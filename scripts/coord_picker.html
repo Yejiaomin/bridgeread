@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BridgeRead 坐标取色器</title>
+  <style>
+    body { font-family: Arial; background: #1a1a1a; color: white; margin: 0; padding: 20px; }
+    h2 { color: #FFD93D; }
+    .controls { margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    select, button { padding: 8px 15px; font-size: 14px; border-radius: 6px; border: none; cursor: pointer; }
+    select { background: #333; color: white; }
+    button { background: #FF6B35; color: white; }
+    button:hover { background: #e55a25; }
+    .canvas-container { position: relative; display: inline-block; border: 2px solid #FFD93D; }
+    canvas { display: block; cursor: crosshair; }
+    .coords { background: #333; padding: 10px 15px; border-radius: 8px; margin-top: 15px; font-family: monospace; }
+    .coords h3 { margin: 0 0 10px; color: #FFD93D; }
+    .coord-item { padding: 4px 0; border-bottom: 1px solid #444; }
+    .coord-item:last-child { border-bottom: none; }
+    .copy-btn { background: #4CAF50; margin-left: 10px; padding: 3px 10px; font-size: 12px; }
+    .instructions { background: #2a2a2a; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; line-height: 1.6; }
+    .highlight-box { position: absolute; border: 2px solid #FFD93D; background: rgba(255, 217, 61, 0.3); pointer-events: none; }
+  </style>
+</head>
+<body>
+  <h2>📍 BridgeRead 关键词坐标工具</h2>
+  
+  <div class="instructions">
+    <b>使用方法：</b><br>
+    1. 选择要标注的图片<br>
+    2. 在图片上<b>点击关键词的左上角</b>，然后<b>再点击右下角</b><br>
+    3. 复制生成的JSON坐标
+  </div>
+
+  <div class="controls">
+    <select id="imgSelect">
+      <option value="../assets/home/home_bg.png">🏠 首页背景 (home_bg)</option>
+      <option value="../assets/home/study_bg.png">📚 学习页背景 (study_bg)</option>
+      <option value="../assets/books/biscuit_spread_01.png">第1页 (spread_01) - small, yellow</option>
+      <option value="../assets/books/biscuit_spread_02.png">第2页 (spread_02) - bed, play</option>
+      <option value="../assets/books/biscuit_spread_03.png">第3页 (spread_03) - snack, drink</option>
+      <option value="../assets/books/biscuit_spread_04.png">第4页 (spread_04) - story</option>
+      <option value="../assets/books/biscuit_spread_05.png">第5页 (spread_05) - blanket, doll</option>
+      <option value="../assets/books/biscuit_spread_06.png">第6页 (spread_06) - hug, kiss</option>
+      <option value="../assets/books/biscuit_spread_07.png">第7页 (spread_07) - light</option>
+      <option value="../assets/books/biscuit_spread_08.png">第8页 (spread_08) - tucked in</option>
+      <option value="../assets/books/biscuit_spread_09.png">第9页 (spread_09) - one more</option>
+      <option value="../assets/books/biscuit_spread_10.png">第10页 (spread_10) - curl up</option>
+      <option value="../assets/books/biscuit_spread_11.png">第11页 (spread_11) - sleepy, good night</option>
+    </select>
+    <button onclick="loadImage()">加载图片</button>
+    <button onclick="clearAll()" style="background:#666">清除标注</button>
+    <span id="status" style="color:#FFD93D">选择图片后点击加载</span>
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="canvas" width="900" height="500"></canvas>
+  </div>
+
+  <div class="coords">
+    <h3>📋 生成的坐标（复制到JSON）</h3>
+    <div id="output">还没有标注</div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let img = new Image();
+    let clickPoints = [];
+    let boxes = [];
+    let wordNames = ['small', 'yellow', 'bed', 'play', 'Biscuit', 'snack', 'drink', 'story', 'blanket', 'doll', 'hug', 'kiss'];
+    let wordIndex = 0;
+
+    function loadImage() {
+      const src = document.getElementById('imgSelect').value;
+      img = new Image();
+      img.onload = function() {
+        // 缩放到合适大小
+        const maxW = 900;
+        const maxH = 600;
+        const scale = Math.min(maxW / img.width, maxH / img.height);
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        drawAll();
+        document.getElementById('status').textContent = `图片已加载 (${img.width}x${img.height}) - 点击标注关键词`;
+        clearAll();
+      };
+      img.src = src;
+    }
+
+    function drawAll() {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // 画已标注的框
+      boxes.forEach((box, i) => {
+        ctx.strokeStyle = '#FFD93D';
+        ctx.fillStyle = 'rgba(255, 217, 61, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.fillRect(box.px, box.py, box.pw, box.ph);
+        ctx.strokeRect(box.px, box.py, box.pw, box.ph);
+        ctx.fillStyle = '#FF6B35';
+        ctx.font = 'bold 14px Arial';
+        ctx.fillText(box.word, box.px + 3, box.py - 4);
+      });
+      // 画第一个点
+      if (clickPoints.length === 1) {
+        ctx.fillStyle = '#FF6B35';
+        ctx.beginPath();
+        ctx.arc(clickPoints[0].x, clickPoints[0].y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    canvas.addEventListener('click', function(e) {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      clickPoints.push({x, y});
+
+      if (clickPoints.length === 1) {
+        document.getElementById('status').textContent = `第一个点已记录 (${(x/canvas.width).toFixed(3)}, ${(y/canvas.height).toFixed(3)}) - 现在点击右下角`;
+        drawAll();
+      } else if (clickPoints.length === 2) {
+        // 计算相对坐标
+        const p1 = clickPoints[0];
+        const p2 = clickPoints[1];
+        const rx = Math.min(p1.x, p2.x) / canvas.width;
+        const ry = Math.min(p1.y, p2.y) / canvas.height;
+        const rw = Math.abs(p2.x - p1.x) / canvas.width;
+        const rh = Math.abs(p2.y - p1.y) / canvas.height;
+
+        const word = prompt(`这个框标注的是什么词？`, wordNames[wordIndex] || 'word');
+        if (word) {
+          boxes.push({
+            word,
+            x: rx, y: ry, width: rw, height: rh,
+            px: Math.min(p1.x, p2.x),
+            py: Math.min(p1.y, p2.y),
+            pw: Math.abs(p2.x - p1.x),
+            ph: Math.abs(p2.y - p1.y)
+          });
+          wordIndex++;
+          updateOutput();
+        }
+        clickPoints = [];
+        drawAll();
+        document.getElementById('status').textContent = `已标注 "${word}" - 继续标注下一个词`;
+      }
+    });
+
+    function updateOutput() {
+      const json = boxes.map(b => 
+        `  {"word": "${b.word}", "x": ${b.x.toFixed(3)}, "y": ${b.y.toFixed(3)}, "width": ${b.width.toFixed(3)}, "height": ${b.height.toFixed(3)}, "color": "#FFD93D"}`
+      ).join(',\n');
+      document.getElementById('output').innerHTML = 
+        `<pre style="color:#4CAF50">"highlights": [\n${json}\n]</pre>
+         <button class="copy-btn" onclick="copyJson()">📋 复制JSON</button>`;
+    }
+
+    function copyJson() {
+      const json = boxes.map(b => 
+        `{"word": "${b.word}", "x": ${b.x.toFixed(3)}, "y": ${b.y.toFixed(3)}, "width": ${b.width.toFixed(3)}, "height": ${b.height.toFixed(3)}, "color": "#FFD93D"}`
+      ).join(', ');
+      navigator.clipboard.writeText(`"highlights": [${json}]`);
+      alert('已复制到剪贴板！');
+    }
+
+    function clearAll() {
+      boxes = [];
+      clickPoints = [];
+      wordIndex = 0;
+      document.getElementById('output').textContent = '还没有标注';
+      if (img.src) drawAll();
+    }
+
+    // 默认加载第一张
+    loadImage();
+  </script>
+</body>
+</html>
