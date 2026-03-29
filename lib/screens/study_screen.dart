@@ -33,7 +33,7 @@ const _kZones = [
   _Zone(0.152, 0.420, 0.152, 0.217, '',        'audio/sfx/book-open.wav'),      // RECAP
   _Zone(0.355, 0.416, 0.144, 0.203, '/reader', 'audio/sfx/book-open.wav'),      // STORY
   _Zone(0.567, 0.421, 0.119, 0.247, '/quiz',   'audio/sfx/pop-click.wav'),      // GAME
-  _Zone(0.781, 0.421, 0.136, 0.270, '/gacha',  'audio/sfx/magic-sparkle.wav'),  // LISTEN
+  _Zone(0.781, 0.421, 0.136, 0.270, '/listen', 'audio/sfx/magic-sparkle.wav'),  // LISTEN
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
