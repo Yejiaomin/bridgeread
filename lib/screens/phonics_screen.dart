@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import '../services/progress_service.dart';
+import 'eggy_celebration_screen.dart';
 
 // ---------------------------------------------------------------------------
 // Constants & data
@@ -90,6 +91,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   // Score
   int _score = 0;
+  int _totalStars = 0;
   late final AnimationController _plusOneCtrl;
 
   // Step 2: staggered tile bounce-in
@@ -155,6 +157,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   _EchoPhase _echoPhase = _EchoPhase.idle;
   int  _echoScorePoints  = 0;
   bool _echoShowButtons  = false;
+  bool _echoPlayingBack  = false;
   DateTime? _echoRecordStart;
 
   late final AnimationController _echoPulseCtrl; // idle mic pulse
@@ -168,6 +171,9 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   @override
   void initState() {
     super.initState();
+    ProgressService.getTodayProgress().then((p) {
+      if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
+    });
 
     _tileControllers = List.generate(
       3,
@@ -254,7 +260,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         Tween<double>(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(parent: c, curve: Curves.elasticOut))).toList();
 
-    _enterIntro();
+    _enterTiles();
   }
 
   @override
@@ -370,12 +376,19 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   }
 
   void _enterTiles() {
+    for (final c in _tileControllers) c.reset();
+    for (final c in _slotControllers) c.reset();
+    _starController.reset();
+    _tileShakeCtrl.stop();
+    _tileShakeCtrl.reset();
     _soundItOutBounceCtrl.stop();
     _soundItOutBounceCtrl.reset();
     _wordMsgController.reset();
     _wordBubbleScale.reset();
-    _tileShakeCtrl.stop();
-    _tileShakeCtrl.reset();
+    _echoPulseCtrl.stop();
+    _echoPulseCtrl.reset();
+    _waveCtrl.stop();
+    for (final c in _echoStarCtrls) c.reset();
     setState(() {
       _step = _Step.tiles;
       _tilesShown = 0;
@@ -383,39 +396,65 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       _letterStarsTapped.clear();
       _tilesPlayable = false;
       _nextTileToTap = 0;
+      _placedLetters.clear();
+      _slots = [null, null, null];
+      _slotSad = [false, false, false];
+      _shuffledOrder = [0, 1, 2];
+      _wordComplete = false;
+      _showAmazing = false;
+      _showNextBtn = false;
+      _echoPhase = _EchoPhase.idle;
+      _echoScorePoints = 0;
+      _echoShowButtons = false;
+      _echoPlayingBack = false;
+      _echoRecordStart = null;
+      _recordingPath = null;
     });
     _revealTilesSequentially();
   }
 
   /// Reveals each tile one-by-one: bounce in → play audio → light up → next.
   Future<void> _revealTilesSequentially() async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    final word = _kWords[_wordIndex];
+    final letters = word.letters;
+
+    // 1. Play full word first
+    await _playAndWait(word.wordAudioPath);
+    if (!mounted) return;
     await Future.delayed(const Duration(milliseconds: 350));
-    final letters = _kWords[_wordIndex].letters;
+
+    // 2. Reveal each letter tile with its phoneme audio (b → e → d)
     for (int i = 0; i < letters.length; i++) {
       if (!mounted) return;
-      // Bounce tile in AND start audio simultaneously
       _tileControllers[i].forward();
       setState(() => _tilesShown = i + 1);
       await _playAndWait(letters[i].audioPath);
       if (!mounted) return;
-      // Light up this tile after its audio finishes
       setState(() => _tilesLit = i + 1);
       if (i < letters.length - 1) {
         await Future.delayed(const Duration(milliseconds: 200));
       }
     }
-    // All letters revealed — start interactive phase, shake first target
+
+    // 3. Play full word again after all letters
     if (!mounted) return;
+    await Future.delayed(const Duration(milliseconds: 200));
+    await _playAndWait(word.wordAudioPath);
+    if (!mounted) return;
+
+    // 4. Start interactive phase — shake first target tile
     setState(() => _tilesPlayable = true);
     _tileShakeCtrl.repeat(reverse: true);
   }
 
   void _enterEcho() {
+    // Stay on tiles step — recording UI appears inline below the tiles
     setState(() {
-      _step = _Step.echo;
       _echoPhase = _EchoPhase.idle;
       _echoScorePoints = 0;
       _echoShowButtons = false;
+      _echoPlayingBack = false;
       _echoRecordStart = null;
       _recordingPath = null;
     });
@@ -461,13 +500,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
           });
         }
       }
-      // Reward sound
-      final audio = pts == 10 ? 'audio/phonemes/amazing.mp3' : 'audio/phonemes/one_more_time.mp3';
+      // Show buttons immediately
       Future.delayed(const Duration(milliseconds: 300), () {
-        if (mounted) _player.play(AssetSource(audio));
-      });
-      // Show buttons after 2 s
-      Future.delayed(const Duration(milliseconds: 2000), () {
         if (mounted) setState(() => _echoShowButtons = true);
       });
     } else {
@@ -502,12 +536,16 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   }
 
   Future<void> _playEchoRecording() async {
-    if (_recordingPath == null) return;
+    if (_recordingPath == null || _echoPlayingBack) return;
+    setState(() => _echoPlayingBack = true);
     await _player.stop();
     final source = kIsWeb
         ? UrlSource(_recordingPath!)
         : DeviceFileSource(_recordingPath!);
     await _player.play(source);
+    _player.onPlayerComplete.listen((_) {
+      if (mounted) setState(() => _echoPlayingBack = false);
+    });
   }
 
   void _onEchoConfirmed() {
@@ -687,11 +725,30 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     setState(() => _wordComplete = true);
     await Future.delayed(const Duration(milliseconds: 300));
     if (!mounted) return;
-    _playAudio('assets/audio/phonemes/amazing.mp3');
-    _starController.forward(from: 0);
-    setState(() => _showAmazing = true);
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) setState(() => _showNextBtn = true);
+
+    final isLastWord = _wordIndex == _kWords.length - 1;
+
+    if (isLastWord) {
+      // Last word done — go straight to Eggy celebration, no amazing
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const EggyCelebrationScreen(
+            nextRoute:    '/recording',
+            nextLabel:    'Say it! 🎙️',
+            moduleKey:    'phonics',
+            modulePoints: 15,
+          ),
+        ),
+      );
+    } else {
+      // Not the last word — play amazing, show stars, then reveal Next button
+      _playAudio('assets/audio/phonemes/amazing.mp3');
+      _starController.forward(from: 0);
+      setState(() => _showAmazing = true);
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) setState(() => _showNextBtn = true);
+    }
   }
 
   void _onNextPressed() {
@@ -700,9 +757,20 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         _wordIndex++;
         _celebration = false;
       });
-      _enterIntro();
+      _enterTiles();
     } else {
-      setState(() => _celebration = true);
+      // Navigate to Eggy celebration screen instead of showing inline widget
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const EggyCelebrationScreen(
+            nextRoute:    '/recording',
+            nextLabel:    'Say it! 🎙️',
+            moduleKey:    'phonics',
+            modulePoints: 15,
+          ),
+        ),
+      );
     }
   }
 
@@ -712,8 +780,6 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (_celebration) return _buildCelebration();
-
     final word = _kWords[_wordIndex];
 
     return Scaffold(
@@ -793,7 +859,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                   const Text('⭐', style: TextStyle(fontSize: 14)),
                   const SizedBox(width: 4),
                   Text(
-                    '$_score',
+                    '$_totalStars',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -847,7 +913,6 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         if (!_wordComplete) ...[
           if (_step == _Step.intro) _buildIntroStep(word),
           if (_step == _Step.tiles) _buildTilesStep(word),
-          if (_step == _Step.echo) _buildEchoStep(word),
           if (_step == _Step.drag) _buildDragStep(word),
         ],
         if (_wordComplete) _buildCompletionOverlay(),
@@ -1019,122 +1084,248 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   Widget _buildTilesStep(_WordData word) {
     final allTapped = _letterStarsTapped.length == 3;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+    final isRecording = _echoPhase == _EchoPhase.recording;
+    final isScored    = _echoPhase == _EchoPhase.scored;
+    final starCount   = _echoScorePoints == 10 ? 3 : _echoScorePoints == 5 ? 1 : 0;
+
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: constraints.maxHeight - 40),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Tap each letter!',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF555555)),
-            ),
-            const Text(
-              '点击每个字母听发音',
-              style: TextStyle(fontSize: 15, color: Color(0xFFAAAAAA)),
-            ),
-            const SizedBox(height: 44),
-
-            // Letter tiles with star above each tapped tile
-            Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Word display with speaker
+          GestureDetector(
+            onTap: () => _playAudio(word.wordAudioPath),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (i) {
-                if (i >= _tilesShown) {
-                  return const SizedBox(width: 112, height: 130);
-                }
-                final letter = word.letters[i];
-                final tapped = _letterStarsTapped.contains(i);
-                final isCurrentTarget =
-                    _tilesPlayable && i == _nextTileToTap && !tapped;
+              children: [
+                Text(word.word,
+                    style: const TextStyle(fontSize: 52, fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333), letterSpacing: 4)),
+                const SizedBox(width: 10),
+                const Icon(Icons.volume_up_rounded, size: 30, color: _kOrange),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            allTapped ? 'Your turn! 🎤' : 'Tap each letter!',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700,
+                color: Color(0xFF555555)),
+          ),
+          if (!allTapped)
+            const Text('点击每个字母听发音',
+                style: TextStyle(fontSize: 14, color: Color(0xFFAAAAAA))),
+          const SizedBox(height: 36),
 
-                // Opacity logic:
-                // During reveal: lit tiles bright, unrevealed dim
-                // During interactive phase: tapped/target bright, future dim
-                double opacity;
-                if (!_tilesPlayable) {
-                  opacity = i < _tilesLit ? 1.0 : 0.55;
-                } else if (tapped) {
-                  opacity = 1.0;
-                } else if (i == _nextTileToTap) {
-                  opacity = 1.0;
-                } else {
-                  opacity = 0.40;
-                }
+          // Letter tiles
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(3, (i) {
+              if (i >= _tilesShown) return const SizedBox(width: 112, height: 130);
+              final letter = word.letters[i];
+              final tapped = _letterStarsTapped.contains(i);
+              final isCurrentTarget = _tilesPlayable && i == _nextTileToTap && !tapped;
 
-                Widget tileBtn = GestureDetector(
-                  onTap: isCurrentTarget ? () => _onLetterTileTap(i) : null,
+              double opacity;
+              if (!_tilesPlayable) {
+                opacity = i < _tilesLit ? 1.0 : 0.55;
+              } else if (tapped || allTapped) {
+                opacity = 1.0;
+              } else if (i == _nextTileToTap) {
+                opacity = 1.0;
+              } else {
+                opacity = 0.40;
+              }
+
+              Widget tileBtn = GestureDetector(
+                onTap: isCurrentTarget ? () => _onLetterTileTap(i) : null,
+                child: Container(
+                  width: 96, height: 96,
+                  decoration: BoxDecoration(
+                    color: letter.tileColor,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [BoxShadow(
+                      color: letter.tileColor.withValues(alpha: 0.45),
+                      blurRadius: 14, offset: const Offset(0, 7),
+                    )],
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(letter.char, style: const TextStyle(
+                      fontSize: 56, fontWeight: FontWeight.bold, color: Colors.white)),
+                ),
+              );
+
+              if (isCurrentTarget) {
+                tileBtn = AnimatedBuilder(
+                  animation: _tileShakeCtrl,
+                  builder: (context, child) => Transform.translate(
+                      offset: Offset(_tileShakeAnim.value * 5, 0), child: child),
+                  child: tileBtn,
+                );
+              }
+
+              return AnimatedOpacity(
+                opacity: opacity,
+                duration: const Duration(milliseconds: 400),
+                child: ScaleTransition(
+                  scale: _tileScaleAnims[i],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(mainAxisSize: MainAxisSize.min, children: [
+                      AnimatedOpacity(
+                        opacity: tapped ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 350),
+                        child: const Text('⭐', style: TextStyle(fontSize: 28)),
+                      ),
+                      const SizedBox(height: 9),
+                      tileBtn,
+                    ]),
+                  ),
+                ),
+              );
+            }),
+          ),
+
+          // ── Inline recording section ──────────────────────────────────────
+          if (allTapped) ...[
+            const SizedBox(height: 36),
+
+            // ── REC dot + waveform while recording ───────────────────────
+            if (isRecording) ...[
+              AnimatedBuilder(
+                animation: _recDotCtrl,
+                builder: (_, __) => Opacity(
+                  opacity: _recDotCtrl.value,
+                  child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(Icons.circle, color: Colors.red, size: 16),
+                    SizedBox(width: 8),
+                    Text('REC', style: TextStyle(fontSize: 18,
+                        fontWeight: FontWeight.bold, color: Colors.red, letterSpacing: 3)),
+                  ]),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 56,
+                child: AnimatedBuilder(
+                  animation: _waveCtrl,
+                  builder: (_, __) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: List.generate(_barHeights.length, (i) => Container(
+                      width: 5,
+                      height: _barHeights[i] * 52,
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.5 + _barHeights[i] * 0.5),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    )),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+            ],
+
+            // ── Play back when scored ─────────────────────────────────────
+            if (isScored) ...[
+              // Play back button
+              if (_recordingPath != null)
+                GestureDetector(
+                  onTap: _echoPlayingBack ? null : _playEchoRecording,
                   child: Container(
-                    width: 96,
-                    height: 96,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     decoration: BoxDecoration(
-                      color: letter.tileColor,
+                      color: _echoPlayingBack ? _kYellow : _kYellow.withValues(alpha: 0.25),
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: letter.tileColor.withValues(alpha: 0.45),
-                          blurRadius: 14,
-                          offset: const Offset(0, 7),
-                        ),
+                      border: Border.all(color: _kYellow, width: 2),
+                    ),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(
+                        _echoPlayingBack ? Icons.volume_up_rounded : Icons.replay_rounded,
+                        color: const Color(0xFF555500), size: 22,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        _echoPlayingBack ? 'Playing...' : 'Play back',
+                        style: const TextStyle(fontSize: 16,
+                            fontWeight: FontWeight.bold, color: Color(0xFF555500)),
+                      ),
+                    ]),
+                  ),
+                ),
+              const SizedBox(height: 18),
+            ],
+
+            // ── Mic button (shown when not scored) ────────────────────────
+            if (!isScored)
+              GestureDetector(
+                onTap: _toggleEchoRecording,
+                child: AnimatedBuilder(
+                  animation: _echoPulseCtrl,
+                  builder: (_, child) => Transform.scale(
+                    scale: isRecording ? _echoPulseAnim.value : 1.0,
+                    child: child,
+                  ),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    width: 120, height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isRecording ? const Color(0xFFCC0000) : Colors.red,
+                      boxShadow: [BoxShadow(
+                        color: Colors.red.withValues(alpha: isRecording ? 0.55 : 0.30),
+                        blurRadius: isRecording ? 28 : 16,
+                        spreadRadius: isRecording ? 6 : 2,
+                        offset: const Offset(0, 5),
+                      )],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(isRecording ? Icons.stop_rounded : Icons.mic_rounded,
+                            color: Colors.white, size: 50),
+                        const SizedBox(height: 4),
+                        Text(isRecording ? 'Stop' : 'Record',
+                            style: const TextStyle(color: Colors.white,
+                                fontSize: 14, fontWeight: FontWeight.w600)),
                       ],
                     ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      letter.char,
-                      style: const TextStyle(
-                        fontSize: 56,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
                   ),
-                );
+                ),
+              ),
 
-                // Shake only the current target tile
-                if (isCurrentTarget) {
-                  tileBtn = AnimatedBuilder(
-                    animation: _tileShakeCtrl,
-                    builder: (context, child) => Transform.translate(
-                      offset: Offset(_tileShakeAnim.value * 5, 0),
-                      child: child,
-                    ),
-                    child: tileBtn,
-                  );
-                }
+            const SizedBox(height: 24),
 
-                return AnimatedOpacity(
-                  opacity: opacity,
-                  duration: const Duration(milliseconds: 400),
-                  child: ScaleTransition(
-                    scale: _tileScaleAnims[i],
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Star reward — visible once tapped
-                          AnimatedOpacity(
-                            opacity: tapped ? 1.0 : 0.0,
-                            duration: const Duration(milliseconds: 350),
-                            child: const Text('⭐',
-                                style: TextStyle(fontSize: 28)),
-                          ),
-                          const SizedBox(height: 6),
-                          tileBtn,
-                        ],
-                      ),
-                    ),
+            // ── Let's spell it button (after scoring) ────────────────────
+            if (isScored && _echoShowButtons)
+              SizedBox(
+                height: 64,
+                width: 280,
+                child: ElevatedButton(
+                  onPressed: _onEchoConfirmed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _kOrange,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32)),
+                    textStyle: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                );
-              }),
-            ),
-
+                  child: const Text("Let's spell it!"),
+                ),
+              ),
+            if (isScored && !_echoShowButtons) const SizedBox(height: 8),
+            const SizedBox(height: 12),
           ],
+        ],
         ),
       ),
-    );
+    ));
   }
 
   // ---------------------------------------------------------------------------
@@ -1601,7 +1792,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                               style: TextStyle(fontSize: 26)),
                           const SizedBox(width: 10),
                           Text(
-                            '$_score  stars',
+                            '$_totalStars  stars',
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -1678,101 +1869,4 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Celebration screen (both words done)
-  // ---------------------------------------------------------------------------
-
-  Widget _buildCelebration() {
-    return Scaffold(
-      backgroundColor: _kCream,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('🎊', style: TextStyle(fontSize: 90)),
-              const SizedBox(height: 28),
-              const Text(
-                'You did it!',
-                style: TextStyle(
-                    fontSize: 52,
-                    fontWeight: FontWeight.bold,
-                    color: _kOrange),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                '你学会了两个新单词！',
-                style: TextStyle(fontSize: 22, color: Color(0xFF777777)),
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'bed  •  hug',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF333333),
-                  letterSpacing: 8,
-                ),
-              ),
-              const SizedBox(height: 28),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 36, vertical: 20),
-                decoration: BoxDecoration(
-                  color: _kOrange.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(
-                      color: _kOrange.withValues(alpha: 0.28), width: 1.5),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('⭐⭐⭐',
-                        style: TextStyle(fontSize: 36)),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$_score  stars!',
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: _kOrange,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'out of ${_kWords.length * 6} total',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFFAAAAAA),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 28),
-              SizedBox(
-                height: 64,
-                width: 280,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    await ProgressService.markModuleComplete('phonics', 15);
-                    if (mounted) Navigator.pushReplacementNamed(context, '/recording');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _kOrange,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32)),
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  child: const Text('回到首页  🏠'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

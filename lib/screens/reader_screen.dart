@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
+import 'eggy_celebration_screen.dart';
 import '../models/lesson.dart';
+import '../models/book_page.dart';
 import '../services/audio_service.dart';
 import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
@@ -23,12 +26,17 @@ class _ReaderScreenState extends State<ReaderScreen>
   Lesson? _lesson;
   int _currentPage = 0;
   bool _loading = true;
+
+  // Eggy avatar
+  int _eggyMonth = 1;
+  String? _equippedAccessory;
   bool _isAudioPlaying = false;
   bool _isPaused = false;
   bool _waitingToAdvance = false;
   bool _showSubtitles = false;
   bool _showCelebration = false;
   int _score = 0;
+  int _totalStars = 0;
   final Set<int> _triggeredHighlights = {};
   StreamSubscription<Duration>? _positionSub;
   Timer? _autoAdvanceTimer;
@@ -40,6 +48,10 @@ class _ReaderScreenState extends State<ReaderScreen>
   // Teacher breathing animation
   late final AnimationController _breathController;
   late final Animation<double> _breathAnim;
+
+  // Cover page bubble bounce
+  late final AnimationController _bubbleCtrl;
+  late final Animation<double>   _bubbleAnim;
 
   // Score: +1 float animation
   late final AnimationController _plusOneCtrl;
@@ -54,6 +66,9 @@ class _ReaderScreenState extends State<ReaderScreen>
   @override
   void initState() {
     super.initState();
+    ProgressService.getTodayProgress().then((p) {
+      if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
+    });
     _speakerController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
@@ -68,11 +83,18 @@ class _ReaderScreenState extends State<ReaderScreen>
     _breathAnim = Tween<double>(begin: 1.0, end: 1.02).animate(
       CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
     );
+    _bubbleCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1800))
+      ..repeat(reverse: true);
+    _bubbleAnim = Tween<double>(begin: 0.0, end: -8.0).animate(
+        CurvedAnimation(parent: _bubbleCtrl, curve: Curves.easeInOut));
+
     _plusOneCtrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 750));
     _celebCtrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1400));
     _celebAnim = CurvedAnimation(parent: _celebCtrl, curve: Curves.easeOut);
+    _loadEggy();
     _loadLesson();
   }
 
@@ -80,6 +102,7 @@ class _ReaderScreenState extends State<ReaderScreen>
   void dispose() {
     _speakerController.dispose();
     _breathController.dispose();
+    _bubbleCtrl.dispose();
     _plusOneCtrl.dispose();
     _celebCtrl.dispose();
     _autoAdvanceTimer?.cancel();
@@ -96,6 +119,22 @@ class _ReaderScreenState extends State<ReaderScreen>
     controller.setLooping(true);
     controller.setVolume(0);
     return controller;
+  }
+
+  Future<void> _loadEggy() async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    if (!prefs.containsKey('app_start_date')) {
+      await prefs.setString('app_start_date', today);
+    }
+    final startDate = DateTime.tryParse(prefs.getString('app_start_date') ?? today) ?? DateTime.now();
+    final eggyMonth = (DateTime.now().difference(startDate).inDays ~/ 30) % 6 + 1;
+    if (mounted) {
+      setState(() {
+        _eggyMonth = eggyMonth;
+        _equippedAccessory = prefs.getString('equipped_accessory');
+      });
+    }
   }
 
   Future<void> _loadLesson() async {
@@ -214,12 +253,20 @@ class _ReaderScreenState extends State<ReaderScreen>
       if (_lesson != null && _currentPage < _lesson!.pages.length - 1) {
         Future.delayed(const Duration(milliseconds: 500), _nextPage);
       } else {
-        // Last page — show celebration
+        // Last page — navigate to Eggy celebration screen
         Future.delayed(const Duration(milliseconds: 600), () {
           if (!mounted) return;
-          _audioService.playAsset('audio/phonemes/amazing.mp3');
-          setState(() => _showCelebration = true);
-          _celebCtrl.forward(from: 0);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const EggyCelebrationScreen(
+                nextRoute:    '/quiz',
+                nextLabel:    '开始闯关  🎯 →',
+                moduleKey:    'reader',
+                modulePoints: 10,
+              ),
+            ),
+          );
         });
       }
     });
@@ -258,32 +305,212 @@ class _ReaderScreenState extends State<ReaderScreen>
     }
   }
 
-  Widget _buildPageImage(String imageAsset, int pageIndex) {
-    return ColoredBox(
-      color: const Color(0xFFFFF8F0),
-      child: Image.asset(
-        imageAsset,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.menu_book, size: 64, color: Color(0xFFFF8C42)),
-                const SizedBox(height: 16),
-                Text(
-                  'Page ${pageIndex + 1}',
-                  style: const TextStyle(
-                    fontSize: 28,
-                    color: Color(0xFFFF8C42),
-                    fontWeight: FontWeight.bold,
+  // ── Eggy avatar widget (base + accessory) ─────────────────────────────────
+  Widget _buildEggyAvatar(double size) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset(
+            'assets/pet/costumes/base/egg_month$_eggyMonth.png',
+            fit: BoxFit.contain,
+            errorBuilder: (_, __, ___) => const SizedBox(),
+          ),
+          if (_equippedAccessory != null)
+            Image.asset(
+              'assets/pet/costumes/accessories/$_equippedAccessory.png',
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) => const SizedBox(),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPageImage(String imageAsset, int pageIndex,
+      {List<KeywordHighlight> highlights = const [],
+       Set<int> triggeredIndices = const {}}) {
+    // Cover page: book on left, Eggy + warm gradient on right
+    if (pageIndex == 0) {
+      return Row(
+        children: [
+          // ── Left: book cover ──────────────────────────────────────────────
+          Expanded(
+            child: ColoredBox(
+              color: const Color(0xFFFFF8F0),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Image.asset(imageAsset, fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => const SizedBox()),
+              ),
+            ),
+          ),
+
+          // ── Right: warm gradient + Eggy + bubble ─────────────────────────
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFFFFE8D6), Color(0xFFFFCBA4), Color(0xFFFFAD7A)],
+                ),
+              ),
+              child: Stack(
+                children: [
+                  // Decorative circles background
+                  Positioned(top: -30, right: -30,
+                    child: Container(width: 120, height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.18)))),
+                  Positioned(bottom: 40, left: -20,
+                    child: Container(width: 90, height: 90,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.13)))),
+                  Positioned(top: 60, left: 30,
+                    child: Container(width: 50, height: 50,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.10)))),
+
+                  // Main content: bubble + Eggy + title
+                  Center(
+                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Speech bubble (bounces up/down)
+                      AnimatedBuilder(
+                        animation: _bubbleAnim,
+                        builder: (_, child) => Transform.translate(
+                          offset: Offset(0, _bubbleAnim.value),
+                          child: child,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFFF8C42).withValues(alpha: 0.25),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Text(
+                            '谢谢你来看我，\n陪我一起听故事~',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFFFF6B35),
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Bubble tail
+                      CustomPaint(
+                        size: const Size(20, 10),
+                        painter: _BubbleTailPainter(),
+                      ),
+                      const SizedBox(height: 4),
+
+                      // Eggy with breathing
+                      ScaleTransition(
+                        scale: _breathAnim,
+                        alignment: Alignment.center,
+                        child: _buildEggyAvatar(300),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Book title
+                      const Text(
+                        'Biscuit',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFFB84A00),
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Let\'s read together! ✨',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFFCC6622),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                   ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    const imgAR = 2480.0 / 1754.0;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double imgW, imgH;
+        if (constraints.maxWidth / constraints.maxHeight > imgAR) {
+          imgH = constraints.maxHeight;
+          imgW = imgH * imgAR;
+        } else {
+          imgW = constraints.maxWidth;
+          imgH = imgW / imgAR;
+        }
+        final left = (constraints.maxWidth  - imgW) / 2;
+        final top  = (constraints.maxHeight - imgH) / 2;
+
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: const ColoredBox(color: Color(0xFFFFF8F0)),
+            ),
+            Positioned(
+              left: left, top: top, width: imgW, height: imgH,
+              child: Image.asset(
+                imageAsset,
+                fit: BoxFit.fill,
+                errorBuilder: (_, __, ___) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.menu_book, size: 64, color: Color(0xFFFF8C42)),
+                      const SizedBox(height: 16),
+                      Text('Page ${pageIndex + 1}',
+                          style: const TextStyle(fontSize: 28,
+                              color: Color(0xFFFF8C42),
+                              fontWeight: FontWeight.bold)),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          );
-        },
-      ),
+            if (highlights.isNotEmpty)
+              Positioned(
+                left: left, top: top, width: imgW, height: imgH,
+                child: HighlighterOverlay(
+                  highlights: highlights,
+                  triggeredIndices: triggeredIndices,
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -299,8 +526,6 @@ class _ReaderScreenState extends State<ReaderScreen>
     final lesson = _lesson!;
     final page = lesson.pages[_currentPage];
     final totalPages = lesson.pages.length;
-
-    if (_showCelebration) return _buildCelebration();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -404,7 +629,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                               const Text('⭐',
                                   style: TextStyle(fontSize: 13)),
                               const SizedBox(width: 4),
-                              Text('$_score',
+                              Text('$_totalStars',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -475,64 +700,25 @@ class _ReaderScreenState extends State<ReaderScreen>
                     },
                     child: SizedBox.expand(
                       key: ValueKey<int>(_currentPage),
-                      child: _buildPageImage(page.imageAsset, _currentPage),
-                    ),
-                  ),
-                  // Highlighter pen effect — synced to EN audio position
-                  HighlighterOverlay(
-                    highlights: page.highlights,
-                    triggeredIndices: Set.unmodifiable(_triggeredHighlights),
-                    imageAspectRatio: 4 / 3,
-                  ),
-                  // Teacher character — bottom-right
-                  Positioned(
-                    bottom: 0,
-                    right: 12,
-                    child: ScaleTransition(
-                      scale: _breathAnim,
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: 160,
-                        height: 160,
-                        child: _currentPage == 0
-                            ? (_videoController != null &&
-                                    _videoController!.value.isInitialized
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black
-                                              .withValues(alpha: 0.18),
-                                          blurRadius: 12,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                    child: FittedBox(
-                                      fit: BoxFit.cover,
-                                      child: SizedBox(
-                                        width: _videoController!.value.size.width,
-                                        height:
-                                            _videoController!.value.size.height,
-                                        child: VideoPlayer(_videoController!),
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox.shrink())
-                            : ClipOval(
-                                child: Image.asset(
-                                  'assets/characters/teacher_default.png',
-                                  width: 160,
-                                  height: 160,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                      child: _buildPageImage(
+                        page.imageAsset,
+                        _currentPage,
+                        highlights: page.highlights,
+                        triggeredIndices: Set.unmodifiable(_triggeredHighlights),
                       ),
                     ),
                   ),
+                  // Eggy avatar — bottom-right (hidden on cover page, shown there via split layout)
+                  if (_currentPage != 0)
+                    Positioned(
+                      bottom: 8,
+                      right: 12,
+                      child: ScaleTransition(
+                        scale: _breathAnim,
+                        alignment: Alignment.bottomCenter,
+                        child: _buildEggyAvatar(140),
+                      ),
+                    ),
                   // 🔊 Pulsing speaker icon while audio plays
                   if (_isAudioPlaying && !_isPaused)
                     Positioned(
@@ -710,138 +896,22 @@ class _ReaderScreenState extends State<ReaderScreen>
     );
   }
 
-  Widget _buildCelebration() {
-    final totalPages = _lesson?.pages.length ?? 1;
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF7C3AED), Color(0xFF2563EB)],
-          ),
-        ),
-        child: SafeArea(
-          child: AnimatedBuilder(
-            animation: _celebAnim,
-            builder: (context, _) {
-              final p = _celebAnim.value;
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Star burst background
-                  ...List.generate(16, (i) {
-                    final angle = (i / 16) * 2 * pi;
-                    final opacity = (1.0 - p * 0.85).clamp(0.0, 1.0);
-                    return Align(
-                      alignment: Alignment(
-                        cos(angle) * p * 1.3,
-                        sin(angle) * p * 1.3,
-                      ),
-                      child: Opacity(
-                        opacity: opacity,
-                        child: Transform.scale(
-                          scale: 0.2 + p * 0.9,
-                          child: const Text('⭐',
-                              style: TextStyle(fontSize: 32)),
-                        ),
-                      ),
-                    );
-                  }),
-                  // Content
-                  Center(
-                    child: Opacity(
-                      opacity: p.clamp(0.0, 1.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('🎉',
-                              style: TextStyle(fontSize: 72)),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Amazing!',
-                            style: TextStyle(
-                              fontSize: 52,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(
-                                    color: Colors.black26,
-                                    blurRadius: 12,
-                                    offset: Offset(0, 4)),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            '故事读完了！',
-                            style: TextStyle(
-                                fontSize: 22, color: Colors.white70),
-                          ),
-                          const SizedBox(height: 32),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 36, vertical: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(
-                                  color: Colors.white
-                                      .withValues(alpha: 0.25)),
-                            ),
-                            child: Column(
-                              children: [
-                                const Text('⭐⭐⭐',
-                                    style: TextStyle(fontSize: 36)),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '$_score  stars!',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'out of $totalPages total',
-                                  style: const TextStyle(
-                                      color: Colors.white60,
-                                      fontSize: 15),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 44),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await ProgressService.markModuleComplete('reader', 10);
-                              if (mounted) Navigator.pushReplacementNamed(context, '/quiz');
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFFF8C42),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(32)),
-                              textStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            child: const Text('开始闯关  🎯 →'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
 }
+
+// ── Bubble tail painter ──────────────────────────────────────────────────────
+class _BubbleTailPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.white;
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width / 2, size.height)
+      ..lineTo(size.width, 0)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_BubbleTailPainter _) => false;
+}
+
