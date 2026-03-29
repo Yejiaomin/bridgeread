@@ -45159,7 +45159,7 @@ for(;;)switch(s){case 0:p=A
 o=J
 n=B.aa
 s=3
-return A.h($.mG().eq("audio/"+a+".mp3"),$async$nR)
+return A.h($.mG().eq("assets/audio/"+a+".mp3"),$async$nR)
 case 3:q=new p.vf(o.it(n.gbk(c)),"audio/mpeg")
 s=1
 break
