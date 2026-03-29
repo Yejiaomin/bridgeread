@@ -16376,7 +16376,7 @@ _.dx=$},
 Cu:function Cu(){},
 Qg:function Qg(){},
 awK(a,b){var s,r,q,p,o,n,m,l,k,j,i,h,g,f
-if(a==null)a=B.jN
+if(a==null)a=B.jM
 s=J.bR(a)
 r=s.gG(a)-1
 q=A.bc(0,null,!1,t.LQ)
@@ -16568,7 +16568,7 @@ r.gG6()
 q.sG6(r.gG6())
 r.gG2()
 q.sG2(r.gG2())
-s.lF(B.jN,q)
+s.lF(B.jM,q)
 s.sb4(b.gb4())
 s.sbu(b.gbu())
 s.fx=b.gamC()
@@ -44849,14 +44849,14 @@ o===$&&A.a()
 o[a].c2(0).aO(new A.anx(p,a),t.H)
 o=p.d
 o.af()
-o.bY(new A.cW(B.jM[a].f,null))
+o.bY(new A.cW(B.jO[a].f,null))
 o=t.z
 s=3
 return A.i(A.bZ(B.Fg,null,o),$async$vY)
 case 3:n=p.c
 if(n==null){s=1
 break}if(a===0){o=A.xw(new A.any(),null,o)
-A.eW(n).yJ(o)}else A.j_(n,B.jM[a].e,t.X)
+A.eW(n).yJ(o)}else A.j_(n,B.jO[a].e,t.X)
 case 1:return A.n(q,r)}})
 return A.o($async$vY,r)},
 O(a){var s=null
@@ -44894,7 +44894,7 @@ $0(){A.eW(this.a).jc(null)
 return null},
 $S:0}
 A.anC.prototype={
-$1(a){var s,r=null,q=B.jM[a],p=this.b,o=this.c,n=this.a,m=n.r
+$1(a){var s,r=null,q=B.jO[a],p=this.b,o=this.c,n=this.a,m=n.r
 m===$&&A.a()
 m=m[a]
 s=n.x
@@ -63877,7 +63877,7 @@ q.ap=b.bV
 q.cy=b.c
 q.a2=b.bd
 q.U=b.bt
-q.a9P(a==null?B.jN:a)
+q.a9P(a==null?B.jM:a)
 if(s!==r)q.OJ()},
 alC(a){return this.lF(null,a)},
 Vp(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3,b4,b5,b6=this,b7={}
@@ -77203,7 +77203,7 @@ grM(){return A.aNZ()},
 a61(){if(this.x)return
 this.wm()},
 Vo(){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c=this,b=null,a=c.c
-if(a===-1||c.d===-1||c.b.length===0)return new A.lT(b,b,B.c9,B.jO,c.b.length!==0)
+if(a===-1||c.d===-1||c.b.length===0)return new A.lT(b,b,B.c9,B.jN,c.b.length!==0)
 if(!c.as){a=c.Jn(c.d,a)
 c.d=a
 c.c=c.Jn(c.c,a)}s=c.b[c.d].gm()
@@ -85195,11 +85195,6 @@ B.ZM=new A.kF(B.zM,B.zN)
 B.ZN=new A.kF(B.zN,B.zM)
 B.K8=s([B.ZL,B.ZO,B.ZM,B.ZN],A.aj("D<kF>"))
 B.Kb=s([35,30,20,25,30,35,30,25,25],t.n)
-B.a0c=new A.ps(0.152,0.42,0.152,0.217,"","audio/sfx/book-open.wav")
-B.a09=new A.ps(0.355,0.416,0.144,0.203,"/reader","audio/sfx/book-open.wav")
-B.a0a=new A.ps(0.567,0.421,0.119,0.247,"/quiz","audio/sfx/pop-click.wav")
-B.a0b=new A.ps(0.781,0.421,0.136,0.27,"/gacha","audio/sfx/magic-sparkle.wav")
-B.jM=s([B.a0c,B.a09,B.a0a,B.a0b],A.aj("D<ps>"))
 B.Kd=s(["click","scroll"],t.s)
 B.AU=new A.pK()
 B.ks=new A.K6(1,"page")
@@ -85218,9 +85213,9 @@ B.Ku=s([],t.ER)
 B.fU=s([],t.jl)
 B.Km=s([],t.wi)
 B.Kl=s([],A.aj("D<awi<@>>"))
-B.jO=s([],t.AO)
+B.jN=s([],t.AO)
 B.Ko=s([],t.D1)
-B.jN=s([],t.QF)
+B.jM=s([],t.QF)
 B.o3=s([],t.s)
 B.al=s([],t.oU)
 B.Kq=s([],t.Lx)
@@ -85229,6 +85224,11 @@ B.Kk=s([],t.t)
 B.o4=s([],t.ee)
 B.Kr=s([],t.XS)
 B.c6=s(["glass","Beanie","Crown","Graduation_cap","Lollipop","stick"],t.s)
+B.a0c=new A.ps(0.152,0.42,0.152,0.217,"","audio/sfx/book-open.wav")
+B.a0a=new A.ps(0.355,0.416,0.144,0.203,"/reader","audio/sfx/book-open.wav")
+B.a0b=new A.ps(0.567,0.421,0.119,0.247,"/quiz","audio/sfx/pop-click.wav")
+B.a09=new A.ps(0.781,0.421,0.136,0.27,"/listen","audio/sfx/magic-sparkle.wav")
+B.jO=s([B.a0c,B.a0a,B.a0b,B.a09],A.aj("D<ps>"))
 B.eb=s([B.cf,B.bB,B.f4,B.f5,B.f6],t.QP)
 B.J7=s([0.001200833568784504,0.002389694492170889,0.0002795742885861124],t.n)
 B.Kf=s([0.0005891086651375999,0.0029785502573438758,0.0003270666104008398],t.n)
@@ -86462,8 +86462,8 @@ B.kv=new A.rx(1,"nextLine")
 B.hk=new A.rx(2,"forward")
 B.hl=new A.rx(3,"backward")
 B.c9=new A.zs(2,"none")
-B.yh=new A.lT(null,null,B.c9,B.jO,!0)
-B.yi=new A.lT(null,null,B.c9,B.jO,!1)
+B.yh=new A.lT(null,null,B.c9,B.jN,!0)
+B.yi=new A.lT(null,null,B.c9,B.jN,!1)
 B.E=new A.lU(0,"next")
 B.G=new A.lU(1,"previous")
 B.K=new A.lU(2,"end")
