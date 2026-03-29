@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 class AudioService {
   static final AudioService _instance = AudioService._internal();
@@ -20,14 +19,7 @@ class AudioService {
   /// Loads an asset and returns the appropriate [Source].
   /// On web, uses [BytesSource] with explicit MIME type to avoid browser
   /// "Format error (Code: 4)" caused by missing Content-Type headers.
-  Future<Source> _source(String name) async {
-    if (kIsWeb) {
-      final data = await rootBundle.load('assets/audio/$name.mp3');
-      return BytesSource(
-        data.buffer.asUint8List(),
-        mimeType: 'audio/mpeg',
-      );
-    }
+  Source _source(String name) {
     return AssetSource('audio/$name.mp3');
   }
 
@@ -35,7 +27,7 @@ class AudioService {
   Future<void> playAsset(String name) async {
     _cancelled = false;
     _isPlaying = true;
-    await _player.play(await _source(name));
+    await _player.play(_source(name));
     await _waitForTrackEnd();
     _isPlaying = false;
   }
@@ -53,7 +45,7 @@ class AudioService {
     _isPlaying = true;
 
     // Play CN track
-    await _player.play(await _source(cn));
+    await _player.play(_source(cn));
     await _waitForTrackEnd();
 
     if (_cancelled) {
@@ -72,7 +64,7 @@ class AudioService {
     onENStart?.call();
 
     // Play EN track
-    await _player.play(await _source(en));
+    await _player.play(_source(en));
     await _waitForTrackEnd();
 
     _isPlaying = false;
