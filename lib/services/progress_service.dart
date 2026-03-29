@@ -51,22 +51,15 @@ class ProgressService {
       await prefs.setString(_kActiveDates, activeDates.join(','));
     }
 
-    // Update streak when all 4 modules done
-    final allDone = (prefs.getBool(_kReaderDone) ?? false) &&
-        (prefs.getBool(_kPhonicsDone) ?? false) &&
-        (prefs.getBool(_kQuizDone) ?? false) &&
-        (prefs.getBool(_kRecordingDone) ?? false);
-
-    if (allDone) {
-      final lastDate = prefs.getString(_kLastDate) ?? '';
-      if (lastDate != today) {
-        final yesterday = _dateStr(
-            DateTime.now().subtract(const Duration(days: 1)));
-        final currentStreak = prefs.getInt(_kStreakDays) ?? 0;
-        final newStreak = lastDate == yesterday ? currentStreak + 1 : 1;
-        await prefs.setInt(_kStreakDays, newStreak);
-        await prefs.setString(_kLastDate, today);
-      }
+    // Update streak on first module completion of the day
+    final lastDate = prefs.getString(_kLastDate) ?? '';
+    if (lastDate != today) {
+      final yesterday = _dateStr(
+          DateTime.now().subtract(const Duration(days: 1)));
+      final currentStreak = prefs.getInt(_kStreakDays) ?? 0;
+      final newStreak = lastDate == yesterday ? currentStreak + 1 : 1;
+      await prefs.setInt(_kStreakDays, newStreak);
+      await prefs.setString(_kLastDate, today);
     }
   }
 

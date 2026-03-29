@@ -78,6 +78,15 @@ flutter:
     - assets/quiz/
     - assets/home/
     - assets/audio/sfx/
+    - assets/audio/items/
+    - assets/pet/
+    - assets/pet/cards/
+    - assets/pet/costumes/
+    - assets/pet/costumes/base/
+    - assets/pet/costumes/accessories/
+    - assets/shop/
+    - assets/shop/items/
+    - assets/shop/items/1month/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

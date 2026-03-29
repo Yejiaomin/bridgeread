@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'screens/home_screen.dart';
 import 'screens/study_screen.dart';
 import 'screens/reader_screen.dart';
@@ -6,8 +7,17 @@ import 'screens/phonics_screen.dart';
 import 'screens/quiz_screen.dart';
 import 'screens/recording_screen.dart';
 import 'screens/listen_screen.dart';
+import 'screens/card_gacha_screen.dart';
+import 'screens/study_room_screen.dart';
+
+final routeObserver = RouteObserver<ModalRoute<void>>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
   runApp(const BridgeReadApp());
 }
 
@@ -33,17 +43,58 @@ class BridgeReadApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
+      navigatorObservers: [routeObserver],
       initialRoute: '/',
       routes: {
-        '/':          (context) => const HomeScreen(),
-        '/home':      (context) => const HomeScreen(),
-        '/study':     (context) => const StudyScreen(),
-        '/calendar':  (context) => const CalendarScreen(),
-        '/reader':    (context) => const ReaderScreen(),
-        '/phonics':   (context) => const PhonicsScreen(),
-        '/quiz':      (context) => const QuizScreen(),
-        '/recording': (context) => const RecordingScreen(),
-        '/listen':    (context) => const ListenScreen(),
+        '/':          (context) => const _OrientationGate(child: HomeScreen()),
+        '/home':      (context) => const _OrientationGate(child: HomeScreen()),
+        '/study':     (context) => const _OrientationGate(child: StudyScreen()),
+        '/calendar':  (context) => const _OrientationGate(child: CalendarScreen()),
+        '/reader':    (context) => const _OrientationGate(child: ReaderScreen()),
+        '/phonics':   (context) => const _OrientationGate(child: PhonicsScreen()),
+        '/quiz':      (context) => const _OrientationGate(child: QuizScreen()),
+        '/recording': (context) => const _OrientationGate(child: RecordingScreen()),
+        '/gacha':     (context) => const _OrientationGate(child: CardGachaScreen()),
+        '/listen':    (context) => const _OrientationGate(child: ListenScreen()),
+        '/studyroom': (context) => const _OrientationGate(child: StudyRoomScreen()),
+      },
+    );
+  }
+}
+
+class _OrientationGate extends StatelessWidget {
+  final Widget child;
+  const _OrientationGate({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        if (orientation == Orientation.portrait) {
+          return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.screen_rotation,
+                      size: 80, color: Color(0xFFFF8C42)),
+                  SizedBox(height: 24),
+                  Text(
+                    '请将设备横屏使用\nPlease rotate your device',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFF555555),
+                      height: 1.8,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        return child;
       },
     );
   }

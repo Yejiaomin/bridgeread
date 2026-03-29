@@ -4,13 +4,11 @@ import '../models/book_page.dart';
 class HighlighterOverlay extends StatefulWidget {
   final List<KeywordHighlight> highlights;
   final Set<int> triggeredIndices;
-  final double imageAspectRatio;
 
   const HighlighterOverlay({
     super.key,
     required this.highlights,
     required this.triggeredIndices,
-    required this.imageAspectRatio,
   });
 
   @override
@@ -116,33 +114,14 @@ class _HighlighterOverlayState extends State<HighlighterOverlay>
     return Color(value);
   }
 
-  Rect _containRect(double widgetW, double widgetH, double imageAspectRatio) {
-    final widgetAspect = widgetW / widgetH;
-    double imgW, imgH;
-    if (imageAspectRatio > widgetAspect) {
-      imgW = widgetW;
-      imgH = widgetW / imageAspectRatio;
-    } else {
-      imgH = widgetH;
-      imgW = widgetH * imageAspectRatio;
-    }
-    return Rect.fromLTWH(
-      (widgetW - imgW) / 2,
-      (widgetH - imgH) / 2,
-      imgW,
-      imgH,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.highlights.isEmpty) return const SizedBox.shrink();
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final imgRect =
-            _containRect(constraints.maxWidth, constraints.maxHeight,
-                widget.imageAspectRatio);
+        final w = constraints.maxWidth;
+        final h = constraints.maxHeight;
 
         return Stack(
           children: [
@@ -152,10 +131,10 @@ class _HighlighterOverlayState extends State<HighlighterOverlay>
                     [_sweepControllers[i], _fadeControllers[i]]),
                 builder: (context, _) {
                   final hl = widget.highlights[i];
-                  final left = imgRect.left + hl.x * imgRect.width;
-                  final top = imgRect.top + hl.y * imgRect.height;
-                  final fullWidth = hl.width * imgRect.width;
-                  final height = hl.height * imgRect.height;
+                  final left      = hl.x * w;
+                  final top       = hl.y * h;
+                  final fullWidth = hl.width * w;
+                  final height    = hl.height * h;
 
                   return Positioned(
                     left: left,

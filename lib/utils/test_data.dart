@@ -9,13 +9,11 @@ Future<void> seedTestData() async {
   await prefs.setInt('streak_days', 5);
   await prefs.setInt('total_stars', 35);
 
-  // Today's modules: reader + phonics done, quiz + recording not
-  final today = _dateStr(DateTime.now());
-  await prefs.setBool('today_reader_done',    true);
-  await prefs.setBool('today_phonics_done',   true);
+  // Today's modules: all not done on fresh start
+  await prefs.setBool('today_reader_done',    false);
+  await prefs.setBool('today_phonics_done',   false);
   await prefs.setBool('today_quiz_done',      false);
   await prefs.setBool('today_recording_done', false);
-  await prefs.setString('last_completed_date', today);
 
   // Mark Mon–Fri of the current week as active
   final now       = DateTime.now();

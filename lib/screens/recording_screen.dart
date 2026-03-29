@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
 import '../services/progress_service.dart';
+import 'eggy_celebration_screen.dart';
 
 const _kOrange = Color(0xFFFF8C42);
 const _kYellow = Color(0xFFFFD93D);
@@ -34,6 +35,7 @@ class _RecordingScreenState extends State<RecordingScreen>
   // ── scoring ────────────────────────────────────────────────────────────────
   // 0 = no attempt, 5 = too short, 10 = full score
   int       _scorePoints     = 0;
+  int       _totalStars      = 0;
   DateTime? _recordStart;
   bool      _showScoreButtons = false;
 
@@ -68,6 +70,9 @@ class _RecordingScreenState extends State<RecordingScreen>
   @override
   void initState() {
     super.initState();
+    ProgressService.getTodayProgress().then((p) {
+      if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
+    });
 
     _pulseCtrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 900))
@@ -187,16 +192,8 @@ class _RecordingScreenState extends State<RecordingScreen>
         }
       }
 
-      // play reward audio
-      final audio = newPoints == 10
-          ? 'audio/phonemes/amazing.mp3'
-          : 'audio/phonemes/one_more_time.mp3';
-      Future.delayed(const Duration(milliseconds: 200), () {
-        if (mounted) _player.play(AssetSource(audio));
-      });
-
-      // show buttons after 2 seconds
-      Future.delayed(const Duration(milliseconds: 2000), () {
+      // Show buttons after short delay for all scores
+      Future.delayed(const Duration(milliseconds: 600), () {
         if (mounted) setState(() => _showScoreButtons = true);
       });
     } else if (_phase == _Phase.idle ||
@@ -367,15 +364,11 @@ class _RecordingScreenState extends State<RecordingScreen>
                 const Text('⭐', style: TextStyle(fontSize: 16)),
                 const SizedBox(width: 4),
                 Text(
-                  '$_scorePoints',
-                  style: TextStyle(
+                  '$_totalStars',
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: _scorePoints == 10
-                        ? Colors.white
-                        : _scorePoints == 5
-                            ? const Color(0xFF664400)
-                            : Colors.grey,
+                    color: Colors.white,
                   ),
                 ),
               ],
@@ -521,42 +514,6 @@ class _RecordingScreenState extends State<RecordingScreen>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // stars row — lit count driven by _starCount
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(3, (i) {
-            final lit = i < _starCount;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ScaleTransition(
-                scale: _starAnims[i],
-                child: Text(
-                  lit ? '⭐' : '☆',
-                  style: TextStyle(
-                    fontSize: 48,
-                    color: lit ? null : Colors.grey.shade300,
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-        const SizedBox(height: 12),
-        // message
-        Text(
-          _scorePoints == 10
-              ? 'Amazing! 🎉'
-              : _scorePoints == 5
-                  ? 'Good try! Keep going!'
-                  : 'Try speaking! 💪',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: _scorePoints == 10 ? _kOrange : Colors.blueGrey,
-          ),
-        ),
-        const SizedBox(height: 12),
         // playback replay button
         if (_recordingPath != null)
           GestureDetector(
@@ -759,62 +716,35 @@ class _RecordingScreenState extends State<RecordingScreen>
 
   Widget _buildBottomControls() {
     if (_phase == _Phase.scored && _showScoreButtons) {
-      return AnimatedOpacity(
-        opacity: 1.0,
-        duration: const Duration(milliseconds: 400),
-        child: Row(
-          children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  for (final c in _starCtrls) { c.reset(); }
-                  setState(() {
-                    _phase            = _Phase.idle;
-                    _scorePoints      = 0;
-                    _showScoreButtons = false;
-                  });
-                },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: _kOrange,
-                  side: const BorderSide(color: _kOrange),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+      return SizedBox(
+        height: 64,
+        width: 280,
+        child: ElevatedButton(
+          onPressed: () {
+            if (!mounted) return;
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => EggyCelebrationScreen(
+                  nextRoute:    '/listen',
+                  nextLabel:    'Final Step! 🎧',
+                  moduleKey:    'listen',
+                  modulePoints: _scorePoints > 0 ? _scorePoints : 10,
                 ),
-                icon: const Icon(Icons.refresh_rounded, size: 18),
-                label: const Text('Try again',
-                    style: TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold)),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  await ProgressService.markModuleComplete('recording', _scorePoints > 0 ? _scorePoints : 10);
-                  if (mounted) Navigator.pushReplacementNamed(context, '/listen');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _kOrange,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 3,
-                ),
-                icon: const Icon(Icons.check_circle_rounded, size: 18),
-                label: const Text('Continue!',
-                    style: TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold)),
-              ),
-            ),
-          ],
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _kOrange,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32)),
+            textStyle: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          child: const Text('Next! →'),
         ),
       );
-    }
-    if (_phase == _Phase.scored) {
-      // waiting for the 2-second delay — show empty placeholder
-      return const SizedBox(height: 8);
     }
     return const SizedBox(height: 8);
   }

@@ -59,6 +59,21 @@ const _kParticleColors = [
   Color(0xFFFCA5A5),
 ];
 
+// Praise words + matching audio for the completion screen
+const _kPraiseOptions = [
+  ('Brilliant!',   'assets/audio/phonemes/brilliant.mp3'),
+  ('Stunning!',    'assets/audio/phonemes/stunning.mp3'),
+  ('Perfect!',     'assets/audio/phonemes/perfect.mp3'),
+  ('Awesome!',     'assets/audio/phonemes/awesome.mp3'),
+  ('Phenomenal!',  'assets/audio/phonemes/phenomenal.mp3'),
+  ('Incredible!',  'assets/audio/phonemes/incredible.mp3'),
+  ('Masterpiece!', 'assets/audio/phonemes/masterpiece.mp3'),
+  ('Exceptional!', 'assets/audio/phonemes/exceptional.mp3'),
+  ('Amazing!',     'assets/audio/phonemes/amazing.mp3'),
+  ('Excellent!',   'assets/audio/phonemes/excellent.mp3'),
+];
+const _kStarCount = 9; // stars that fly into Eggy
+
 // Per-bubble vibrant gradients (6 options, assigned by index % 6)
 const _kBubbleGrads = [
   [Color(0xFFFF6B9D), Color(0xFFFF4757)],   // hot-pink → red
@@ -130,6 +145,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   int  _round         = 0;
   int  _score         = 0;
+  int  _totalStars    = 0;
   bool _scoreLoaded   = false;
   bool _done          = false;
   bool _locked   = false; // block taps during animations
@@ -142,6 +158,15 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   int? _popIdx; // index of bubble being popped
   int? _wobIdx; // index of bubble wobbling
 
+  // Play area size — seeded from real window in initState; refined by LayoutBuilder
+  Size _playAreaSize = const Size(390, 650);
+
+  // Completion screen state
+  String _praiseWord  = '';
+  bool   _showNextBtn = false;
+  // Edge-start fractions for the 9 flying stars (generated when done=true)
+  List<Offset> _starStartFracs = [];
+
   // Background star field (150 stars, generated once)
   late final List<_StarData> _stars;
 
@@ -150,7 +175,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   late final AnimationController _floatCtrl;
   late final AnimationController _popCtrl;
   late final AnimationController _wobCtrl;
-  late final AnimationController _celebCtrl;
+  late final AnimationController _celebCtrl;    // praise text pop-in
+  late final AnimationController _eggyBounceCtrl;
+  late final AnimationController _starFlyCtrl;
+  late final AnimationController _eggyJiggleCtrl;
 
   late final Animation<double> _popAnim;
   late final Animation<double> _wobAnim;
@@ -161,6 +189,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _loadTotalStars();
 
     _floatCtrl = AnimationController(
         vsync: this, duration: const Duration(seconds: 7))
@@ -172,6 +201,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         vsync: this, duration: const Duration(milliseconds: 280));
     _celebCtrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1400));
+
+    _eggyBounceCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
+    _starFlyCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 2000));
+    _eggyJiggleCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 350));
 
     _popAnim = CurvedAnimation(parent: _popCtrl, curve: Curves.easeOut);
     _wobAnim = Tween<double>(begin: -1.0, end: 1.0)
@@ -191,6 +227,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       );
     });
 
+    // Seed play area from real window so the first _scatter call uses actual dimensions.
+    final view = WidgetsBinding.instance.platformDispatcher.views.first;
+    final dpr  = view.devicePixelRatio;
+    final sw   = view.physicalSize.width  / dpr;
+    final sh   = view.physicalSize.height / dpr;
+    // Play area ≈ full width × ~72 % height (excludes status bar, header, prompt bar)
+    _playAreaSize = Size(sw, sh * 0.72);
+
     _rounds = List.of(_kAllRounds)..shuffle(_rng);
     _loadRound();
   }
@@ -204,18 +248,24 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     _popCtrl.dispose();
     _wobCtrl.dispose();
     _celebCtrl.dispose();
+    _eggyBounceCtrl.dispose();
+    _starFlyCtrl.dispose();
+    _eggyJiggleCtrl.dispose();
     super.dispose();
   }
 
   // ── Round loading ──────────────────────────────────────────────────────────
 
   void _loadRound() {
-    final r   = _rounds[_round];
-    final pos = _scatter(5);
+    final r       = _rounds[_round];
     final bubbles = <_Bubble>[];
 
     // Shuffle color indices so each bubble gets a unique vibrant color
     final colorOrder = List.generate(6, (i) => i)..shuffle(_rng);
+
+    // Pre-generate sizes so _scatter can use per-bubble radii for collision
+    final sizes = List.generate(5, (_) => 200.0 + _rng.nextDouble() * 60.0);
+    final pos   = _scatter(sizes);
 
     if (r.type == _RType.image) {
       final others = ['bed', 'hug', 'story'].where((w) => w != r.word).toList();
@@ -233,7 +283,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         bubbles.add(_Bubble(
           isCorrect: correct,
           img: img, emoji: emoji,
-          size: 100 + _rng.nextDouble() * 40,
+          size: sizes[i],
           bx: p.dx, by: p.dy,
           speed: 0.5 + _rng.nextDouble(),
           px: _rng.nextDouble() * 2 * pi,
@@ -252,7 +302,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         bubbles.add(_Bubble(
           isCorrect: words[i] == r.word,
           text: words[i],
-          size: 100 + _rng.nextDouble() * 40,
+          size: sizes[i],
           bx: p.dx, by: p.dy,
           speed: 0.5 + _rng.nextDouble(),
           px: _rng.nextDouble() * 2 * pi,
@@ -278,24 +328,67 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     });
   }
 
-  /// Generate n non-overlapping fractional positions across the play area.
-  List<Offset> _scatter(int n) {
-    // y is capped at 0.75 so bubbles don't overlap the bottom prompt bar
-    final out  = <Offset>[];
-    int   tries = 0;
-    while (out.length < n && tries++ < 600) {
-      final x = 0.12 + _rng.nextDouble() * 0.76;
-      final y = 0.08 + _rng.nextDouble() * 0.67;
-      if (out.every((p) =>
-          (p.dx - x).abs() > 0.26 || (p.dy - y).abs() > 0.20)) {
-        out.add(Offset(x, y));
+  /// Generate non-overlapping fractional positions for bubbles with given [sizes].
+  ///
+  /// For bubble diameters 200–260 px on a real device (~680 px wide, ~490 px play height):
+  ///   safe x  : [0.05, 0.95] × w  →  ~646 px center range
+  ///   safe y  : [top+r, 82%h−r−drift]  →  ~250 px center range
+  ///   min dist: (ri+rj) × 0.92  →  ~368 px — a quincunx of 5 fits on 680 px screens.
+  ///
+  /// On very narrow screens the fallback places bubbles without the gap guarantee,
+  /// but the 0.15-opacity fill means minor overlap is barely visible.
+  List<Offset> _scatter(List<double> sizes) {
+    final w = _playAreaSize.width;
+    final h = _playAreaSize.height;
+    const safeYFrac = 0.82;
+    const maxDriftY = 22.0;
+    final n = sizes.length;
+
+    final out = <Offset>[];
+    int tries = 0;
+
+    while (out.length < n && tries++ < 4000) {
+      final i  = out.length;
+      final ri = sizes[i] / 2;
+
+      // Keep centers at least ri from x edges so bubbles don't clip badly
+      final minPx = (ri).clamp(0.05 * w, 0.45 * w);
+      final maxPx = (w - ri).clamp(0.55 * w, 0.95 * w);
+
+      final minPy = 0.06 * h + ri;
+      final maxPy = (h * safeYFrac - ri - maxDriftY).clamp(minPy + 1, h);
+
+      final px = minPx + _rng.nextDouble() * (maxPx - minPx);
+      final py = minPy + _rng.nextDouble() * (maxPy - minPy);
+
+      bool valid = true;
+      for (int j = 0; j < out.length; j++) {
+        final rj      = sizes[j] / 2;
+        // 0.92× = bubbles may kiss at edges but centers stay separated;
+        // fine because fill is only 0.15 opacity
+        final minDist = (ri + rj) * 0.92;
+        final dx      = out[j].dx - px;
+        final dy      = out[j].dy - py;
+        if (sqrt(dx * dx + dy * dy) < minDist) { valid = false; break; }
       }
+      if (valid) out.add(Offset(px, py));
     }
+
+    // Fallback — rare; just spread evenly across safe zone
     while (out.length < n) {
+      final i   = out.length;
+      final ri  = sizes[i] / 2;
+      final minPx = (ri).clamp(0.05 * w, 0.45 * w);
+      final maxPx = (w - ri).clamp(0.55 * w, 0.95 * w);
+      final minPy = 0.06 * h + ri;
+      final maxPy = (h * safeYFrac - ri - maxDriftY).clamp(minPy + 1, h);
       out.add(Offset(
-          0.12 + _rng.nextDouble() * 0.76, 0.10 + _rng.nextDouble() * 0.65));
+        minPx + _rng.nextDouble() * (maxPx - minPx),
+        minPy + _rng.nextDouble() * (maxPy - minPy),
+      ));
     }
-    return out;
+
+    return out.map((p) => Offset(p.dx / w, p.dy / h)).toList();
   }
 
   // ── Interaction ────────────────────────────────────────────────────────────
@@ -347,8 +440,51 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       setState(() => _round++);
       _loadRound();
     } else {
-      setState(() => _done = true);
-      _celebCtrl.forward(from: 0);
+      // Pick a random praise word + audio
+      final idx = _rng.nextInt(_kPraiseOptions.length);
+      final (word, audio) = _kPraiseOptions[idx];
+
+      // Generate star start positions along screen edges (as fractions)
+      final starFracs = List.generate(_kStarCount, (i) {
+        final side = _rng.nextInt(4);
+        return switch (side) {
+          0 => Offset(0.1 + _rng.nextDouble() * 0.8, -0.06),  // top
+          1 => Offset(0.1 + _rng.nextDouble() * 0.8,  1.06),  // bottom
+          2 => Offset(-0.06, 0.1 + _rng.nextDouble() * 0.8),  // left
+          _ => Offset( 1.06, 0.1 + _rng.nextDouble() * 0.8),  // right
+        };
+      });
+
+      setState(() {
+        _done          = true;
+        _praiseWord    = word;
+        _showNextBtn   = false;
+        _starStartFracs = starFracs;
+      });
+
+      // Animations
+      _eggyBounceCtrl.repeat(reverse: true);
+      _starFlyCtrl.forward(from: 0);
+      _celebCtrl.forward(from: 0); // praise text pop-in
+
+      // Play praise audio after brief pause
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) _play(audio);
+      });
+
+      // Eggy jiggles each time a star lands
+      // Star i lands at (i * 0.09 + 0.55) * 2000 ms into _starFlyCtrl
+      for (int i = 0; i < _kStarCount; i++) {
+        final landMs = ((i * 0.09 + 0.55) * 2000).round();
+        Future.delayed(Duration(milliseconds: landMs), () {
+          if (mounted) _eggyJiggleCtrl.forward(from: 0);
+        });
+      }
+
+      // Show Next button after 2.5 s
+      Future.delayed(const Duration(milliseconds: 2500), () {
+        if (mounted) setState(() => _showNextBtn = true);
+      });
     }
   }
 
@@ -358,6 +494,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   // ── Build ──────────────────────────────────────────────────────────────────
+
+  Future<void> _loadTotalStars() async {
+    final p = await ProgressService.getTodayProgress();
+    if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
+  }
 
   @override
   void didChangeDependencies() {
@@ -388,6 +529,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     _buildHeader(),
                     Expanded(
                       child: LayoutBuilder(builder: (ctx, box) {
+                        // Keep play area size up-to-date for scatter algorithm.
+                        // Update directly (no setState) so next _loadRound() uses real dims.
+                        if (box.maxWidth  != _playAreaSize.width ||
+                            box.maxHeight != _playAreaSize.height) {
+                          _playAreaSize = Size(box.maxWidth, box.maxHeight);
+                        }
                         return AnimatedBuilder(
                           animation: Listenable.merge(
                               [_floatCtrl, _popCtrl, _wobCtrl]),
@@ -424,7 +571,9 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     final b  = _bubbles[i];
     final d  = b.drift(_floatCtrl.value);
     final cx = b.bx * w + d.dx;
-    final cy = b.by * h + d.dy;
+    // Clamp cy so the bubble's bottom edge never enters the bottom 25% prompt zone
+    final rawCy = b.by * h + d.dy;
+    final cy = rawCy.clamp(b.size / 2, h * 0.82 - b.size / 2) as double;
 
     double scale   = 1.0;
     double opacity = 1.0;
@@ -464,10 +613,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [grads[0], grads[1]],
+          // Very light fill (0.15) — text is the dominant visual element
+          colors: [
+            grads[0].withValues(alpha: 0.15),
+            grads[1].withValues(alpha: 0.15),
+          ],
         ),
         border: Border.all(
-            color: Colors.white.withValues(alpha: 0.55), width: 2.5),
+            color: Colors.white.withValues(alpha: 0.20), width: 2.0),
         boxShadow: [
           BoxShadow(
               color: grads[1].withValues(alpha: 0.55),
@@ -524,48 +677,23 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     if (b.emoji != null) {
       return Center(
-          child: Text(b.emoji!, style: const TextStyle(fontSize: 52)));
+          child: Text(b.emoji!, style: const TextStyle(fontSize: 90)));
     }
-    // Dark shadow pass — renders behind the gradient text for readability
-    final textStyle = GoogleFonts.nunito(
-      fontSize: 24,
-      fontWeight: FontWeight.w900,
-      color: Colors.white,
-    );
     return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Shadow layer
-          Text(
-            b.text!,
-            textAlign: TextAlign.center,
-            style: textStyle.copyWith(
-              foreground: Paint()
-                ..color = Colors.black.withValues(alpha: 0.45)
-                ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
-            ),
-          ),
-          // Gradient text layer
-          ShaderMask(
-            blendMode: BlendMode.srcIn,
-            shaderCallback: (bounds) => const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFFFFE066), // bright yellow
-                Color(0xFFFF9F43), // orange
-                Color(0xFFFF6B9D), // hot pink
-                Color(0xFF66D4FF), // sky blue
-              ],
-            ).createShader(bounds),
-            child: Text(
-              b.text!,
-              textAlign: TextAlign.center,
-              style: textStyle,
-            ),
-          ),
-        ],
+      child: Text(
+        b.text!,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.nunito(
+          fontSize: 56,
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFFFFFFFF),
+          shadows: const [
+            Shadow(color: Colors.black, blurRadius: 4, offset: Offset(1, 1)),
+            Shadow(color: Colors.black, blurRadius: 4, offset: Offset(-1, -1)),
+            Shadow(color: Colors.black, blurRadius: 4, offset: Offset(1, -1)),
+            Shadow(color: Colors.black, blurRadius: 4, offset: Offset(-1, 1)),
+          ],
+        ),
       ),
     );
   }
@@ -710,7 +838,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               children: [
                 const Text('⭐', style: TextStyle(fontSize: 16)),
                 const SizedBox(width: 5),
-                Text('$_score',
+                Text('$_totalStars',
                     style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -781,127 +909,190 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       body: DecoratedBox(
         decoration: const BoxDecoration(gradient: _kBgGradient),
         child: SafeArea(
-          child: AnimatedBuilder(
-            animation: _celebAnim,
-            builder: (_, __) {
-              final p = _celebAnim.value;
-              return Stack(
-                children: [
-                  _starField(p),
-                  Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Transform.scale(
-                          scale: Curves.elasticOut
-                              .transform(p.clamp(0.0, 1.0)),
-                          child: const Text('🎉',
-                              style: TextStyle(fontSize: 80)),
-                        ),
-                        const SizedBox(height: 16),
-                        Opacity(
-                          opacity: p.clamp(0.0, 1.0),
-                          child: const Text('Amazing!',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 52,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        const SizedBox(height: 6),
-                        Opacity(
-                          opacity: p.clamp(0.0, 1.0),
-                          child: const Text('太棒了！',
-                              style: TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 22)),
-                        ),
-                        const SizedBox(height: 32),
-                        Opacity(
-                          opacity: p.clamp(0.0, 1.0),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 36, vertical: 18),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(32),
-                              border: Border.all(
-                                  color: Colors.white
-                                      .withValues(alpha: 0.25)),
-                            ),
-                            child: Column(
-                              children: [
-                                const Text('⭐⭐⭐',
-                                    style: TextStyle(fontSize: 40)),
-                                const SizedBox(height: 10),
-                                Text('$_score points!',
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 44),
-                        Opacity(
-                          opacity: p.clamp(0.0, 1.0),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await ProgressService.markModuleComplete('quiz', 20);
-                              if (mounted) Navigator.pushReplacementNamed(context, '/phonics');
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _kOrange,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(32)),
-                              textStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            child: const Text('拼读练习  🔤 →'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+          child: LayoutBuilder(builder: (ctx, box) {
+            final sw = box.maxWidth;
+            final sh = box.maxHeight;
+            // Eggy belly target — horizontal center, just below mid-screen
+            final eggyTargetX = sw / 2;
+            final eggyTargetY = sh * 0.54;
 
-  // _starField used only in celebration — background stars are _StarPainter
-  Widget _starField(double p) {
-    return IgnorePointer(
-      child: LayoutBuilder(builder: (ctx, box) {
-        final cx = box.maxWidth / 2;
-        final cy = box.maxHeight / 2;
-        return Stack(
-          children: List.generate(14, (i) {
-            final angle = (i / 14) * 2 * pi;
-            final dist  = p * (box.maxWidth * 0.44);
-            return Positioned(
-              left: cx + cos(angle) * dist - 18,
-              top:  cy + sin(angle) * dist - 18,
-              child: Opacity(
-                opacity: (1.0 - p * 0.65).clamp(0.0, 1.0),
-                child: Transform.scale(
-                  scale: 0.3 + p * 0.7,
-                  child:
-                      const Text('⭐', style: TextStyle(fontSize: 34)),
-                ),
-              ),
+            return AnimatedBuilder(
+              animation: Listenable.merge(
+                  [_celebAnim, _starFlyCtrl, _eggyBounceCtrl, _eggyJiggleCtrl]),
+              builder: (_, __) {
+                final popP     = _celebAnim.value;
+                final flyP     = _starFlyCtrl.value;
+                final bounceP  = _eggyBounceCtrl.value;
+                final jiggleP  = _eggyJiggleCtrl.value;
+
+                // Eggy scale: idle bounce 1.0↔1.08, plus jiggle pulse
+                final eggyScale = (1.0 + bounceP * 0.08) *
+                    (1.0 + sin(jiggleP * pi) * 0.06);
+
+                return Stack(
+                  children: [
+                    // ── Flying stars ──────────────────────────────────────
+                    IgnorePointer(
+                      child: Stack(
+                        children: List.generate(_kStarCount, (i) {
+                          // Each star occupies a staggered interval [start, end] within [0,1]
+                          final iStart = i * 0.09;
+                          const iLen   = 0.55;
+                          // Normalise to [0,1] within this star's window
+                          final raw = ((flyP - iStart) / iLen).clamp(0.0, 1.0);
+                          final t   = Curves.easeInCubic.transform(raw);
+
+                          if (raw <= 0.0) return const SizedBox.shrink();
+
+                          final frac  = _starStartFracs[i];
+                          final sx    = frac.dx * sw;
+                          final sy    = frac.dy * sh;
+                          final cx    = sx + (eggyTargetX - sx) * t;
+                          final cy    = sy + (eggyTargetY - sy) * t;
+
+                          // When star reaches Eggy (t > 0.9) show a flash, hide star
+                          final landed = raw >= 1.0;
+                          final starOp = landed ? 0.0 : (1.0 - raw * 0.4).clamp(0.0, 1.0);
+                          final flashOp = landed
+                              ? 0.0
+                              : (t > 0.88
+                                  ? ((t - 0.88) / 0.12).clamp(0.0, 1.0)
+                                  : 0.0);
+
+                          return Stack(
+                            children: [
+                              // Star icon flying toward Eggy
+                              Positioned(
+                                left: cx - 14,
+                                top:  cy - 14,
+                                child: Opacity(
+                                  opacity: starOp,
+                                  child: Transform.scale(
+                                    scale: 0.5 + t * 0.8,
+                                    child: const Text('⭐',
+                                        style: TextStyle(fontSize: 28)),
+                                  ),
+                                ),
+                              ),
+                              // Flash circle at landing
+                              if (flashOp > 0)
+                                Positioned(
+                                  left: eggyTargetX - 30,
+                                  top:  eggyTargetY - 30,
+                                  child: Opacity(
+                                    opacity: flashOp * 0.75,
+                                    child: Container(
+                                      width: 60, height: 60,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: const Color(0xFFFBBF24)
+                                            .withValues(alpha: 0.6),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }),
+                      ),
+                    ),
+
+                    // ── Central column: praise + Eggy + button ────────────
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Praise text — pop-in with elasticOut
+                          Transform.scale(
+                            scale: Curves.elasticOut
+                                .transform(popP.clamp(0.0, 1.0)),
+                            child: ShaderMask(
+                              blendMode: BlendMode.srcIn,
+                              shaderCallback: (bounds) =>
+                                  const LinearGradient(
+                                colors: [
+                                  Color(0xFFFFE066),
+                                  Color(0xFFFF9F43),
+                                  Color(0xFFFF6B9D),
+                                  Color(0xFF66D4FF),
+                                ],
+                              ).createShader(bounds),
+                              child: Text(
+                                _praiseWord,
+                                style: GoogleFonts.nunito(
+                                  fontSize: 52,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                  shadows: const [
+                                    Shadow(
+                                        color: Colors.black54,
+                                        blurRadius: 8,
+                                        offset: Offset(2, 2)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Eggy image with bounce + jiggle — 400 px (2× size)
+                          Transform.scale(
+                            scale: eggyScale,
+                            child: Image.asset(
+                              'assets/pet/eggy_transparent_bg.png',
+                              height: 400,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+
+                          const SizedBox(height: 40),
+
+                          // Next button — appears after 2.5 s
+                          AnimatedOpacity(
+                            opacity: _showNextBtn ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 400),
+                            child: AnimatedScale(
+                              scale: _showNextBtn ? 1.0 : 0.5,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.elasticOut,
+                              child: ElevatedButton(
+                                onPressed: _showNextBtn
+                                    ? () async {
+                                        await ProgressService
+                                            .markModuleComplete('quiz', 20);
+                                        if (mounted) {
+                                          Navigator.pushReplacementNamed(
+                                              context, '/phonics');
+                                        }
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _kOrange,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(32)),
+                                  textStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                child: const Text('拼读练习  🔤 →'),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           }),
-        );
-      }),
+        ),
+      ),
     );
   }
 }

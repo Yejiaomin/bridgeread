@@ -1,0 +1,18 @@
+{
+  "bookId": "biscuit_book2",
+  "bookTitle": "Biscuit Finds a Friend",
+  "pages": [
+    {
+      "en": "Quack! Quack! said the duck.",
+      "keywords": ["duck", "quack"]
+    },
+    {
+      "en": "Biscuit found a little duck.",
+      "keywords": ["found", "duck"]
+    },
+    {
+      "en": "Come, Biscuit. Come and play!",
+      "keywords": ["play"]
+    }
+  ]
+}

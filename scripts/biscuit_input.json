@@ -1,0 +1,66 @@
+{
+  "bookId": "biscuit",
+  "bookTitle": "biscuit",
+  "pages": [
+    {
+      "image": "biscuit_spread_01.png",
+      "en": "This is Biscuit. Biscuit is small. Biscuit is yellow.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_02.png",
+      "en": "Time for bed, Biscuit! 6 Woof, woof! Biscuit wants to play.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_03.png",
+      "en": "0Q Time for bed, Biscuit! Woof, woof! Biscuit wants a snack. 8 Time for bed, Biscuit! Woof, woof! Biscuit wants a drink.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_04.png",
+      "en": "me for bed, Biscuit! Woof, woof! Biscuit wants to hear a story. AB C",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_05.png",
+      "en": "Time for bed, Biscuit! Woof, woof! Biscuit wants his blanket. 12 Time for bed, Biscuit! Woof, woof! Biscuit wants his doll.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_06.png",
+      "en": "Time for bed, Biscuit! Woof, woof! Biscuit wants a hug. 14 Time for bed, Biscuit! Woof, woof! Biscuit wants a kiss.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_07.png",
+      "en": "Time for bed, Biscuit! Woof, woof! Biscuit wants a light on.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_08.png",
+      "en": "Woof! Biscuit wants to be tucked in.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_09.png",
+      "en": "Woof! Biscuit wants one more kiss. 20 Woof! Biscuit wants one more hug.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_10.png",
+      "en": "Woof! 22 Biscuit wants to curl up.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_11.png",
+      "en": "Sleepy puppy. Good night, Biscuit.",
+      "keywords": []
+    },
+    {
+      "image": "biscuit_spread_12.png",
+      "en": "",
+      "keywords": []
+    }
+  ]
+}
