@@ -22,7 +22,7 @@ class AudioService {
   /// "Format error (Code: 4)" caused by missing Content-Type headers.
   Future<Source> _source(String name) async {
     if (kIsWeb) {
-      final data = await rootBundle.load('audio/$name.mp3');
+      final data = await rootBundle.load('assets/audio/$name.mp3');
       return BytesSource(
         data.buffer.asUint8List(),
         mimeType: 'audio/mpeg',
