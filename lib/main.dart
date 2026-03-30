@@ -51,6 +51,7 @@ class BridgeReadApp extends StatelessWidget {
         '/study':     (context) => const _OrientationGate(child: StudyScreen()),
         '/calendar':  (context) => const _OrientationGate(child: CalendarScreen()),
         '/reader':    (context) => const _OrientationGate(child: ReaderScreen()),
+        '/reader2':   (context) => const _OrientationGate(child: ReaderScreen(lessonId: 'biscuit_baby_book2_day1')),
         '/phonics':   (context) => const _OrientationGate(child: PhonicsScreen()),
         '/quiz':      (context) => const _OrientationGate(child: QuizScreen()),
         '/recording': (context) => const _OrientationGate(child: RecordingScreen()),

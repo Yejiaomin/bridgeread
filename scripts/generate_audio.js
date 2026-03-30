@@ -65,6 +65,52 @@ const audioScripts = [
   { id: 'featured_time_for_bed', text: 'Time for bed, Biscuit!', lang: 'en', keywords: [] },
   // Quiz bubble pop SFX — short punchy English
   { id: 'bubble_pop', text: 'Pop!', lang: 'en', keywords: [] },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Book 2: Biscuit and the Baby
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // 开场
+  { id: 'biscuit_baby_intro', text: 'Hello Hello！我们又见面啦！今天Amy要给你们讲一个新故事——Biscuit and the Baby！Biscuit要认识一个小宝宝啦，你猜猜会发生什么呢？Let\'s find out！', lang: 'cn' },
+  // 第1页
+  { id: 'biscuit_baby_p1_cn', text: '哎呀，Biscuit看到了什么呀？Woof woof！他好兴奋！see就是看到的意思。你看他的小尾巴是不是都摇起来了？他到底看到了什么呢，我们翻过去看看！', lang: 'cn' },
+  { id: 'biscuit_baby_p1_en', text: 'Woof, woof! What does Biscuit see?', lang: 'en', keywords: ['see'] },
+  // 第2页
+  { id: 'biscuit_baby_p2_cn', text: '原来Biscuit看到了一个baby！baby就是小宝宝！你们家里有没有小宝宝呀？Biscuit看到小宝宝好开心呢！', lang: 'cn' },
+  { id: 'biscuit_baby_p2_en', text: 'Woof, woof! Biscuit sees the baby.', lang: 'en', keywords: ['baby'] },
+  // 第3页
+  { id: 'biscuit_baby_p3_cn', text: 'Biscuit好想去认识小宝宝呀！meet就是见面、认识的意思。但是呢，嘘——小声点！小宝宝正在sleeping，sleeping就是睡觉！小宝宝在睡觉呢，我们要安静哦！', lang: 'cn' },
+  { id: 'biscuit_baby_p3_en', text: 'Biscuit wants to meet the baby! Woof, woof! Sshhh! Quiet, Biscuit. The baby is sleeping.', lang: 'en', keywords: ['meet', 'sleeping'] },
+  // 第4页
+  { id: 'biscuit_baby_p4_cn', text: '现在还不能去见小宝宝哦！但是Biscuit看到了什么？他看到了baby的rattle！rattle就是小摇铃，就是那种摇一摇会响的小玩具！你小时候是不是也有一个小摇铃呀？', lang: 'cn' },
+  { id: 'biscuit_baby_p4_en', text: 'It\'s not time to meet the baby yet. Woof, woof! Biscuit sees the baby\'s rattle.', lang: 'en', keywords: ['rattle'] },
+  // 第5页
+  { id: 'biscuit_baby_p5_cn', text: 'Biscuit又看到了小宝宝的bunny！bunny就是小兔子，一个毛茸茸的小兔子玩偶！Biscuit好想去认识小宝宝呀，他一直在说Woof woof！', lang: 'cn' },
+  { id: 'biscuit_baby_p5_en', text: 'Woof, woof! Biscuit sees the baby\'s bunny. Woof, woof! Biscuit wants to meet the baby!', lang: 'en', keywords: ['bunny'] },
+  // 第6页
+  { id: 'biscuit_baby_p6_cn', text: '嘘！quiet！quiet就是安静的意思。小宝宝还在睡觉呢！哎呀，Biscuit你在干什么？你拿了小宝宝的blanket！blanket就是小毯子！silly puppy，你真是个小傻瓜！那不是你的毯子呀！', lang: 'cn' },
+  { id: 'biscuit_baby_p6_en', text: 'Sshhh! Quiet, Biscuit. The baby is still sleeping. It\'s not time to meet the baby yet. Woof, woof! Silly puppy! That\'s not your blanket.', lang: 'en', keywords: ['quiet', 'blanket'] },
+  // 第7页
+  { id: 'biscuit_baby_p7_cn', text: '哈哈，Biscuit又拿了什么？他拿了小宝宝的booties！booties就是小婴儿穿的那种小鞋子小袜子。funny puppy，funny就是搞笑的意思。Biscuit你真是太搞笑啦，你那么想见小宝宝，但是现在还不行哦！', lang: 'cn' },
+  { id: 'biscuit_baby_p7_en', text: 'Oh no, Biscuit. Those booties are for the baby. Woof, woof! Funny puppy! You want to meet the baby. But it\'s not time to meet the baby yet.', lang: 'en', keywords: ['booties', 'funny'] },
+  // 第8页
+  { id: 'biscuit_baby_p8_cn', text: 'Woof！Biscuit叫了一大声！哎呀，发生什么事了？', lang: 'cn' },
+  { id: 'biscuit_baby_p8_en', text: 'Woof!', lang: 'en', keywords: [] },
+  // 第9页
+  { id: 'biscuit_baby_p9_cn', text: '哎呀不好了！小宝宝被吵醒了！Waa Waa Waa！小宝宝在哭呢！Biscuit也在一直叫Woof Woof Woof！你说他们两个谁的声音更大呀？哈哈！', lang: 'cn' },
+  { id: 'biscuit_baby_p9_en', text: 'Waa! Waa! Waa! Waa! Woof! Woof! Woof! Woof!', lang: 'en', keywords: [] },
+  // 第10页
+  { id: 'biscuit_baby_p10_cn', text: 'Biscuit吓了一跳想跑掉！come back就是回来的意思！小女孩说，回来呀Biscuit，这只是小宝宝呀，不用害怕！', lang: 'cn' },
+  { id: 'biscuit_baby_p10_en', text: 'Biscuit, come back. It\'s only the baby! Woof, woof!', lang: 'en', keywords: ['come back'] },
+  // 第11页
+  { id: 'biscuit_baby_p11_cn', text: '终于到时间啦！sweet puppy，sweet就是甜甜的可爱的。现在可以认识小宝宝了！最棒的是，小宝宝也认识了一个new friend，一个新朋友！你说这个新朋友是谁呀？对了，就是Biscuit！', lang: 'cn' },
+  { id: 'biscuit_baby_p11_en', text: 'Here, sweet puppy. Now it\'s time to meet the baby. Woof, woof! Best of all, it\'s time for the baby to meet a new friend!', lang: 'en', keywords: ['sweet', 'friend'] },
+  // 第12页（结尾）
+  { id: 'biscuit_baby_p12_cn', text: 'Woof！Biscuit和小宝宝成为好朋友啦！', lang: 'cn' },
+  // 完成
+  { id: 'biscuit_baby_done', text: '今天Biscuit认识了一个新朋友——小宝宝！你还记得Biscuit看到了小宝宝的哪些东西吗？有rattle小摇铃，有bunny小兔子，还有blanket小毯子和booties小鞋子！下次我们再来听Biscuit的新故事吧！', lang: 'cn' },
+  // 录音页示范句
+  { id: 'biscuit_baby_featured', text: 'Biscuit wants to meet the baby!', lang: 'en', keywords: [] },
 ];
 
 // 火山引擎TTS（中文）
