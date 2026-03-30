@@ -5,6 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/progress_service.dart';
+import '../services/lesson_service.dart';
 
 // ---------------------------------------------------------------------------
 // Data
@@ -21,8 +22,8 @@ class _Round {
   const _Round(this.word, this.type, this.audio);
 }
 
-// All possible rounds — shuffled at game start
-const _kAllRounds = [
+// Default rounds — used as fallback
+const _kDefaultRounds = [
   _Round('bed',   _RType.image, 'assets/audio/phonemes/word_bed.mp3'),
   _Round('bed',   _RType.word,  'assets/audio/phonemes/word_bed.mp3'),
   _Round('hug',   _RType.image, 'assets/audio/phonemes/word_hug.mp3'),
@@ -30,6 +31,20 @@ const _kAllRounds = [
   _Round('story', _RType.image, 'assets/audio/phonemes/word_story.mp3'),
   _Round('story', _RType.word,  'assets/audio/phonemes/word_story.mp3'),
 ];
+
+/// Build quiz rounds from lesson's phonics words
+List<_Round> _buildRoundsFromLesson(List<String> words) {
+  final rounds = <_Round>[];
+  // Check which words have quiz images
+  const _hasImage = {'bed', 'hug', 'story'};
+  for (final w in words) {
+    if (_hasImage.contains(w)) {
+      rounds.add(_Round(w, _RType.image, 'assets/audio/phonemes/word_$w.mp3'));
+    }
+    rounds.add(_Round(w, _RType.word, 'assets/audio/phonemes/word_$w.mp3'));
+  }
+  return rounds;
+}
 
 const _kPositiveAudio = [
   'assets/audio/phonemes/bingo.mp3',
@@ -47,7 +62,7 @@ const _kEncouragementAudio = [
   'assets/audio/phonemes/one_more_time.mp3',
 ];
 
-const _kWordSet  = ['bed', 'hug', 'story', 'play', 'light'];
+List<String> _wordSet = ['bed', 'hug', 'story', 'play', 'light'];
 const _kEmoji    = ['🌟', '🐕'];
 
 // Particle burst colors
@@ -235,8 +250,30 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     // Play area ≈ full width × ~72 % height (excludes status bar, header, prompt bar)
     _playAreaSize = Size(sw, sh * 0.72);
 
-    _rounds = List.of(_kAllRounds)..shuffle(_rng);
-    _loadRound();
+    _loadLessonQuizData();
+  }
+
+  Future<void> _loadLessonQuizData() async {
+    try {
+      final service = LessonService();
+      final lessonId = await service.restoreCurrentLessonId();
+      final lesson = await service.loadLesson(lessonId);
+      if (lesson.phonicsWords.isNotEmpty && mounted) {
+        final words = lesson.phonicsWords.map((w) => w.word).toList();
+        // Build word set: lesson words + enough fillers for wrong answers
+        final fillers = ['play', 'light', 'bed', 'hug', 'story']
+            .where((w) => !words.contains(w))
+            .toList();
+        _wordSet = [...words, ...fillers.take(3)];
+        _rounds = _buildRoundsFromLesson(words)..shuffle(_rng);
+      }
+    } catch (_) {
+      _rounds = List.of(_kDefaultRounds)..shuffle(_rng);
+    }
+    if (mounted) {
+      _round = 0;
+      _loadRound();
+    }
   }
 
   @override
@@ -292,7 +329,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         ));
       }
     } else {
-      var words = List.of(_kWordSet)..shuffle(_rng);
+      var words = List.of(_wordSet)..shuffle(_rng);
       if (!words.contains(r.word)) {
         words[0] = r.word;
         words.shuffle(_rng);

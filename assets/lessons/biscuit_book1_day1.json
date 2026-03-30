@@ -4,6 +4,7 @@
   "characterName": "Biscuit",
   "characterAsset": "assets/characters/teacher_default.png",
   "featuredSentence": "Time for bed, Biscuit!",
+  "originalAudio": "audio/biscuit_original.mp3",
   "pages": [
     {
       "imageAsset": "assets/books/biscuit_cover.png",
@@ -401,16 +402,7 @@
         "e",
         "d"
       ],
-      "imageAsset": "assets/books/bed.png"
-    },
-    {
-      "word": "dog",
-      "phonemes": [
-        "d",
-        "o",
-        "g"
-      ],
-      "imageAsset": "assets/books/dog.png"
+      "imageAsset": "assets/books/biscuit_spread_02.png"
     },
     {
       "word": "hug",
@@ -419,7 +411,7 @@
         "u",
         "g"
       ],
-      "imageAsset": "assets/books/hug.png"
+      "imageAsset": "assets/books/biscuit_spread_06.png"
     }
   ]
 }

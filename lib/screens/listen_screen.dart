@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
+import '../services/lesson_service.dart';
 
 // ── Playlist ──────────────────────────────────────────────────────────────────
 
@@ -11,8 +12,9 @@ class _Track {
   const _Track(this.label, this.path);
 }
 
-const _kTracks = [
-  _Track('Biscuit - Original Narration', 'audio/biscuit01_original.mp3'),
+// Default fallback
+const _kDefaultTracks = [
+  _Track('Biscuit - Original Narration', 'audio/biscuit_original.mp3'),
 ];
 
 // ── Screen ────────────────────────────────────────────────────────────────────
@@ -26,6 +28,9 @@ class ListenScreen extends StatefulWidget {
 class _ListenScreenState extends State<ListenScreen>
     with TickerProviderStateMixin {
   final _player = AudioPlayer();
+
+  // Playlist
+  List<_Track> _tracks = _kDefaultTracks;
 
   // Audio state
   bool _playing = false;
@@ -52,6 +57,7 @@ class _ListenScreenState extends State<ListenScreen>
   @override
   void initState() {
     super.initState();
+    _loadListenData();
 
     _waveCtrl = List.generate(5, (i) => AnimationController(
       vsync: this,
@@ -76,6 +82,17 @@ class _ListenScreenState extends State<ListenScreen>
     _startTimers();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _playTrack(0));
+  }
+
+  Future<void> _loadListenData() async {
+    final service = LessonService();
+    final lessonId = await service.restoreCurrentLessonId();
+    final lesson = await service.loadLesson(lessonId);
+    if (lesson.originalAudio.isNotEmpty && mounted) {
+      setState(() {
+        _tracks = [_Track('${lesson.bookTitle} - Original', lesson.originalAudio)];
+      });
+    }
   }
 
   @override
@@ -139,10 +156,10 @@ class _ListenScreenState extends State<ListenScreen>
   // ── Playback ─────────────────────────────────────────────────────────────────
 
   Future<void> _playTrack(int idx) async {
-    final i = idx % _kTracks.length;
+    final i = idx % _tracks.length;
     setState(() => _trackIdx = i);
     await _player.stop();
-    await _player.play(AssetSource(_kTracks[i].path));
+    await _player.play(AssetSource(_tracks[i].path));
     _setPlaying(true);
   }
 
@@ -168,7 +185,7 @@ class _ListenScreenState extends State<ListenScreen>
   void _nextTrack() => _playTrack(_trackIdx + 1);
 
   void _prevTrack() =>
-      _playTrack((_trackIdx - 1 + _kTracks.length) % _kTracks.length);
+      _playTrack((_trackIdx - 1 + _tracks.length) % _tracks.length);
 
   // ── Build ─────────────────────────────────────────────────────────────────────
 

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/test_data.dart';
 import '../main.dart' show routeObserver;
 import 'reader_screen.dart';
+import '../services/lesson_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HomeScreen — background image + transparent tap zones
@@ -429,11 +430,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: GestureDetector(
                       onTap: unlocked
-                          ? () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ReaderScreen(lessonId: book.lessonId),
-                              ))
+                          ? () async {
+                              await LessonService().setCurrentLesson(book.lessonId);
+                              if (context.mounted) {
+                                Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                              }
+                            }
                           : null,
                       child: Container(
                         padding: const EdgeInsets.all(14),

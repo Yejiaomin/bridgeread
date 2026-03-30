@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import '../services/progress_service.dart';
+import '../services/lesson_service.dart';
+import '../models/lesson.dart';
 import 'eggy_celebration_screen.dart';
 
 // ---------------------------------------------------------------------------
@@ -36,7 +38,37 @@ class _WordData {
   });
 }
 
-final List<_WordData> _kWords = [
+// Phoneme audio path mapping for vowels (short sounds)
+const _kVowelAudio = {
+  'a': 'assets/audio/phonemes/a_short.mp3',
+  'e': 'assets/audio/phonemes/e_short.mp3',
+  'i': 'assets/audio/phonemes/i_short.mp3',
+  'o': 'assets/audio/phonemes/o_short.mp3',
+  'u': 'assets/audio/phonemes/u_short.mp3',
+};
+const _kVowels = {'a', 'e', 'i', 'o', 'u'};
+
+/// Build _WordData list from lesson's PhonicsWords
+List<_WordData> _buildWordsFromLesson(List<PhonicsWord> phonicsWords) {
+  return phonicsWords.map((pw) {
+    final letters = <_LetterInfo>[];
+    for (int i = 0; i < pw.phonemes.length; i++) {
+      final p = pw.phonemes[i];
+      final isVowel = _kVowels.contains(p);
+      final audioPath = _kVowelAudio[p] ?? 'assets/audio/phonemes/$p.mp3';
+      letters.add(_LetterInfo(p, isVowel ? _kYellow : _kOrange, audioPath));
+    }
+    return _WordData(
+      word: pw.word,
+      bookImage: pw.imageAsset,
+      wordAudioPath: 'assets/audio/phonemes/word_${pw.word}.mp3',
+      letters: letters,
+    );
+  }).toList();
+}
+
+// Default fallback words
+final List<_WordData> _kDefaultWords = [
   _WordData(
     word: 'bed',
     bookImage: 'assets/books/biscuit_spread_02.png',
@@ -85,6 +117,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   static const _kBingo = 'assets/audio/phonemes/bingo.mp3';
   static const _kOops  = 'assets/audio/phonemes/oops.mp3';
 
+  List<_WordData> _words = _kDefaultWords;
   int _wordIndex = 0;
   _Step _step = _Step.intro;
   bool _celebration = false;
@@ -171,6 +204,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   @override
   void initState() {
     super.initState();
+    _loadPhonicsData();
     ProgressService.getTodayProgress().then((p) {
       if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
     });
@@ -261,6 +295,17 @@ class _PhonicsScreenState extends State<PhonicsScreen>
             CurvedAnimation(parent: c, curve: Curves.elasticOut))).toList();
 
     _enterTiles();
+  }
+
+  Future<void> _loadPhonicsData() async {
+    final service = LessonService();
+    final lessonId = await service.restoreCurrentLessonId();
+    final lesson = await service.loadLesson(lessonId);
+    if (lesson.phonicsWords.isNotEmpty && mounted) {
+      setState(() {
+        _words = _buildWordsFromLesson(lesson.phonicsWords);
+      });
+    }
   }
 
   @override
@@ -368,7 +413,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     // Play word, then start speaker shake to invite the child to tap
     Future.delayed(const Duration(milliseconds: 500), () async {
       if (!mounted) return;
-      await _playAndWait(_kWords[_wordIndex].wordAudioPath);
+      await _playAndWait(_words[_wordIndex].wordAudioPath);
       if (mounted && !_wordSpeakerDone) {
         _speakerShakeCtrl.repeat(reverse: true);
       }
@@ -416,7 +461,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   /// Reveals each tile one-by-one: bounce in → play audio → light up → next.
   Future<void> _revealTilesSequentially() async {
     await Future.delayed(const Duration(milliseconds: 400));
-    final word = _kWords[_wordIndex];
+    final word = _words[_wordIndex];
     final letters = word.letters;
 
     // 1. Play full word first
@@ -659,11 +704,11 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     if (index != _nextTileToTap) return; // enforce sequential order
     if (_letterStarsTapped.contains(index)) return;
 
-    _playAudio(_kWords[_wordIndex].letters[index].audioPath);
+    _playAudio(_words[_wordIndex].letters[index].audioPath);
     _tileShakeCtrl.stop();
     _tileShakeCtrl.reset();
 
-    final letters = _kWords[_wordIndex].letters;
+    final letters = _words[_wordIndex].letters;
     setState(() {
       _letterStarsTapped.add(index);
       _nextTileToTap = index + 1;
@@ -680,7 +725,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       _tileShakeCtrl.stop();
       Future.delayed(const Duration(milliseconds: 400), () async {
         if (!mounted) return;
-        await _playAndWait(_kWords[_wordIndex].wordAudioPath);
+        await _playAndWait(_words[_wordIndex].wordAudioPath);
         if (mounted) _enterEcho();
       });
     }
@@ -726,7 +771,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     await Future.delayed(const Duration(milliseconds: 300));
     if (!mounted) return;
 
-    final isLastWord = _wordIndex == _kWords.length - 1;
+    final isLastWord = _wordIndex == _words.length - 1;
 
     if (isLastWord) {
       // Last word done — go straight to Eggy celebration, no amazing
@@ -752,7 +797,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   }
 
   void _onNextPressed() {
-    if (_wordIndex < _kWords.length - 1) {
+    if (_wordIndex < _words.length - 1) {
       setState(() {
         _wordIndex++;
         _celebration = false;
@@ -780,7 +825,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final word = _kWords[_wordIndex];
+    final word = _words[_wordIndex];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -1912,7 +1957,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                           fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     child: Text(
-                      _wordIndex >= _kWords.length - 1
+                      _wordIndex >= _words.length - 1
                           ? 'Finish! 🎉'
                           : 'Next word! →',
                     ),

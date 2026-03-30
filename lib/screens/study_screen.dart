@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
+import '../services/lesson_service.dart';
 import '../main.dart' show routeObserver;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -345,7 +346,18 @@ class _RecapScreenState extends State<RecapScreen>
   }
 
   Future<void> _play() async {
-    await _player.play(AssetSource('audio/biscuit01_original.mp3'));
+    // Play previous day's original audio for recap
+    final service = LessonService();
+    final lessonId = await service.restoreCurrentLessonId();
+
+    // Map of lessonId -> previous book's original audio
+    const prevAudioMap = {
+      'biscuit_book1_day1': 'audio/biscuit_original.mp3', // Day 1 has no previous, play own
+      'biscuit_baby_book2_day1': 'audio/biscuit_original.mp3', // Day 2 recaps Day 1
+    };
+
+    final audioPath = prevAudioMap[lessonId] ?? 'audio/biscuit_original.mp3';
+    await _player.play(AssetSource(audioPath));
     _setPlaying(true);
   }
 
