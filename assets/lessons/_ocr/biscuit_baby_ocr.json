@@ -1,0 +1,1872 @@
+{
+  "bookId": "biscuit_baby",
+  "pages": [
+    {
+      "image": "biscuit_baby_spread_01.jpg",
+      "en": "",
+      "keywords": [],
+      "words": []
+    },
+    {
+      "image": "biscuit_baby_spread_02.jpg",
+      "en": "Woof, woof! Biscuit sees the baby. ATTA",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.0475,
+          "y": 0.5006,
+          "width": 0.0379,
+          "height": 0.0353
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.0842,
+          "y": 0.5006,
+          "width": 0.0037,
+          "height": 0.0342
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.0925,
+          "y": 0.5006,
+          "width": 0.0362,
+          "height": 0.0342
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1283,
+          "y": 0.5006,
+          "width": 0.005,
+          "height": 0.0342
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.0479,
+          "y": 0.5654,
+          "width": 0.0475,
+          "height": 0.04
+        },
+        {
+          "word": "sees",
+          "clean": "sees",
+          "x": 0.1004,
+          "y": 0.5677,
+          "width": 0.0271,
+          "height": 0.0389
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1321,
+          "y": 0.5689,
+          "width": 0.0221,
+          "height": 0.0389
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.1571,
+          "y": 0.5701,
+          "width": 0.0342,
+          "height": 0.0377
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.19,
+          "y": 0.5713,
+          "width": 0.0037,
+          "height": 0.0365
+        },
+        {
+          "word": "ATTA",
+          "clean": "atta",
+          "x": 0.8142,
+          "y": 0.6243,
+          "width": 0.0129,
+          "height": 0.0236
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_03.jpg",
+      "en": "Biscuit wants to meet the baby! Woof, woof! Sshhh! Quiet, Biscuit. The baby is sleeping.",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.0629,
+          "y": 0.1508,
+          "width": 0.0479,
+          "height": 0.0353
+        },
+        {
+          "word": "wants",
+          "clean": "wants",
+          "x": 0.1154,
+          "y": 0.1531,
+          "width": 0.0396,
+          "height": 0.0342
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.0621,
+          "y": 0.2226,
+          "width": 0.0138,
+          "height": 0.0353
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.0808,
+          "y": 0.2214,
+          "width": 0.0325,
+          "height": 0.0377
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1171,
+          "y": 0.2238,
+          "width": 0.0213,
+          "height": 0.0353
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.1421,
+          "y": 0.2238,
+          "width": 0.0338,
+          "height": 0.0377
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1762,
+          "y": 0.225,
+          "width": 0.0054,
+          "height": 0.0353
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.8042,
+          "y": 0.1531,
+          "width": 0.0375,
+          "height": 0.0365
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.8413,
+          "y": 0.1543,
+          "width": 0.0037,
+          "height": 0.0342
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.8496,
+          "y": 0.1519,
+          "width": 0.0354,
+          "height": 0.0365
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.885,
+          "y": 0.1531,
+          "width": 0.0046,
+          "height": 0.0342
+        },
+        {
+          "word": "Sshhh",
+          "clean": "sshhh",
+          "x": 0.8046,
+          "y": 0.2238,
+          "width": 0.0413,
+          "height": 0.0365
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8467,
+          "y": 0.2238,
+          "width": 0.0046,
+          "height": 0.0365
+        },
+        {
+          "word": "Quiet",
+          "clean": "quiet",
+          "x": 0.8554,
+          "y": 0.2238,
+          "width": 0.0375,
+          "height": 0.0365
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.8938,
+          "y": 0.2238,
+          "width": 0.0033,
+          "height": 0.0365
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.9025,
+          "y": 0.2238,
+          "width": 0.0475,
+          "height": 0.0365
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.9513,
+          "y": 0.2238,
+          "width": 0.0021,
+          "height": 0.0365
+        },
+        {
+          "word": "The",
+          "clean": "the",
+          "x": 0.805,
+          "y": 0.2909,
+          "width": 0.0254,
+          "height": 0.0412
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.835,
+          "y": 0.2909,
+          "width": 0.0333,
+          "height": 0.0412
+        },
+        {
+          "word": "is",
+          "clean": "is",
+          "x": 0.8721,
+          "y": 0.2921,
+          "width": 0.0108,
+          "height": 0.04
+        },
+        {
+          "word": "sleeping",
+          "clean": "sleeping",
+          "x": 0.8883,
+          "y": 0.2921,
+          "width": 0.0571,
+          "height": 0.0424
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.945,
+          "y": 0.2933,
+          "width": 0.0037,
+          "height": 0.04
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_04.jpg",
+      "en": "It's not time to meet the baby yet. 8 Woof, woof! Biscuit sees the baby's rattle.",
+      "keywords": [],
+      "words": [
+        {
+          "word": "It's",
+          "clean": "it's",
+          "x": 0.0517,
+          "y": 0.7845,
+          "width": 0.0213,
+          "height": 0.0306
+        },
+        {
+          "word": "not",
+          "clean": "not",
+          "x": 0.0775,
+          "y": 0.7845,
+          "width": 0.0225,
+          "height": 0.0294
+        },
+        {
+          "word": "time",
+          "clean": "time",
+          "x": 0.1037,
+          "y": 0.7845,
+          "width": 0.0304,
+          "height": 0.0294
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.0517,
+          "y": 0.8504,
+          "width": 0.0138,
+          "height": 0.0389
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.0688,
+          "y": 0.8504,
+          "width": 0.0342,
+          "height": 0.04
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1067,
+          "y": 0.8528,
+          "width": 0.0208,
+          "height": 0.0389
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.1313,
+          "y": 0.8528,
+          "width": 0.0342,
+          "height": 0.04
+        },
+        {
+          "word": "yet",
+          "clean": "yet",
+          "x": 0.1683,
+          "y": 0.8539,
+          "width": 0.0221,
+          "height": 0.04
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.1908,
+          "y": 0.8563,
+          "width": 0.0033,
+          "height": 0.0377
+        },
+        {
+          "word": "8",
+          "clean": "",
+          "x": 0.1212,
+          "y": 0.9529,
+          "width": 0.005,
+          "height": 0.0177
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.7813,
+          "y": 0.7774,
+          "width": 0.0383,
+          "height": 0.0353
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.8179,
+          "y": 0.7774,
+          "width": 0.0042,
+          "height": 0.033
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.8275,
+          "y": 0.7762,
+          "width": 0.0354,
+          "height": 0.0342
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8629,
+          "y": 0.7762,
+          "width": 0.0046,
+          "height": 0.033
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.7817,
+          "y": 0.8469,
+          "width": 0.0488,
+          "height": 0.0365
+        },
+        {
+          "word": "sees",
+          "clean": "sees",
+          "x": 0.835,
+          "y": 0.8469,
+          "width": 0.0271,
+          "height": 0.0365
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.8667,
+          "y": 0.8469,
+          "width": 0.0213,
+          "height": 0.0365
+        },
+        {
+          "word": "baby's",
+          "clean": "baby's",
+          "x": 0.8921,
+          "y": 0.8481,
+          "width": 0.0442,
+          "height": 0.0365
+        },
+        {
+          "word": "rattle",
+          "clean": "rattle",
+          "x": 0.9408,
+          "y": 0.8481,
+          "width": 0.0346,
+          "height": 0.0365
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.9767,
+          "y": 0.8481,
+          "width": 0.0033,
+          "height": 0.0365
+        },
+        {
+          "word": "9",
+          "clean": "",
+          "x": 0.8771,
+          "y": 0.947,
+          "width": 0.0054,
+          "height": 0.02
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_05.jpg",
+      "en": "Woof, woof! Biscuit sees the baby's bunny. Woof, woof! Biscuit wants to meet the baby! 10",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.0233,
+          "y": 0.7774,
+          "width": 0.0383,
+          "height": 0.0353
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.0604,
+          "y": 0.7786,
+          "width": 0.0037,
+          "height": 0.033
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.0692,
+          "y": 0.7762,
+          "width": 0.0354,
+          "height": 0.0353
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.105,
+          "y": 0.7774,
+          "width": 0.005,
+          "height": 0.033
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.0238,
+          "y": 0.8445,
+          "width": 0.0488,
+          "height": 0.04
+        },
+        {
+          "word": "sees",
+          "clean": "sees",
+          "x": 0.0767,
+          "y": 0.8457,
+          "width": 0.0275,
+          "height": 0.04
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1087,
+          "y": 0.8469,
+          "width": 0.0213,
+          "height": 0.0377
+        },
+        {
+          "word": "baby's",
+          "clean": "baby's",
+          "x": 0.1333,
+          "y": 0.8469,
+          "width": 0.045,
+          "height": 0.04
+        },
+        {
+          "word": "bunny",
+          "clean": "bunny",
+          "x": 0.1821,
+          "y": 0.8481,
+          "width": 0.0429,
+          "height": 0.04
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.2233,
+          "y": 0.8492,
+          "width": 0.0046,
+          "height": 0.0377
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.8204,
+          "y": 0.7055,
+          "width": 0.0379,
+          "height": 0.0353
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.8571,
+          "y": 0.7055,
+          "width": 0.0037,
+          "height": 0.033
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.8658,
+          "y": 0.7044,
+          "width": 0.0362,
+          "height": 0.0353
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.9017,
+          "y": 0.7044,
+          "width": 0.005,
+          "height": 0.033
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.8208,
+          "y": 0.7739,
+          "width": 0.0475,
+          "height": 0.0353
+        },
+        {
+          "word": "wants",
+          "clean": "wants",
+          "x": 0.8733,
+          "y": 0.7762,
+          "width": 0.0396,
+          "height": 0.0353
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.8204,
+          "y": 0.8445,
+          "width": 0.0138,
+          "height": 0.0377
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.8383,
+          "y": 0.8445,
+          "width": 0.0333,
+          "height": 0.0389
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.875,
+          "y": 0.8457,
+          "width": 0.0213,
+          "height": 0.0377
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.9004,
+          "y": 0.8457,
+          "width": 0.0333,
+          "height": 0.04
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.9342,
+          "y": 0.8469,
+          "width": 0.005,
+          "height": 0.0377
+        },
+        {
+          "word": "10",
+          "clean": "",
+          "x": 0.1212,
+          "y": 0.947,
+          "width": 0.01,
+          "height": 0.0188
+        },
+        {
+          "word": "11",
+          "clean": "",
+          "x": 0.8758,
+          "y": 0.9458,
+          "width": 0.0092,
+          "height": 0.0177
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_06.jpg",
+      "en": "Sshhh! Quiet, Biscuit. The baby is still sleeping. It's not time to meet the baby yet. Woof, woof! Silly puppy! That's not your blanket. 13 ld www",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Sshhh",
+          "clean": "sshhh",
+          "x": 0.0404,
+          "y": 0.1484,
+          "width": 0.0413,
+          "height": 0.0377
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.0829,
+          "y": 0.1484,
+          "width": 0.0042,
+          "height": 0.0377
+        },
+        {
+          "word": "Quiet",
+          "clean": "quiet",
+          "x": 0.0917,
+          "y": 0.1484,
+          "width": 0.0379,
+          "height": 0.0377
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.13,
+          "y": 0.1484,
+          "width": 0.0029,
+          "height": 0.0377
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.1383,
+          "y": 0.1484,
+          "width": 0.0483,
+          "height": 0.0377
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.1867,
+          "y": 0.1484,
+          "width": 0.0029,
+          "height": 0.0377
+        },
+        {
+          "word": "The",
+          "clean": "the",
+          "x": 0.0408,
+          "y": 0.2144,
+          "width": 0.0254,
+          "height": 0.04
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.0708,
+          "y": 0.2144,
+          "width": 0.0329,
+          "height": 0.0412
+        },
+        {
+          "word": "is",
+          "clean": "is",
+          "x": 0.1083,
+          "y": 0.2155,
+          "width": 0.0104,
+          "height": 0.0389
+        },
+        {
+          "word": "still",
+          "clean": "still",
+          "x": 0.1242,
+          "y": 0.2155,
+          "width": 0.0262,
+          "height": 0.0412
+        },
+        {
+          "word": "sleeping",
+          "clean": "sleeping",
+          "x": 0.1542,
+          "y": 0.2167,
+          "width": 0.0567,
+          "height": 0.0412
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.2108,
+          "y": 0.2191,
+          "width": 0.0037,
+          "height": 0.0389
+        },
+        {
+          "word": "It's",
+          "clean": "it's",
+          "x": 0.04,
+          "y": 0.2886,
+          "width": 0.0217,
+          "height": 0.0306
+        },
+        {
+          "word": "not",
+          "clean": "not",
+          "x": 0.0667,
+          "y": 0.2886,
+          "width": 0.0225,
+          "height": 0.0306
+        },
+        {
+          "word": "time",
+          "clean": "time",
+          "x": 0.0921,
+          "y": 0.2886,
+          "width": 0.0313,
+          "height": 0.0306
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.0396,
+          "y": 0.3569,
+          "width": 0.0138,
+          "height": 0.0377
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.0579,
+          "y": 0.3557,
+          "width": 0.0329,
+          "height": 0.04
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.0946,
+          "y": 0.3581,
+          "width": 0.0208,
+          "height": 0.0389
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.1196,
+          "y": 0.3581,
+          "width": 0.0342,
+          "height": 0.04
+        },
+        {
+          "word": "yet",
+          "clean": "yet",
+          "x": 0.1571,
+          "y": 0.3604,
+          "width": 0.0217,
+          "height": 0.0389
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.1783,
+          "y": 0.3604,
+          "width": 0.0037,
+          "height": 0.0377
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.7992,
+          "y": 0.7079,
+          "width": 0.0375,
+          "height": 0.0365
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.8367,
+          "y": 0.7091,
+          "width": 0.0037,
+          "height": 0.0342
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.8446,
+          "y": 0.7067,
+          "width": 0.0358,
+          "height": 0.0365
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.88,
+          "y": 0.7079,
+          "width": 0.005,
+          "height": 0.0342
+        },
+        {
+          "word": "Silly",
+          "clean": "silly",
+          "x": 0.7992,
+          "y": 0.7762,
+          "width": 0.0317,
+          "height": 0.0389
+        },
+        {
+          "word": "puppy",
+          "clean": "puppy",
+          "x": 0.8354,
+          "y": 0.7774,
+          "width": 0.0425,
+          "height": 0.0389
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8792,
+          "y": 0.7797,
+          "width": 0.0054,
+          "height": 0.0365
+        },
+        {
+          "word": "That's",
+          "clean": "that's",
+          "x": 0.7987,
+          "y": 0.8492,
+          "width": 0.0425,
+          "height": 0.0365
+        },
+        {
+          "word": "not",
+          "clean": "not",
+          "x": 0.8462,
+          "y": 0.8492,
+          "width": 0.0217,
+          "height": 0.0365
+        },
+        {
+          "word": "your",
+          "clean": "your",
+          "x": 0.8717,
+          "y": 0.8492,
+          "width": 0.0321,
+          "height": 0.0365
+        },
+        {
+          "word": "blanket",
+          "clean": "blanket",
+          "x": 0.9071,
+          "y": 0.8492,
+          "width": 0.0508,
+          "height": 0.0365
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.9579,
+          "y": 0.8492,
+          "width": 0.0033,
+          "height": 0.0365
+        },
+        {
+          "word": "13",
+          "clean": "",
+          "x": 0.8758,
+          "y": 0.947,
+          "width": 0.01,
+          "height": 0.0188
+        },
+        {
+          "word": "ld",
+          "clean": "ld",
+          "x": 0.9858,
+          "y": 0.3192,
+          "width": 0.0129,
+          "height": 0.02
+        },
+        {
+          "word": "www",
+          "clean": "www",
+          "x": 0.9871,
+          "y": 0.3993,
+          "width": 0.0083,
+          "height": 0.013
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_07.jpg",
+      "en": "Oh no, Biscuit. Those booties are for the baby. Woof, woof! Funny puppy! You want to meet the baby. But it's not time to meet the baby yet.",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Oh",
+          "clean": "oh",
+          "x": 0.0688,
+          "y": 0.1472,
+          "width": 0.02,
+          "height": 0.0365
+        },
+        {
+          "word": "no",
+          "clean": "no",
+          "x": 0.0933,
+          "y": 0.1461,
+          "width": 0.0167,
+          "height": 0.0353
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.11,
+          "y": 0.1472,
+          "width": 0.0037,
+          "height": 0.0342
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.1192,
+          "y": 0.1437,
+          "width": 0.0488,
+          "height": 0.0377
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.1679,
+          "y": 0.1437,
+          "width": 0.0037,
+          "height": 0.0342
+        },
+        {
+          "word": "Those",
+          "clean": "those",
+          "x": 0.0692,
+          "y": 0.2167,
+          "width": 0.0404,
+          "height": 0.033
+        },
+        {
+          "word": "booties",
+          "clean": "booties",
+          "x": 0.1146,
+          "y": 0.2167,
+          "width": 0.0488,
+          "height": 0.0318
+        },
+        {
+          "word": "are",
+          "clean": "are",
+          "x": 0.0692,
+          "y": 0.2886,
+          "width": 0.0208,
+          "height": 0.0377
+        },
+        {
+          "word": "for",
+          "clean": "for",
+          "x": 0.0938,
+          "y": 0.2886,
+          "width": 0.0204,
+          "height": 0.0377
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1179,
+          "y": 0.2886,
+          "width": 0.0208,
+          "height": 0.0377
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.1429,
+          "y": 0.2886,
+          "width": 0.0342,
+          "height": 0.0377
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.175,
+          "y": 0.2886,
+          "width": 0.0037,
+          "height": 0.0377
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.0688,
+          "y": 0.3557,
+          "width": 0.0383,
+          "height": 0.0353
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.1058,
+          "y": 0.3557,
+          "width": 0.0037,
+          "height": 0.033
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.1142,
+          "y": 0.3545,
+          "width": 0.0362,
+          "height": 0.0353
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1496,
+          "y": 0.3545,
+          "width": 0.0054,
+          "height": 0.033
+        },
+        {
+          "word": "Funny",
+          "clean": "funny",
+          "x": 0.7867,
+          "y": 0.6396,
+          "width": 0.0429,
+          "height": 0.0377
+        },
+        {
+          "word": "puppy",
+          "clean": "puppy",
+          "x": 0.8342,
+          "y": 0.6396,
+          "width": 0.0417,
+          "height": 0.0377
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8775,
+          "y": 0.6396,
+          "width": 0.0054,
+          "height": 0.0377
+        },
+        {
+          "word": "You",
+          "clean": "you",
+          "x": 0.7863,
+          "y": 0.7091,
+          "width": 0.0271,
+          "height": 0.0353
+        },
+        {
+          "word": "want",
+          "clean": "want",
+          "x": 0.8183,
+          "y": 0.7091,
+          "width": 0.0329,
+          "height": 0.0353
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.8554,
+          "y": 0.7091,
+          "width": 0.0133,
+          "height": 0.0365
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.8733,
+          "y": 0.7102,
+          "width": 0.0333,
+          "height": 0.0353
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.9092,
+          "y": 0.7102,
+          "width": 0.0221,
+          "height": 0.0353
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.9342,
+          "y": 0.7114,
+          "width": 0.035,
+          "height": 0.0353
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.9675,
+          "y": 0.7114,
+          "width": 0.0046,
+          "height": 0.0353
+        },
+        {
+          "word": "But",
+          "clean": "but",
+          "x": 0.7867,
+          "y": 0.7786,
+          "width": 0.0242,
+          "height": 0.0306
+        },
+        {
+          "word": "it's",
+          "clean": "it's",
+          "x": 0.8154,
+          "y": 0.7786,
+          "width": 0.0204,
+          "height": 0.0306
+        },
+        {
+          "word": "not",
+          "clean": "not",
+          "x": 0.8404,
+          "y": 0.7786,
+          "width": 0.0217,
+          "height": 0.0306
+        },
+        {
+          "word": "time",
+          "clean": "time",
+          "x": 0.8662,
+          "y": 0.7786,
+          "width": 0.0308,
+          "height": 0.0306
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.7858,
+          "y": 0.8457,
+          "width": 0.0138,
+          "height": 0.0377
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.8037,
+          "y": 0.8457,
+          "width": 0.0333,
+          "height": 0.0389
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.8404,
+          "y": 0.8469,
+          "width": 0.0213,
+          "height": 0.04
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.8658,
+          "y": 0.8481,
+          "width": 0.0338,
+          "height": 0.0389
+        },
+        {
+          "word": "yet",
+          "clean": "yet",
+          "x": 0.9033,
+          "y": 0.8492,
+          "width": 0.0213,
+          "height": 0.04
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.925,
+          "y": 0.8504,
+          "width": 0.0029,
+          "height": 0.0377
+        },
+        {
+          "word": "15",
+          "clean": "",
+          "x": 0.8733,
+          "y": 0.947,
+          "width": 0.0096,
+          "height": 0.0188
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_08.jpg",
+      "en": "Woof!",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.0796,
+          "y": 0.1531,
+          "width": 0.0387,
+          "height": 0.0283
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1179,
+          "y": 0.1531,
+          "width": 0.005,
+          "height": 0.0283
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_09.jpg",
+      "en": "Waa! Waa! Waa! Waa! 18 Woof! Woof! Woof! Woof!",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Waa",
+          "clean": "waa",
+          "x": 0.0546,
+          "y": 0.8563,
+          "width": 0.0296,
+          "height": 0.0306
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.0858,
+          "y": 0.8563,
+          "width": 0.0042,
+          "height": 0.0306
+        },
+        {
+          "word": "Waa",
+          "clean": "waa",
+          "x": 0.0942,
+          "y": 0.8563,
+          "width": 0.0296,
+          "height": 0.0306
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.125,
+          "y": 0.8563,
+          "width": 0.0037,
+          "height": 0.0306
+        },
+        {
+          "word": "Waa",
+          "clean": "waa",
+          "x": 0.1338,
+          "y": 0.8563,
+          "width": 0.0296,
+          "height": 0.0306
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1642,
+          "y": 0.8563,
+          "width": 0.0046,
+          "height": 0.0306
+        },
+        {
+          "word": "Waa",
+          "clean": "waa",
+          "x": 0.1729,
+          "y": 0.8563,
+          "width": 0.03,
+          "height": 0.0306
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.2033,
+          "y": 0.8563,
+          "width": 0.005,
+          "height": 0.0306
+        },
+        {
+          "word": "18",
+          "clean": "",
+          "x": 0.1267,
+          "y": 0.9541,
+          "width": 0.0096,
+          "height": 0.0165
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.7954,
+          "y": 0.1543,
+          "width": 0.0379,
+          "height": 0.033
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8337,
+          "y": 0.1543,
+          "width": 0.0042,
+          "height": 0.033
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.8421,
+          "y": 0.1543,
+          "width": 0.0383,
+          "height": 0.033
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8812,
+          "y": 0.1543,
+          "width": 0.0042,
+          "height": 0.033
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.8892,
+          "y": 0.1543,
+          "width": 0.0379,
+          "height": 0.033
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.9279,
+          "y": 0.1543,
+          "width": 0.0042,
+          "height": 0.033
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.9358,
+          "y": 0.1543,
+          "width": 0.0387,
+          "height": 0.033
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.9746,
+          "y": 0.1543,
+          "width": 0.0046,
+          "height": 0.033
+        },
+        {
+          "word": "19",
+          "clean": "",
+          "x": 0.8804,
+          "y": 0.9552,
+          "width": 0.0092,
+          "height": 0.0165
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_10.jpg",
+      "en": "Biscuit, come back. It's only the baby! 20 Woof, woof! 215/70 A",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.0617,
+          "y": 0.7833,
+          "width": 0.0479,
+          "height": 0.0353
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.1104,
+          "y": 0.7833,
+          "width": 0.0033,
+          "height": 0.0353
+        },
+        {
+          "word": "come",
+          "clean": "come",
+          "x": 0.1187,
+          "y": 0.7833,
+          "width": 0.0358,
+          "height": 0.0353
+        },
+        {
+          "word": "back",
+          "clean": "back",
+          "x": 0.1592,
+          "y": 0.7833,
+          "width": 0.0329,
+          "height": 0.0353
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.1917,
+          "y": 0.7833,
+          "width": 0.0042,
+          "height": 0.0353
+        },
+        {
+          "word": "It's",
+          "clean": "it's",
+          "x": 0.0612,
+          "y": 0.8504,
+          "width": 0.0217,
+          "height": 0.04
+        },
+        {
+          "word": "only",
+          "clean": "only",
+          "x": 0.0879,
+          "y": 0.8504,
+          "width": 0.03,
+          "height": 0.0412
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1217,
+          "y": 0.8516,
+          "width": 0.0208,
+          "height": 0.04
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.1467,
+          "y": 0.8516,
+          "width": 0.0342,
+          "height": 0.0412
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1812,
+          "y": 0.8539,
+          "width": 0.005,
+          "height": 0.0389
+        },
+        {
+          "word": "20",
+          "clean": "",
+          "x": 0.1242,
+          "y": 0.9529,
+          "width": 0.0108,
+          "height": 0.0177
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.8363,
+          "y": 0.1519,
+          "width": 0.0375,
+          "height": 0.0342
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.8729,
+          "y": 0.1531,
+          "width": 0.0037,
+          "height": 0.0318
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.8812,
+          "y": 0.1508,
+          "width": 0.0358,
+          "height": 0.0342
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.9171,
+          "y": 0.1519,
+          "width": 0.0054,
+          "height": 0.0318
+        },
+        {
+          "word": "215/70",
+          "clean": "",
+          "x": 0.8608,
+          "y": 0.5819,
+          "width": 0.0221,
+          "height": 0.0353
+        },
+        {
+          "word": "A",
+          "clean": "a",
+          "x": 0.8917,
+          "y": 0.6042,
+          "width": 0.0058,
+          "height": 0.013
+        },
+        {
+          "word": "21",
+          "clean": "",
+          "x": 0.8733,
+          "y": 0.9517,
+          "width": 0.0108,
+          "height": 0.0177
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_11.jpg",
+      "en": "Here, sweet puppy. Now it's time to meet the baby. Woof, woof! 22 Best of all, it's time for the baby to meet a new friend!",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Here",
+          "clean": "here",
+          "x": 0.0708,
+          "y": 0.6431,
+          "width": 0.0325,
+          "height": 0.0389
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.1037,
+          "y": 0.6466,
+          "width": 0.0037,
+          "height": 0.0353
+        },
+        {
+          "word": "sweet",
+          "clean": "sweet",
+          "x": 0.1121,
+          "y": 0.6466,
+          "width": 0.0387,
+          "height": 0.0389
+        },
+        {
+          "word": "puppy",
+          "clean": "puppy",
+          "x": 0.155,
+          "y": 0.649,
+          "width": 0.0429,
+          "height": 0.04
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.1954,
+          "y": 0.6525,
+          "width": 0.0042,
+          "height": 0.0353
+        },
+        {
+          "word": "Now",
+          "clean": "now",
+          "x": 0.07,
+          "y": 0.715,
+          "width": 0.0321,
+          "height": 0.0306
+        },
+        {
+          "word": "it's",
+          "clean": "it's",
+          "x": 0.1079,
+          "y": 0.715,
+          "width": 0.0196,
+          "height": 0.0306
+        },
+        {
+          "word": "time",
+          "clean": "time",
+          "x": 0.1325,
+          "y": 0.715,
+          "width": 0.0308,
+          "height": 0.0306
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.07,
+          "y": 0.7833,
+          "width": 0.0129,
+          "height": 0.0365
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.0879,
+          "y": 0.7821,
+          "width": 0.0329,
+          "height": 0.0389
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1246,
+          "y": 0.7845,
+          "width": 0.0213,
+          "height": 0.0365
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.15,
+          "y": 0.7845,
+          "width": 0.0333,
+          "height": 0.0389
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.1821,
+          "y": 0.7856,
+          "width": 0.0037,
+          "height": 0.0365
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.07,
+          "y": 0.8528,
+          "width": 0.0375,
+          "height": 0.0365
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.1062,
+          "y": 0.8539,
+          "width": 0.0037,
+          "height": 0.0342
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.1154,
+          "y": 0.8516,
+          "width": 0.0354,
+          "height": 0.0365
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1512,
+          "y": 0.8516,
+          "width": 0.0046,
+          "height": 0.0342
+        },
+        {
+          "word": "22",
+          "clean": "",
+          "x": 0.13,
+          "y": 0.9529,
+          "width": 0.0112,
+          "height": 0.0177
+        },
+        {
+          "word": "Best",
+          "clean": "best",
+          "x": 0.8129,
+          "y": 0.7138,
+          "width": 0.0292,
+          "height": 0.0353
+        },
+        {
+          "word": "of",
+          "clean": "of",
+          "x": 0.8475,
+          "y": 0.7138,
+          "width": 0.0146,
+          "height": 0.0342
+        },
+        {
+          "word": "all",
+          "clean": "all",
+          "x": 0.8654,
+          "y": 0.7138,
+          "width": 0.0167,
+          "height": 0.0342
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.8829,
+          "y": 0.7138,
+          "width": 0.0029,
+          "height": 0.0342
+        },
+        {
+          "word": "it's",
+          "clean": "it's",
+          "x": 0.8921,
+          "y": 0.7138,
+          "width": 0.0192,
+          "height": 0.0342
+        },
+        {
+          "word": "time",
+          "clean": "time",
+          "x": 0.9158,
+          "y": 0.7126,
+          "width": 0.0304,
+          "height": 0.0342
+        },
+        {
+          "word": "for",
+          "clean": "for",
+          "x": 0.8125,
+          "y": 0.7845,
+          "width": 0.02,
+          "height": 0.0365
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.8367,
+          "y": 0.7845,
+          "width": 0.0208,
+          "height": 0.0365
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.8621,
+          "y": 0.7845,
+          "width": 0.0329,
+          "height": 0.0377
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.8992,
+          "y": 0.7856,
+          "width": 0.0142,
+          "height": 0.0365
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.9167,
+          "y": 0.7856,
+          "width": 0.0346,
+          "height": 0.0377
+        },
+        {
+          "word": "a",
+          "clean": "a",
+          "x": 0.8129,
+          "y": 0.8587,
+          "width": 0.0075,
+          "height": 0.0318
+        },
+        {
+          "word": "new",
+          "clean": "new",
+          "x": 0.8242,
+          "y": 0.8551,
+          "width": 0.0262,
+          "height": 0.0342
+        },
+        {
+          "word": "friend",
+          "clean": "friend",
+          "x": 0.8562,
+          "y": 0.8516,
+          "width": 0.0404,
+          "height": 0.0342
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8971,
+          "y": 0.8516,
+          "width": 0.0058,
+          "height": 0.0306
+        },
+        {
+          "word": "23",
+          "clean": "",
+          "x": 0.8762,
+          "y": 0.9529,
+          "width": 0.0117,
+          "height": 0.0188
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_12.jpg",
+      "en": "Woof!",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.1138,
+          "y": 0.1543,
+          "width": 0.0383,
+          "height": 0.0283
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.1521,
+          "y": 0.1543,
+          "width": 0.0046,
+          "height": 0.0283
+        }
+      ]
+    }
+  ]
+}
