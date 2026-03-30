@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/test_data.dart';
 import '../main.dart' show routeObserver;
+import 'reader_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HomeScreen — background image + transparent tap zones
@@ -268,8 +269,23 @@ class _DevBtn extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CalendarScreen — streak calendar placeholder
+// CalendarScreen — book calendar (one book per day)
 // ─────────────────────────────────────────────────────────────────────────────
+
+class _BookDay {
+  final int day;
+  final String title;
+  final String titleCN;
+  final String lessonId;
+  final String coverAsset;
+  const _BookDay(this.day, this.title, this.titleCN, this.lessonId, this.coverAsset);
+}
+
+const _kBooks = [
+  _BookDay(1, 'Biscuit', '小饼干', 'biscuit_book1_day1', 'assets/books/biscuit_cover.png'),
+  _BookDay(2, 'Biscuit and the Baby', '小饼干和宝宝', 'biscuit_baby_book2_day1', 'assets/books/biscuit_baby_cover.jpg'),
+  // 后续书籍在这里添加
+];
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -278,8 +294,9 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  int  _streakDays = 0;
-  List<bool> _weekActive = List.filled(7, false);
+  int _streakDays = 0;
+  String? _startDate;
+  bool _testMode = true; // 测试阶段：全部可读
 
   @override
   void initState() {
@@ -289,29 +306,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
-    final activeDates = (prefs.getString('active_dates') ?? '')
-        .split(',')
-        .where((s) => s.isNotEmpty)
-        .toSet();
-    final now      = DateTime.now();
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    String dateStr(DateTime d) =>
-        '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
-    final week = List.generate(
-        7, (i) => activeDates.contains(dateStr(weekStart.add(Duration(days: i)))));
+    var start = prefs.getString('book_start_date');
+    if (start == null) {
+      final now = DateTime.now();
+      start = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      await prefs.setString('book_start_date', start);
+    }
     if (mounted) {
       setState(() {
         _streakDays = prefs.getInt('streak_days') ?? 0;
-        _weekActive = week;
+        _startDate = start;
       });
     }
   }
 
+  int get _currentDay {
+    if (_startDate == null) return 1;
+    final parts = _startDate!.split('-');
+    final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    return DateTime.now().difference(start).inDays + 1;
+  }
+
   @override
   Widget build(BuildContext context) {
-    const labels  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const orange  = Color(0xFFFF8C42);
-    final todayIdx = DateTime.now().weekday - 1;
+    const orange = Color(0xFFFF8C42);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFF4E6),
@@ -328,19 +346,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 fontWeight: FontWeight.w900,
                 fontSize: 20)),
         centerTitle: true,
+        actions: [
+          // 测试模式开关
+          IconButton(
+            icon: Icon(_testMode ? Icons.lock_open_rounded : Icons.lock_rounded,
+                color: orange, size: 22),
+            onPressed: () => setState(() => _testMode = !_testMode),
+            tooltip: _testMode ? '测试模式(全部开放)' : '正常模式',
+          ),
+        ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Streak card
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                     colors: [Color(0xFFFFB347), Color(0xFFFF7043)]),
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                       color: const Color(0xFFFF7043).withValues(alpha: 0.35),
@@ -348,82 +376,171 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       offset: const Offset(0, 6))
                 ],
               ),
-              child: Column(
+              child: Row(
                 children: [
-                  const Text('🔥', style: TextStyle(fontSize: 48)),
-                  const SizedBox(height: 8),
-                  Text('$_streakDays 天连续学习！',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900)),
+                  const Text('🔥', style: TextStyle(fontSize: 36)),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('$_streakDays 天连续学习！',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900)),
+                      Text('每天一本绘本',
+                          style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.8),
+                              fontSize: 14)),
+                    ],
+                  ),
+                  const Spacer(),
+                  if (_testMode)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text('TEST',
+                          style: TextStyle(color: Colors.white,
+                              fontSize: 12, fontWeight: FontWeight.bold)),
+                    ),
                 ],
               ),
             ),
-            const SizedBox(height: 32),
-            // Week row
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text('本周打卡',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFFE65100))),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(7, (i) {
-                final isToday = i == todayIdx;
-                final active  = _weekActive[i];
-                return Column(
-                  children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: active
-                            ? orange
-                            : isToday
-                                ? const Color(0xFFFFE0B2)
-                                : Colors.grey.shade200,
-                        border: isToday && !active
-                            ? Border.all(color: orange, width: 2.5)
-                            : null,
-                        boxShadow: active
-                            ? [BoxShadow(
-                                color: orange.withValues(alpha: 0.40),
-                                blurRadius: 8,
-                                offset: const Offset(0, 3))]
-                            : null,
-                      ),
-                      child: active
-                          ? const Icon(Icons.check_rounded,
-                              color: Colors.white, size: 22)
-                          : isToday
-                              ? Center(
-                                  child: Container(
-                                    width: 10, height: 10,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: orange),
-                                  ))
+            const SizedBox(height: 20),
+            const Text('绘本日历',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFFE65100))),
+            const SizedBox(height: 12),
+            // Book list
+            Expanded(
+              child: ListView.builder(
+                itemCount: _kBooks.length,
+                itemBuilder: (context, index) {
+                  final book = _kBooks[index];
+                  final unlocked = _testMode || book.day <= _currentDay;
+                  final isToday = book.day == _currentDay;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: GestureDetector(
+                      onTap: unlocked
+                          ? () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ReaderScreen(lessonId: book.lessonId),
+                              ))
+                          : null,
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: unlocked ? Colors.white : Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(18),
+                          border: isToday
+                              ? Border.all(color: orange, width: 2.5)
                               : null,
+                          boxShadow: unlocked
+                              ? [BoxShadow(
+                                  color: orange.withValues(alpha: 0.15),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4))]
+                              : null,
+                        ),
+                        child: Row(
+                          children: [
+                            // Day number
+                            Container(
+                              width: 44, height: 44,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isToday
+                                    ? orange
+                                    : unlocked
+                                        ? const Color(0xFFFFE0B2)
+                                        : Colors.grey.shade300,
+                              ),
+                              child: Center(
+                                child: Text('${book.day}',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900,
+                                        color: isToday
+                                            ? Colors.white
+                                            : unlocked
+                                                ? orange
+                                                : Colors.grey)),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            // Cover thumbnail
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(
+                                book.coverAsset,
+                                width: 56, height: 56,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Container(
+                                  width: 56, height: 56,
+                                  color: Colors.grey.shade200,
+                                  child: const Icon(Icons.book, color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            // Title
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(book.title,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: unlocked
+                                              ? const Color(0xFF333333)
+                                              : Colors.grey)),
+                                  const SizedBox(height: 2),
+                                  Text(book.titleCN,
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: unlocked
+                                              ? const Color(0xFF999999)
+                                              : Colors.grey.shade400)),
+                                ],
+                              ),
+                            ),
+                            // Status icon
+                            if (!unlocked)
+                              const Icon(Icons.lock_rounded,
+                                  color: Colors.grey, size: 22)
+                            else if (isToday)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: orange,
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: const Text('TODAY',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold)),
+                              )
+                            else
+                              const Icon(Icons.check_circle_rounded,
+                                  color: Color(0xFF4CAF50), size: 22),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(labels[i],
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: isToday
-                                ? FontWeight.w900
-                                : FontWeight.w500,
-                            color: isToday
-                                ? orange
-                                : Colors.grey.shade500)),
-                  ],
-                );
-              }),
+                  );
+                },
+              ),
             ),
           ],
         ),
