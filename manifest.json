@@ -1,12 +1,12 @@
 {
-    "name": "bridgeread",
-    "short_name": "bridgeread",
+    "name": "BridgeRead",
+    "short_name": "BridgeRead",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#FFF8F0",
+    "theme_color": "#FF8C42",
+    "description": "儿童英语绘本阅读 - Children's English Reading",
+    "orientation": "landscape",
     "prefer_related_applications": false,
     "icons": [
         {
