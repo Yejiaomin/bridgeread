@@ -11,7 +11,7 @@ const env = fs.readFileSync(envPath, 'utf8');
 const elevenLabsKey = env.match(/ELEVENLABS_API_KEY=(.+)/)?.[1]?.trim();
 const ttsApiKey    = env.match(/TTS_API_KEY=(.+)/)?.[1]?.trim();
 const ttsAppId     = env.match(/TTS_APP_ID=(.+)/)?.[1]?.trim();
-const ttsVoiceId   = 'S_3PU7UUbX1'; // potato's clone voice
+const ttsVoiceId   = 'S_MnneA1cX1'; // 复刻cat clone voice
 
 if (!elevenLabsKey) { console.error('找不到ELEVENLABS_API_KEY'); process.exit(1); }
 if (!ttsApiKey || !ttsAppId) { console.error('找不到火山引擎TTS配置'); process.exit(1); }
@@ -51,7 +51,7 @@ const audioScripts = [
   { id: 'biscuit_p8_cn', text: '小女孩把灯开着，然后把Biscuit好好地盖进被子里。tucked in就是把被子掖好。其实在你睡觉的时候，爸爸妈妈也会来悄悄的给你掖被子哦？', lang: 'cn' },
   { id: 'biscuit_p8_en', text: 'Biscuit wants to be tucked in.', lang: 'en', keywords: [] },
   // 第9页
-  { id: 'biscuit_p9_cn', text: '盖好了被子，好像还不够！Biscuit说——再亲一次！再抱一次！哈哈哈! one more kiss，one more hug。one more就是再来一个！你猜猜看，现在biscuit是不是真的要睡觉啦？', lang: 'cn' },
+  { id: 'biscuit_p9_cn', text: '盖好了被子，好像还不够！Biscuit说——再亲一次！再抱一次！哈哈哈! one more kiss，one more 哈格。one more就是再来一个！你猜猜看，现在biscuit是不是真的要睡觉啦？', lang: 'cn' },
   { id: 'biscuit_p9_en', text: 'Biscuit wants one more kiss. Biscuit wants one more hug.', lang: 'en', keywords: [] },
   // 第10页
   { id: 'biscuit_p10_cn', text: '……Biscuit说了最后一声Woof！终于，他蜷起身体准备睡觉啦！curl up就是蜷成一团。你们睡觉是不是也喜欢蜷成小球球？', lang: 'cn' },
