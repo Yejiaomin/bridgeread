@@ -86,6 +86,11 @@ const phonemes = [
   { id: 'word_small', text: 'small' },
   { id: 'word_yellow', text: 'yellow' },
   { id: 'word_play', text: 'play' },
+  { id: 'word_met', text: 'met' },
+  { id: 'word_nap', text: 'nap' },
+  { id: 'word_fun', text: 'fun' },
+  { id: 'word_story', text: 'story' },
+  { id: 'word_pet', text: 'pet' },
 ];
 
 async function generatePhoneme(phoneme) {

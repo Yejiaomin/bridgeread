@@ -26,6 +26,7 @@ class Lesson {
   final List<BookPage> pages;
   final List<PhonicsWord> phonicsWords;
   final String featuredSentence;
+  final String originalAudio;
 
   const Lesson({
     required this.id,
@@ -35,6 +36,7 @@ class Lesson {
     required this.pages,
     required this.phonicsWords,
     required this.featuredSentence,
+    this.originalAudio = '',
   });
 
   factory Lesson.fromJson(Map<String, dynamic> json) => Lesson(
@@ -49,5 +51,6 @@ class Lesson {
             .map((w) => PhonicsWord.fromJson(w as Map<String, dynamic>))
             .toList(),
         featuredSentence: json['featuredSentence'] as String,
+        originalAudio: (json['originalAudio'] as String?) ?? '',
       );
 }

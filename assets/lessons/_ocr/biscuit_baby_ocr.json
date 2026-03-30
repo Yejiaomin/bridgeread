@@ -3,94 +3,183 @@
   "pages": [
     {
       "image": "biscuit_baby_spread_01.jpg",
-      "en": "",
-      "keywords": [],
-      "words": []
-    },
-    {
-      "image": "biscuit_baby_spread_02.jpg",
-      "en": "Woof, woof! Biscuit sees the baby. ATTA",
+      "en": "Woof, woof! What does Biscuit see?",
       "keywords": [],
       "words": [
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.0475,
-          "y": 0.5006,
-          "width": 0.0379,
-          "height": 0.0353
+          "x": 0.6038,
+          "y": 0.7808,
+          "width": 0.0762,
+          "height": 0.0365
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.0842,
-          "y": 0.5006,
-          "width": 0.0037,
+          "x": 0.6771,
+          "y": 0.7814,
+          "width": 0.0083,
           "height": 0.0342
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.0925,
-          "y": 0.5006,
-          "width": 0.0362,
-          "height": 0.0342
+          "x": 0.6954,
+          "y": 0.779,
+          "width": 0.0712,
+          "height": 0.0359
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1283,
-          "y": 0.5006,
-          "width": 0.005,
+          "x": 0.7658,
+          "y": 0.7796,
+          "width": 0.0092,
           "height": 0.0342
+        },
+        {
+          "word": "What",
+          "clean": "what",
+          "x": 0.6038,
+          "y": 0.8509,
+          "width": 0.0737,
+          "height": 0.0312
+        },
+        {
+          "word": "does",
+          "clean": "does",
+          "x": 0.6863,
+          "y": 0.8509,
+          "width": 0.06,
+          "height": 0.0312
         },
         {
           "word": "Biscuit",
           "clean": "biscuit",
-          "x": 0.0479,
-          "y": 0.5654,
-          "width": 0.0475,
-          "height": 0.04
+          "x": 0.7571,
+          "y": 0.8509,
+          "width": 0.0967,
+          "height": 0.0312
+        },
+        {
+          "word": "see",
+          "clean": "see",
+          "x": 0.8621,
+          "y": 0.8509,
+          "width": 0.0425,
+          "height": 0.0312
+        },
+        {
+          "word": "?",
+          "clean": "",
+          "x": 0.9063,
+          "y": 0.8509,
+          "width": 0.0133,
+          "height": 0.0312
+        },
+        {
+          "word": "3",
+          "clean": "",
+          "x": 0.7588,
+          "y": 0.9505,
+          "width": 0.0125,
+          "height": 0.0159
+        }
+      ]
+    },
+    {
+      "image": "biscuit_baby_spread_02.jpg",
+      "en": "Woof, woof! Biscuit sees the baby. www F",
+      "keywords": [],
+      "words": [
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.095,
+          "y": 0.5009,
+          "width": 0.0754,
+          "height": 0.0359
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.1696,
+          "y": 0.5015,
+          "width": 0.0067,
+          "height": 0.0348
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.1862,
+          "y": 0.5003,
+          "width": 0.0712,
+          "height": 0.0359
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.2571,
+          "y": 0.5009,
+          "width": 0.0092,
+          "height": 0.0348
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.0954,
+          "y": 0.5675,
+          "width": 0.0967,
+          "height": 0.0389
         },
         {
           "word": "sees",
           "clean": "sees",
-          "x": 0.1004,
-          "y": 0.5677,
-          "width": 0.0271,
-          "height": 0.0389
+          "x": 0.1996,
+          "y": 0.5698,
+          "width": 0.0554,
+          "height": 0.0383
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.1321,
-          "y": 0.5689,
-          "width": 0.0221,
-          "height": 0.0389
+          "x": 0.2633,
+          "y": 0.571,
+          "width": 0.0429,
+          "height": 0.0377
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.1571,
-          "y": 0.5701,
-          "width": 0.0342,
+          "x": 0.3146,
+          "y": 0.5722,
+          "width": 0.0663,
           "height": 0.0377
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.19,
-          "y": 0.5713,
-          "width": 0.0037,
+          "x": 0.3792,
+          "y": 0.574,
+          "width": 0.0067,
           "height": 0.0365
         },
         {
-          "word": "ATTA",
-          "clean": "atta",
-          "x": 0.8142,
-          "y": 0.6243,
-          "width": 0.0129,
-          "height": 0.0236
+          "word": "www",
+          "clean": "www",
+          "x": 0.9513,
+          "y": 0.8038,
+          "width": 0.0246,
+          "height": 0.0189
+        },
+        {
+          "word": "F",
+          "clean": "f",
+          "x": 0.995,
+          "y": 0.7955,
+          "width": 0.0046,
+          "height": 0.0094
         }
       ]
     },
@@ -102,839 +191,863 @@
         {
           "word": "Biscuit",
           "clean": "biscuit",
-          "x": 0.0629,
-          "y": 0.1508,
-          "width": 0.0479,
-          "height": 0.0353
+          "x": 0.1263,
+          "y": 0.1526,
+          "width": 0.095,
+          "height": 0.0318
         },
         {
           "word": "wants",
           "clean": "wants",
-          "x": 0.1154,
-          "y": 0.1531,
-          "width": 0.0396,
-          "height": 0.0342
+          "x": 0.2304,
+          "y": 0.155,
+          "width": 0.0788,
+          "height": 0.0306
         },
         {
           "word": "to",
           "clean": "to",
-          "x": 0.0621,
-          "y": 0.2226,
-          "width": 0.0138,
-          "height": 0.0353
+          "x": 0.1242,
+          "y": 0.2222,
+          "width": 0.0262,
+          "height": 0.0377
         },
         {
           "word": "meet",
           "clean": "meet",
-          "x": 0.0808,
-          "y": 0.2214,
-          "width": 0.0325,
+          "x": 0.1604,
+          "y": 0.2222,
+          "width": 0.0663,
           "height": 0.0377
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.1171,
-          "y": 0.2238,
-          "width": 0.0213,
-          "height": 0.0353
+          "x": 0.2338,
+          "y": 0.2227,
+          "width": 0.0421,
+          "height": 0.0383
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.1421,
-          "y": 0.2238,
-          "width": 0.0338,
+          "x": 0.2842,
+          "y": 0.2239,
+          "width": 0.0667,
           "height": 0.0377
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1762,
-          "y": 0.225,
-          "width": 0.0054,
-          "height": 0.0353
+          "x": 0.3529,
+          "y": 0.2245,
+          "width": 0.01,
+          "height": 0.0371
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.8042,
-          "y": 0.1531,
-          "width": 0.0375,
+          "x": 0.6088,
+          "y": 0.1526,
+          "width": 0.075,
           "height": 0.0365
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.8413,
-          "y": 0.1543,
-          "width": 0.0037,
-          "height": 0.0342
+          "x": 0.6829,
+          "y": 0.1526,
+          "width": 0.0067,
+          "height": 0.0354
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.8496,
-          "y": 0.1519,
-          "width": 0.0354,
+          "x": 0.7,
+          "y": 0.1514,
+          "width": 0.0708,
           "height": 0.0365
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.885,
-          "y": 0.1531,
-          "width": 0.0046,
-          "height": 0.0342
+          "x": 0.7704,
+          "y": 0.152,
+          "width": 0.0088,
+          "height": 0.0354
         },
         {
           "word": "Sshhh",
           "clean": "sshhh",
-          "x": 0.8046,
-          "y": 0.2238,
-          "width": 0.0413,
-          "height": 0.0365
+          "x": 0.6096,
+          "y": 0.2222,
+          "width": 0.0821,
+          "height": 0.0377
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.8467,
-          "y": 0.2238,
-          "width": 0.0046,
+          "x": 0.6937,
+          "y": 0.2222,
+          "width": 0.0079,
           "height": 0.0365
         },
         {
           "word": "Quiet",
           "clean": "quiet",
-          "x": 0.8554,
-          "y": 0.2238,
-          "width": 0.0375,
-          "height": 0.0365
+          "x": 0.7104,
+          "y": 0.2216,
+          "width": 0.075,
+          "height": 0.0371
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.8938,
-          "y": 0.2238,
-          "width": 0.0033,
+          "x": 0.7863,
+          "y": 0.2216,
+          "width": 0.0067,
           "height": 0.0365
         },
         {
           "word": "Biscuit",
           "clean": "biscuit",
-          "x": 0.9025,
-          "y": 0.2238,
-          "width": 0.0475,
-          "height": 0.0365
+          "x": 0.8042,
+          "y": 0.2204,
+          "width": 0.0954,
+          "height": 0.0377
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.9513,
-          "y": 0.2238,
-          "width": 0.0021,
+          "x": 0.9008,
+          "y": 0.2204,
+          "width": 0.0058,
           "height": 0.0365
         },
         {
           "word": "The",
           "clean": "the",
-          "x": 0.805,
-          "y": 0.2909,
-          "width": 0.0254,
-          "height": 0.0412
+          "x": 0.6096,
+          "y": 0.2911,
+          "width": 0.05,
+          "height": 0.0395
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.835,
-          "y": 0.2909,
-          "width": 0.0333,
-          "height": 0.0412
+          "x": 0.6696,
+          "y": 0.2917,
+          "width": 0.0658,
+          "height": 0.0395
         },
         {
           "word": "is",
           "clean": "is",
-          "x": 0.8721,
-          "y": 0.2921,
-          "width": 0.0108,
-          "height": 0.04
+          "x": 0.7446,
+          "y": 0.2929,
+          "width": 0.0213,
+          "height": 0.0383
         },
         {
           "word": "sleeping",
           "clean": "sleeping",
-          "x": 0.8883,
-          "y": 0.2921,
-          "width": 0.0571,
-          "height": 0.0424
+          "x": 0.7762,
+          "y": 0.2929,
+          "width": 0.1142,
+          "height": 0.0401
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.945,
-          "y": 0.2933,
-          "width": 0.0037,
-          "height": 0.04
+          "x": 0.8896,
+          "y": 0.2946,
+          "width": 0.0075,
+          "height": 0.0383
         }
       ]
     },
     {
       "image": "biscuit_baby_spread_04.jpg",
-      "en": "It's not time to meet the baby yet. 8 Woof, woof! Biscuit sees the baby's rattle.",
+      "en": "It's not time to meet the baby yet. 8 Woof, woof! wedloow Biscuit sees the baby's rattle. 9 D",
       "keywords": [],
       "words": [
         {
           "word": "It's",
           "clean": "it's",
-          "x": 0.0517,
-          "y": 0.7845,
-          "width": 0.0213,
-          "height": 0.0306
+          "x": 0.1054,
+          "y": 0.7849,
+          "width": 0.0421,
+          "height": 0.0298
         },
         {
           "word": "not",
           "clean": "not",
-          "x": 0.0775,
-          "y": 0.7845,
-          "width": 0.0225,
-          "height": 0.0294
+          "x": 0.1575,
+          "y": 0.7849,
+          "width": 0.0442,
+          "height": 0.0292
         },
         {
           "word": "time",
           "clean": "time",
-          "x": 0.1037,
-          "y": 0.7845,
-          "width": 0.0304,
-          "height": 0.0294
+          "x": 0.2096,
+          "y": 0.7838,
+          "width": 0.0608,
+          "height": 0.0298
         },
         {
           "word": "to",
           "clean": "to",
-          "x": 0.0517,
-          "y": 0.8504,
-          "width": 0.0138,
-          "height": 0.0389
+          "x": 0.1046,
+          "y": 0.8515,
+          "width": 0.0258,
+          "height": 0.0362
         },
         {
           "word": "meet",
           "clean": "meet",
-          "x": 0.0688,
-          "y": 0.8504,
-          "width": 0.0342,
-          "height": 0.04
+          "x": 0.14,
+          "y": 0.8515,
+          "width": 0.0671,
+          "height": 0.038
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.1067,
-          "y": 0.8528,
-          "width": 0.0208,
-          "height": 0.0389
+          "x": 0.2142,
+          "y": 0.8539,
+          "width": 0.0421,
+          "height": 0.0368
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.1313,
-          "y": 0.8528,
-          "width": 0.0342,
-          "height": 0.04
+          "x": 0.2646,
+          "y": 0.8545,
+          "width": 0.0683,
+          "height": 0.038
         },
         {
           "word": "yet",
           "clean": "yet",
-          "x": 0.1683,
-          "y": 0.8539,
-          "width": 0.0221,
-          "height": 0.04
+          "x": 0.3408,
+          "y": 0.8562,
+          "width": 0.0433,
+          "height": 0.0374
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.1908,
-          "y": 0.8563,
-          "width": 0.0033,
-          "height": 0.0377
+          "x": 0.3829,
+          "y": 0.8574,
+          "width": 0.0071,
+          "height": 0.0357
         },
         {
           "word": "8",
           "clean": "",
-          "x": 0.1212,
-          "y": 0.9529,
-          "width": 0.005,
-          "height": 0.0177
+          "x": 0.2454,
+          "y": 0.9515,
+          "width": 0.0096,
+          "height": 0.0228
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.7813,
-          "y": 0.7774,
-          "width": 0.0383,
-          "height": 0.0353
+          "x": 0.5687,
+          "y": 0.7773,
+          "width": 0.0767,
+          "height": 0.0362
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.8179,
-          "y": 0.7774,
-          "width": 0.0042,
-          "height": 0.033
+          "x": 0.6433,
+          "y": 0.7773,
+          "width": 0.0075,
+          "height": 0.0351
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.8275,
+          "x": 0.6608,
           "y": 0.7762,
-          "width": 0.0354,
-          "height": 0.0342
+          "width": 0.0712,
+          "height": 0.0362
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.8629,
+          "x": 0.7325,
           "y": 0.7762,
-          "width": 0.0046,
-          "height": 0.033
+          "width": 0.0096,
+          "height": 0.0351
+        },
+        {
+          "word": "wedloow",
+          "clean": "wedloow",
+          "x": 0.755,
+          "y": 0.775,
+          "width": 0.1233,
+          "height": 0.0362
         },
         {
           "word": "Biscuit",
           "clean": "biscuit",
-          "x": 0.7817,
-          "y": 0.8469,
-          "width": 0.0488,
-          "height": 0.0365
+          "x": 0.5692,
+          "y": 0.8463,
+          "width": 0.0963,
+          "height": 0.0397
         },
         {
           "word": "sees",
           "clean": "sees",
-          "x": 0.835,
+          "x": 0.675,
           "y": 0.8469,
-          "width": 0.0271,
-          "height": 0.0365
+          "width": 0.0542,
+          "height": 0.0397
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.8667,
-          "y": 0.8469,
-          "width": 0.0213,
-          "height": 0.0365
+          "x": 0.74,
+          "y": 0.8475,
+          "width": 0.0421,
+          "height": 0.0386
         },
         {
           "word": "baby's",
           "clean": "baby's",
-          "x": 0.8921,
-          "y": 0.8481,
-          "width": 0.0442,
-          "height": 0.0365
+          "x": 0.7913,
+          "y": 0.8475,
+          "width": 0.0879,
+          "height": 0.0397
         },
         {
           "word": "rattle",
           "clean": "rattle",
-          "x": 0.9408,
-          "y": 0.8481,
-          "width": 0.0346,
-          "height": 0.0365
+          "x": 0.8892,
+          "y": 0.848,
+          "width": 0.0704,
+          "height": 0.0397
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.9767,
-          "y": 0.8481,
-          "width": 0.0033,
-          "height": 0.0365
+          "x": 0.9617,
+          "y": 0.8486,
+          "width": 0.0063,
+          "height": 0.0386
         },
         {
           "word": "9",
           "clean": "",
-          "x": 0.8771,
-          "y": 0.947,
-          "width": 0.0054,
-          "height": 0.02
+          "x": 0.7608,
+          "y": 0.9468,
+          "width": 0.0121,
+          "height": 0.0199
+        },
+        {
+          "word": "D",
+          "clean": "d",
+          "x": 0.6929,
+          "y": 0.2712,
+          "width": 0.0688,
+          "height": 0.0766
         }
       ]
     },
     {
       "image": "biscuit_baby_spread_05.jpg",
-      "en": "Woof, woof! Biscuit sees the baby's bunny. Woof, woof! Biscuit wants to meet the baby! 10",
+      "en": "Woof, woof! Biscuit sees the baby's bunny. Woof, woof! Biscuit wants to meet the baby! 10 11 Me",
       "keywords": [],
       "words": [
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.0233,
-          "y": 0.7774,
-          "width": 0.0383,
-          "height": 0.0353
+          "x": 0.0479,
+          "y": 0.7773,
+          "width": 0.0767,
+          "height": 0.0365
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.0604,
-          "y": 0.7786,
-          "width": 0.0037,
-          "height": 0.033
+          "x": 0.1217,
+          "y": 0.7773,
+          "width": 0.0079,
+          "height": 0.0348
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.0692,
-          "y": 0.7762,
-          "width": 0.0354,
-          "height": 0.0353
+          "x": 0.1383,
+          "y": 0.7761,
+          "width": 0.0721,
+          "height": 0.0359
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.105,
-          "y": 0.7774,
-          "width": 0.005,
-          "height": 0.033
+          "x": 0.2108,
+          "y": 0.7761,
+          "width": 0.0092,
+          "height": 0.0348
         },
         {
           "word": "Biscuit",
           "clean": "biscuit",
-          "x": 0.0238,
-          "y": 0.8445,
-          "width": 0.0488,
-          "height": 0.04
+          "x": 0.0483,
+          "y": 0.845,
+          "width": 0.0954,
+          "height": 0.0395
         },
         {
           "word": "sees",
           "clean": "sees",
-          "x": 0.0767,
-          "y": 0.8457,
-          "width": 0.0275,
-          "height": 0.04
-        },
-        {
-          "word": "the",
-          "clean": "the",
-          "x": 0.1087,
-          "y": 0.8469,
-          "width": 0.0213,
-          "height": 0.0377
-        },
-        {
-          "word": "baby's",
-          "clean": "baby's",
-          "x": 0.1333,
-          "y": 0.8469,
-          "width": 0.045,
-          "height": 0.04
-        },
-        {
-          "word": "bunny",
-          "clean": "bunny",
-          "x": 0.1821,
-          "y": 0.8481,
-          "width": 0.0429,
-          "height": 0.04
-        },
-        {
-          "word": ".",
-          "clean": "",
-          "x": 0.2233,
-          "y": 0.8492,
-          "width": 0.0046,
-          "height": 0.0377
-        },
-        {
-          "word": "Woof",
-          "clean": "woof",
-          "x": 0.8204,
-          "y": 0.7055,
-          "width": 0.0379,
-          "height": 0.0353
-        },
-        {
-          "word": ",",
-          "clean": "",
-          "x": 0.8571,
-          "y": 0.7055,
-          "width": 0.0037,
-          "height": 0.033
-        },
-        {
-          "word": "woof",
-          "clean": "woof",
-          "x": 0.8658,
-          "y": 0.7044,
-          "width": 0.0362,
-          "height": 0.0353
-        },
-        {
-          "word": "!",
-          "clean": "",
-          "x": 0.9017,
-          "y": 0.7044,
-          "width": 0.005,
-          "height": 0.033
-        },
-        {
-          "word": "Biscuit",
-          "clean": "biscuit",
-          "x": 0.8208,
-          "y": 0.7739,
-          "width": 0.0475,
-          "height": 0.0353
-        },
-        {
-          "word": "wants",
-          "clean": "wants",
-          "x": 0.8733,
-          "y": 0.7762,
-          "width": 0.0396,
-          "height": 0.0353
-        },
-        {
-          "word": "to",
-          "clean": "to",
-          "x": 0.8204,
-          "y": 0.8445,
-          "width": 0.0138,
-          "height": 0.0377
-        },
-        {
-          "word": "meet",
-          "clean": "meet",
-          "x": 0.8383,
-          "y": 0.8445,
-          "width": 0.0333,
+          "x": 0.1525,
+          "y": 0.8462,
+          "width": 0.0546,
           "height": 0.0389
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.875,
-          "y": 0.8457,
-          "width": 0.0213,
+          "x": 0.2175,
+          "y": 0.8468,
+          "width": 0.0408,
+          "height": 0.0389
+        },
+        {
+          "word": "baby's",
+          "clean": "baby's",
+          "x": 0.2671,
+          "y": 0.8474,
+          "width": 0.0892,
+          "height": 0.0383
+        },
+        {
+          "word": "bunny",
+          "clean": "bunny",
+          "x": 0.3646,
+          "y": 0.848,
+          "width": 0.0854,
+          "height": 0.0389
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.4479,
+          "y": 0.8491,
+          "width": 0.0071,
+          "height": 0.0377
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.6425,
+          "y": 0.706,
+          "width": 0.0758,
+          "height": 0.0354
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.715,
+          "y": 0.7065,
+          "width": 0.0075,
+          "height": 0.0336
+        },
+        {
+          "word": "woof",
+          "clean": "woof",
+          "x": 0.7329,
+          "y": 0.7048,
+          "width": 0.0712,
+          "height": 0.0354
+        },
+        {
+          "word": "!",
+          "clean": "",
+          "x": 0.8046,
+          "y": 0.7054,
+          "width": 0.0079,
+          "height": 0.0336
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.6421,
+          "y": 0.7767,
+          "width": 0.0954,
+          "height": 0.0312
+        },
+        {
+          "word": "wants",
+          "clean": "wants",
+          "x": 0.7462,
+          "y": 0.779,
+          "width": 0.0792,
+          "height": 0.0306
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.6404,
+          "y": 0.8456,
+          "width": 0.0262,
+          "height": 0.0365
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.6767,
+          "y": 0.8456,
+          "width": 0.0663,
+          "height": 0.0377
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.75,
+          "y": 0.8462,
+          "width": 0.0417,
           "height": 0.0377
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.9004,
-          "y": 0.8457,
-          "width": 0.0333,
-          "height": 0.04
+          "x": 0.8004,
+          "y": 0.8468,
+          "width": 0.0663,
+          "height": 0.0377
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.9342,
-          "y": 0.8469,
-          "width": 0.005,
-          "height": 0.0377
+          "x": 0.8688,
+          "y": 0.8474,
+          "width": 0.01,
+          "height": 0.0365
         },
         {
           "word": "10",
           "clean": "",
-          "x": 0.1212,
+          "x": 0.2429,
           "y": 0.947,
-          "width": 0.01,
-          "height": 0.0188
+          "width": 0.0196,
+          "height": 0.0171
         },
         {
           "word": "11",
           "clean": "",
-          "x": 0.8758,
+          "x": 0.7521,
           "y": 0.9458,
-          "width": 0.0092,
+          "width": 0.0171,
           "height": 0.0177
+        },
+        {
+          "word": "Me",
+          "clean": "me",
+          "x": 0.9242,
+          "y": 0.0471,
+          "width": 0.0754,
+          "height": 0.0407
         }
       ]
     },
     {
       "image": "biscuit_baby_spread_06.jpg",
-      "en": "Sshhh! Quiet, Biscuit. The baby is still sleeping. It's not time to meet the baby yet. Woof, woof! Silly puppy! That's not your blanket. 13 ld www",
+      "en": "Sshhh! Quiet, Biscuit. The baby is still sleeping. It's not time to meet the baby yet. www Trav Woof, woof! Silly puppy! That's not your blanket.",
       "keywords": [],
       "words": [
         {
           "word": "Sshhh",
           "clean": "sshhh",
-          "x": 0.0404,
-          "y": 0.1484,
-          "width": 0.0413,
-          "height": 0.0377
+          "x": 0.0817,
+          "y": 0.1479,
+          "width": 0.0821,
+          "height": 0.0365
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.0829,
-          "y": 0.1484,
-          "width": 0.0042,
-          "height": 0.0377
+          "x": 0.1667,
+          "y": 0.1479,
+          "width": 0.0079,
+          "height": 0.0365
         },
         {
           "word": "Quiet",
           "clean": "quiet",
-          "x": 0.0917,
-          "y": 0.1484,
-          "width": 0.0379,
-          "height": 0.0377
-        },
-        {
-          "word": ",",
-          "clean": "",
-          "x": 0.13,
-          "y": 0.1484,
-          "width": 0.0029,
-          "height": 0.0377
-        },
-        {
-          "word": "Biscuit",
-          "clean": "biscuit",
-          "x": 0.1383,
-          "y": 0.1484,
-          "width": 0.0483,
-          "height": 0.0377
-        },
-        {
-          "word": ".",
-          "clean": "",
-          "x": 0.1867,
-          "y": 0.1484,
-          "width": 0.0029,
-          "height": 0.0377
-        },
-        {
-          "word": "The",
-          "clean": "the",
-          "x": 0.0408,
-          "y": 0.2144,
-          "width": 0.0254,
-          "height": 0.04
-        },
-        {
-          "word": "baby",
-          "clean": "baby",
-          "x": 0.0708,
-          "y": 0.2144,
-          "width": 0.0329,
-          "height": 0.0412
-        },
-        {
-          "word": "is",
-          "clean": "is",
-          "x": 0.1083,
-          "y": 0.2155,
-          "width": 0.0104,
-          "height": 0.0389
-        },
-        {
-          "word": "still",
-          "clean": "still",
-          "x": 0.1242,
-          "y": 0.2155,
-          "width": 0.0262,
-          "height": 0.0412
-        },
-        {
-          "word": "sleeping",
-          "clean": "sleeping",
-          "x": 0.1542,
-          "y": 0.2167,
-          "width": 0.0567,
-          "height": 0.0412
-        },
-        {
-          "word": ".",
-          "clean": "",
-          "x": 0.2108,
-          "y": 0.2191,
-          "width": 0.0037,
-          "height": 0.0389
-        },
-        {
-          "word": "It's",
-          "clean": "it's",
-          "x": 0.04,
-          "y": 0.2886,
-          "width": 0.0217,
-          "height": 0.0306
-        },
-        {
-          "word": "not",
-          "clean": "not",
-          "x": 0.0667,
-          "y": 0.2886,
-          "width": 0.0225,
-          "height": 0.0306
-        },
-        {
-          "word": "time",
-          "clean": "time",
-          "x": 0.0921,
-          "y": 0.2886,
-          "width": 0.0313,
-          "height": 0.0306
-        },
-        {
-          "word": "to",
-          "clean": "to",
-          "x": 0.0396,
-          "y": 0.3569,
-          "width": 0.0138,
-          "height": 0.0377
-        },
-        {
-          "word": "meet",
-          "clean": "meet",
-          "x": 0.0579,
-          "y": 0.3557,
-          "width": 0.0329,
-          "height": 0.04
-        },
-        {
-          "word": "the",
-          "clean": "the",
-          "x": 0.0946,
-          "y": 0.3581,
-          "width": 0.0208,
-          "height": 0.0389
-        },
-        {
-          "word": "baby",
-          "clean": "baby",
-          "x": 0.1196,
-          "y": 0.3581,
-          "width": 0.0342,
-          "height": 0.04
-        },
-        {
-          "word": "yet",
-          "clean": "yet",
-          "x": 0.1571,
-          "y": 0.3604,
-          "width": 0.0217,
-          "height": 0.0389
-        },
-        {
-          "word": ".",
-          "clean": "",
-          "x": 0.1783,
-          "y": 0.3604,
-          "width": 0.0037,
-          "height": 0.0377
-        },
-        {
-          "word": "Woof",
-          "clean": "woof",
-          "x": 0.7992,
-          "y": 0.7079,
-          "width": 0.0375,
+          "x": 0.1833,
+          "y": 0.1479,
+          "width": 0.075,
           "height": 0.0365
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.8367,
-          "y": 0.7091,
-          "width": 0.0037,
+          "x": 0.2604,
+          "y": 0.1479,
+          "width": 0.0054,
+          "height": 0.0365
+        },
+        {
+          "word": "Biscuit",
+          "clean": "biscuit",
+          "x": 0.2762,
+          "y": 0.1479,
+          "width": 0.0958,
+          "height": 0.0365
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.3742,
+          "y": 0.1479,
+          "width": 0.005,
+          "height": 0.0365
+        },
+        {
+          "word": "The",
+          "clean": "the",
+          "x": 0.0813,
+          "y": 0.2139,
+          "width": 0.0508,
+          "height": 0.0418
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.1408,
+          "y": 0.2151,
+          "width": 0.0663,
+          "height": 0.0418
+        },
+        {
+          "word": "is",
+          "clean": "is",
+          "x": 0.2158,
+          "y": 0.2163,
+          "width": 0.0221,
+          "height": 0.0407
+        },
+        {
+          "word": "still",
+          "clean": "still",
+          "x": 0.2475,
+          "y": 0.2163,
+          "width": 0.0521,
+          "height": 0.0418
+        },
+        {
+          "word": "sleeping",
+          "clean": "sleeping",
+          "x": 0.3083,
+          "y": 0.2169,
+          "width": 0.1125,
+          "height": 0.043
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.4217,
+          "y": 0.2186,
+          "width": 0.0067,
+          "height": 0.0407
+        },
+        {
+          "word": "It's",
+          "clean": "it's",
+          "x": 0.0804,
+          "y": 0.2882,
+          "width": 0.0429,
+          "height": 0.0301
+        },
+        {
+          "word": "not",
+          "clean": "not",
+          "x": 0.1321,
+          "y": 0.2882,
+          "width": 0.0442,
+          "height": 0.0295
+        },
+        {
+          "word": "time",
+          "clean": "time",
+          "x": 0.1837,
+          "y": 0.287,
+          "width": 0.0608,
+          "height": 0.0301
+        },
+        {
+          "word": "to",
+          "clean": "to",
+          "x": 0.0792,
+          "y": 0.3553,
+          "width": 0.0267,
+          "height": 0.0383
+        },
+        {
+          "word": "meet",
+          "clean": "meet",
+          "x": 0.115,
+          "y": 0.3553,
+          "width": 0.0667,
+          "height": 0.0395
+        },
+        {
+          "word": "the",
+          "clean": "the",
+          "x": 0.1888,
+          "y": 0.3571,
+          "width": 0.0417,
+          "height": 0.0383
+        },
+        {
+          "word": "baby",
+          "clean": "baby",
+          "x": 0.2396,
+          "y": 0.3577,
+          "width": 0.0667,
+          "height": 0.0395
+        },
+        {
+          "word": "yet",
+          "clean": "yet",
+          "x": 0.3137,
+          "y": 0.3589,
+          "width": 0.0429,
+          "height": 0.0389
+        },
+        {
+          "word": ".",
+          "clean": "",
+          "x": 0.3558,
+          "y": 0.36,
+          "width": 0.0071,
+          "height": 0.0377
+        },
+        {
+          "word": "www",
+          "clean": "www",
+          "x": 0.8792,
+          "y": 0.1567,
+          "width": 0.0446,
+          "height": 0.0896
+        },
+        {
+          "word": "Trav",
+          "clean": "trav",
+          "x": 0.9821,
+          "y": 0.264,
+          "width": 0.0175,
+          "height": 0.0106
+        },
+        {
+          "word": "Woof",
+          "clean": "woof",
+          "x": 0.5996,
+          "y": 0.7077,
+          "width": 0.0754,
+          "height": 0.0359
+        },
+        {
+          "word": ",",
+          "clean": "",
+          "x": 0.6737,
+          "y": 0.7083,
+          "width": 0.0075,
           "height": 0.0342
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.8446,
-          "y": 0.7067,
-          "width": 0.0358,
-          "height": 0.0365
+          "x": 0.6896,
+          "y": 0.7065,
+          "width": 0.0717,
+          "height": 0.0359
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.88,
-          "y": 0.7079,
-          "width": 0.005,
+          "x": 0.7617,
+          "y": 0.7065,
+          "width": 0.0092,
           "height": 0.0342
         },
         {
           "word": "Silly",
           "clean": "silly",
-          "x": 0.7992,
-          "y": 0.7762,
-          "width": 0.0317,
-          "height": 0.0389
+          "x": 0.5992,
+          "y": 0.7773,
+          "width": 0.0638,
+          "height": 0.0401
         },
         {
           "word": "puppy",
           "clean": "puppy",
-          "x": 0.8354,
-          "y": 0.7774,
-          "width": 0.0425,
-          "height": 0.0389
+          "x": 0.6717,
+          "y": 0.7778,
+          "width": 0.0838,
+          "height": 0.0401
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.8792,
-          "y": 0.7797,
-          "width": 0.0054,
-          "height": 0.0365
+          "x": 0.7583,
+          "y": 0.779,
+          "width": 0.0096,
+          "height": 0.0389
         },
         {
           "word": "That's",
           "clean": "that's",
-          "x": 0.7987,
-          "y": 0.8492,
-          "width": 0.0425,
-          "height": 0.0365
+          "x": 0.5992,
+          "y": 0.848,
+          "width": 0.0833,
+          "height": 0.0377
         },
         {
           "word": "not",
           "clean": "not",
-          "x": 0.8462,
-          "y": 0.8492,
-          "width": 0.0217,
-          "height": 0.0365
+          "x": 0.6925,
+          "y": 0.8486,
+          "width": 0.0433,
+          "height": 0.0371
         },
         {
           "word": "your",
           "clean": "your",
-          "x": 0.8717,
-          "y": 0.8492,
-          "width": 0.0321,
-          "height": 0.0365
+          "x": 0.7442,
+          "y": 0.8491,
+          "width": 0.0629,
+          "height": 0.0371
         },
         {
           "word": "blanket",
           "clean": "blanket",
-          "x": 0.9071,
-          "y": 0.8492,
-          "width": 0.0508,
-          "height": 0.0365
+          "x": 0.8137,
+          "y": 0.8491,
+          "width": 0.1008,
+          "height": 0.0377
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.9579,
-          "y": 0.8492,
-          "width": 0.0033,
+          "x": 0.9163,
+          "y": 0.8503,
+          "width": 0.0063,
           "height": 0.0365
         },
         {
           "word": "13",
           "clean": "",
-          "x": 0.8758,
+          "x": 0.7517,
           "y": 0.947,
-          "width": 0.01,
-          "height": 0.0188
-        },
-        {
-          "word": "ld",
-          "clean": "ld",
-          "x": 0.9858,
-          "y": 0.3192,
-          "width": 0.0129,
-          "height": 0.02
-        },
-        {
-          "word": "www",
-          "clean": "www",
-          "x": 0.9871,
-          "y": 0.3993,
-          "width": 0.0083,
-          "height": 0.013
+          "width": 0.0196,
+          "height": 0.0177
         }
       ]
     },
@@ -946,298 +1059,298 @@
         {
           "word": "Oh",
           "clean": "oh",
-          "x": 0.0688,
-          "y": 0.1472,
-          "width": 0.02,
+          "x": 0.1375,
+          "y": 0.1473,
+          "width": 0.04,
           "height": 0.0365
         },
         {
           "word": "no",
           "clean": "no",
-          "x": 0.0933,
-          "y": 0.1461,
-          "width": 0.0167,
-          "height": 0.0353
+          "x": 0.1867,
+          "y": 0.1467,
+          "width": 0.0325,
+          "height": 0.0354
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.11,
-          "y": 0.1472,
-          "width": 0.0037,
-          "height": 0.0342
+          "x": 0.2213,
+          "y": 0.1467,
+          "width": 0.0067,
+          "height": 0.0348
         },
         {
           "word": "Biscuit",
           "clean": "biscuit",
-          "x": 0.1192,
-          "y": 0.1437,
-          "width": 0.0488,
+          "x": 0.2387,
+          "y": 0.1432,
+          "width": 0.0967,
           "height": 0.0377
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.1679,
-          "y": 0.1437,
-          "width": 0.0037,
-          "height": 0.0342
+          "x": 0.3358,
+          "y": 0.1432,
+          "width": 0.0071,
+          "height": 0.0348
         },
         {
           "word": "Those",
           "clean": "those",
-          "x": 0.0692,
-          "y": 0.2167,
-          "width": 0.0404,
-          "height": 0.033
+          "x": 0.1388,
+          "y": 0.218,
+          "width": 0.0796,
+          "height": 0.0312
         },
         {
           "word": "booties",
           "clean": "booties",
-          "x": 0.1146,
-          "y": 0.2167,
-          "width": 0.0488,
-          "height": 0.0318
+          "x": 0.2292,
+          "y": 0.2174,
+          "width": 0.0963,
+          "height": 0.0312
         },
         {
           "word": "are",
           "clean": "are",
-          "x": 0.0692,
-          "y": 0.2886,
-          "width": 0.0208,
-          "height": 0.0377
+          "x": 0.1388,
+          "y": 0.2893,
+          "width": 0.0413,
+          "height": 0.0365
         },
         {
           "word": "for",
           "clean": "for",
-          "x": 0.0938,
-          "y": 0.2886,
-          "width": 0.0204,
-          "height": 0.0377
+          "x": 0.1879,
+          "y": 0.2893,
+          "width": 0.04,
+          "height": 0.0365
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.1179,
-          "y": 0.2886,
-          "width": 0.0208,
-          "height": 0.0377
+          "x": 0.2358,
+          "y": 0.2893,
+          "width": 0.0417,
+          "height": 0.0365
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.1429,
-          "y": 0.2886,
-          "width": 0.0342,
-          "height": 0.0377
+          "x": 0.2863,
+          "y": 0.2893,
+          "width": 0.0675,
+          "height": 0.0365
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.175,
-          "y": 0.2886,
-          "width": 0.0037,
-          "height": 0.0377
+          "x": 0.3517,
+          "y": 0.2893,
+          "width": 0.0063,
+          "height": 0.0365
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.0688,
-          "y": 0.3557,
-          "width": 0.0383,
-          "height": 0.0353
+          "x": 0.1375,
+          "y": 0.3559,
+          "width": 0.0779,
+          "height": 0.0354
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.1058,
-          "y": 0.3557,
-          "width": 0.0037,
+          "x": 0.2117,
+          "y": 0.3565,
+          "width": 0.0075,
           "height": 0.033
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.1142,
-          "y": 0.3545,
-          "width": 0.0362,
-          "height": 0.0353
+          "x": 0.2283,
+          "y": 0.3547,
+          "width": 0.0729,
+          "height": 0.0348
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1496,
-          "y": 0.3545,
-          "width": 0.0054,
+          "x": 0.3004,
+          "y": 0.3547,
+          "width": 0.0092,
           "height": 0.033
         },
         {
           "word": "Funny",
           "clean": "funny",
-          "x": 0.7867,
-          "y": 0.6396,
-          "width": 0.0429,
-          "height": 0.0377
+          "x": 0.5733,
+          "y": 0.6388,
+          "width": 0.0867,
+          "height": 0.0389
         },
         {
           "word": "puppy",
           "clean": "puppy",
-          "x": 0.8342,
-          "y": 0.6396,
-          "width": 0.0417,
-          "height": 0.0377
+          "x": 0.6675,
+          "y": 0.6394,
+          "width": 0.0854,
+          "height": 0.0389
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.8775,
-          "y": 0.6396,
-          "width": 0.0054,
+          "x": 0.7542,
+          "y": 0.6405,
+          "width": 0.0108,
           "height": 0.0377
         },
         {
           "word": "You",
           "clean": "you",
-          "x": 0.7863,
-          "y": 0.7091,
-          "width": 0.0271,
-          "height": 0.0353
+          "x": 0.5725,
+          "y": 0.7065,
+          "width": 0.0546,
+          "height": 0.0383
         },
         {
           "word": "want",
           "clean": "want",
-          "x": 0.8183,
-          "y": 0.7091,
-          "width": 0.0329,
-          "height": 0.0353
+          "x": 0.6358,
+          "y": 0.7071,
+          "width": 0.0663,
+          "height": 0.0383
         },
         {
           "word": "to",
           "clean": "to",
-          "x": 0.8554,
-          "y": 0.7091,
-          "width": 0.0133,
-          "height": 0.0365
+          "x": 0.7104,
+          "y": 0.7083,
+          "width": 0.0271,
+          "height": 0.0371
         },
         {
           "word": "meet",
           "clean": "meet",
-          "x": 0.8733,
-          "y": 0.7102,
-          "width": 0.0333,
-          "height": 0.0353
+          "x": 0.7467,
+          "y": 0.7083,
+          "width": 0.065,
+          "height": 0.0383
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.9092,
-          "y": 0.7102,
-          "width": 0.0221,
-          "height": 0.0353
+          "x": 0.82,
+          "y": 0.7089,
+          "width": 0.0417,
+          "height": 0.0383
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.9342,
-          "y": 0.7114,
-          "width": 0.035,
-          "height": 0.0353
+          "x": 0.8708,
+          "y": 0.7095,
+          "width": 0.0658,
+          "height": 0.0383
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.9675,
-          "y": 0.7114,
-          "width": 0.0046,
-          "height": 0.0353
+          "x": 0.9337,
+          "y": 0.7101,
+          "width": 0.0079,
+          "height": 0.0371
         },
         {
           "word": "But",
           "clean": "but",
-          "x": 0.7867,
-          "y": 0.7786,
-          "width": 0.0242,
-          "height": 0.0306
+          "x": 0.5733,
+          "y": 0.7796,
+          "width": 0.0488,
+          "height": 0.0295
         },
         {
           "word": "it's",
           "clean": "it's",
-          "x": 0.8154,
-          "y": 0.7786,
-          "width": 0.0204,
-          "height": 0.0306
+          "x": 0.6308,
+          "y": 0.7796,
+          "width": 0.0404,
+          "height": 0.0295
         },
         {
           "word": "not",
           "clean": "not",
-          "x": 0.8404,
-          "y": 0.7786,
-          "width": 0.0217,
-          "height": 0.0306
+          "x": 0.6813,
+          "y": 0.7796,
+          "width": 0.0429,
+          "height": 0.0295
         },
         {
           "word": "time",
           "clean": "time",
-          "x": 0.8662,
-          "y": 0.7786,
-          "width": 0.0308,
-          "height": 0.0306
+          "x": 0.7325,
+          "y": 0.7796,
+          "width": 0.0612,
+          "height": 0.0295
         },
         {
           "word": "to",
           "clean": "to",
-          "x": 0.7858,
-          "y": 0.8457,
-          "width": 0.0138,
-          "height": 0.0377
+          "x": 0.5717,
+          "y": 0.845,
+          "width": 0.0262,
+          "height": 0.0389
         },
         {
           "word": "meet",
           "clean": "meet",
-          "x": 0.8037,
-          "y": 0.8457,
-          "width": 0.0333,
-          "height": 0.0389
+          "x": 0.6075,
+          "y": 0.8456,
+          "width": 0.0663,
+          "height": 0.0395
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.8404,
-          "y": 0.8469,
-          "width": 0.0213,
-          "height": 0.04
+          "x": 0.6808,
+          "y": 0.8468,
+          "width": 0.0425,
+          "height": 0.0401
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.8658,
-          "y": 0.8481,
-          "width": 0.0338,
-          "height": 0.0389
+          "x": 0.7317,
+          "y": 0.848,
+          "width": 0.0675,
+          "height": 0.0401
         },
         {
           "word": "yet",
           "clean": "yet",
-          "x": 0.9033,
-          "y": 0.8492,
-          "width": 0.0213,
-          "height": 0.04
+          "x": 0.8067,
+          "y": 0.8497,
+          "width": 0.0429,
+          "height": 0.0395
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.925,
-          "y": 0.8504,
-          "width": 0.0029,
-          "height": 0.0377
+          "x": 0.8492,
+          "y": 0.8509,
+          "width": 0.005,
+          "height": 0.0383
         },
         {
           "word": "15",
           "clean": "",
-          "x": 0.8733,
-          "y": 0.947,
-          "width": 0.0096,
-          "height": 0.0188
+          "x": 0.7462,
+          "y": 0.9481,
+          "width": 0.0204,
+          "height": 0.0183
         }
       ]
     },
@@ -1249,18 +1362,18 @@
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.0796,
-          "y": 0.1531,
-          "width": 0.0387,
-          "height": 0.0283
+          "x": 0.1596,
+          "y": 0.152,
+          "width": 0.0762,
+          "height": 0.0301
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1179,
-          "y": 0.1531,
-          "width": 0.005,
-          "height": 0.0283
+          "x": 0.2358,
+          "y": 0.152,
+          "width": 0.0092,
+          "height": 0.0301
         }
       ]
     },
@@ -1272,576 +1385,560 @@
         {
           "word": "Waa",
           "clean": "waa",
-          "x": 0.0546,
-          "y": 0.8563,
-          "width": 0.0296,
-          "height": 0.0306
+          "x": 0.1092,
+          "y": 0.8556,
+          "width": 0.0596,
+          "height": 0.0318
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.0858,
-          "y": 0.8563,
-          "width": 0.0042,
-          "height": 0.0306
+          "x": 0.1713,
+          "y": 0.8556,
+          "width": 0.0075,
+          "height": 0.0318
         },
         {
           "word": "Waa",
           "clean": "waa",
-          "x": 0.0942,
-          "y": 0.8563,
-          "width": 0.0296,
-          "height": 0.0306
+          "x": 0.1883,
+          "y": 0.8556,
+          "width": 0.0587,
+          "height": 0.0318
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.125,
-          "y": 0.8563,
-          "width": 0.0037,
-          "height": 0.0306
+          "x": 0.2504,
+          "y": 0.8556,
+          "width": 0.0071,
+          "height": 0.0318
         },
         {
           "word": "Waa",
           "clean": "waa",
-          "x": 0.1338,
-          "y": 0.8563,
-          "width": 0.0296,
-          "height": 0.0306
+          "x": 0.2671,
+          "y": 0.8556,
+          "width": 0.0596,
+          "height": 0.0318
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1642,
-          "y": 0.8563,
-          "width": 0.0046,
-          "height": 0.0306
+          "x": 0.3292,
+          "y": 0.8556,
+          "width": 0.0083,
+          "height": 0.0318
         },
         {
           "word": "Waa",
           "clean": "waa",
-          "x": 0.1729,
-          "y": 0.8563,
-          "width": 0.03,
-          "height": 0.0306
+          "x": 0.3458,
+          "y": 0.8556,
+          "width": 0.0587,
+          "height": 0.0318
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.2033,
-          "y": 0.8563,
-          "width": 0.005,
-          "height": 0.0306
+          "x": 0.4071,
+          "y": 0.8556,
+          "width": 0.0083,
+          "height": 0.0318
         },
         {
           "word": "18",
           "clean": "",
-          "x": 0.1267,
-          "y": 0.9541,
-          "width": 0.0096,
-          "height": 0.0165
+          "x": 0.2542,
+          "y": 0.9534,
+          "width": 0.0183,
+          "height": 0.0194
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.7954,
-          "y": 0.1543,
-          "width": 0.0379,
-          "height": 0.033
+          "x": 0.5908,
+          "y": 0.1544,
+          "width": 0.0767,
+          "height": 0.0324
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.8337,
-          "y": 0.1543,
-          "width": 0.0042,
-          "height": 0.033
+          "x": 0.6679,
+          "y": 0.1544,
+          "width": 0.0083,
+          "height": 0.0324
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.8421,
-          "y": 0.1543,
-          "width": 0.0383,
-          "height": 0.033
+          "x": 0.6846,
+          "y": 0.1544,
+          "width": 0.0758,
+          "height": 0.0324
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.8812,
-          "y": 0.1543,
-          "width": 0.0042,
-          "height": 0.033
+          "x": 0.7617,
+          "y": 0.1544,
+          "width": 0.0079,
+          "height": 0.0324
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.8892,
-          "y": 0.1543,
-          "width": 0.0379,
-          "height": 0.033
+          "x": 0.7788,
+          "y": 0.1544,
+          "width": 0.075,
+          "height": 0.0324
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.9279,
-          "y": 0.1543,
-          "width": 0.0042,
-          "height": 0.033
+          "x": 0.8558,
+          "y": 0.1544,
+          "width": 0.0075,
+          "height": 0.0324
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.9358,
-          "y": 0.1543,
-          "width": 0.0387,
-          "height": 0.033
+          "x": 0.8721,
+          "y": 0.1544,
+          "width": 0.0762,
+          "height": 0.0324
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.9746,
-          "y": 0.1543,
-          "width": 0.0046,
-          "height": 0.033
+          "x": 0.9492,
+          "y": 0.1544,
+          "width": 0.0083,
+          "height": 0.0324
         },
         {
           "word": "19",
           "clean": "",
-          "x": 0.8804,
-          "y": 0.9552,
-          "width": 0.0092,
+          "x": 0.7604,
+          "y": 0.9546,
+          "width": 0.0187,
           "height": 0.0165
         }
       ]
     },
     {
       "image": "biscuit_baby_spread_10.jpg",
-      "en": "Biscuit, come back. It's only the baby! 20 Woof, woof! 215/70 A",
+      "en": "Biscuit, come back. It's only the baby! 20 Woof, woof!",
       "keywords": [],
       "words": [
         {
           "word": "Biscuit",
           "clean": "biscuit",
-          "x": 0.0617,
-          "y": 0.7833,
-          "width": 0.0479,
-          "height": 0.0353
+          "x": 0.1242,
+          "y": 0.7843,
+          "width": 0.0946,
+          "height": 0.0342
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.1104,
-          "y": 0.7833,
-          "width": 0.0033,
-          "height": 0.0353
+          "x": 0.2208,
+          "y": 0.7843,
+          "width": 0.0063,
+          "height": 0.0342
         },
         {
           "word": "come",
           "clean": "come",
-          "x": 0.1187,
-          "y": 0.7833,
-          "width": 0.0358,
-          "height": 0.0353
+          "x": 0.2367,
+          "y": 0.7843,
+          "width": 0.0717,
+          "height": 0.0342
         },
         {
           "word": "back",
           "clean": "back",
-          "x": 0.1592,
-          "y": 0.7833,
-          "width": 0.0329,
-          "height": 0.0353
+          "x": 0.3179,
+          "y": 0.7843,
+          "width": 0.0663,
+          "height": 0.0342
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.1917,
-          "y": 0.7833,
-          "width": 0.0042,
-          "height": 0.0353
+          "x": 0.3833,
+          "y": 0.7843,
+          "width": 0.0075,
+          "height": 0.0342
         },
         {
           "word": "It's",
           "clean": "it's",
-          "x": 0.0612,
-          "y": 0.8504,
-          "width": 0.0217,
-          "height": 0.04
+          "x": 0.1229,
+          "y": 0.8503,
+          "width": 0.0429,
+          "height": 0.0383
         },
         {
           "word": "only",
           "clean": "only",
-          "x": 0.0879,
-          "y": 0.8504,
-          "width": 0.03,
-          "height": 0.0412
+          "x": 0.1754,
+          "y": 0.8515,
+          "width": 0.0604,
+          "height": 0.0389
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.1217,
-          "y": 0.8516,
-          "width": 0.0208,
-          "height": 0.04
+          "x": 0.2429,
+          "y": 0.8527,
+          "width": 0.0421,
+          "height": 0.0383
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.1467,
-          "y": 0.8516,
-          "width": 0.0342,
-          "height": 0.0412
+          "x": 0.2938,
+          "y": 0.8539,
+          "width": 0.0667,
+          "height": 0.0383
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1812,
-          "y": 0.8539,
-          "width": 0.005,
-          "height": 0.0389
+          "x": 0.3621,
+          "y": 0.855,
+          "width": 0.01,
+          "height": 0.0371
         },
         {
           "word": "20",
           "clean": "",
-          "x": 0.1242,
+          "x": 0.2483,
           "y": 0.9529,
-          "width": 0.0108,
-          "height": 0.0177
+          "width": 0.0217,
+          "height": 0.0171
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.8363,
-          "y": 0.1519,
-          "width": 0.0375,
+          "x": 0.6725,
+          "y": 0.1526,
+          "width": 0.0762,
           "height": 0.0342
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.8729,
-          "y": 0.1531,
-          "width": 0.0037,
-          "height": 0.0318
+          "x": 0.7467,
+          "y": 0.1526,
+          "width": 0.0071,
+          "height": 0.033
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.8812,
-          "y": 0.1508,
-          "width": 0.0358,
-          "height": 0.0342
+          "x": 0.7638,
+          "y": 0.152,
+          "width": 0.0712,
+          "height": 0.0336
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.9171,
-          "y": 0.1519,
-          "width": 0.0054,
-          "height": 0.0318
-        },
-        {
-          "word": "215/70",
-          "clean": "",
-          "x": 0.8608,
-          "y": 0.5819,
-          "width": 0.0221,
-          "height": 0.0353
-        },
-        {
-          "word": "A",
-          "clean": "a",
-          "x": 0.8917,
-          "y": 0.6042,
-          "width": 0.0058,
-          "height": 0.013
+          "x": 0.8354,
+          "y": 0.152,
+          "width": 0.0088,
+          "height": 0.033
         },
         {
           "word": "21",
           "clean": "",
-          "x": 0.8733,
-          "y": 0.9517,
-          "width": 0.0108,
-          "height": 0.0177
+          "x": 0.7475,
+          "y": 0.9511,
+          "width": 0.0208,
+          "height": 0.02
         }
       ]
     },
     {
       "image": "biscuit_baby_spread_11.jpg",
-      "en": "Here, sweet puppy. Now it's time to meet the baby. Woof, woof! 22 Best of all, it's time for the baby to meet a new friend!",
+      "en": "Here, sweet puppy. Now it's time to meet the baby. Woof, woof! Best of all, it's time for the baby to meet a new friend! 22",
       "keywords": [],
       "words": [
         {
           "word": "Here",
           "clean": "here",
-          "x": 0.0708,
-          "y": 0.6431,
-          "width": 0.0325,
-          "height": 0.0389
+          "x": 0.1412,
+          "y": 0.6435,
+          "width": 0.065,
+          "height": 0.0377
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.1037,
-          "y": 0.6466,
-          "width": 0.0037,
-          "height": 0.0353
+          "x": 0.2075,
+          "y": 0.6464,
+          "width": 0.0079,
+          "height": 0.0348
         },
         {
           "word": "sweet",
           "clean": "sweet",
-          "x": 0.1121,
-          "y": 0.6466,
-          "width": 0.0387,
-          "height": 0.0389
+          "x": 0.2238,
+          "y": 0.647,
+          "width": 0.0788,
+          "height": 0.0383
         },
         {
           "word": "puppy",
           "clean": "puppy",
-          "x": 0.155,
-          "y": 0.649,
-          "width": 0.0429,
-          "height": 0.04
+          "x": 0.3092,
+          "y": 0.6506,
+          "width": 0.0854,
+          "height": 0.0383
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.1954,
-          "y": 0.6525,
-          "width": 0.0042,
-          "height": 0.0353
+          "x": 0.3917,
+          "y": 0.6541,
+          "width": 0.0075,
+          "height": 0.0348
         },
         {
           "word": "Now",
           "clean": "now",
-          "x": 0.07,
-          "y": 0.715,
-          "width": 0.0321,
-          "height": 0.0306
+          "x": 0.1404,
+          "y": 0.7148,
+          "width": 0.0642,
+          "height": 0.0301
         },
         {
           "word": "it's",
           "clean": "it's",
-          "x": 0.1079,
-          "y": 0.715,
-          "width": 0.0196,
-          "height": 0.0306
+          "x": 0.2154,
+          "y": 0.7148,
+          "width": 0.04,
+          "height": 0.0301
         },
         {
           "word": "time",
           "clean": "time",
-          "x": 0.1325,
-          "y": 0.715,
-          "width": 0.0308,
-          "height": 0.0306
+          "x": 0.2658,
+          "y": 0.7148,
+          "width": 0.0592,
+          "height": 0.0301
         },
         {
           "word": "to",
           "clean": "to",
-          "x": 0.07,
-          "y": 0.7833,
-          "width": 0.0129,
-          "height": 0.0365
+          "x": 0.1396,
+          "y": 0.7831,
+          "width": 0.0271,
+          "height": 0.0377
         },
         {
           "word": "meet",
           "clean": "meet",
-          "x": 0.0879,
-          "y": 0.7821,
-          "width": 0.0329,
+          "x": 0.175,
+          "y": 0.7831,
+          "width": 0.0675,
           "height": 0.0389
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.1246,
-          "y": 0.7845,
-          "width": 0.0213,
-          "height": 0.0365
+          "x": 0.2487,
+          "y": 0.7849,
+          "width": 0.0425,
+          "height": 0.0377
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.15,
-          "y": 0.7845,
-          "width": 0.0333,
-          "height": 0.0389
+          "x": 0.2996,
+          "y": 0.7855,
+          "width": 0.0683,
+          "height": 0.0383
         },
         {
           "word": ".",
           "clean": "",
-          "x": 0.1821,
-          "y": 0.7856,
-          "width": 0.0037,
-          "height": 0.0365
+          "x": 0.3638,
+          "y": 0.7867,
+          "width": 0.0067,
+          "height": 0.0371
         },
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.07,
-          "y": 0.8528,
-          "width": 0.0375,
-          "height": 0.0365
+          "x": 0.14,
+          "y": 0.8539,
+          "width": 0.0758,
+          "height": 0.0348
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.1062,
-          "y": 0.8539,
-          "width": 0.0037,
-          "height": 0.0342
+          "x": 0.215,
+          "y": 0.8544,
+          "width": 0.0067,
+          "height": 0.0336
         },
         {
           "word": "woof",
           "clean": "woof",
-          "x": 0.1154,
-          "y": 0.8516,
-          "width": 0.0354,
-          "height": 0.0365
+          "x": 0.2313,
+          "y": 0.8533,
+          "width": 0.0708,
+          "height": 0.0348
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1512,
-          "y": 0.8516,
-          "width": 0.0046,
-          "height": 0.0342
-        },
-        {
-          "word": "22",
-          "clean": "",
-          "x": 0.13,
-          "y": 0.9529,
-          "width": 0.0112,
-          "height": 0.0177
+          "x": 0.3029,
+          "y": 0.8539,
+          "width": 0.0079,
+          "height": 0.0336
         },
         {
           "word": "Best",
           "clean": "best",
-          "x": 0.8129,
-          "y": 0.7138,
-          "width": 0.0292,
-          "height": 0.0353
+          "x": 0.6262,
+          "y": 0.7142,
+          "width": 0.06,
+          "height": 0.0336
         },
         {
           "word": "of",
           "clean": "of",
-          "x": 0.8475,
-          "y": 0.7138,
-          "width": 0.0146,
-          "height": 0.0342
+          "x": 0.695,
+          "y": 0.7142,
+          "width": 0.03,
+          "height": 0.0336
         },
         {
           "word": "all",
           "clean": "all",
-          "x": 0.8654,
-          "y": 0.7138,
-          "width": 0.0167,
-          "height": 0.0342
+          "x": 0.7325,
+          "y": 0.7142,
+          "width": 0.0333,
+          "height": 0.0336
         },
         {
           "word": ",",
           "clean": "",
-          "x": 0.8829,
-          "y": 0.7138,
-          "width": 0.0029,
-          "height": 0.0342
+          "x": 0.7675,
+          "y": 0.7142,
+          "width": 0.0067,
+          "height": 0.0336
         },
         {
           "word": "it's",
           "clean": "it's",
-          "x": 0.8921,
-          "y": 0.7138,
-          "width": 0.0192,
-          "height": 0.0342
+          "x": 0.7842,
+          "y": 0.7142,
+          "width": 0.04,
+          "height": 0.0336
         },
         {
           "word": "time",
           "clean": "time",
-          "x": 0.9158,
-          "y": 0.7126,
-          "width": 0.0304,
-          "height": 0.0342
+          "x": 0.8329,
+          "y": 0.7142,
+          "width": 0.0604,
+          "height": 0.0336
         },
         {
           "word": "for",
           "clean": "for",
-          "x": 0.8125,
-          "y": 0.7845,
-          "width": 0.02,
-          "height": 0.0365
+          "x": 0.6258,
+          "y": 0.7849,
+          "width": 0.0396,
+          "height": 0.0354
         },
         {
           "word": "the",
           "clean": "the",
-          "x": 0.8367,
-          "y": 0.7845,
-          "width": 0.0208,
-          "height": 0.0365
+          "x": 0.6742,
+          "y": 0.7849,
+          "width": 0.0408,
+          "height": 0.0359
         },
         {
           "word": "baby",
           "clean": "baby",
-          "x": 0.8621,
-          "y": 0.7845,
-          "width": 0.0329,
-          "height": 0.0377
+          "x": 0.7242,
+          "y": 0.7855,
+          "width": 0.0658,
+          "height": 0.0354
         },
         {
           "word": "to",
           "clean": "to",
-          "x": 0.8992,
-          "y": 0.7856,
-          "width": 0.0142,
-          "height": 0.0365
+          "x": 0.7983,
+          "y": 0.7861,
+          "width": 0.0271,
+          "height": 0.0348
         },
         {
           "word": "meet",
           "clean": "meet",
-          "x": 0.9167,
-          "y": 0.7856,
-          "width": 0.0346,
-          "height": 0.0377
+          "x": 0.8342,
+          "y": 0.7861,
+          "width": 0.0663,
+          "height": 0.0359
         },
         {
           "word": "a",
           "clean": "a",
-          "x": 0.8129,
-          "y": 0.8587,
-          "width": 0.0075,
-          "height": 0.0318
+          "x": 0.6262,
+          "y": 0.8603,
+          "width": 0.0154,
+          "height": 0.0312
         },
         {
           "word": "new",
           "clean": "new",
-          "x": 0.8242,
-          "y": 0.8551,
-          "width": 0.0262,
-          "height": 0.0342
+          "x": 0.6492,
+          "y": 0.8568,
+          "width": 0.0537,
+          "height": 0.0336
         },
         {
           "word": "friend",
           "clean": "friend",
-          "x": 0.8562,
-          "y": 0.8516,
-          "width": 0.0404,
-          "height": 0.0342
+          "x": 0.7129,
+          "y": 0.8521,
+          "width": 0.0821,
+          "height": 0.0354
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.8971,
-          "y": 0.8516,
-          "width": 0.0058,
-          "height": 0.0306
+          "x": 0.7954,
+          "y": 0.8521,
+          "width": 0.0112,
+          "height": 0.0312
+        },
+        {
+          "word": "22",
+          "clean": "",
+          "x": 0.2604,
+          "y": 0.9523,
+          "width": 0.0213,
+          "height": 0.0194
         },
         {
           "word": "23",
           "clean": "",
-          "x": 0.8762,
+          "x": 0.7529,
           "y": 0.9529,
-          "width": 0.0117,
-          "height": 0.0188
+          "width": 0.0238,
+          "height": 0.0194
         }
       ]
     },
@@ -1853,18 +1950,18 @@
         {
           "word": "Woof",
           "clean": "woof",
-          "x": 0.1138,
-          "y": 0.1543,
-          "width": 0.0383,
-          "height": 0.0283
+          "x": 0.4575,
+          "y": 0.1526,
+          "width": 0.1508,
+          "height": 0.0318
         },
         {
           "word": "!",
           "clean": "",
-          "x": 0.1521,
-          "y": 0.1543,
-          "width": 0.0046,
-          "height": 0.0283
+          "x": 0.61,
+          "y": 0.1538,
+          "width": 0.0167,
+          "height": 0.0301
         }
       ]
     }

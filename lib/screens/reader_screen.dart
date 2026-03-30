@@ -12,8 +12,8 @@ import '../services/progress_service.dart';
 import '../widgets/highlighter_overlay.dart';
 
 class ReaderScreen extends StatefulWidget {
-  final String lessonId;
-  const ReaderScreen({super.key, this.lessonId = 'biscuit_book1_day1'});
+  final String? lessonId;
+  const ReaderScreen({super.key, this.lessonId});
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -139,7 +139,8 @@ class _ReaderScreenState extends State<ReaderScreen>
   }
 
   Future<void> _loadLesson() async {
-    final lesson = await _lessonService.loadLesson(widget.lessonId);
+    final lessonId = widget.lessonId ?? await _lessonService.restoreCurrentLessonId();
+    final lesson = await _lessonService.loadLesson(lessonId);
     setState(() {
       _lesson = lesson;
       _loading = false;

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
 import '../services/progress_service.dart';
+import '../services/lesson_service.dart';
 import 'eggy_celebration_screen.dart';
 
 const _kOrange = Color(0xFFFF8C42);
@@ -24,6 +25,11 @@ class _RecordingScreenState extends State<RecordingScreen>
 
   final AudioPlayer  _player   = AudioPlayer();
   final AudioRecorder _recorder = AudioRecorder();
+
+  // ── lesson data ────────────────────────────────────────────────────────────
+  String _featuredSentence = '"Time for bed, Biscuit!"';
+  String _featuredSentenceCN = '小饼干，该睡觉啦！';
+  String _demoAudioPath = 'audio/featured_time_for_bed.mp3';
 
   // ── state ──────────────────────────────────────────────────────────────────
   _Phase    _phase          = _Phase.demo;
@@ -70,6 +76,7 @@ class _RecordingScreenState extends State<RecordingScreen>
   @override
   void initState() {
     super.initState();
+    _loadLessonData();
     ProgressService.getTodayProgress().then((p) {
       if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
     });
@@ -130,12 +137,32 @@ class _RecordingScreenState extends State<RecordingScreen>
     super.dispose();
   }
 
+  // ── lesson data ─────────────────────────────────────────────────────────────
+
+  // Map lessonId to featured audio file
+  static const _featuredAudioMap = {
+    'biscuit_book1_day1': 'audio/featured_time_for_bed.mp3',
+    'biscuit_baby_book2_day1': 'audio/biscuit_baby_featured.mp3',
+  };
+
+  Future<void> _loadLessonData() async {
+    final service = LessonService();
+    final lessonId = await service.restoreCurrentLessonId();
+    final lesson = await service.loadLesson(lessonId);
+    if (mounted) {
+      setState(() {
+        _featuredSentence = '"${lesson.featuredSentence}"';
+        _demoAudioPath = _featuredAudioMap[lessonId] ?? 'audio/featured_time_for_bed.mp3';
+      });
+    }
+  }
+
   // ── demo ───────────────────────────────────────────────────────────────────
 
   void _playDemo() async {
     if (!mounted) return;
     setState(() => _demoPlaying = true);
-    await _player.play(AssetSource('audio/featured_time_for_bed.mp3'));
+    await _player.play(AssetSource(_demoAudioPath));
   }
 
   void _replayDemo() {
@@ -428,24 +455,15 @@ class _RecordingScreenState extends State<RecordingScreen>
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        '"Time for bed, Biscuit!"',
+                      Text(
+                        _featuredSentence,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic,
                           color: Color(0xFF222222),
                           height: 1.4,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        '小饼干，该睡觉啦！',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF999999),
                         ),
                       ),
                     ],
