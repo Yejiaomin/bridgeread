@@ -214,7 +214,7 @@ class _RecordingScreenState extends State<RecordingScreen>
         // path_provider is not available on web — use a dummy path (ignored by record on web)
         final String recordPath;
         if (kIsWeb) {
-          recordPath = 'bridgeread_recording.webm';
+          recordPath = 'bridgeread_recording.m4a';
         } else {
           final dir = await getTemporaryDirectory();
           recordPath = '${dir.path}/bridgeread_recording.m4a';
@@ -222,7 +222,7 @@ class _RecordingScreenState extends State<RecordingScreen>
 
         await _recorder.start(
           RecordConfig(
-            encoder: kIsWeb ? AudioEncoder.opus : AudioEncoder.aacLc,
+            encoder: AudioEncoder.aacLc,
             bitRate: 128000,
           ),
           path: recordPath,
@@ -424,37 +424,42 @@ class _RecordingScreenState extends State<RecordingScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // sentence
-                  const Text(
-                    '"Time for bed, Biscuit!"',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      color: Color(0xFF222222),
-                      height: 1.4,
-                    ),
+                  // 1. Sentence
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        '"Time for bed, Biscuit!"',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                          color: Color(0xFF222222),
+                          height: 1.4,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        '小饼干，该睡觉啦！',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF999999),
+                        ),
+                      ),
+                    ],
                   ),
-                  // Chinese subtitle
-                  const Text(
-                    '小饼干，该睡觉啦！',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF999999),
-                    ),
-                  ),
-                  // big demo button
+                  // 2. Demo button
                   _buildDemoButton(),
-                  // score section replaces waveform + record button once scored
-                  if (_phase == _Phase.scored) ...[
-                    _buildScoreSection(),
-                  ] else ...[
+                  // 3. Middle slot: mic/waveform OR play back + re-record
+                  if (_phase == _Phase.scored)
+                    _buildScoreSection()
+                  else ...[
                     _buildWaveformOrStatus(),
                     _buildRecordButton(),
                   ],
-                  // bottom controls
+                  // 4. Bottom: Next button (always occupies space)
                   _buildBottomControls(),
                 ],
               ),
@@ -514,41 +519,77 @@ class _RecordingScreenState extends State<RecordingScreen>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // playback replay button
         if (_recordingPath != null)
-          GestureDetector(
-            onTap: _isPlayingBack ? null : _playRecording,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                color: _isPlayingBack
-                    ? _kYellow
-                    : _kYellow.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: _kYellow, width: 2),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    _isPlayingBack
-                        ? Icons.volume_up_rounded
-                        : Icons.replay_rounded,
-                    color: const Color(0xFF555500),
-                    size: 22,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Play back button
+              GestureDetector(
+                onTap: _isPlayingBack ? null : _playRecording,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: _isPlayingBack
+                        ? _kYellow
+                        : _kYellow.withValues(alpha: 0.25),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: _kYellow, width: 2),
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    _isPlayingBack ? 'Playing...' : 'Play back',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF555500),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _isPlayingBack
+                            ? Icons.volume_up_rounded
+                            : Icons.replay_rounded,
+                        color: const Color(0xFF555500),
+                        size: 22,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        _isPlayingBack ? 'Playing...' : 'Play back',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF555500),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+              const SizedBox(width: 12),
+              // Re-record button
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _phase = _Phase.idle;
+                    _scorePoints = 0;
+                    _showScoreButtons = false;
+                    _hasRecording = false;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.red.withValues(alpha: 0.3), width: 2),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.mic_rounded, color: Colors.red, size: 22),
+                      SizedBox(width: 8),
+                      Text('Re-record',
+                        style: TextStyle(fontSize: 16,
+                            fontWeight: FontWeight.bold, color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
       ],
     );
