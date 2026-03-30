@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages & HK Server
 
 on:
   push:
@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,9 +18,27 @@ jobs:
           channel: stable
 
       - run: flutter pub get
+
+      # Build for GitHub Pages (with base-href)
       - run: flutter build web --base-href "/bridgeread/"
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/web
+
+      # Rebuild for HK server (no base-href, root path)
+      - run: flutter build web
+
+      # Deploy to HK server
+      - name: Deploy to HK Server
+        env:
+          SSH_KEY: ${{ secrets.HK_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/hk_key
+          chmod 600 ~/.ssh/hk_key
+          ssh-keyscan -H 47.243.220.248 >> ~/.ssh/known_hosts 2>/dev/null
+          tar czf /tmp/web.tar.gz -C build/web .
+          scp -i ~/.ssh/hk_key /tmp/web.tar.gz root@47.243.220.248:/tmp/
+          ssh -i ~/.ssh/hk_key root@47.243.220.248 'cd /var/www/bridgeread && rm -rf * && tar xzf /tmp/web.tar.gz'
