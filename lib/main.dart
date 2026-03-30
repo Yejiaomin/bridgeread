@@ -71,25 +71,60 @@ class _OrientationGate extends StatelessWidget {
     return OrientationBuilder(
       builder: (context, orientation) {
         if (orientation == Orientation.portrait) {
-          return const Scaffold(
-            backgroundColor: Colors.white,
+          return Scaffold(
+            backgroundColor: const Color(0xFFFFF8F0),
             body: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.screen_rotation,
-                      size: 80, color: Color(0xFFFF8C42)),
-                  SizedBox(height: 24),
-                  Text(
-                    '请将设备横屏使用\nPlease rotate your device',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFF555555),
-                      height: 1.8,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/pet/eggy_transparent_bg.png',
+                      width: 120,
+                      height: 120,
+                      errorBuilder: (_, __, ___) => const Icon(
+                        Icons.screen_rotation,
+                        size: 80,
+                        color: Color(0xFFFF8C42),
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 32),
+                    const Text(
+                      'Hi~ 请把手机横过来',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFFF8C42),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '横屏体验更好哦！',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF999999),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Please rotate your device to landscape',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFFBBBBBB),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    const Icon(
+                      Icons.screen_rotation_rounded,
+                      size: 48,
+                      color: Color(0xFFFFD93D),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
