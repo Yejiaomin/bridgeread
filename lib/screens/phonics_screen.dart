@@ -510,14 +510,14 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         if (!await _recorder.hasPermission()) return;
         final String path;
         if (kIsWeb) {
-          path = 'phonics_echo.webm';
+          path = 'phonics_echo.m4a';
         } else {
           final dir = await getTemporaryDirectory();
           path = '${dir.path}/phonics_echo.m4a';
         }
         await _recorder.start(
           RecordConfig(
-            encoder: kIsWeb ? AudioEncoder.opus : AudioEncoder.aacLc,
+            encoder: AudioEncoder.aacLc,
             bitRate: 128000,
           ),
           path: path,
@@ -1111,38 +1111,49 @@ class _PhonicsScreenState extends State<PhonicsScreen>
             ),
           ),
           const SizedBox(height: 12),
-          Text(
-            allTapped ? 'Your turn! 🎤' : 'Tap each letter!',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700,
-                color: Color(0xFF555555)),
+          // Subtitle — always occupies space, text changes
+          AnimatedOpacity(
+            opacity: 1.0,
+            duration: const Duration(milliseconds: 300),
+            child: Text(
+              allTapped ? 'Your turn! 🎤' : 'Tap each letter!',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700,
+                  color: Color(0xFF555555)),
+            ),
           ),
-          if (!allTapped)
-            const Text('点击每个字母听发音',
+          // Chinese hint — always occupies space, fades out when done
+          AnimatedOpacity(
+            opacity: allTapped ? 0.0 : 1.0,
+            duration: const Duration(milliseconds: 300),
+            child: const Text('点击每个字母听发音',
                 style: TextStyle(fontSize: 14, color: Color(0xFFAAAAAA))),
+          ),
           const SizedBox(height: 36),
 
-          // Letter tiles
+          // Letter tiles — always rendered with fixed size slots
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(3, (i) {
-              if (i >= _tilesShown) return const SizedBox(width: 112, height: 130);
               final letter = word.letters[i];
               final tapped = _letterStarsTapped.contains(i);
               final isCurrentTarget = _tilesPlayable && i == _nextTileToTap && !tapped;
+              final shown = i < _tilesShown;
 
-              double opacity;
-              if (!_tilesPlayable) {
-                opacity = i < _tilesLit ? 1.0 : 0.55;
+              double tileOpacity;
+              if (!shown) {
+                tileOpacity = 0.0;
+              } else if (!_tilesPlayable) {
+                tileOpacity = i < _tilesLit ? 1.0 : 0.55;
               } else if (tapped || allTapped) {
-                opacity = 1.0;
+                tileOpacity = 1.0;
               } else if (i == _nextTileToTap) {
-                opacity = 1.0;
+                tileOpacity = 1.0;
               } else {
-                opacity = 0.40;
+                tileOpacity = 0.40;
               }
 
               Widget tileBtn = GestureDetector(
-                onTap: isCurrentTarget ? () => _onLetterTileTap(i) : null,
+                onTap: (isCurrentTarget && shown) ? () => _onLetterTileTap(i) : null,
                 child: Container(
                   width: 96, height: 96,
                   decoration: BoxDecoration(
@@ -1159,7 +1170,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                 ),
               );
 
-              if (isCurrentTarget) {
+              if (isCurrentTarget && shown) {
                 tileBtn = AnimatedBuilder(
                   animation: _tileShakeCtrl,
                   builder: (context, child) => Transform.translate(
@@ -1169,7 +1180,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
               }
 
               return AnimatedOpacity(
-                opacity: opacity,
+                opacity: tileOpacity,
                 duration: const Duration(milliseconds: 400),
                 child: ScaleTransition(
                   scale: _tileScaleAnims[i],
@@ -1190,138 +1201,216 @@ class _PhonicsScreenState extends State<PhonicsScreen>
             }),
           ),
 
-          // ── Inline recording section ──────────────────────────────────────
-          if (allTapped) ...[
-            const SizedBox(height: 36),
+          // ── Recording / scored section — shared space via Stack ────────────
+          const SizedBox(height: 20),
 
-            // ── REC dot + waveform while recording ───────────────────────
-            if (isRecording) ...[
-              AnimatedBuilder(
-                animation: _recDotCtrl,
-                builder: (_, __) => Opacity(
-                  opacity: _recDotCtrl.value,
-                  child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.circle, color: Colors.red, size: 16),
-                    SizedBox(width: 8),
-                    Text('REC', style: TextStyle(fontSize: 18,
-                        fontWeight: FontWeight.bold, color: Colors.red, letterSpacing: 3)),
-                  ]),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 56,
-                child: AnimatedBuilder(
-                  animation: _waveCtrl,
-                  builder: (_, __) => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: List.generate(_barHeights.length, (i) => Container(
-                      width: 5,
-                      height: _barHeights[i] * 52,
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: 0.5 + _barHeights[i] * 0.5),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    )),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
-            ],
-
-            // ── Play back when scored ─────────────────────────────────────
-            if (isScored) ...[
-              // Play back button
-              if (_recordingPath != null)
-                GestureDetector(
-                  onTap: _echoPlayingBack ? null : _playEchoRecording,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: _echoPlayingBack ? _kYellow : _kYellow.withValues(alpha: 0.25),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _kYellow, width: 2),
-                    ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(
-                        _echoPlayingBack ? Icons.volume_up_rounded : Icons.replay_rounded,
-                        color: const Color(0xFF555500), size: 22,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        _echoPlayingBack ? 'Playing...' : 'Play back',
-                        style: const TextStyle(fontSize: 16,
-                            fontWeight: FontWeight.bold, color: Color(0xFF555500)),
-                      ),
-                    ]),
-                  ),
-                ),
-              const SizedBox(height: 18),
-            ],
-
-            // ── Mic button (shown when not scored) ────────────────────────
-            if (!isScored)
-              GestureDetector(
-                onTap: _toggleEchoRecording,
-                child: AnimatedBuilder(
-                  animation: _echoPulseCtrl,
-                  builder: (_, child) => Transform.scale(
-                    scale: isRecording ? _echoPulseAnim.value : 1.0,
-                    child: child,
-                  ),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    width: 120, height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isRecording ? const Color(0xFFCC0000) : Colors.red,
-                      boxShadow: [BoxShadow(
-                        color: Colors.red.withValues(alpha: isRecording ? 0.55 : 0.30),
-                        blurRadius: isRecording ? 28 : 16,
-                        spreadRadius: isRecording ? 6 : 2,
-                        offset: const Offset(0, 5),
-                      )],
-                    ),
+          // Fixed-height area: mic/recording OR scored buttons share this space
+          SizedBox(
+            height: 320,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // ── Recording state: REC dot + waveform + stop button ────
+                AnimatedOpacity(
+                  opacity: (allTapped && isRecording) ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: IgnorePointer(
+                    ignoring: !isRecording,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(isRecording ? Icons.stop_rounded : Icons.mic_rounded,
-                            color: Colors.white, size: 50),
-                        const SizedBox(height: 4),
-                        Text(isRecording ? 'Stop' : 'Record',
-                            style: const TextStyle(color: Colors.white,
-                                fontSize: 14, fontWeight: FontWeight.w600)),
+                        AnimatedBuilder(
+                          animation: _recDotCtrl,
+                          builder: (_, __) => Opacity(
+                            opacity: isRecording ? _recDotCtrl.value : 0.0,
+                            child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                              Icon(Icons.circle, color: Colors.red, size: 16),
+                              SizedBox(width: 8),
+                              Text('REC', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.bold, color: Colors.red, letterSpacing: 3)),
+                            ]),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 56,
+                          child: AnimatedBuilder(
+                            animation: _waveCtrl,
+                            builder: (_, __) => Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: List.generate(_barHeights.length, (i) => Container(
+                                width: 5,
+                                height: _barHeights[i] * 52,
+                                margin: const EdgeInsets.symmetric(horizontal: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withValues(alpha: 0.5 + _barHeights[i] * 0.5),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              )),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        GestureDetector(
+                          onTap: _toggleEchoRecording,
+                          child: AnimatedBuilder(
+                            animation: _echoPulseCtrl,
+                            builder: (_, child) => Transform.scale(
+                              scale: _echoPulseAnim.value,
+                              child: child,
+                            ),
+                            child: Container(
+                              width: 120, height: 120,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color(0xFFCC0000),
+                                boxShadow: [BoxShadow(
+                                  color: Colors.red.withValues(alpha: 0.55),
+                                  blurRadius: 28, spreadRadius: 6,
+                                )],
+                              ),
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.stop_rounded, color: Colors.white, size: 50),
+                                  SizedBox(height: 4),
+                                  Text('Stop', style: TextStyle(color: Colors.white,
+                                      fontSize: 14, fontWeight: FontWeight.w600)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-              ),
 
-            const SizedBox(height: 24),
-
-            // ── Let's spell it button (after scoring) ────────────────────
-            if (isScored && _echoShowButtons)
-              SizedBox(
-                height: 64,
-                width: 280,
-                child: ElevatedButton(
-                  onPressed: _onEchoConfirmed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _kOrange,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32)),
-                    textStyle: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
+                // ── Idle state: mic button ───────────────────────────────
+                AnimatedOpacity(
+                  opacity: (allTapped && !isScored && !isRecording) ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: IgnorePointer(
+                    ignoring: !allTapped || isScored || isRecording,
+                    child: GestureDetector(
+                      onTap: _toggleEchoRecording,
+                      child: Container(
+                        width: 120, height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                          boxShadow: [BoxShadow(
+                            color: Colors.red.withValues(alpha: 0.30),
+                            blurRadius: 16, spreadRadius: 2,
+                            offset: const Offset(0, 5),
+                          )],
+                        ),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.mic_rounded, color: Colors.white, size: 50),
+                            SizedBox(height: 4),
+                            Text('Record', style: TextStyle(color: Colors.white,
+                                fontSize: 14, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  child: const Text("Let's spell it!"),
                 ),
-              ),
-            if (isScored && !_echoShowButtons) const SizedBox(height: 8),
-            const SizedBox(height: 12),
-          ],
+
+                // ── Scored state: Play back + Re-record + Let's spell it ─
+                AnimatedOpacity(
+                  opacity: isScored ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: IgnorePointer(
+                    ignoring: !isScored,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: _echoPlayingBack ? null : _playEchoRecording,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: _echoPlayingBack ? _kYellow : _kYellow.withValues(alpha: 0.25),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(color: _kYellow, width: 2),
+                                ),
+                                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                                  Icon(
+                                    _echoPlayingBack ? Icons.volume_up_rounded : Icons.replay_rounded,
+                                    color: const Color(0xFF555500), size: 22,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _echoPlayingBack ? 'Playing...' : 'Play back',
+                                    style: const TextStyle(fontSize: 16,
+                                        fontWeight: FontWeight.bold, color: Color(0xFF555500)),
+                                  ),
+                                ]),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _echoPhase = _EchoPhase.idle;
+                                  _echoScorePoints = 0;
+                                  _echoShowButtons = false;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(color: Colors.red.withValues(alpha: 0.3), width: 2),
+                                ),
+                                child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                                  Icon(Icons.mic_rounded, color: Colors.red, size: 22),
+                                  SizedBox(width: 8),
+                                  Text('Re-record',
+                                    style: TextStyle(fontSize: 16,
+                                        fontWeight: FontWeight.bold, color: Colors.red),
+                                  ),
+                                ]),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 72),
+                        AnimatedOpacity(
+                          opacity: _echoShowButtons ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 300),
+                          child: SizedBox(
+                            height: 56,
+                            width: 260,
+                            child: ElevatedButton(
+                              onPressed: _echoShowButtons ? _onEchoConfirmed : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _kOrange,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(32)),
+                                textStyle: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              child: const Text("Let's spell it!"),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
         ),
       ),
