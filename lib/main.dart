@@ -80,7 +80,7 @@ class _OrientationGate extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      'assets/pet/eggy_transparent_bg.png',
+                      'assets/pet/eggy_transparent_bg.webp',
                       width: 120,
                       height: 120,
                       errorBuilder: (_, __, ___) => const Icon(

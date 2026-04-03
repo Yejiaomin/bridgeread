@@ -24,23 +24,18 @@ class _Round {
 
 // Default rounds — used as fallback
 const _kDefaultRounds = [
-  _Round('bed',   _RType.image, 'assets/audio/phonemes/word_bed.mp3'),
-  _Round('bed',   _RType.word,  'assets/audio/phonemes/word_bed.mp3'),
-  _Round('hug',   _RType.image, 'assets/audio/phonemes/word_hug.mp3'),
-  _Round('hug',   _RType.word,  'assets/audio/phonemes/word_hug.mp3'),
-  _Round('story', _RType.image, 'assets/audio/phonemes/word_story.mp3'),
-  _Round('story', _RType.word,  'assets/audio/phonemes/word_story.mp3'),
+  _Round('bed',   _RType.word, 'assets/audio/phonemes/word_bed.mp3'),
+  _Round('bed',   _RType.word, 'assets/audio/phonemes/word_bed.mp3'),
+  _Round('hug',   _RType.word, 'assets/audio/phonemes/word_hug.mp3'),
+  _Round('hug',   _RType.word, 'assets/audio/phonemes/word_hug.mp3'),
 ];
 
-/// Build quiz rounds from lesson's phonics words
+/// Build quiz rounds from lesson's phonics words (word bubbles only)
 List<_Round> _buildRoundsFromLesson(List<String> words) {
   final rounds = <_Round>[];
-  // Check which words have quiz images
-  const _hasImage = {'bed', 'hug', 'story'};
   for (final w in words) {
-    if (_hasImage.contains(w)) {
-      rounds.add(_Round(w, _RType.image, 'assets/audio/phonemes/word_$w.mp3'));
-    }
+    // Each word appears twice for more practice
+    rounds.add(_Round(w, _RType.word, 'assets/audio/phonemes/word_$w.mp3'));
     rounds.add(_Round(w, _RType.word, 'assets/audio/phonemes/word_$w.mp3'));
   }
   return rounds;
@@ -1077,7 +1072,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           Transform.scale(
                             scale: eggyScale,
                             child: Image.asset(
-                              'assets/pet/eggy_transparent_bg.png',
+                              'assets/pet/eggy_transparent_bg.webp',
                               height: 400,
                               fit: BoxFit.contain,
                             ),

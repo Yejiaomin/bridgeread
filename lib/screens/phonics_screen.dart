@@ -38,30 +38,24 @@ class _WordData {
   });
 }
 
-// Phoneme audio path mapping for vowels (short sounds)
-const _kVowelAudio = {
-  'a': 'assets/audio/phonemes/a_short.mp3',
-  'e': 'assets/audio/phonemes/e_short.mp3',
-  'i': 'assets/audio/phonemes/i_short.mp3',
-  'o': 'assets/audio/phonemes/o_short.mp3',
-  'u': 'assets/audio/phonemes/u_short.mp3',
-};
+// Vowel set for coloring
 const _kVowels = {'a', 'e', 'i', 'o', 'u'};
 
 /// Build _WordData list from lesson's PhonicsWords
+/// All phoneme audio now comes from phonics_sounds/ (user-clipped from video)
 List<_WordData> _buildWordsFromLesson(List<PhonicsWord> phonicsWords) {
   return phonicsWords.map((pw) {
     final letters = <_LetterInfo>[];
     for (int i = 0; i < pw.phonemes.length; i++) {
       final p = pw.phonemes[i];
       final isVowel = _kVowels.contains(p);
-      final audioPath = _kVowelAudio[p] ?? 'assets/audio/phonemes/$p.mp3';
+      final audioPath = 'assets/audio/phonics_sounds/$p.mp3';
       letters.add(_LetterInfo(p, isVowel ? _kYellow : _kOrange, audioPath));
     }
     return _WordData(
       word: pw.word,
       bookImage: pw.imageAsset,
-      wordAudioPath: 'assets/audio/phonemes/word_${pw.word}.mp3',
+      wordAudioPath: 'assets/audio/phonics_sounds/word_${pw.word}.mp3',
       letters: letters,
     );
   }).toList();
@@ -71,22 +65,22 @@ List<_WordData> _buildWordsFromLesson(List<PhonicsWord> phonicsWords) {
 final List<_WordData> _kDefaultWords = [
   _WordData(
     word: 'bed',
-    bookImage: 'assets/books/biscuit_spread_02.png',
-    wordAudioPath: 'assets/audio/phonemes/word_bed.mp3',
+    bookImage: 'assets/books/biscuit_spread_02.webp',
+    wordAudioPath: 'assets/audio/phonics_sounds/word_bed.mp3',
     letters: const [
-      _LetterInfo('b', _kOrange, 'assets/audio/phonemes/b.mp3'),
-      _LetterInfo('e', _kYellow, 'assets/audio/phonemes/e_short.mp3'),
-      _LetterInfo('d', _kOrange, 'assets/audio/phonemes/d.mp3'),
+      _LetterInfo('b', _kOrange, 'assets/audio/phonics_sounds/b.mp3'),
+      _LetterInfo('e', _kYellow, 'assets/audio/phonics_sounds/e.mp3'),
+      _LetterInfo('d', _kOrange, 'assets/audio/phonics_sounds/d.mp3'),
     ],
   ),
   _WordData(
     word: 'hug',
-    bookImage: 'assets/books/biscuit_spread_06.png',
-    wordAudioPath: 'assets/audio/phonemes/word_hug.mp3',
+    bookImage: 'assets/books/biscuit_spread_06.webp',
+    wordAudioPath: 'assets/audio/phonics_sounds/word_hug.mp3',
     letters: const [
-      _LetterInfo('h', _kOrange, 'assets/audio/phonemes/h.mp3'),
-      _LetterInfo('u', _kYellow, 'assets/audio/phonemes/u_short.mp3'),
-      _LetterInfo('g', _kOrange, 'assets/audio/phonemes/g.mp3'),
+      _LetterInfo('h', _kOrange, 'assets/audio/phonics_sounds/h.mp3'),
+      _LetterInfo('u', _kYellow, 'assets/audio/phonics_sounds/u.mp3'),
+      _LetterInfo('g', _kOrange, 'assets/audio/phonics_sounds/g.mp3'),
     ],
   ),
 ];
@@ -721,9 +715,9 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         if (mounted) _tileShakeCtrl.repeat(reverse: true);
       });
     } else {
-      // All done — play full word audio then auto-enter echo
+      // All done — wait for last letter audio to finish, then play full word
       _tileShakeCtrl.stop();
-      Future.delayed(const Duration(milliseconds: 400), () async {
+      Future.delayed(const Duration(milliseconds: 800), () async {
         if (!mounted) return;
         await _playAndWait(_words[_wordIndex].wordAudioPath);
         if (mounted) _enterEcho();

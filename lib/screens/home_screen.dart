@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen>
             fit: StackFit.expand,
             children: [
               // ── Background ────────────────────────────────────────────
-              Image.asset('assets/home/home_bg.png',
+              Image.asset('assets/home/home_bg.webp',
                   fit: BoxFit.cover, width: w, height: h),
 
               // ── BOOKS tap zone ────────────────────────────────────────
@@ -283,7 +283,7 @@ class _BookDay {
 }
 
 const _kBooks = [
-  _BookDay(1, 'Biscuit', '小饼干', 'biscuit_book1_day1', 'assets/books/biscuit_cover.png'),
+  _BookDay(1, 'Biscuit', '小饼干', 'biscuit_book1_day1', 'assets/books/biscuit_cover.webp'),
   _BookDay(2, 'Biscuit and the Baby', '小饼干和宝宝', 'biscuit_baby_book2_day1', 'assets/books/biscuit_baby_cover.jpg'),
   // 后续书籍在这里添加
 ];
