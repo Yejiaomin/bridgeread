@@ -143,6 +143,7 @@ class _RecordingScreenState extends State<RecordingScreen>
   static const _featuredAudioMap = {
     'biscuit_book1_day1': 'audio/featured_time_for_bed.mp3',
     'biscuit_baby_book2_day1': 'audio/biscuit_baby_featured.mp3',
+    'biscuit_library_book3_day1': 'audio/library_featured.mp3',
   };
 
   Future<void> _loadLessonData() async {
@@ -419,7 +420,7 @@ class _RecordingScreenState extends State<RecordingScreen>
             child: ColoredBox(
               color: const Color(0xFFFFF8F0),
               child: Image.asset(
-                'assets/books/biscuit_spread_02.webp',
+                'assets/books/01Biscuit/biscuit_spread_02.webp',
                 fit: BoxFit.contain,
               ),
             ),

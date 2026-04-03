@@ -68,7 +68,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/books/
+    - assets/books/01Biscuit/
+    - assets/books/02Biscuit_and_the_Baby/
+    - assets/books/03Biscuit_Loves_the_Library/
     - assets/characters/
     - assets/audio/
     - assets/audio/phonemes/
