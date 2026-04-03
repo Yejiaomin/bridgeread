@@ -210,7 +210,7 @@ class _ListenScreenState extends State<ListenScreen>
                 alignment: Alignment.center,
                 children: [
                   Image.asset(
-                    'assets/pet/cards/bicycle.png',
+                    'assets/pet/cards/bicycle.webp',
                     fit: BoxFit.contain,
                     width: double.infinity,
                     height: double.infinity,

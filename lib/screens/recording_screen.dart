@@ -419,7 +419,7 @@ class _RecordingScreenState extends State<RecordingScreen>
             child: ColoredBox(
               color: const Color(0xFFFFF8F0),
               child: Image.asset(
-                'assets/books/biscuit_spread_02.png',
+                'assets/books/biscuit_spread_02.webp',
                 fit: BoxFit.contain,
               ),
             ),

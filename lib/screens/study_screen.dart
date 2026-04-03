@@ -126,9 +126,9 @@ class _StudyScreenState extends State<StudyScreen>
   bool _listenDone = false;
 
   String get _bgImage {
-    if (_listenDone) return 'assets/home/study_bg_end.png';
-    if (_completedCount == 0) return 'assets/home/study_bg_start.png';
-    return 'assets/home/study_bg_mid.png';
+    if (_listenDone) return 'assets/home/study_bg_end.webp';
+    if (_completedCount == 0) return 'assets/home/study_bg_start.webp';
+    return 'assets/home/study_bg_mid.webp';
   }
 
   // Zone i is active only when completedCount > 0, except RECAP (i==0) which is always active
@@ -399,7 +399,7 @@ class _RecapScreenState extends State<RecapScreen>
         children: [
           // ── Sleepy eggy background ───────────────────────────────────────
           Image.asset(
-            'assets/pet/cards/spleepy.png',
+            'assets/pet/cards/spleepy.webp',
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,

@@ -3,21 +3,21 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _kCardBack = 'assets/pet/cards/card.png';
+const _kCardBack = 'assets/pet/cards/card.webp';
 
 const _kCards = [
-  'assets/pet/cards/bicycle_card.png',
-  'assets/pet/cards/egg_card.png',
-  'assets/pet/cards/finished_card.png',
-  'assets/pet/cards/handstand_card.png',
-  'assets/pet/cards/hatching_card.png',
-  'assets/pet/cards/keepworking_card.png',
-  'assets/pet/cards/lying_down_card.png',
-  'assets/pet/cards/lying_face_down_card.png',
-  'assets/pet/cards/single_leg_card.png',
-  'assets/pet/cards/sleepy_card.png',
-  'assets/pet/cards/study_card.png',
-  'assets/pet/cards/wearing_hat_card.png',
+  'assets/pet/cards/bicycle_card.webp',
+  'assets/pet/cards/egg_card.webp',
+  'assets/pet/cards/finished_card.webp',
+  'assets/pet/cards/handstand_card.webp',
+  'assets/pet/cards/hatching_card.webp',
+  'assets/pet/cards/keepworking_card.webp',
+  'assets/pet/cards/lying_down_card.webp',
+  'assets/pet/cards/lying_face_down_card.webp',
+  'assets/pet/cards/single_leg_card.webp',
+  'assets/pet/cards/sleepy_card.webp',
+  'assets/pet/cards/study_card.webp',
+  'assets/pet/cards/wearing_hat_card.webp',
 ];
 
 enum _Phase { idle, spinning, flipping, center, countdown }

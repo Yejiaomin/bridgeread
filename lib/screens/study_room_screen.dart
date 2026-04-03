@@ -475,7 +475,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
             children: [
 
               // ── Background ────────────────────────────────────────────────
-              Image.asset('assets/home/study_room_bg.png',
+              Image.asset('assets/home/study_room_bg.webp',
                   fit: BoxFit.cover, width: w, height: h),
 
               // ── Back button ───────────────────────────────────────────────
@@ -588,7 +588,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
               'assets/pet/costumes/base/egg_month$_eggyMonth.png',
               width: size, height: size, fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => Image.asset(
-                'assets/pet/eggy_transparent_bg.png',
+                'assets/pet/eggy_transparent_bg.webp',
                 width: size, height: size,
                 errorBuilder: (_, __, ___) =>
                     const SizedBox(width: size, height: size),

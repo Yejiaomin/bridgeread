@@ -275,7 +275,7 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                           Transform.scale(
                             scale: eggyScale,
                             child: Image.asset(
-                              'assets/pet/eggy_transparent_bg.png',
+                              'assets/pet/eggy_transparent_bg.webp',
                               height: 400,
                               fit: BoxFit.contain,
                             ),
