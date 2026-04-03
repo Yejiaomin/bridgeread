@@ -1,0 +1,248 @@
+{
+  "id": "biscuit_library_book3_day1",
+  "bookTitle": "Biscuit Loves the Library",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "It's Read to a Pet Day!",
+  "originalAudio": "books/03Biscuit_Loves_the_Library/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要一起去图书馆啦！Biscuit Loves the Library！library就是图书馆，Biscuit最喜欢图书馆了！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "library_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_02.webp",
+      "teacherExpression": "excited",
+      "narrativeCN": "哇！今天图书馆有一个特别的活动！Read to a Pet Day！就是带宠物去图书馆，读书给宠物听的日子！special就是特别的。小女孩要带Biscuit去图书馆，你觉得Biscuit开心吗？",
+      "narrativeEN": "It's a very special day at the library, Biscuit. Woof, woof!",
+      "keywords": [
+        "special",
+        "library"
+      ],
+      "audioCN": "library_p1_cn",
+      "audioEN": "library_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "到了图书馆啦！今天是Read to a Pet Day！小女孩说——我可以读书给你听哦，Biscuit！read就是读，read to you就是读给你听。Biscuit好开心，Woof woof！",
+      "narrativeEN": "It's Read to a Pet Day! I can read to you, Biscuit. Woof, woof!",
+      "keywords": [
+        "read"
+      ],
+      "audioCN": "library_p2_cn",
+      "audioEN": "library_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩说——来吧Biscuit，我们去找一本书！come along就是一起来吧。find a book就是找一本书。图书馆里有好多好多的书，你最喜欢看什么书呀？ 你看！图书馆里有关于bunnies小兔子的书，还有关于bears小熊的书！bunnies就是小兔子们，bears就是小熊们。Biscuit看到这些书好开心呀！",
+      "narrativeEN": "Come along, Biscuit. Let's find a book. Woof, woof! See, Biscuit? There are books about bunnies and bears. Woof, woof!",
+      "keywords": [
+        "find",
+        "book",
+        "bunnies",
+        "bears"
+      ],
+      "audioCN": "library_p3_cn",
+      "audioEN": "library_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_05.webp",
+      "teacherExpression": "surprised",
+      "narrativeCN": "哇！还有关于大恐龙的书呢！big dinosaurs！dinosaurs就是恐龙。Biscuit看到恐龙的书，叫了一声大大的Woof！是不是被吓到了呀，哈哈！ 哈哈！Biscuit这个小调皮！他在恐龙书里看到了一根骨头bone，他以为是真的骨头呢！小女孩说——Funny puppy！那不是真的骨头呀！real就是真的。",
+      "narrativeEN": "And big dinosaurs, too! Woof! Funny puppy! That's not a real bone! Woof, woof!",
+      "keywords": [
+        "big",
+        "dinosaurs",
+        "funny",
+        "real",
+        "bone"
+      ],
+      "audioCN": "library_p5_cn",
+      "audioEN": "library_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩说——看，Biscuit！这边还有更多的书呢！more books就是更多的书。over here就是这边。图书馆真的好大呀，到处都是书！ 咦？Biscuit跑到哪里去了？小女孩找不到Biscuit了！Where are you就是你在哪里呀？Biscuit一定是看到什么好玩的东西跑掉了！",
+      "narrativeEN": "Look, Biscuit. There are more books over here. Woof, woof! Biscuit! Where are you? Woof!",
+      "keywords": [
+        "more",
+        "books",
+        "where"
+      ],
+      "audioCN": "library_p7_cn",
+      "audioEN": "library_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "原来Biscuit找到了手偶玩具！puppets就是手偶。你玩过手偶吗？就是套在手上可以动来动去的小玩偶！Biscuit觉得好有趣呀！ Biscuit还发现了可以听故事的地方！listen就是听。stories就是故事们。图书馆不光可以看书，还可以听故事呢！",
+      "narrativeEN": "You found the puppets, Biscuit. And you even found stories we can listen to. Woof!",
+      "keywords": [
+        "found",
+        "puppets",
+        "stories",
+        "listen"
+      ],
+      "audioCN": "library_p9_cn",
+      "audioEN": "library_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "好啦，现在该选一本书来读啦！which book就是哪本书。小女孩问——我们要读哪一本呢？你觉得Biscuit会选哪本书呀？",
+      "narrativeEN": "Now, which book will it be?",
+      "keywords": [
+        "which",
+        "book"
+      ],
+      "audioCN": "library_p11_cn",
+      "audioEN": "library_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_10.webp",
+      "teacherExpression": "excited",
+      "narrativeCN": "Biscuit找到了图书管理员！librarian就是图书管理员。还找到了一本刚刚好的书！just right就是刚刚好。图书管理员帮他们选了一本最棒的书！",
+      "narrativeEN": "You found the librarian and a book that's just right. Woof, woof!",
+      "keywords": [
+        "librarian",
+        "right"
+      ],
+      "audioCN": "library_p12_cn",
+      "audioEN": "library_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit还找到了一个舒服的位置，周围都是朋友！cozy就是舒舒服服暖暖的。friends就是朋友们。大家一起坐在图书馆里读书，多开心呀！",
+      "narrativeEN": "You found a cozy spot filled with friends, too.",
+      "keywords": [
+        "cozy",
+        "friends"
+      ],
+      "audioCN": "library_p13_cn",
+      "audioEN": "library_p13_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_12.webp",
+      "teacherExpression": "excited",
+      "narrativeCN": "每个人都喜欢图书馆！Everyone loves the library！everyone就是每一个人。你喜欢图书馆吗？下次让爸爸妈妈带你去图书馆看书吧！",
+      "narrativeEN": "Everyone loves the library, Biscuit. Woof, woof!",
+      "keywords": [
+        "everyone",
+        "loves"
+      ],
+      "audioCN": "library_p14_cn",
+      "audioEN": "library_p14_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_13.webp",
+      "teacherExpression": "excited",
+      "narrativeCN": "好啦！让我们一起读书吧！Let's read！今天的故事告诉我们，图书馆是一个非常special的地方，可以看书，听故事，还能交到好朋友！你学会了哪些新单词呀？",
+      "narrativeEN": "Let's read! Woof!",
+      "keywords": [
+        "read"
+      ],
+      "audioCN": "library_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "fun",
+      "phonemes": [
+        "f",
+        "u",
+        "n"
+      ],
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_05.webp"
+    },
+    {
+      "word": "pet",
+      "phonemes": [
+        "p",
+        "e",
+        "t"
+      ],
+      "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_02.webp"
+    }
+  ]
+}
