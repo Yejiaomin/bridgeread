@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/progress_service.dart';
+import '../utils/cdn_asset.dart';
 
 // ── Praise options ────────────────────────────────────────────────────────────
 
@@ -114,7 +115,7 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
 
     // Play praise audio after a short pause
     Future.delayed(const Duration(milliseconds: 300), () {
-      if (mounted) _player.play(AssetSource(audio));
+      if (mounted) _player.play(cdnAudioSource(audio));
     });
 
     // Eggy jiggles when each star lands
@@ -274,8 +275,7 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                           // Eggy — 400 px (2× the quiz 200 px)
                           Transform.scale(
                             scale: eggyScale,
-                            child: Image.asset(
-                              'assets/pet/eggy_transparent_bg.webp',
+                            child: cdnImage('assets/pet/eggy_transparent_bg.webp',
                               height: 400,
                               fit: BoxFit.contain,
                             ),

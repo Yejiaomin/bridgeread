@@ -30,7 +30,7 @@ jobs:
       # Rebuild for HK server (no base-href, root path)
       - run: flutter build web
 
-      # Deploy to HK server
+      # Deploy to HK server — app bundle + CDN assets separately
       - name: Deploy to HK Server
         env:
           SSH_KEY: ${{ secrets.HK_SSH_KEY }}
@@ -39,6 +39,22 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/hk_key
           chmod 600 ~/.ssh/hk_key
           ssh-keyscan -H 47.243.220.248 >> ~/.ssh/known_hosts 2>/dev/null
+
+          # 1. Deploy Flutter web build (small, ~36MB)
           tar czf /tmp/web.tar.gz -C build/web .
           scp -i ~/.ssh/hk_key /tmp/web.tar.gz root@47.243.220.248:/tmp/
           ssh -i ~/.ssh/hk_key root@47.243.220.248 'cd /var/www/bridgeread && rm -rf * && tar xzf /tmp/web.tar.gz'
+
+          # 2. Deploy CDN assets (books, audio, images — loaded on demand)
+          tar czf /tmp/cdn_assets.tar.gz \
+            assets/books/ \
+            assets/audio/ \
+            assets/characters/ \
+            assets/pet/ \
+            assets/shop/ \
+            assets/phonics/ \
+            assets/quiz/ \
+            assets/home/ \
+            assets/video/
+          scp -i ~/.ssh/hk_key /tmp/cdn_assets.tar.gz root@47.243.220.248:/tmp/
+          ssh -i ~/.ssh/hk_key root@47.243.220.248 'cd /var/www/bridgeread && tar xzf /tmp/cdn_assets.tar.gz'

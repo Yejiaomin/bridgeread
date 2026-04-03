@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
+import '../utils/cdn_asset.dart';
 
 // ── Playlist ──────────────────────────────────────────────────────────────────
 
@@ -192,7 +193,7 @@ class _ListenScreenState extends State<ListenScreen>
     final i = idx % _tracks.length;
     setState(() => _trackIdx = i);
     await _player.stop();
-    await _player.play(AssetSource(_tracks[i].path));
+    await _player.play(cdnAudioSource(_tracks[i].path));
     _setPlaying(true);
   }
 
@@ -259,19 +260,16 @@ class _ListenScreenState extends State<ListenScreen>
             child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Image.asset(
-                    'assets/pet/cards/bicycle.webp',
+                  cdnImage('assets/pet/cards/bicycle.webp',
                     fit: BoxFit.contain,
                     width: double.infinity,
                     height: double.infinity,
-                    errorBuilder: (_, __, ___) => Image.asset(
-                      'assets/pet/costumes/base/egg_month$_eggyMonth.png',
+                    errorBuilder: (_, __, ___) => cdnImage('assets/pet/costumes/base/egg_month$_eggyMonth.png',
                       fit: BoxFit.contain,
                     ),
                   ),
                   if (_equippedAccessory != null)
-                    Image.asset(
-                      'assets/pet/costumes/accessories/$_equippedAccessory.png',
+                    cdnImage('assets/pet/costumes/accessories/$_equippedAccessory.png',
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,

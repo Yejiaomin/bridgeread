@@ -9,6 +9,7 @@ import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../models/lesson.dart';
 import 'eggy_celebration_screen.dart';
+import '../utils/cdn_asset.dart';
 
 // ---------------------------------------------------------------------------
 // Constants & data
@@ -336,7 +337,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   Future<void> _playAudio(String assetPath) async {
     await _player.stop();
-    await _player.play(AssetSource(assetPath.replaceFirst('assets/', '')));
+    await _player.play(cdnAudioFromAssetPath(assetPath));
   }
 
   /// Play audio and wait for it to finish before returning.
@@ -348,7 +349,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       if (!completer.isCompleted) completer.complete();
       sub.cancel();
     });
-    await _player.play(AssetSource(assetPath.replaceFirst('assets/', '')));
+    await _player.play(cdnAudioFromAssetPath(assetPath));
     await completer.future;
   }
 
@@ -828,8 +829,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         children: [
           // ── BACKGROUND: white base + full-screen book image ─────────────
           Container(color: Colors.white),
-          Image.asset(
-            word.bookImage,
+          cdnImage(word.bookImage,
             fit: BoxFit.cover,
             alignment: Alignment.centerLeft,
           ),

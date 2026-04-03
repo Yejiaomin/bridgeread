@@ -10,6 +10,7 @@ import '../services/audio_service.dart';
 import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
 import '../widgets/highlighter_overlay.dart';
+import '../utils/cdn_asset.dart';
 
 class ReaderScreen extends StatefulWidget {
   final String? lessonId;
@@ -315,14 +316,12 @@ class _ReaderScreenState extends State<ReaderScreen>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Image.asset(
-            'assets/pet/costumes/base/egg_month$_eggyMonth.png',
+          cdnImage('assets/pet/costumes/base/egg_month$_eggyMonth.png',
             fit: BoxFit.contain,
             errorBuilder: (_, __, ___) => const SizedBox(),
           ),
           if (_equippedAccessory != null)
-            Image.asset(
-              'assets/pet/costumes/accessories/$_equippedAccessory.png',
+            cdnImage('assets/pet/costumes/accessories/$_equippedAccessory.png',
               fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => const SizedBox(),
             ),
@@ -344,7 +343,7 @@ class _ReaderScreenState extends State<ReaderScreen>
               color: const Color(0xFFFFF8F0),
               child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: Image.asset(imageAsset, fit: BoxFit.contain,
+                child: cdnImage(imageAsset, fit: BoxFit.contain,
                     errorBuilder: (_, __, ___) => const SizedBox()),
               ),
             ),
@@ -484,8 +483,7 @@ class _ReaderScreenState extends State<ReaderScreen>
             ),
             Positioned(
               left: left, top: top, width: imgW, height: imgH,
-              child: Image.asset(
-                imageAsset,
+              child: cdnImage(imageAsset,
                 fit: BoxFit.fill,
                 errorBuilder: (_, __, ___) => Center(
                   child: Column(

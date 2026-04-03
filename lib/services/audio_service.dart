@@ -16,10 +16,9 @@ class AudioService {
   /// Stream of playback position updates for the current track.
   Stream<Duration> get onPositionChanged => _player.onPositionChanged;
 
-  /// Loads an asset and returns the appropriate [Source].
-  /// On web, uses [BytesSource] with explicit MIME type to avoid browser
-  /// "Format error (Code: 4)" caused by missing Content-Type headers.
+  /// Loads an audio source. On web, uses UrlSource for CDN loading.
   Source _source(String name) {
+    if (kIsWeb) return UrlSource('/assets/audio/$name.mp3');
     return AssetSource('audio/$name.mp3');
   }
 

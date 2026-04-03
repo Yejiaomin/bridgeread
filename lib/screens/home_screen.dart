@@ -6,6 +6,7 @@ import '../utils/test_data.dart';
 import '../main.dart' show routeObserver;
 import 'reader_screen.dart';
 import '../services/lesson_service.dart';
+import '../utils/cdn_asset.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HomeScreen — background image + transparent tap zones
@@ -111,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> _onBooksTap(BuildContext ctx) async {
     _pressCtrl.forward(from: 0);
     _glowCtrl.forward(from: 0).then((_) => _glowCtrl.reverse());
-    _player.play(AssetSource('audio/sfx/book-open.wav'));
+    _player.play(cdnAudioSource('audio/sfx/book-open.wav'));
     await Future.delayed(const Duration(milliseconds: 180));
     if (mounted) Navigator.pushNamed(ctx, '/study').then((_) => _loadStats());
   }
@@ -133,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen>
             fit: StackFit.expand,
             children: [
               // ── Background ────────────────────────────────────────────
-              Image.asset('assets/home/home_bg.webp',
+              cdnImage('assets/home/home_bg.webp',
                   fit: BoxFit.cover, width: w, height: h),
 
               // ── BOOKS tap zone ────────────────────────────────────────
@@ -482,8 +483,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             // Cover thumbnail
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                book.coverAsset,
+                              child: cdnImage(book.coverAsset,
                                 width: 56, height: 56,
                                 fit: BoxFit.cover,
                                 errorBuilder: (_, __, ___) => Container(
