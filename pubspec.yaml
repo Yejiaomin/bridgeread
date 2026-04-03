@@ -68,8 +68,31 @@ flutter:
   uses-material-design: true
 
   assets:
-    # Only bundle lesson JSON (small config files) — everything else loads from CDN
+    # Lesson configs (small JSON, always bundled)
     - assets/lessons/
+    # Large assets below: bundled for dev, served from nginx CDN in production.
+    # CI/CD deploys these separately to keep the web build small.
+    - assets/books/01Biscuit/
+    - assets/books/02Biscuit_and_the_Baby/
+    - assets/books/03Biscuit_Loves_the_Library/
+    - assets/audio/
+    - assets/audio/phonemes/
+    - assets/audio/phonics_sounds/
+    - assets/audio/sfx/
+    - assets/audio/items/
+    - assets/characters/
+    - assets/home/
+    - assets/pet/
+    - assets/pet/cards/
+    - assets/pet/costumes/
+    - assets/pet/costumes/base/
+    - assets/pet/costumes/accessories/
+    - assets/phonics/
+    - assets/quiz/
+    - assets/shop/
+    - assets/shop/items/
+    - assets/shop/items/1month/
+    - assets/video/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

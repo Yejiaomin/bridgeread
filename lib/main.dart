@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'utils/cdn_asset.dart';
 import 'screens/home_screen.dart';
 import 'screens/study_screen.dart';
 import 'screens/reader_screen.dart';
@@ -79,7 +80,7 @@ class _OrientationGate extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset(
+                    cdnImage(
                       'assets/pet/eggy_transparent_bg.webp',
                       width: 120,
                       height: 120,

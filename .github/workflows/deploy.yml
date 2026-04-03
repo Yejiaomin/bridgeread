@@ -19,16 +19,35 @@ jobs:
 
       - run: flutter pub get
 
-      # Build for GitHub Pages (with base-href)
-      - run: flutter build web --base-href "/bridgeread/"
+      # Build for GitHub Pages (with base-href, local canvaskit)
+      - run: flutter build web --base-href "/bridgeread/" --no-web-resources-cdn
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/web
 
-      # Rebuild for HK server (no base-href, root path)
-      - run: flutter build web
+      # Strip large assets from pubspec before production build
+      - name: Strip large assets for production build
+        run: |
+          python3 -c "
+          lines = open('pubspec.yaml').readlines()
+          out = []
+          skip = False
+          for line in lines:
+              if '# Large assets below' in line:
+                  skip = True
+                  continue
+              if skip and line.strip().startswith('- assets/'):
+                  continue
+              if skip and not line.strip().startswith('- assets/') and not line.strip().startswith('#'):
+                  skip = False
+              out.append(line)
+          open('pubspec.yaml','w').writelines(out)
+          "
+
+      # Build for HK server (no base-href, local canvaskit — gstatic.com blocked in China)
+      - run: flutter build web --no-web-resources-cdn
 
       # Deploy to HK server — app bundle + CDN assets separately
       - name: Deploy to HK Server

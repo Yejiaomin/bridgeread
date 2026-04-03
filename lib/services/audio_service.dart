@@ -16,9 +16,8 @@ class AudioService {
   /// Stream of playback position updates for the current track.
   Stream<Duration> get onPositionChanged => _player.onPositionChanged;
 
-  /// Loads an audio source. On web, uses UrlSource for CDN loading.
+  /// Loads an audio source.
   Source _source(String name) {
-    if (kIsWeb) return UrlSource('/assets/audio/$name.mp3');
     return AssetSource('audio/$name.mp3');
   }
 

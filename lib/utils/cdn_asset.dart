@@ -1,11 +1,17 @@
-/// Helpers for loading assets from CDN (web) or local bundle (mobile).
+/// Helpers for loading assets.
+///
+/// On web: Flutter's AssetSource/Image.asset internally request `/assets/...`
+/// via HTTP. In production, nginx serves these from the CDN assets directory.
+/// No special UrlSource/Image.network needed — just keep files on the server.
+///
+/// On mobile: Assets are bundled as usual.
 library;
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
-/// Load an image from CDN on web, or from bundled assets on mobile.
+/// Load an image. Uses Image.asset which works on both web and mobile.
+/// On web, Flutter requests `/assets/{assetPath}` via HTTP — nginx serves it.
 /// [assetPath] starts with 'assets/', e.g. 'assets/books/01Biscuit/cover.webp'
 Widget cdnImage(
   String assetPath, {
@@ -16,17 +22,6 @@ Widget cdnImage(
   Alignment alignment = Alignment.center,
   Widget Function(BuildContext, Object, StackTrace?)? errorBuilder,
 }) {
-  if (kIsWeb) {
-    return Image.network(
-      '/$assetPath',
-      key: key,
-      fit: fit,
-      width: width,
-      height: height,
-      alignment: alignment,
-      errorBuilder: errorBuilder,
-    );
-  }
   return Image.asset(
     assetPath,
     key: key,
@@ -38,10 +33,9 @@ Widget cdnImage(
   );
 }
 
-/// Get an audio [Source] from CDN on web, or from bundled assets on mobile.
+/// Get an audio [Source].
 /// [audioPath] does NOT start with 'assets/', e.g. 'audio/biscuit_p1_cn.mp3'
 Source cdnAudioSource(String audioPath) {
-  if (kIsWeb) return UrlSource('/assets/$audioPath');
   return AssetSource(audioPath);
 }
 
@@ -51,5 +45,5 @@ Source cdnAudioFromAssetPath(String assetPath) {
   final path = assetPath.startsWith('assets/')
       ? assetPath.substring(7) // strip 'assets/'
       : assetPath;
-  return cdnAudioSource(path);
+  return AssetSource(path);
 }
