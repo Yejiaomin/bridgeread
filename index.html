@@ -42,6 +42,10 @@
       animation: spin 0.8s linear infinite;
     }
     #loading p { color: #FF8C42; margin-top: 16px; font-size: 16px; }
+    #loading .pwa-tip {
+      color: #999; font-size: 13px; margin-top: 24px; text-align: center;
+      line-height: 1.6; display: none;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -50,7 +54,18 @@
   <div id="loading">
     <div class="spinner"></div>
     <p>Loading...</p>
+    <p class="pwa-tip" id="pwaTip">
+      Tip: 点击浏览器右上角 "添加到主屏幕"<br>下次可以直接从桌面打开哦
+    </p>
   </div>
+  <script>
+    // Only show PWA tip when opened in browser (not standalone/installed)
+    if (!window.matchMedia('(display-mode: standalone)').matches &&
+        !window.navigator.standalone) {
+      var tip = document.getElementById('pwaTip');
+      if (tip) tip.style.display = 'block';
+    }
+  </script>
 
   <script>
     // Remove loading screen once Flutter renders first frame
