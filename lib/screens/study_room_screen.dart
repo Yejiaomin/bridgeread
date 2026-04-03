@@ -3,6 +3,7 @@ import 'dart:math' show sin, pi, cos, Random;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/cdn_asset.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Item pools & helpers
@@ -238,7 +239,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
 
     // Shake jar, play sound
     _jarShakeCtrl.forward(from: 0);
-    _player.play(AssetSource('audio/sfx/magic-sparkle.wav'));
+    _player.play(cdnAudioSource('audio/sfx/magic-sparkle.wav'));
 
     // Fly animation from jar upward
     await Future.delayed(const Duration(milliseconds: 300));
@@ -254,7 +255,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
       _gachaAvailable = true; // re-enable jar (testing mode)
     });
     await _player.stop();
-    await _player.play(AssetSource('audio/items/$dropped.mp3'));
+    await _player.play(cdnAudioSource('audio/items/$dropped.mp3'));
   }
 
   void _flyGachaItem(String itemId) {
@@ -322,7 +323,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
-                      child: Image.asset(_itemPath(itemId), fit: BoxFit.contain,
+                      child: cdnImage(_itemPath(itemId), fit: BoxFit.contain,
                           errorBuilder: (_, __, ___) =>
                               const Icon(Icons.star, color: Colors.amber)),
                     ),
@@ -375,7 +376,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
       _placed.clear();
     });
     _saveData();
-    _player.play(AssetSource('audio/sfx/cartoon-whistle.wav'));
+    _player.play(cdnAudioSource('audio/sfx/cartoon-whistle.wav'));
 
     // Fire fly animations from captured slot positions (purely visual)
     int delay = 0;
@@ -393,7 +394,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     Future.delayed(Duration(milliseconds: delay + 480), () {
       if (mounted) {
         _boxCtrl.forward(from: 0);
-        _player.play(AssetSource('audio/pop.wav'));
+        _player.play(cdnAudioSource('audio/pop.wav'));
       }
     });
   }
@@ -428,7 +429,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                 opacity: opacity.value,
                 child: Transform.scale(
                   scale: scale.value,
-                  child: Image.asset(_itemPath(itemId),
+                  child: cdnImage(_itemPath(itemId),
                       width: 60, height: 60, fit: BoxFit.contain,
                       errorBuilder: (_, __, ___) =>
                           const Icon(Icons.star, color: Colors.amber, size: 60)),
@@ -475,7 +476,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
             children: [
 
               // ── Background ────────────────────────────────────────────────
-              Image.asset('assets/home/study_room_bg.webp',
+              cdnImage('assets/home/study_room_bg.webp',
                   fit: BoxFit.cover, width: w, height: h),
 
               // ── Back button ───────────────────────────────────────────────
@@ -518,7 +519,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                   onTap: _collectShelfToBox,
                   onLongPress: () {
                     _boxCtrl.forward(from: 0);
-                    _player.play(AssetSource('audio/sfx/book-open.wav'));
+                    _player.play(cdnAudioSource('audio/sfx/book-open.wav'));
                     setState(() => _showCollection = true);
                   },
                   child: AnimatedBuilder(
@@ -532,16 +533,14 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                               final s = 1.0 + sin(_jarSparkleCtrl.value * 2 * pi) * 0.06;
                               return Transform.scale(scale: s, child: child);
                             },
-                            child: Image.asset(
-                              _placed.length >= 15
+                            child: cdnImage(_placed.length >= 15
                                   ? 'assets/shop/items/box_opened.png'
                                   : 'assets/shop/items/box_closed.png',
                               fit: BoxFit.contain,
                               errorBuilder: (_, __, ___) => const SizedBox(),
                             ),
                           )
-                        : Image.asset(
-                            _placed.length >= 15
+                        : cdnImage(_placed.length >= 15
                                 ? 'assets/shop/items/box_opened.png'
                                 : 'assets/shop/items/box_closed.png',
                             fit: BoxFit.contain,
@@ -584,11 +583,9 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
           alignment: Alignment.center,
           children: [
             // Base egg (monthly)
-            Image.asset(
-              'assets/pet/costumes/base/egg_month$_eggyMonth.png',
+            cdnImage('assets/pet/costumes/base/egg_month$_eggyMonth.png',
               width: size, height: size, fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Image.asset(
-                'assets/pet/eggy_transparent_bg.webp',
+              errorBuilder: (_, __, ___) => cdnImage('assets/pet/eggy_transparent_bg.webp',
                 width: size, height: size,
                 errorBuilder: (_, __, ___) =>
                     const SizedBox(width: size, height: size),
@@ -596,8 +593,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
             ),
             // Accessory overlay (single slot — hat/glasses share)
             if (_equippedAccessory != null)
-              Image.asset(
-                _itemPath(_equippedAccessory!),
+              cdnImage(_itemPath(_equippedAccessory!),
                 width: size, height: size, fit: BoxFit.contain,
                 errorBuilder: (_, __, ___) => const SizedBox(width: size, height: size),
               ),
@@ -813,8 +809,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                         fontSize: 22, fontWeight: FontWeight.w900,
                         color: Color(0xFFD4521A))),
                   const SizedBox(height: 10),
-                  Image.asset(
-                    _itemPath(item),
+                  cdnImage(_itemPath(item),
                     width: 156, height: 156, fit: BoxFit.contain,
                     errorBuilder: (_, __, ___) =>
                         const Icon(Icons.star, color: Colors.amber, size: 156),
@@ -822,7 +817,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
-                      _player.play(AssetSource('audio/sfx/pop-click.wav'));
+                      _player.play(cdnAudioSource('audio/sfx/pop-click.wav'));
                       setState(() {
                         // Apply item on OK
                         if (_isAccessory(item)) {
@@ -871,7 +866,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
   Widget _buildCollectionOverlay(double w, double h) {
     return GestureDetector(
       onTap: () {
-        _player.play(AssetSource('audio/pop.wav'));
+        _player.play(cdnAudioSource('audio/pop.wav'));
         setState(() => _showCollection = false);
       },
       child: Container(
@@ -906,7 +901,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                         ),
                         GestureDetector(
                           onTap: () {
-                            _player.play(AssetSource('audio/pop.wav'));
+                            _player.play(cdnAudioSource('audio/pop.wav'));
                             setState(() => _showCollection = false);
                           },
                           child: const Icon(Icons.close,
@@ -954,8 +949,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                                       color: const Color(0x38FF8C42), width: 1),
                                 ),
                                 padding: const EdgeInsets.all(7),
-                                child: Image.asset(
-                                  _itemPath(id), fit: BoxFit.contain,
+                                child: cdnImage(_itemPath(id), fit: BoxFit.contain,
                                   errorBuilder: (_, __, ___) =>
                                       const Icon(Icons.image_not_supported,
                                           color: Colors.grey),
@@ -989,7 +983,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
           key: _slotKeys[i],
           width: itemSize, height: itemSize,
           child: placed != null
-              ? Image.asset(_itemPath(placed), fit: BoxFit.contain,
+              ? cdnImage(_itemPath(placed), fit: BoxFit.contain,
                   errorBuilder: (_, __, ___) =>
                       const Icon(Icons.help_outline, color: Colors.white38))
               : null,

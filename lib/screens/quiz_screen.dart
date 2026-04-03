@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
+import '../utils/cdn_asset.dart';
 
 // ---------------------------------------------------------------------------
 // Data
@@ -439,7 +440,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     });
     // Play pop SFX simultaneously with the positive voice (fails silently if file missing)
     _popPlayer.stop().then((_) =>
-        _popPlayer.play(AssetSource('audio/pop.wav'))
+        _popPlayer.play(cdnAudioSource('audio/pop.wav'))
             .catchError((_) {}));
     _play(_randomPositive());
     _popCtrl.forward(from: 0).then((_) {
@@ -522,7 +523,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   Future<void> _play(String path) async {
     await _player.stop();
-    await _player.play(AssetSource(path.replaceFirst('assets/', '')));
+    await _player.play(cdnAudioFromAssetPath(path));
   }
 
   // ── Build ──────────────────────────────────────────────────────────────────
@@ -705,7 +706,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   Widget _bubbleContent(_Bubble b) {
     if (b.img != null) {
-      return Image.asset(b.img!, fit: BoxFit.cover);
+      return cdnImage(b.img!, fit: BoxFit.cover);
     }
     if (b.emoji != null) {
       return Center(
@@ -1071,8 +1072,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                           // Eggy image with bounce + jiggle — 400 px (2× size)
                           Transform.scale(
                             scale: eggyScale,
-                            child: Image.asset(
-                              'assets/pet/eggy_transparent_bg.webp',
+                            child: cdnImage('assets/pet/eggy_transparent_bg.webp',
                               height: 400,
                               fit: BoxFit.contain,
                             ),

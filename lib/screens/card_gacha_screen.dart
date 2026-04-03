@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/cdn_asset.dart';
 
 const _kCardBack = 'assets/pet/cards/card.webp';
 
@@ -418,8 +419,7 @@ class _CardGachaScreenState extends State<CardGachaScreen>
 
   // ── Helpers ───────────────────────────────────────────────────────────────────
 
-  Widget _img(String path) => Image.asset(
-        path,
+  Widget _img(String path) => cdnImage(path,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) =>
             Container(color: const Color(0xFF1A1A3A)),

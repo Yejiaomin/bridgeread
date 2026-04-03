@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import 'eggy_celebration_screen.dart';
+import '../utils/cdn_asset.dart';
 
 const _kOrange = Color(0xFFFF8C42);
 const _kYellow = Color(0xFFFFD93D);
@@ -163,7 +164,7 @@ class _RecordingScreenState extends State<RecordingScreen>
   void _playDemo() async {
     if (!mounted) return;
     setState(() => _demoPlaying = true);
-    await _player.play(AssetSource(_demoAudioPath));
+    await _player.play(cdnAudioSource(_demoAudioPath));
   }
 
   void _replayDemo() {
@@ -419,8 +420,7 @@ class _RecordingScreenState extends State<RecordingScreen>
           Positioned.fill(
             child: ColoredBox(
               color: const Color(0xFFFFF8F0),
-              child: Image.asset(
-                'assets/books/01Biscuit/biscuit_spread_02.webp',
+              child: cdnImage('assets/books/01Biscuit/biscuit_spread_02.webp',
                 fit: BoxFit.contain,
               ),
             ),

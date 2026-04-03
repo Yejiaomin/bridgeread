@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../main.dart' show routeObserver;
+import '../utils/cdn_asset.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Zone data
@@ -155,7 +156,7 @@ class _StudyScreenState extends State<StudyScreen>
     _ctrls[i].forward(from: 0).then((_) => _ctrls[i].reverse());
     // Per-zone SFX
     _player.stop();
-    _player.play(AssetSource(_kZones[i].sfx));
+    _player.play(cdnAudioSource(_kZones[i].sfx));
 
     await Future.delayed(const Duration(milliseconds: 160));
     if (!mounted) return;
@@ -189,8 +190,7 @@ class _StudyScreenState extends State<StudyScreen>
                   // ── Background ────────────────────────────────────────
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 600),
-                    child: Image.asset(
-                      _bgImage,
+                    child: cdnImage(_bgImage,
                       key: ValueKey(_bgImage),
                       fit: BoxFit.cover,
                       width: w,
@@ -358,7 +358,7 @@ class _RecapScreenState extends State<RecapScreen>
     };
 
     final audioPath = prevAudioMap[lessonId] ?? 'audio/biscuit_original.mp3';
-    await _player.play(AssetSource(audioPath));
+    await _player.play(cdnAudioSource(audioPath));
     _setPlaying(true);
   }
 
@@ -399,8 +399,7 @@ class _RecapScreenState extends State<RecapScreen>
         fit: StackFit.expand,
         children: [
           // ── Sleepy eggy background ───────────────────────────────────────
-          Image.asset(
-            'assets/pet/cards/spleepy.webp',
+          cdnImage('assets/pet/cards/spleepy.webp',
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
