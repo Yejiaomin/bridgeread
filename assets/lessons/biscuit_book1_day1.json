@@ -7,7 +7,7 @@
   "originalAudio": "audio/biscuit_original.mp3",
   "pages": [
     {
-      "imageAsset": "assets/books/biscuit_cover.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_cover.webp",
       "narrativeCN": "Hello Hello, my dear friend！I am Amy! 我们又见面啦！今天我们要讲Biscuit的故事。Are you ready？让我们开始吧，let's go！",
       "narrativeEN": "",
       "keywords": [],
@@ -22,7 +22,7 @@
       "highlights": []
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_01.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_01.webp",
       "teacherExpression": "excited",
       "narrativeCN": "呀~ 你们看到了吗？这就是今天的小主角，一只叫Biscuit的小狗！你知道biscuit是什么意思吗？哈哈，没错，就是饼干的意思，你看他个子小小的，毛是黄色的，是不是很像黄油饼干呀！",
       "narrativeEN": "This is Biscuit. Biscuit is small. Biscuit is yellow.",
@@ -59,7 +59,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_02.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_02.webp",
       "teacherExpression": "surprised",
       "narrativeCN": "好像要到睡觉时间啦！小女孩叫Biscuit去睡觉。这个bed就是小床，Time for bed就是该上床睡觉啦！但是你说Biscuit想不想睡啊？对了，他可不想睡，他大声的说 —— Woof woof！他想玩，他想玩！",
       "narrativeEN": "Time for bed, Biscuit! Woof, woof! Biscuit wants to play.",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_03.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_03.webp",
       "teacherExpression": "happy",
       "narrativeCN": "Biscuit还是不想睡觉，他想干嘛呀，哈哈，Biscuit说我要吃零食！snack就是小零食小点心。然后他又说我要喝水！这里的drink就是喝水。Biscuit怎么一会儿要这个，一会儿要那个呀，哈哈！",
       "narrativeEN": "Biscuit wants a snack. Biscuit wants a drink.",
@@ -133,7 +133,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_04.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_04.webp",
       "teacherExpression": "gentle",
       "narrativeCN": "那我们看看吃完喝完以后biscuit要睡觉了吗？Biscuit又说了什么？——他说要听故事！story就是故事。小女孩只好又给他讲起了故事，是不是就像我们现在这样啊？",
       "narrativeEN": "Biscuit wants to hear a story.",
@@ -160,7 +160,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_05.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_05.webp",
       "teacherExpression": "thinking",
       "narrativeCN": "故事听完了，Biscuit看了看，又说到——我想要我的小毯子！blanket就是小毯子。结果他还要什么呀？他说——我要我的玩偶！doll就是布娃娃玩偶！你睡觉的时候是不是总有一个小玩偶陪着你呀",
       "narrativeEN": "Biscuit wants his blanket. Biscuit wants his doll.",
@@ -197,7 +197,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_06.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_06.webp",
       "teacherExpression": "happy",
       "narrativeCN": "你看现在毯子有了，小玩偶有了，Biscuit又想到了什么呀？他说——我要抱抱！我要亲亲！hug是抱抱，kiss是亲亲。你们睡前有没有亲亲抱抱你家的小宠物，小狗狗或者小猫咪，然后跟他说晚安呀？",
       "narrativeEN": "Biscuit wants a hug. Biscuit wants a kiss.",
@@ -234,7 +234,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_07.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_07.webp",
       "teacherExpression": "surprised",
       "narrativeCN": "还没结束呢，Biscuit又说——我要开灯！light就是灯。light on就是把灯开着。biscuit是不是怕黑呀？你怕不怕黑呀？其实老师也总是在睡觉的时候开着小夜灯呢",
       "narrativeEN": "Biscuit wants a light on.",
@@ -261,7 +261,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_08.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_08.webp",
       "teacherExpression": "gentle",
       "narrativeCN": "小女孩把灯开着，然后把Biscuit好好地盖进被子里。tucked in就是把被子掖好。其实在你睡觉的时候，爸爸妈妈也会来悄悄的给你掖被子哦？",
       "narrativeEN": "Biscuit wants to be tucked in.",
@@ -288,7 +288,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_09.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_09.webp",
       "teacherExpression": "wow",
       "narrativeCN": "盖好了被子，好像还不够！Biscuit说——再亲一次！再抱一次！哈哈哈! one more kiss，one more 哈格。one more就是再来一个！你猜猜看，现在biscuit是不是真的要睡觉啦？",
       "narrativeEN": "Biscuit wants one more kiss. Biscuit wants one more hug.",
@@ -324,7 +324,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_10.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_10.webp",
       "teacherExpression": "sleepy",
       "narrativeCN": "……Biscuit说了最后一声Woof！终于，他蜷起身体准备睡觉啦！curl up就是蜷成一团。你们睡觉是不是也喜欢蜷成小球球？",
       "narrativeEN": "Woof! Biscuit wants to curl up.",
@@ -351,7 +351,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_11.webp",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_11.webp",
       "teacherExpression": "sleepy",
       "narrativeCN": "小饼干狗Biscuit终于睡着了！sleepy就是困困的瞌睡的。Good night Biscuit——晚安小饼干！",
       "narrativeEN": "Sleepy puppy. Good night, Biscuit.",
@@ -379,7 +379,7 @@
       ]
     },
     {
-      "imageAsset": "assets/books/biscuit_spread_12.png",
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_12.png",
       "teacherExpression": "praise",
       "narrativeCN": "今天我们认识了Biscuit！你还记得他睡前要了哪些东西吗？是不是也有你喜欢的呢？那我们明天再见哦！看看小Biscuit明天又有什么新鲜事吧！",
       "narrativeEN": "Great job today! See you tomorrow!",
@@ -402,7 +402,7 @@
         "e",
         "d"
       ],
-      "imageAsset": "assets/books/biscuit_spread_02.webp"
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_02.webp"
     },
     {
       "word": "hug",
@@ -411,7 +411,7 @@
         "u",
         "g"
       ],
-      "imageAsset": "assets/books/biscuit_spread_06.webp"
+      "imageAsset": "assets/books/01Biscuit/biscuit_spread_06.webp"
     }
   ]
 }

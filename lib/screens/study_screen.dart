@@ -354,6 +354,7 @@ class _RecapScreenState extends State<RecapScreen>
     const prevAudioMap = {
       'biscuit_book1_day1': 'audio/biscuit_original.mp3', // Day 1 has no previous, play own
       'biscuit_baby_book2_day1': 'audio/biscuit_original.mp3', // Day 2 recaps Day 1
+      'biscuit_library_book3_day1': 'audio/biscuit_baby_original.mp3', // Day 3 recaps Day 2
     };
 
     final audioPath = prevAudioMap[lessonId] ?? 'audio/biscuit_original.mp3';

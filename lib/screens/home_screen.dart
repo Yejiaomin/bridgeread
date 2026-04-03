@@ -283,8 +283,9 @@ class _BookDay {
 }
 
 const _kBooks = [
-  _BookDay(1, 'Biscuit', '小饼干', 'biscuit_book1_day1', 'assets/books/biscuit_cover.webp'),
-  _BookDay(2, 'Biscuit and the Baby', '小饼干和宝宝', 'biscuit_baby_book2_day1', 'assets/books/biscuit_baby_cover.jpg'),
+  _BookDay(1, 'Biscuit', '小饼干', 'biscuit_book1_day1', 'assets/books/01Biscuit/biscuit_cover.webp'),
+  _BookDay(2, 'Biscuit and the Baby', '小饼干和宝宝', 'biscuit_baby_book2_day1', 'assets/books/02Biscuit_and_the_Baby/biscuit_baby_cover.jpg'),
+  _BookDay(3, 'Biscuit Loves the Library', '小饼干爱图书馆', 'biscuit_library_book3_day1', 'assets/books/03Biscuit_Loves_the_Library/cover.webp'),
   // 后续书籍在这里添加
 ];
 

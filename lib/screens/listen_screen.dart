@@ -57,7 +57,6 @@ class _ListenScreenState extends State<ListenScreen>
   @override
   void initState() {
     super.initState();
-    _loadListenData();
 
     _waveCtrl = List.generate(5, (i) => AnimationController(
       vsync: this,
@@ -81,17 +80,51 @@ class _ListenScreenState extends State<ListenScreen>
     _loadEggy();
     _startTimers();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => _playTrack(0));
+    // Wait for data to load before starting playback
+    _loadListenData().then((_) {
+      if (mounted) _playTrack(0);
+    });
   }
+
+  // Ordered list of all lessons for building listen playlists
+  static const _kLessonOrder = [
+    ('biscuit_book1_day1',          'Biscuit',                    'audio/biscuit_original.mp3'),
+    ('biscuit_baby_book2_day1',     'Biscuit and the Baby',       'audio/biscuit_baby_original.mp3'),
+    ('biscuit_library_book3_day1',  'Biscuit Loves the Library',  'books/03Biscuit_Loves_the_Library/audio.mp3'),
+  ];
 
   Future<void> _loadListenData() async {
     final service = LessonService();
     final lessonId = await service.restoreCurrentLessonId();
     final lesson = await service.loadLesson(lessonId);
-    if (lesson.originalAudio.isNotEmpty && mounted) {
-      setState(() {
-        _tracks = [_Track('${lesson.bookTitle} - Original', lesson.originalAudio)];
-      });
+
+    if (lesson.originalAudio.isEmpty) return;
+
+    // Find current day index (0-based) in the lesson order
+    int dayIndex = _kLessonOrder.indexWhere((e) => e.$1 == lessonId);
+    if (dayIndex < 0) dayIndex = 0;
+
+    final todayTitle = lesson.bookTitle;
+    final todayAudio = lesson.originalAudio;
+
+    final playlist = <_Track>[];
+
+    if (dayIndex == 0) {
+      // Day 1: today × 2
+      playlist.add(_Track('$todayTitle (1/2)', todayAudio));
+      playlist.add(_Track('$todayTitle (2/2)', todayAudio));
+    } else {
+      // Day 2+: today × 1, then previous day, then today again
+      final prevTitle = _kLessonOrder[dayIndex - 1].$2;
+      final prevAudio = _kLessonOrder[dayIndex - 1].$3;
+
+      playlist.add(_Track('$todayTitle - 新故事', todayAudio));
+      playlist.add(_Track('$prevTitle - 复习', prevAudio));
+      playlist.add(_Track('$todayTitle - 巩固', todayAudio));
+    }
+
+    if (mounted) {
+      setState(() => _tracks = playlist);
     }
   }
 
@@ -182,7 +215,24 @@ class _ListenScreenState extends State<ListenScreen>
     }
   }
 
-  void _nextTrack() => _playTrack(_trackIdx + 1);
+  void _nextTrack() {
+    if (_trackIdx + 1 >= _tracks.length) {
+      // All tracks finished — mark listen done and go home
+      _onListenComplete();
+    } else {
+      _playTrack(_trackIdx + 1);
+    }
+  }
+
+  Future<void> _onListenComplete() async {
+    await _player.stop();
+    _setPlaying(false);
+    await _saveListenTime();
+    await ProgressService.markModuleComplete('listen', 10);
+    if (mounted) {
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    }
+  }
 
   void _prevTrack() =>
       _playTrack((_trackIdx - 1 + _tracks.length) % _tracks.length);

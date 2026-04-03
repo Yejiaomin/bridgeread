@@ -24,10 +24,10 @@ class _Round {
 
 // Default rounds — used as fallback
 const _kDefaultRounds = [
-  _Round('bed',   _RType.word, 'assets/audio/phonemes/word_bed.mp3'),
-  _Round('bed',   _RType.word, 'assets/audio/phonemes/word_bed.mp3'),
-  _Round('hug',   _RType.word, 'assets/audio/phonemes/word_hug.mp3'),
-  _Round('hug',   _RType.word, 'assets/audio/phonemes/word_hug.mp3'),
+  _Round('bed',   _RType.word, 'assets/audio/phonics_sounds/word_bed.mp3'),
+  _Round('bed',   _RType.word, 'assets/audio/phonics_sounds/word_bed.mp3'),
+  _Round('hug',   _RType.word, 'assets/audio/phonics_sounds/word_hug.mp3'),
+  _Round('hug',   _RType.word, 'assets/audio/phonics_sounds/word_hug.mp3'),
 ];
 
 /// Build quiz rounds from lesson's phonics words (word bubbles only)
@@ -35,8 +35,8 @@ List<_Round> _buildRoundsFromLesson(List<String> words) {
   final rounds = <_Round>[];
   for (final w in words) {
     // Each word appears twice for more practice
-    rounds.add(_Round(w, _RType.word, 'assets/audio/phonemes/word_$w.mp3'));
-    rounds.add(_Round(w, _RType.word, 'assets/audio/phonemes/word_$w.mp3'));
+    rounds.add(_Round(w, _RType.word, 'assets/audio/phonics_sounds/word_$w.mp3'));
+    rounds.add(_Round(w, _RType.word, 'assets/audio/phonics_sounds/word_$w.mp3'));
   }
   return rounds;
 }
