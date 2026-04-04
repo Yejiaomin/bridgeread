@@ -129,7 +129,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   int _tilesLit = 0;   // how many tiles have completed audio (are lit up)
 
   // Step 3: drag state
-  List<int> _shuffledOrder = [0, 1, 2];
+  List<int> _shuffledOrder = [0, 1, 2]; // will be resized in _enterDrag
   List<int?> _slots = [null, null, null];
   final Set<int> _placedLetters = {};
 
@@ -204,8 +204,9 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
     });
 
+    // Create enough controllers for up to 5 phonemes (use first N as needed)
     _tileControllers = List.generate(
-      3,
+      5,
       (_) => AnimationController(
           vsync: this, duration: const Duration(milliseconds: 650)),
     );
@@ -216,7 +217,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         .toList();
 
     _slotControllers = List.generate(
-      3,
+      5,
       (_) => AnimationController(
           vsync: this, duration: const Duration(milliseconds: 450)),
     );
@@ -336,13 +337,13 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   // ---------------------------------------------------------------------------
 
   Future<void> _playAudio(String assetPath) async {
-    await _player.stop();
+    try { await _player.stop(); } catch (_) {}
     await _player.play(cdnAudioFromAssetPath(assetPath));
   }
 
   /// Play audio and wait for it to finish before returning.
   Future<void> _playAndWait(String assetPath) async {
-    await _player.stop();
+    try { await _player.stop(); } catch (_) {}
     final completer = Completer<void>();
     late StreamSubscription<void> sub;
     sub = _player.onPlayerComplete.listen((_) {
@@ -381,9 +382,10 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       _step = _Step.intro;
       _tilesShown = 0;
       _placedLetters.clear();
-      _slots = [null, null, null];
-      _slotSad = [false, false, false];
-      _shuffledOrder = [0, 1, 2];
+      final _count = _words[_wordIndex].letters.length;
+      _slots = List.filled(_count, null);
+      _slotSad = List.filled(_count, false);
+      _shuffledOrder = List.generate(_count, (i) => i);
       _wordComplete = false;
       _showAmazing = false;
       _showNextBtn = false;
@@ -437,9 +439,10 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       _tilesPlayable = false;
       _nextTileToTap = 0;
       _placedLetters.clear();
-      _slots = [null, null, null];
-      _slotSad = [false, false, false];
-      _shuffledOrder = [0, 1, 2];
+      final _count = _words[_wordIndex].letters.length;
+      _slots = List.filled(_count, null);
+      _slotSad = List.filled(_count, false);
+      _shuffledOrder = List.generate(_count, (i) => i);
       _wordComplete = false;
       _showAmazing = false;
       _showNextBtn = false;
@@ -477,9 +480,9 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       }
     }
 
-    // 3. Play full word again after all letters
+    // 3. Play full word again after all letters (pause to let last phoneme finish)
     if (!mounted) return;
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 600));
     await _playAndWait(word.wordAudioPath);
     if (!mounted) return;
 
@@ -595,10 +598,11 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   }
 
   void _enterDrag() {
-    final shuffled = [0, 1, 2]..shuffle(_rng);
+    final count = _words[_wordIndex].letters.length;
+    final shuffled = List.generate(count, (i) => i)..shuffle(_rng);
     setState(() {
       _shuffledOrder = shuffled;
-      _slots = [null, null, null];
+      _slots = List.filled(count, null);
       _placedLetters.clear();
       _step = _Step.drag;
     });
@@ -718,7 +722,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     } else {
       // All done — wait for last letter audio to finish, then play full word
       _tileShakeCtrl.stop();
-      Future.delayed(const Duration(milliseconds: 800), () async {
+      Future.delayed(const Duration(milliseconds: 1000), () async {
         if (!mounted) return;
         await _playAndWait(_words[_wordIndex].wordAudioPath);
         if (mounted) _enterEcho();
@@ -752,7 +756,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     _slotControllers[slotIndex].forward(from: 0);
     _addPoint();
 
-    if (_placedLetters.length == 3) {
+    if (_placedLetters.length == _words[_wordIndex].letters.length) {
       _playAndWait(_kBingo).then((_) {
         if (mounted) _onAllCorrect();
       });
@@ -1118,7 +1122,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   // ---------------------------------------------------------------------------
 
   Widget _buildTilesStep(_WordData word) {
-    final allTapped = _letterStarsTapped.length == 3;
+    final allTapped = _letterStarsTapped.length == _words[_wordIndex].letters.length;
     final isRecording = _echoPhase == _EchoPhase.recording;
     final isScored    = _echoPhase == _EchoPhase.scored;
     final starCount   = _echoScorePoints == 10 ? 3 : _echoScorePoints == 5 ? 1 : 0;
@@ -1168,7 +1172,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
           // Letter tiles — always rendered with fixed size slots
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(3, (i) {
+            children: List.generate(word.letters.length, (i) {
               final letter = word.letters[i];
               final tapped = _letterStarsTapped.contains(i);
               final isCurrentTarget = _tilesPlayable && i == _nextTileToTap && !tapped;
@@ -1698,7 +1702,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children:
-                  List.generate(3, (i) => _buildDropSlot(word, i)),
+                  List.generate(word.letters.length, (i) => _buildDropSlot(word, i)),
             ),
 
             const SizedBox(height: 52),
