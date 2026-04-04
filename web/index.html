@@ -26,40 +26,97 @@
 
   <!-- Loading screen style -->
   <style>
-    body { margin: 0; background: #FFF8F0; }
+    body { margin: 0; background: linear-gradient(135deg, #FFE8D6, #FFCBA4, #FFAD7A); }
     #loading {
       position: fixed; inset: 0; z-index: 9999;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      background: #FFF8F0;
-      font-family: -apple-system, sans-serif;
+      background: linear-gradient(135deg, #FFE8D6, #FFCBA4, #FFAD7A);
+      font-family: -apple-system, 'PingFang SC', sans-serif;
     }
-    #loading .spinner {
-      width: 48px; height: 48px;
-      border: 4px solid #FFE0C0;
-      border-top-color: #FF8C42;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    /* Decorative circles */
+    #loading::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
     }
-    #loading p { color: #FF8C42; margin-top: 16px; font-size: 16px; }
-    #loading .pwa-tip {
-      color: #999; font-size: 13px; margin-top: 24px; text-align: center;
+    #loading::after {
+      content: ''; position: absolute; bottom: 60px; left: -30px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: rgba(255,255,255,0.13);
+    }
+    /* Speech bubble */
+    .bubble {
+      background: white; border-radius: 24px;
+      padding: 16px 24px; text-align: center;
+      box-shadow: 0 4px 12px rgba(255,140,66,0.25);
+      position: relative; margin-bottom: 8px;
+      animation: bubbleBounce 2s ease-in-out infinite;
+    }
+    .bubble::after {
+      content: ''; position: absolute; bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid white;
+    }
+    .bubble-text { color: #FF6B35; font-weight: 800; font-size: 20px; line-height: 1.5; }
+    .bubble-text .countdown { font-size: 28px; font-weight: 900; }
+    @keyframes bubbleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    /* Eggy image */
+    .eggy-img {
+      width: 280px; height: 280px; object-fit: contain;
+      animation: eggyBreath 3s ease-in-out infinite;
+    }
+    @keyframes eggyBreath {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    /* Title */
+    .loading-title {
+      font-size: 36px; font-weight: 900; color: #B84A00;
+      letter-spacing: 1.5px; margin-top: 12px;
+    }
+    .loading-subtitle {
+      font-size: 16px; color: #CC6622; font-weight: 600; margin-top: 4px;
+    }
+    /* PWA tip */
+    .pwa-tip {
+      color: #999; font-size: 13px; margin-top: 32px; text-align: center;
       line-height: 1.6; display: none;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
-  <!-- Loading indicator while Flutter initializes -->
+  <!-- Loading screen: Eggy + countdown bubble -->
   <div id="loading">
-    <div class="spinner"></div>
-    <p>Loading...</p>
-    <p class="pwa-tip" id="pwaTip">
-      Tip: 点击浏览器右上角 "添加到主屏幕"<br>下次可以直接从桌面打开哦
-    </p>
+    <div class="bubble">
+      <div class="bubble-text">
+        给我<span class="countdown" id="countdown">10</span>秒钟<br>让我醒过来哦~
+      </div>
+    </div>
+    <img class="eggy-img" src="assets/pet/eggy_transparent_bg.webp"
+         onerror="this.style.display='none'"
+         alt="Eggy">
+    <div class="loading-title">BridgeRead</div>
+    <div class="loading-subtitle" id="pwaTip" style="display:none">
+      点击右上角 "添加到主屏幕"<br>下次直接从桌面打开哦
+    </div>
   </div>
   <script>
-    // Only show PWA tip when opened in browser (not standalone/installed)
+    // Countdown from 10 to 0
+    var count = 10;
+    var countdownEl = document.getElementById('countdown');
+    var countdownTimer = setInterval(function() {
+      count--;
+      if (count >= 0) countdownEl.textContent = count;
+      if (count <= 0) clearInterval(countdownTimer);
+    }, 1000);
+
+    // Only show PWA tip in browser mode (not installed PWA)
     if (!window.matchMedia('(display-mode: standalone)').matches &&
         !window.navigator.standalone) {
       var tip = document.getElementById('pwaTip');

@@ -382,6 +382,8 @@ class _RecapScreenState extends State<RecapScreen>
     'biscuit_book1_day1': ('biscuit_book1_day1', 'audio/biscuit_original.mp3'),
     'biscuit_baby_book2_day1': ('biscuit_book1_day1', 'audio/biscuit_original.mp3'),
     'biscuit_library_book3_day1': ('biscuit_baby_book2_day1', 'audio/biscuit_baby_original.mp3'),
+      'friend_book04_day1': ('biscuit_library_book3_day1', 'books/03Biscuit_Loves_the_Library/audio.mp3'),
+      'trick_book05_day1': ('friend_book04_day1', 'books/04Biscuit_Finds_a_Friend/audio.mp3'),
   };
 
   Future<void> _play() async {

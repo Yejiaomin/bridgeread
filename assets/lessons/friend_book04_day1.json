@@ -1,0 +1,238 @@
+{
+  "id": "friend_book04_day1",
+  "bookTitle": "Biscuit Finds a Friend",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "ST",
+  "originalAudio": "books/04Biscuit_Finds_a_Friend/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Finds a Friend的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "friend_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_01.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？found就是found的意思。ST Woof! Woof! What has Biscuit found?。你能跟我说一遍 found 吗？",
+      "narrativeEN": "ST Woof! Woof! What has Biscuit found?",
+      "keywords": [],
+      "audioCN": "friend_p1_cn",
+      "audioEN": "friend_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？ball就是ball的意思。Is it a ball? Woof! Is it a bone? Woof!。你能跟我说一遍 ball 吗？",
+      "narrativeEN": "Is it a ball? Woof! Is it a bone? Woof! 6",
+      "keywords": [
+        "ball",
+        "bone"
+      ],
+      "audioCN": "friend_p2_cn",
+      "audioEN": "friend_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 29900
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Quack就是Quack的意思。Quack! It is a little duck。你能跟我说一遍 Quack 吗？",
+      "narrativeEN": "Quack! It is a little duck. The little duck is lost. Woof! Woof! 8",
+      "keywords": [
+        "quack",
+        "little"
+      ],
+      "audioCN": "friend_p3_cn",
+      "audioEN": "friend_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 61700
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？will就是will的意思。We will bring the little duck back to the pond。你能跟我说一遍 will 吗？",
+      "narrativeEN": "We will bring the little duck back to the pond. 10 * Woof! Woof!",
+      "keywords": [
+        "bring",
+        "little"
+      ],
+      "audioCN": "friend_p4_cn",
+      "audioEN": "friend_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？your就是your的意思。Here are your mother your father。你能跟我说一遍 your 吗？",
+      "narrativeEN": "Here are your mother your father. Quack! Here, little duck. and Here is the pond. 12",
+      "keywords": [
+        "mother",
+        "father"
+      ],
+      "audioCN": "friend_p5_cn",
+      "audioEN": "friend_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 64300
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？your就是your的意思。Here are your brothers and your sisters。你能跟我说一遍 your 吗？",
+      "narrativeEN": "Here are your brothers and your sisters. Quack! Quack! The ducks say thank you. Thank you for finding the little duck. 14",
+      "keywords": [
+        "brothers",
+        "sisters"
+      ],
+      "audioCN": "friend_p6_cn",
+      "audioEN": "friend_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Quack就是Quack的意思。Quack! The little duck wants to play。你能跟我说一遍 Quack 吗？",
+      "narrativeEN": "Quack! The little duck wants to play. 16 Quack! Woof! 17 Quack! Woof!",
+      "keywords": [
+        "quack",
+        "little"
+      ],
+      "audioCN": "friend_p7_cn",
+      "audioEN": "friend_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 77700
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Splash就是Splash的意思。Splash! Biscuit fell into the pond! Silly Biscuit。你能跟我说一遍 Splash 吗？",
+      "narrativeEN": "Splash! Biscuit fell into the pond! Silly Biscuit. You are all wet! 18",
+      "keywords": [
+        "splash",
+        "fell"
+      ],
+      "audioCN": "friend_p8_cn",
+      "audioEN": "friend_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？shake就是shake的意思。Woof! Oh no, Biscuit。你能跟我说一遍 shake 吗？",
+      "narrativeEN": "Woof! Oh no, Biscuit. Not a big shake! Woof! Time to go home, Biscuit. 20",
+      "keywords": [
+        "shake",
+        "home"
+      ],
+      "audioCN": "friend_p9_cn",
+      "audioEN": "friend_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Quack就是Quack的意思。Quack! Quack! Say good-bye, Biscuit。你能跟我说一遍 Quack 吗？",
+      "narrativeEN": "Quack! Quack! Say good-bye, Biscuit. Woof! Woof! Good-bye, little duck. 22",
+      "keywords": [
+        "quack",
+        "good"
+      ],
+      "audioCN": "friend_p10_cn",
+      "audioEN": "friend_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？found就是found的意思。Biscuit has found a new friend。你能跟我说一遍 found 吗？",
+      "narrativeEN": "Biscuit has found a new friend.",
+      "keywords": [
+        "friend"
+      ],
+      "audioCN": "friend_p11_cn",
+      "audioEN": "friend_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 90200
+    },
+    {
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_11.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit Finds a Friend真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "friend_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": []
+}
