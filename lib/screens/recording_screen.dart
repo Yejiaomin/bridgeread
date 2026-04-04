@@ -15,7 +15,8 @@ const _kYellow = Color(0xFFFFD93D);
 const _kCream  = Color(0xFFFFF8F0);
 
 class RecordingScreen extends StatefulWidget {
-  const RecordingScreen({super.key});
+  final bool weekendMode;
+  const RecordingScreen({super.key, this.weekendMode = false});
 
   @override
   State<RecordingScreen> createState() => _RecordingScreenState();
@@ -149,14 +150,26 @@ class _RecordingScreenState extends State<RecordingScreen>
       'trick_book05_day1': 'audio/trick_featured.mp3',
   };
 
+  String _bookImage = 'assets/books/01Biscuit/spread_02.webp';
+
   Future<void> _loadLessonData() async {
     final service = LessonService();
     final lessonId = await service.restoreCurrentLessonId();
     final lesson = await service.loadLesson(lessonId);
     if (mounted) {
+      // Find the page that contains the featured sentence
+      String image = lesson.pages.isNotEmpty ? lesson.pages[0].imageAsset : _bookImage;
+      final sentenceLower = lesson.featuredSentence.toLowerCase();
+      for (final page in lesson.pages) {
+        if (page.narrativeEN.toLowerCase().contains(sentenceLower)) {
+          image = page.imageAsset;
+          break;
+        }
+      }
       setState(() {
         _featuredSentence = '"${lesson.featuredSentence}"';
         _demoAudioPath = _featuredAudioMap[lessonId] ?? 'audio/featured_time_for_bed.mp3';
+        _bookImage = image;
       });
     }
   }
@@ -422,7 +435,7 @@ class _RecordingScreenState extends State<RecordingScreen>
           Positioned.fill(
             child: ColoredBox(
               color: const Color(0xFFFFF8F0),
-              child: cdnImage('assets/books/01Biscuit/spread_02.webp',
+              child: cdnImage(_bookImage,
                 fit: BoxFit.contain,
               ),
             ),
@@ -784,6 +797,10 @@ class _RecordingScreenState extends State<RecordingScreen>
         child: ElevatedButton(
           onPressed: () {
             if (!mounted) return;
+            if (widget.weekendMode) {
+              Navigator.pop(context);
+              return;
+            }
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

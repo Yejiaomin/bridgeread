@@ -37,14 +37,34 @@ const _kZoneColors = [
 
 const _kZoneLabels = ['RECAP', 'STORY', 'GAME', 'LISTEN'];
 
-// 4 zones: recap / story / game / listen
-// RECAP (i=0) has special navigation — handled in _onZoneTap
+// Weekday: 4 zones: recap / story / game / listen
 const _kZones = [
   _Zone(0.152, 0.420, 0.152, 0.217, '',        'audio/sfx/book-open.wav'),      // RECAP
   _Zone(0.355, 0.416, 0.144, 0.203, '/reader', 'audio/sfx/book-open.wav'),      // STORY
   _Zone(0.567, 0.421, 0.119, 0.247, '/quiz',   'audio/sfx/pop-click.wav'),      // GAME
   _Zone(0.781, 0.421, 0.136, 0.270, '/listen', 'audio/sfx/magic-sparkle.wav'),  // LISTEN
 ];
+
+// Weekend: 2 zones: game / listen (positions adjusted for weekend_bg.webp)
+const _kWeekendZones = [
+  _Zone(0.34, 0.35, 0.18, 0.30, '/weekend-game', 'audio/sfx/pop-click.wav'),    // GAME
+  _Zone(0.68, 0.40, 0.18, 0.30, '/listen',       'audio/sfx/magic-sparkle.wav'), // LISTEN
+];
+
+const _kWeekendZoneColors = [Colors.green, Colors.purple];
+const _kWeekendZoneLabels = ['GAME', 'LISTEN'];
+
+/// Get current time in China timezone (UTC+8)
+DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
+
+/// Check if today is weekend in China timezone
+bool _isWeekend() {
+  final day = _chinaTime().weekday; // 6 = Saturday, 7 = Sunday
+  return day == 6 || day == 7;
+}
+
+/// Check if today is Saturday (true) or Sunday (false) in China timezone
+bool _isSaturday() => _chinaTime().weekday == 6;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // StudyScreen
@@ -59,6 +79,11 @@ class StudyScreen extends StatefulWidget {
 class _StudyScreenState extends State<StudyScreen>
     with TickerProviderStateMixin, RouteAware {
   final _player = AudioPlayer();
+
+  // Weekend mode
+  final bool _weekend = _isWeekend();
+
+  List<_Zone> get _zones => _weekend ? _kWeekendZones : _kZones;
 
   // Progress state
   int _completedCount = 0; // 0-4
@@ -85,8 +110,9 @@ class _StudyScreenState extends State<StudyScreen>
   void initState() {
     super.initState();
     _loadProgress();
+    final zoneCount = _zones.length;
     _ctrls = List.generate(
-      _kZones.length,
+      zoneCount,
       (_) => AnimationController(
           vsync: this, duration: const Duration(milliseconds: 420)),
     );
@@ -96,7 +122,7 @@ class _StudyScreenState extends State<StudyScreen>
         .toList();
 
     _pressCtrls = List.generate(
-      _kZones.length,
+      zoneCount,
       (_) => AnimationController(
           vsync: this, duration: const Duration(milliseconds: 150)),
     );
@@ -135,13 +161,16 @@ class _StudyScreenState extends State<StudyScreen>
   bool _listenDone = false;
 
   String get _bgImage {
+    if (_weekend) return 'assets/home/weekend_bg.webp';
     if (_listenDone) return 'assets/home/study_bg_end.webp';
     if (_completedCount == 0) return 'assets/home/study_bg_start.webp';
     return 'assets/home/study_bg_mid.webp';
   }
 
   // Zone i is active only when completedCount > 0, except RECAP (i==0) which is always active
+  // Weekend: all zones always active
   bool _zoneEnabled(int i) {
+    if (_weekend) return true;
     if (i == 0) return true;
     return _completedCount > 0;
   }
@@ -156,26 +185,25 @@ class _StudyScreenState extends State<StudyScreen>
   }
 
   Future<void> _onZoneTap(int i) async {
-    if (!_zoneEnabled(i)) return; // disabled zone — ignore tap
+    if (!_zoneEnabled(i)) return;
 
     // Press-down animation
-    _pressCtrls[i].forward(from: 0);
-    // Glow flash
-    _ctrls[i].forward(from: 0).then((_) => _ctrls[i].reverse());
+    if (i < _pressCtrls.length) _pressCtrls[i].forward(from: 0);
+    if (i < _ctrls.length) _ctrls[i].forward(from: 0).then((_) => _ctrls[i].reverse());
     // Per-zone SFX
-    _player.stop();
-    _player.play(cdnAudioSource(_kZones[i].sfx));
+    try { _player.stop(); } catch (_) {}
+    _player.play(cdnAudioSource(_zones[i].sfx));
 
     await Future.delayed(const Duration(milliseconds: 160));
     if (!mounted) return;
 
-    if (i == 0) {
+    if (!_weekend && i == 0) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const RecapScreen()),
       );
     } else {
-      Navigator.pushNamed(context, _kZones[i].route);
+      Navigator.pushNamed(context, _zones[i].route);
     }
   }
 
@@ -218,8 +246,8 @@ class _StudyScreenState extends State<StudyScreen>
                   ),
 
                   // ── Tap zones ─────────────────────────────────────────
-                  ...List.generate(_kZones.length, (i) {
-                    final z = _kZones[i];
+                  ...List.generate(_zones.length, (i) {
+                    final z = _zones[i];
                     return Positioned(
                       left:   z.x * w,
                       top:    z.y * h,

@@ -45,22 +45,35 @@ function splitWord(word) {
   const result = [];
   let i = 0;
 
-  // Check for word family ending first
-  let familyMatch = null;
-  for (const fam of wordFamilies) {
-    if (word.endsWith(fam) && word.length > fam.length) {
-      familyMatch = fam;
+  // 1. Check for ending consonant digraphs/trigraphs first (tch, ck, ng, nk, etc.)
+  const endConsonants = multiPhonemes.filter(p => !/^[aeiou]/.test(p)); // consonant clusters
+  let endMatch = null;
+  for (const ec of endConsonants) {
+    if (word.endsWith(ec) && word.length > ec.length) {
+      endMatch = ec;
       break;
     }
   }
 
-  const endIdx = familyMatch ? word.length - familyMatch.length : word.length;
+  // 2. Then check for word family ending (all, ell, igh, etc.) — but only if no end consonant matched
+  let familyMatch = null;
+  if (!endMatch) {
+    for (const fam of wordFamilies) {
+      if (word.endsWith(fam) && word.length > fam.length) {
+        familyMatch = fam;
+        break;
+      }
+    }
+  }
 
-  // Scan left to right for the beginning/middle part
+  const suffix = endMatch || familyMatch;
+  const endIdx = suffix ? word.length - suffix.length : word.length;
+
+  // 3. Scan left to right for the beginning/middle part
   while (i < endIdx) {
     let matched = false;
 
-    // Try multi-character phonemes (longest first): sh, ch, th, ck, bl, tr, str, etc.
+    // Try multi-character phonemes (longest first): sh, ch, th, bl, tr, str, etc.
     for (const mp of multiPhonemes) {
       if (i + mp.length <= endIdx && word.substring(i, i + mp.length) === mp) {
         result.push(mp);
@@ -77,9 +90,9 @@ function splitWord(word) {
     }
   }
 
-  // Add word family ending
-  if (familyMatch) {
-    result.push(familyMatch);
+  // Add suffix (consonant cluster or word family)
+  if (suffix) {
+    result.push(suffix);
   }
 
   return result;

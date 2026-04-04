@@ -42,6 +42,8 @@ class EggyCelebrationScreen extends StatefulWidget {
   final String nextLabel;
   final String moduleKey;
   final int    modulePoints;
+  final String? customTitle;
+  final VoidCallback? onComplete;
 
   const EggyCelebrationScreen({
     super.key,
@@ -49,6 +51,8 @@ class EggyCelebrationScreen extends StatefulWidget {
     required this.nextLabel,
     required this.moduleKey,
     required this.modulePoints,
+    this.customTitle,
+    this.onComplete,
   });
 
   @override
@@ -298,7 +302,9 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                                             .markModuleComplete(
                                                 widget.moduleKey,
                                                 widget.modulePoints);
-                                        if (mounted) {
+                                        if (widget.onComplete != null) {
+                                          widget.onComplete!();
+                                        } else if (mounted) {
                                           Navigator.pushReplacementNamed(
                                               context, widget.nextRoute);
                                         }
