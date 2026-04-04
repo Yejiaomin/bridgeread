@@ -142,7 +142,8 @@ class _Bubble {
 // ---------------------------------------------------------------------------
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen({super.key});
+  final bool weekendMode;
+  const QuizScreen({super.key, this.weekendMode = false});
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
@@ -487,6 +488,12 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           _ => Offset( 1.06, 0.1 + _rng.nextDouble() * 0.8),  // right
         };
       });
+
+      // Weekend mode: skip celebration, just pop back
+      if (widget.weekendMode) {
+        if (mounted) Navigator.pop(context);
+        return;
+      }
 
       setState(() {
         _done          = true;

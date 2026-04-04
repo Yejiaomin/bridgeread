@@ -10,6 +10,7 @@ import 'screens/recording_screen.dart';
 import 'screens/listen_screen.dart';
 import 'screens/card_gacha_screen.dart';
 import 'screens/study_room_screen.dart';
+import 'screens/weekend_game_screen.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
 
@@ -56,8 +57,9 @@ class BridgeReadApp extends StatelessWidget {
         '/quiz':      (context) => const _OrientationGate(child: QuizScreen()),
         '/recording': (context) => const _OrientationGate(child: RecordingScreen()),
         '/gacha':     (context) => const _OrientationGate(child: CardGachaScreen()),
-        '/listen':    (context) => _OrientationGate(child: ListenScreen()),
-        '/studyroom': (context) => const _OrientationGate(child: StudyRoomScreen()),
+        '/listen':       (context) => _OrientationGate(child: ListenScreen()),
+        '/weekend-game': (context) => const _OrientationGate(child: WeekendGameScreen()),
+        '/studyroom':    (context) => const _OrientationGate(child: StudyRoomScreen()),
       },
     );
   }

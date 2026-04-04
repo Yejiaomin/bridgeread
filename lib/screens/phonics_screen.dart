@@ -94,7 +94,8 @@ enum _Step      { intro, tiles, echo, drag }
 enum _EchoPhase { idle, recording, scored }
 
 class PhonicsScreen extends StatefulWidget {
-  const PhonicsScreen({super.key});
+  final bool weekendMode;
+  const PhonicsScreen({super.key, this.weekendMode = false});
 
   @override
   State<PhonicsScreen> createState() => _PhonicsScreenState();
@@ -773,7 +774,10 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     final isLastWord = _wordIndex == _words.length - 1;
 
     if (isLastWord) {
-      // Last word done — go straight to Eggy celebration, no amazing
+      if (widget.weekendMode) {
+        if (mounted) Navigator.pop(context);
+        return;
+      }
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
