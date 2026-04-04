@@ -178,29 +178,112 @@ async function sttTiming() {
   return words;
 }
 
-// ── Step 5: Generate Chinese narration ──────────────────────────────────────
+// ── Step 5: Generate Chinese narration via Gemini AI ────────────────────────
+
+// Few-shot examples from Book 1 (the gold standard)
+const NARRATIVE_EXAMPLES = `
+示例（Book 1: Biscuit）：
+
+英文第1页: This is Biscuit. Biscuit is small. Biscuit is yellow.
+中文讲解: 呀~ 你们看到了吗？这就是今天的小主角，一只叫Biscuit的小狗！你知道biscuit是什么意思吗？哈哈，没错，就是饼干的意思，你看他个子小小的，毛是黄色的，是不是很像黄油饼干呀！
+
+英文第2页: Time for bed, Biscuit! Woof, woof! Biscuit wants to play.
+中文讲解: 好像要到睡觉时间啦！小女孩叫Biscuit去睡觉。这个bed就是小床，Time for bed就是该上床睡觉啦！但是你说Biscuit想不想睡啊？对了，他可不想睡，他大声的说——Woof woof！他想玩，他想玩！
+
+英文第3页: Biscuit wants a snack. Biscuit wants a drink.
+中文讲解: Biscuit还是不想睡觉，他想干嘛呀，哈哈，Biscuit说我要吃零食！snack就是小零食小点心。然后他又说我要喝水！这里的drink就是喝水。Biscuit怎么一会儿要这个，一会儿要那个呀，哈哈！
+
+英文第4页: Biscuit wants to hear a story.
+中文讲解: 那我们看看吃完喝完以后biscuit要睡觉了吗？Biscuit又说了什么？——他说要听故事！story就是故事。小女孩只好又给他讲起了故事，是不是就像我们现在这样啊？
+
+英文第5页: Biscuit wants his blanket. Biscuit wants his doll.
+中文讲解: 故事听完了，Biscuit看了看，又说到——我想要我的小毯子！blanket就是小毯子。结果他还要什么呀？他说——我要我的玩偶！doll就是布娃娃玩偶！你睡觉的时候是不是总有一个小玩偶陪着你呀
+
+英文第6页: Biscuit wants a hug. Biscuit wants a kiss.
+中文讲解: 你看现在毯子有了，小玩偶有了，Biscuit又想到了什么呀？他说——我要抱抱！我要亲亲！hug是抱抱，kiss是亲亲。你们睡前有没有亲亲抱抱你家的小宠物，小狗狗或者小猫咪，然后跟他说晚安呀？
+`;
+
+async function generateNarrativesWithAI(storyPages) {
+  console.log('── Step 5a: Generating narratives with Gemini AI ──');
+
+  // Build the full story text for context
+  const fullStory = storyPages.map((sp, i) => {
+    const text = sp.text.replace(/\n/g, ' ').replace(/\d+\s*$/, '').trim();
+    return `第${i + 1}页: ${text}`;
+  }).join('\n');
+
+  const prompt = `你是Amy老师，一个非常受小朋友喜欢的英语启蒙老师。你要给5-8岁中国小朋友用中文讲解英文绘本"${bookTitle}"。
+
+你的讲解风格：
+- 语气活泼亲切，像跟小朋友面对面说话
+- 每页选1-2个关键英文单词自然融入讲解，用"xxx就是xxx"的方式解释
+- 根据故事情节有情绪变化（惊讶、搞笑、温馨、紧张）
+- 经常问互动问题（"你觉得呢？"、"是不是很有趣呀？"、"你猜猜看会怎样？"）
+- 前后页之间要有故事连贯性，不要每页独立
+- 中英文自然穿插，不要生硬翻译
+- 不要说"这一页"、"让我们看看这一页"这种话
+
+${NARRATIVE_EXAMPLES}
+
+现在请按同样的风格，为下面这本新书写每页的中文讲解。
+注意：每页讲解控制在50-100字左右，不要太长。
+
+这本书的完整内容：
+${fullStory}
+
+请按以下JSON格式输出，只输出JSON数组，不要输出其他内容：
+[
+  {"page": 1, "narrativeCN": "讲解内容", "keywords": ["关键词1", "关键词2"]},
+  {"page": 2, "narrativeCN": "讲解内容", "keywords": ["关键词1"]},
+  ...
+]`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.8, maxOutputTokens: 8192 },
+        }),
+      }
+    );
+
+    const data = await res.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    // Extract JSON from response (might have ```json wrapper)
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.error('  ✗ Gemini did not return valid JSON');
+      console.error('  Response:', text.slice(0, 200));
+      return null;
+    }
+
+    const narratives = JSON.parse(jsonMatch[0]);
+    console.log(`  ✓ Generated ${narratives.length} page narratives`);
+    return narratives;
+  } catch (e) {
+    console.error('  ✗ Gemini error:', e.message);
+    return null;
+  }
+}
+
+// Fallback template (used only if Gemini fails)
 function generateNarrativeCN(englishText) {
-  // Amy 老师风格的中文讲解模板
   const text = englishText.replace(/\n/g, ' ').replace(/\d+\s*$/, '').trim();
   if (!text) return '';
-
-  // Extract key words (nouns, adjectives, verbs > 3 chars)
   const words = text.split(/\s+/).filter(w => w.replace(/[^a-zA-Z]/g, '').length > 3);
-  const keyword = words.find(w => !['biscuit', 'woof', 'that', 'this', 'what', 'where', 'there', 'here'].includes(w.toLowerCase().replace(/[^a-z]/g, '')));
+  const keyword = words.find(w => !['biscuit','woof','that','this','what','where','there','here'].includes(w.toLowerCase().replace(/[^a-z]/g, '')));
   const kwClean = keyword ? keyword.replace(/[^a-zA-Z]/g, '') : '';
-
-  // Simple templates based on content patterns
-  if (text.toLowerCase().includes('woof') && text.length < 30) {
-    return `Biscuit又在叫啦！Woof woof！你觉得他在说什么呢？`;
-  }
-  if (kwClean) {
-    return `你听到了吗？${kwClean}就是${kwClean}的意思。${text.split('.')[0].trim()}。你能跟我说一遍 ${kwClean} 吗？`;
-  }
+  if (kwClean) return `你听到了吗？${kwClean}就是${kwClean}的意思。${text.split('.')[0].trim()}。`;
   return `我们来听听看发生了什么。${text.split('.')[0].trim()}。`;
 }
 
 // ── Step 6: Build lesson JSON ───────────────────────────────────────────────
-function buildLesson(ocrResults, sttWords) {
+async function buildLesson(ocrResults, sttWords) {
   if (fs.existsSync(lessonFile)) { console.log('⏭ Step 5: Lesson JSON exists'); return; }
   console.log('── Step 5: Building lesson JSON ──');
 
@@ -209,6 +292,9 @@ function buildLesson(ocrResults, sttWords) {
     !p.text.includes('ISBN') && !p.text.includes('HOORAY') &&
     !p.text.includes('HarperCollins') && !p.text.includes('copyright')
   );
+
+  // Try Gemini AI first for high-quality narratives
+  const aiNarratives = await generateNarrativesWithAI(storyPages);
 
   const pages = [{
     imageAsset: `assets/books/${folderName}/cover.webp`,
@@ -238,12 +324,17 @@ function buildLesson(ocrResults, sttWords) {
     const common = new Set(['biscuit','woof','that','this','what','where','there','here','with','have','does','will','your','they','them','just','very','come','more','over','even','found','want','wants','time','it\'s']);
     const keywords = [...new Set(text.toLowerCase().split(/[^a-z]+/).filter(w => w.length > 3 && !common.has(w)))].slice(0, 2);
 
+    // Use AI narrative if available, fallback to template
+    const aiPage = aiNarratives?.[i];
+    const narrativeCN = aiPage?.narrativeCN || generateNarrativeCN(text);
+    const aiKeywords = aiPage?.keywords || keywords;
+
     const page = {
       imageAsset: `assets/books/${folderName}/${sp.page}`,
       teacherExpression: 'happy',
-      narrativeCN: generateNarrativeCN(text),
+      narrativeCN,
       narrativeEN: text,
-      keywords,
+      keywords: aiKeywords,
       audioCN: `${prefix}_p${i + 1}_cn`,
       audioEN: `${prefix}_p${i + 1}_en`,
       highlights: [],
@@ -405,7 +496,7 @@ async function main() {
   await splitAndMerge();
   const ocr = await ocrPages();
   const stt = await sttTiming();
-  buildLesson(ocr, stt);
+  await buildLesson(ocr, stt);
   await generateAudio();
   registerInApp();
 
