@@ -409,7 +409,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                             '谢谢你来看我，\n陪我一起听故事~',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 24,
                               fontWeight: FontWeight.w800,
                               color: Color(0xFFFF6B35),
                               height: 1.5,
@@ -428,7 +428,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                       ScaleTransition(
                         scale: _breathAnim,
                         alignment: Alignment.center,
-                        child: _buildEggyAvatar(300),
+                        child: _buildEggyAvatar(450),
                       ),
                       const SizedBox(height: 16),
 
@@ -436,7 +436,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                       const Text(
                         'Biscuit',
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 42,
                           fontWeight: FontWeight.w900,
                           color: Color(0xFFB84A00),
                           letterSpacing: 1.5,
@@ -446,7 +446,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                       const Text(
                         'Let\'s read together! ✨',
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 20,
                           color: Color(0xFFCC6622),
                           fontWeight: FontWeight.w600,
                         ),

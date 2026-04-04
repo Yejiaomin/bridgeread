@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show DefaultAssetBundle;
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
@@ -10,7 +14,16 @@ import '../utils/cdn_asset.dart';
 
 class _Track {
   final String label, path;
-  const _Track(this.label, this.path);
+  final bool showBook;
+  final String? lessonId;
+  final String? coverImage; // cover image for intro page
+  const _Track(this.label, this.path, {this.showBook = false, this.lessonId, this.coverImage});
+}
+
+class _PageTiming {
+  final String imageAsset;
+  final int startMs;
+  const _PageTiming(this.imageAsset, this.startMs);
 }
 
 // Default fallback
@@ -47,6 +60,11 @@ class _ListenScreenState extends State<ListenScreen>
   int _eggyMonth = 1;
   String? _equippedAccessory;
 
+  // Book page display — timings per lesson
+  final Map<String, List<_PageTiming>> _allPageTimings = {};
+  List<_PageTiming> _pageTimings = [];
+  int _currentPageIdx = 0;
+
   // Progress
   Duration _position = Duration.zero;
   Duration _duration  = Duration.zero;
@@ -70,7 +88,10 @@ class _ListenScreenState extends State<ListenScreen>
     _subs.addAll([
       _player.onPlayerComplete.listen((_) => _nextTrack()),
       _player.onPositionChanged.listen((p) {
-        if (mounted) setState(() => _position = p);
+        if (mounted) {
+          setState(() => _position = p);
+          _updatePageForPosition(p);
+        }
       }),
       _player.onDurationChanged.listen((d) {
         if (mounted) setState(() => _duration = d);
@@ -80,6 +101,9 @@ class _ListenScreenState extends State<ListenScreen>
     _loadListenTime();
     _loadEggy();
     _startTimers();
+
+    // Keep screen on during listening
+    WakelockPlus.enable();
 
     // Wait for data to load before starting playback
     _loadListenData().then((_) {
@@ -110,27 +134,66 @@ class _ListenScreenState extends State<ListenScreen>
 
     final playlist = <_Track>[];
 
+    // Helper to get cover image from lesson JSON
+    Future<String?> getCover(String lid) async {
+      try {
+        final js = await DefaultAssetBundle.of(context).loadString('assets/lessons/$lid.json');
+        final map = json.decode(js) as Map<String, dynamic>;
+        final pages = map['pages'] as List;
+        if (pages.isNotEmpty) return pages[0]['imageAsset'] as String?;
+      } catch (_) {}
+      return null;
+    }
+
+    final todayCover = await getCover(lessonId);
+
     if (dayIndex == 0) {
-      // Day 1: today × 2
-      playlist.add(_Track('$todayTitle (1/2)', todayAudio));
-      playlist.add(_Track('$todayTitle (2/2)', todayAudio));
+      playlist.add(_Track('$todayTitle (1/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+      playlist.add(_Track('$todayTitle (2/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
     } else {
-      // Day 2+: today × 1, then previous day, then today again
+      final prevLessonId = _kLessonOrder[dayIndex - 1].$1;
       final prevTitle = _kLessonOrder[dayIndex - 1].$2;
       final prevAudio = _kLessonOrder[dayIndex - 1].$3;
+      final prevCover = await getCover(prevLessonId);
 
-      playlist.add(_Track('$todayTitle - 新故事', todayAudio));
-      playlist.add(_Track('$prevTitle - 复习', prevAudio));
-      playlist.add(_Track('$todayTitle - 巩固', todayAudio));
+      playlist.add(_Track('$todayTitle - 新故事', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+      playlist.add(_Track('$prevTitle - 复习', prevAudio, showBook: true, lessonId: prevLessonId, coverImage: prevCover));
+      playlist.add(_Track('$todayTitle - 巩固', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+    }
+
+    // Load page timings for all needed lessons
+    final lessonIds = playlist.map((t) => t.lessonId).where((id) => id != null).toSet();
+    for (final lid in lessonIds) {
+      if (_allPageTimings.containsKey(lid)) continue;
+      try {
+        final jsonString = await DefaultAssetBundle.of(context)
+            .loadString('assets/lessons/$lid.json');
+        final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
+        final timings = <_PageTiming>[];
+        for (final p in jsonMap['pages'] as List) {
+          final ms = p['pageStartMs'] as int?;
+          if (ms != null) {
+            timings.add(_PageTiming(p['imageAsset'] as String, ms));
+          }
+        }
+        _allPageTimings[lid!] = timings;
+      } catch (_) {}
     }
 
     if (mounted) {
-      setState(() => _tracks = playlist);
+      setState(() {
+        _tracks = playlist;
+        _bookTitle = lesson.bookTitle;
+        // Set initial page timings for first track
+        final firstLessonId = playlist.isNotEmpty ? playlist[0].lessonId : null;
+        _pageTimings = firstLessonId != null ? (_allPageTimings[firstLessonId] ?? []) : [];
+      });
     }
   }
 
   @override
   void dispose() {
+    WakelockPlus.disable();
     for (final s in _subs) s.cancel();
     _player.dispose();
     for (final c in _waveCtrl) c.dispose();
@@ -191,9 +254,16 @@ class _ListenScreenState extends State<ListenScreen>
 
   Future<void> _playTrack(int idx) async {
     final i = idx % _tracks.length;
-    setState(() => _trackIdx = i);
+    final track = _tracks[i];
+    // Switch page timings for this track's lesson
+    final timings = track.lessonId != null ? (_allPageTimings[track.lessonId] ?? []) : <_PageTiming>[];
+    setState(() {
+      _trackIdx = i;
+      _pageTimings = timings;
+      _currentPageIdx = 0;
+    });
     await _player.stop();
-    await _player.play(cdnAudioSource(_tracks[i].path));
+    await _player.play(cdnAudioSource(track.path));
     _setPlaying(true);
   }
 
@@ -216,10 +286,19 @@ class _ListenScreenState extends State<ListenScreen>
     }
   }
 
+  bool _allTracksCompleted = false;
+
   void _nextTrack() {
     if (_trackIdx + 1 >= _tracks.length) {
-      // All tracks finished — mark listen done and go home
-      _onListenComplete();
+      // All tracks played once — mark done, show completion button, loop back
+      if (!_allTracksCompleted) {
+        _allTracksCompleted = true;
+        ProgressService.markModuleComplete('listen', 10);
+        _saveListenTime();
+      }
+      setState(() {});
+      // Loop back to first track for continued listening
+      _playTrack(0);
     } else {
       _playTrack(_trackIdx + 1);
     }
@@ -229,7 +308,9 @@ class _ListenScreenState extends State<ListenScreen>
     await _player.stop();
     _setPlaying(false);
     await _saveListenTime();
-    await ProgressService.markModuleComplete('listen', 10);
+    if (!_allTracksCompleted) {
+      await ProgressService.markModuleComplete('listen', 10);
+    }
     if (mounted) {
       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     }
@@ -237,6 +318,149 @@ class _ListenScreenState extends State<ListenScreen>
 
   void _prevTrack() =>
       _playTrack((_trackIdx - 1 + _tracks.length) % _tracks.length);
+
+  // ── Page tracking ────────────────────────────────────────────────────────────
+
+  void _updatePageForPosition(Duration pos) {
+    if (_tracks.isEmpty || !_tracks[_trackIdx].showBook || _pageTimings.isEmpty) return;
+    final ms = pos.inMilliseconds;
+    int pageIdx = 0;
+    for (int i = _pageTimings.length - 1; i >= 0; i--) {
+      if (ms >= _pageTimings[i].startMs) {
+        pageIdx = i;
+        break;
+      }
+    }
+    if (pageIdx != _currentPageIdx) {
+      setState(() => _currentPageIdx = pageIdx);
+    }
+  }
+
+  bool get _isBookMode =>
+      _tracks.isNotEmpty && _trackIdx < _tracks.length && _tracks[_trackIdx].showBook && _pageTimings.isNotEmpty;
+
+  // Book title for cover display
+  String _bookTitle = 'Biscuit';
+
+  Widget _buildListenCover() {
+    // Use the current track's cover image
+    final track = _tracks.isNotEmpty && _trackIdx < _tracks.length ? _tracks[_trackIdx] : null;
+    final coverImage = track?.coverImage ?? 'assets/books/01Biscuit/cover.webp';
+    final title = track?.label.split(' - ').first.split(' (').first ?? _bookTitle;
+
+    return Row(
+      children: [
+        // ── Left: book cover ──────────────────────────────────────────
+        Expanded(
+          child: ColoredBox(
+            color: const Color(0xFFFFF8F0),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: cdnImage(coverImage, fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => const SizedBox()),
+            ),
+          ),
+        ),
+        // ── Right: warm gradient + Eggy + bubble ─────────────────────
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFFFE8D6), Color(0xFFFFCBA4), Color(0xFFFFAD7A)],
+              ),
+            ),
+            child: Stack(
+              children: [
+                // Decorative circles
+                Positioned(top: -30, right: -30,
+                  child: Container(width: 120, height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withValues(alpha: 0.18)))),
+                Positioned(bottom: 40, left: -20,
+                  child: Container(width: 90, height: 90,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withValues(alpha: 0.13)))),
+
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Speech bubble
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFFF8C42).withValues(alpha: 0.25),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          'Almost there!\n马上就要通关啦~',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFFFF6B35),
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                      // Bubble tail
+                      CustomPaint(
+                        size: const Size(20, 10),
+                        painter: _BubbleTailPainter(),
+                      ),
+                      const SizedBox(height: 4),
+
+                      // Eggy
+                      cdnImage(
+                        'assets/pet/eggy_transparent_bg.webp',
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.pets, size: 180, color: Color(0xFFFFAD7A)),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Book title
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 42,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFFB84A00),
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        "Let's listen together!",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Color(0xFFCC6622),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   // ── Build ─────────────────────────────────────────────────────────────────────
 
@@ -246,40 +470,106 @@ class _ListenScreenState extends State<ListenScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // ── Dark starry background ──────────────────────────────────────
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF0D1B2A), Color(0xFF1B2A4A)],
-              ),
+          // ── Background: cover intro, book pages, or eggy ─────────────
+          if (_isBookMode && _currentPageIdx == 0 && _position.inMilliseconds < (_pageTimings.isNotEmpty ? _pageTimings[0].startMs : 0)) ...[
+            // Cover intro: left = book cover, right = eggy + bubble
+            Positioned.fill(
+              child: _buildListenCover(),
             ),
-          ),
-          Positioned.fill(
-            child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  cdnImage('assets/pet/cards/bicycle.webp',
+          ] else if (_isBookMode) ...[
+            // Book mode: show current page spread
+            Positioned.fill(
+              child: Container(
+                color: const Color(0xFFFFF8F0),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: cdnImage(
+                    _pageTimings[_currentPageIdx].imageAsset,
+                    key: ValueKey(_currentPageIdx),
                     fit: BoxFit.contain,
                     width: double.infinity,
                     height: double.infinity,
-                    errorBuilder: (_, __, ___) => cdnImage('assets/pet/costumes/base/egg_month$_eggyMonth.png',
-                      fit: BoxFit.contain,
-                    ),
                   ),
-                  if (_equippedAccessory != null)
-                    cdnImage('assets/pet/costumes/accessories/$_equippedAccessory.png',
-                      fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ] else ...[
+            // Eggy mode: dark background with pet
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF0D1B2A), Color(0xFF1B2A4A)],
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    cdnImage('assets/pet/cards/bicycle.webp',
+                      fit: BoxFit.contain,
                       width: double.infinity,
                       height: double.infinity,
-                      errorBuilder: (_, __, ___) => const SizedBox(),
+                      errorBuilder: (_, __, ___) => cdnImage('assets/pet/costumes/base/egg_month$_eggyMonth.png',
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                ],
+                    if (_equippedAccessory != null)
+                      cdnImage('assets/pet/costumes/accessories/$_equippedAccessory.png',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        errorBuilder: (_, __, ___) => const SizedBox(),
+                      ),
+                  ],
+              ),
             ),
-          ),
-          // ── Dark overlay ─────────────────────────────────────────────────────
-          Container(color: Colors.black.withValues(alpha: 0.55)),
+            Container(color: Colors.black.withValues(alpha: 0.55)),
+          ],
+
+          // ── "All done" overlay — shown after first complete cycle ──────────
+          if (_allTracksCompleted)
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: _onListenComplete,
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.4),
+                  child: Center(
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFFFF8C42),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFF8C42).withValues(alpha: 0.5),
+                            blurRadius: 30,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.check_circle_outline, color: Colors.white, size: 48),
+                          SizedBox(height: 8),
+                          Text('全部完成啦！',
+                            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                          ),
+                          SizedBox(height: 4),
+                          Text('点击返回',
+                            style: TextStyle(color: Colors.white70, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
           // ── Top bar + waveform + controls ────────────────────────────────────
           SafeArea(
@@ -495,6 +785,22 @@ class _ListenScreenState extends State<ListenScreen>
     );
   }
 
+}
+
+class _BubbleTailPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.white;
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width / 2, size.height)
+      ..lineTo(size.width, 0)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_BubbleTailPainter _) => false;
 }
 
 

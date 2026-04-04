@@ -66,7 +66,7 @@ List<_WordData> _buildWordsFromLesson(List<PhonicsWord> phonicsWords) {
 final List<_WordData> _kDefaultWords = [
   _WordData(
     word: 'bed',
-    bookImage: 'assets/books/01Biscuit/biscuit_spread_02.webp',
+    bookImage: 'assets/books/01Biscuit/spread_02.webp',
     wordAudioPath: 'assets/audio/phonics_sounds/word_bed.mp3',
     letters: const [
       _LetterInfo('b', _kOrange, 'assets/audio/phonics_sounds/b.mp3'),
@@ -76,7 +76,7 @@ final List<_WordData> _kDefaultWords = [
   ),
   _WordData(
     word: 'hug',
-    bookImage: 'assets/books/01Biscuit/biscuit_spread_06.webp',
+    bookImage: 'assets/books/01Biscuit/spread_06.webp',
     wordAudioPath: 'assets/audio/phonics_sounds/word_hug.mp3',
     letters: const [
       _LetterInfo('h', _kOrange, 'assets/audio/phonics_sounds/h.mp3'),

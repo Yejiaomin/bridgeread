@@ -420,7 +420,7 @@ class _RecordingScreenState extends State<RecordingScreen>
           Positioned.fill(
             child: ColoredBox(
               color: const Color(0xFFFFF8F0),
-              child: cdnImage('assets/books/01Biscuit/biscuit_spread_02.webp',
+              child: cdnImage('assets/books/01Biscuit/spread_02.webp',
                 fit: BoxFit.contain,
               ),
             ),
