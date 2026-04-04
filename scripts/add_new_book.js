@@ -126,7 +126,7 @@ async function ocrPages() {
     console.log('⏭ Step 3: OCR exists');
     return JSON.parse(fs.readFileSync(ocrFile, 'utf8'));
   }
-  console.log('── Step 3: OCR ──');
+  console.log('── Step 3: OCR (with word positions) ──');
   const imgs = fs.readdirSync(bookDir).filter(f => (f.startsWith('spread_') || f === 'cover.webp') && f.endsWith('.webp')).sort();
   const results = [];
   for (const img of imgs) {
@@ -135,9 +135,25 @@ async function ocrPages() {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ requests: [{ image: { content: bytes }, features: [{ type: 'TEXT_DETECTION' }] }] }),
     });
-    const text = ((await res.json()).responses?.[0]?.fullTextAnnotation?.text || '').trim();
-    results.push({ page: img, text });
-    console.log(`  ${img}: "${text.replace(/\n/g, ' ').slice(0, 50)}..."`);
+    const response = (await res.json()).responses?.[0] || {};
+    const text = (response.fullTextAnnotation?.text || '').trim();
+    // Save word positions: { word, x } for each detected word
+    const annotations = response.textAnnotations || [];
+    const imgWidth = annotations[0]?.boundingPoly?.vertices?.[1]?.x || 1;
+    const midX = imgWidth / 2;
+    const leftWords = []; // words on left half of spread
+    const rightWords = [];
+    for (let i = 1; i < annotations.length; i++) {
+      const w = annotations[i];
+      const x = w.boundingPoly?.vertices?.[0]?.x || 0;
+      const word = w.description.toLowerCase().replace(/[^a-z]/g, '');
+      if (word.length >= 3) {
+        if (x < midX) leftWords.push(word);
+        else rightWords.push(word);
+      }
+    }
+    results.push({ page: img, text, leftWords: [...new Set(leftWords)], rightWords: [...new Set(rightWords)] });
+    console.log(`  ${img}: "${text.replace(/\n/g, ' ').slice(0, 50)}..." (L:${leftWords.length} R:${rightWords.length})`);
     await new Promise(r => setTimeout(r, 300));
   }
   fs.writeFileSync(ocrFile, JSON.stringify(results, null, 2));
@@ -208,7 +224,8 @@ async function generateNarrativesWithAI(storyPages) {
 
   // Build the full story text for context
   const fullStory = storyPages.map((sp, i) => {
-    const text = sp.text.replace(/\n/g, ' ').replace(/\d+\s*$/, '').trim();
+    // Clean OCR text: remove page numbers (standalone 1-3 digit numbers) and extra whitespace
+    const text = sp.text.replace(/\n/g, ' ').replace(/\b\d{1,3}\b/g, '').replace(/\s+/g, ' ').trim();
     return `第${i + 1}页: ${text}`;
   }).join('\n');
 
@@ -246,23 +263,27 @@ ${fullStory}
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.8, maxOutputTokens: 8192 },
+          generationConfig: { temperature: 0.8, maxOutputTokens: 8192, responseMimeType: 'application/json' },
         }),
       }
     );
 
     const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const allParts = data.candidates?.[0]?.content?.parts || [];
+    const text = allParts.map(p => p.text || '').join('');
 
-    // Extract JSON from response (might have ```json wrapper)
-    const jsonMatch = text.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      console.error('  ✗ Gemini did not return valid JSON');
-      console.error('  Response:', text.slice(0, 200));
-      return null;
+    let narratives;
+    try {
+      narratives = JSON.parse(text);
+    } catch {
+      // Fallback: try extracting JSON array from text
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) {
+        console.error('  ✗ Gemini did not return valid JSON');
+        return null;
+      }
+      narratives = JSON.parse(jsonMatch[0]);
     }
-
-    const narratives = JSON.parse(jsonMatch[0]);
     console.log(`  ✓ Generated ${narratives.length} page narratives`);
     return narratives;
   } catch (e) {
@@ -306,7 +327,8 @@ async function buildLesson(ocrResults, sttWords) {
   let searchFrom = 0;
   for (let i = 0; i < storyPages.length; i++) {
     const sp = storyPages[i];
-    const text = sp.text.replace(/\n/g, ' ').replace(/\d+\s*$/, '').trim();
+    // Clean OCR text: remove page numbers (standalone 1-3 digit numbers) and extra whitespace
+    const text = sp.text.replace(/\n/g, ' ').replace(/\b\d{1,3}\b/g, '').replace(/\s+/g, ' ').trim();
     const searchWord = text.toLowerCase().split(/\s+/).filter(w => w.replace(/[^a-z]/g, '').length > 2)[0]?.replace(/[^a-z]/g, '') || '';
 
     let startMs = null;
@@ -352,13 +374,50 @@ async function buildLesson(ocrResults, sttWords) {
     highlights: [], characterPos: { x: 0.75, y: 0.7, action: 'excited' },
   });
 
+  // Auto-select phonicsWords: pick 2 simple CVC words from LEFT side of spreads
+  // Then use Gemini to get correct phoneme splits
+  const skipWords = new Set(['biscuit','woof','quack','that','this','what','with','here','your','will','back','into','have','from','they','them','does','just','very','come','more','over','even','want','wants','time','the','and','are','for','not','but','was','his','her','she','all','can','had','one','our','out','has','its','let','say']);
+  let phonicsWords = [];
+  const usedWords = new Set();
+
+  // Find candidates: 3-5 letter words from left side of spreads
+  for (const sp of storyPages) {
+    if (phonicsWords.length >= 2) break;
+    const leftWords = sp.leftWords || [];
+    for (const w of leftWords) {
+      if (phonicsWords.length >= 2) break;
+      if (w.length >= 3 && w.length <= 5 && !skipWords.has(w) && !usedWords.has(w) && /^[a-z]+$/.test(w)) {
+        phonicsWords.push({ word: w, page: sp.page });
+        usedWords.add(w);
+        break;
+      }
+    }
+  }
+
+  // Split phonemes using rule-based splitter (100% accurate, no AI needed)
+  const { splitWord, validateSplit } = require('./phoneme_splitter');
+  phonicsWords = phonicsWords.map(pw => ({
+    word: pw.word,
+    phonemes: splitWord(pw.word),
+    imageAsset: `assets/books/${folderName}/${pw.page}`,
+  }));
+  console.log(`  Phonics words: ${phonicsWords.map(w => `${w.word} [${w.phonemes.join('-')}] @ ${w.imageAsset.split('/').pop()}`).join(', ') || 'none'}`);
+
+
   const lesson = {
     id: lessonId, bookTitle, characterName: 'Biscuit',
     characterAsset: 'assets/characters/teacher_default.webp',
-    featuredSentence: storyPages[0]?.text.split('\n')[0].replace(/\d+\s*$/, '').trim() || bookTitle,
+    featuredSentence: (() => {
+      // Pick a good sentence: at least 4 words, from any story page
+      for (const sp of storyPages) {
+        const sentences = sp.text.replace(/\n/g, ' ').split(/[.!?]+/).map(s => s.replace(/\b\d{1,3}\b/g, '').trim()).filter(s => s.split(/\s+/).length >= 4 && s.length > 10 && !/ISBN|HOORAY|copyright/i.test(s));
+        if (sentences.length) return sentences[0] + (sentences[0].endsWith('!') ? '' : '!');
+      }
+      return bookTitle;
+    })(),
     originalAudio: `books/${folderName}/audio.mp3`,
     pages,
-    phonicsWords: [],
+    phonicsWords,
   };
 
   fs.writeFileSync(lessonFile, JSON.stringify(lesson, null, 2));
@@ -382,8 +441,73 @@ async function generateAudio() {
   // Featured sentence for recording
   scripts.push({ id: `${prefix}_featured`, text: lesson.featuredSentence, lang: 'en', keywords: [] });
 
+  // Phonics word audio: generate with "The word is: X" then trim to just the word
+  const PHONICS_DIR = path.join(__dirname, '..', 'assets', 'audio', 'phonics_sounds');
+  for (const pw of lesson.phonicsWords || []) {
+    const wordFile = path.join(PHONICS_DIR, `word_${pw.word}.mp3`);
+    if (fs.existsSync(wordFile)) continue;
+
+    console.log(`  Generating word audio: ${pw.word} ...`);
+    try {
+      // Step 1: Generate "The word is: [word]" for accurate pronunciation
+      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID_EN}/with-timestamps`, {
+        method: 'POST',
+        headers: { 'xi-api-key': elevenLabsKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: `The word is: ${pw.word}`,
+          model_id: 'eleven_multilingual_v2',
+          voice_settings: { stability: 0.7, similarity_boost: 0.75, style: 0.1, speed: 0.85 },
+        }),
+      });
+      if (!res.ok) throw new Error(`ElevenLabs ${res.status}`);
+      const data = await res.json();
+
+      // Step 2: Find where the actual word starts using timestamps
+      const alignment = data.alignment;
+      let wordStartSec = 0;
+      if (alignment?.characters) {
+        // Find the start of the target word (after "The word is: ")
+        const fullText = alignment.characters.join('');
+        const colonIdx = fullText.indexOf(':');
+        if (colonIdx >= 0) {
+          // Word starts after ": " — find next non-space character
+          for (let ci = colonIdx + 1; ci < alignment.characters.length; ci++) {
+            if (alignment.characters[ci].trim()) {
+              wordStartSec = alignment.character_start_times_seconds[ci];
+              break;
+            }
+          }
+        }
+      }
+
+      // Step 3: Save full audio, then trim with ffmpeg
+      const fullPath = path.join(PHONICS_DIR, `_full_${pw.word}.mp3`);
+      fs.writeFileSync(fullPath, Buffer.from(data.audio_base64, 'base64'));
+
+      // Trim: start slightly before the word, keep the rest
+      const trimStart = Math.max(0, wordStartSec - 0.05);
+      execSync(`"${FFMPEG}" -y -ss ${trimStart.toFixed(3)} -i "${fullPath}" -af "afade=t=in:st=0:d=0.02,afade=t=out:st=1.5:d=0.05" -t 2.0 -q:a 2 "${wordFile}"`, { stdio: 'pipe' });
+      fs.unlinkSync(fullPath);
+
+      console.log(`  ✓ word_${pw.word}.mp3 (trimmed from ${wordStartSec.toFixed(2)}s)`);
+      await new Promise(r => setTimeout(r, 500));
+    } catch (e) {
+      console.error(`  ✗ word_${pw.word}: ${e.message}`);
+      // Fallback: generate just the word directly
+      try {
+        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID_EN}`, {
+          method: 'POST',
+          headers: { 'xi-api-key': elevenLabsKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: pw.word, model_id: 'eleven_multilingual_v2',
+            voice_settings: { stability: 0.7, similarity_boost: 0.75, style: 0.1, speed: 0.85 } }),
+        });
+        if (res.ok) fs.writeFileSync(wordFile, Buffer.from(await res.arrayBuffer()));
+      } catch (_) {}
+    }
+  }
+
   for (const s of scripts) {
-    const outPath = path.join(AUDIO_DIR, `${s.id}.mp3`);
+    const outPath = s._outputDir ? path.join(s._outputDir, s._filename) : path.join(AUDIO_DIR, `${s.id}.mp3`);
     if (fs.existsSync(outPath)) { console.log(`  ⏭ ${s.id}`); continue; }
 
     try {

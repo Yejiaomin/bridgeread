@@ -3,7 +3,7 @@
   "bookTitle": "Biscuit Finds a Friend",
   "characterName": "Biscuit",
   "characterAsset": "assets/characters/teacher_default.webp",
-  "featuredSentence": "ST",
+  "featuredSentence": "Biscuit has found a new friend!",
   "originalAudio": "books/04Biscuit_Finds_a_Friend/audio.mp3",
   "pages": [
     {
@@ -23,11 +23,11 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_01.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "Woof！Woof！你们听到了吗？这是谁的声音呀？是小狗Biscuit！他好像发现了什么好玩的东西！你们看，Biscuit的眼睛亮亮的，他闻了闻，又看了看，What has Biscuit found？他到底find（就是找到）了什么呢？你猜猜看！",
+      "narrativeCN": "呀，你们看！今天的小饼干又在干嘛呀？他好像发现什么啦！你看他大声地叫着Woof Woof！这个found就是发现的意思，他发现了一个小秘密！你猜猜看，他会发现什么有趣的东西呢？是不是很好奇呀？",
       "narrativeEN": "ST Woof! Woof! What has Biscuit found?",
       "keywords": [
-        "Woof",
-        "found"
+        "found",
+        "Woof"
       ],
       "audioCN": "friend_p1_cn",
       "audioEN": "friend_p1_en",
@@ -41,8 +41,8 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_02.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "Biscuit凑近了，努力想看清楚。他歪着头，好像在想：Is it a ball？嗯，ball就是球！是他最爱玩的球吗？他又闻了闻，说：Is it a bone？bone就是骨头！难道是香喷喷的骨头吗？哈哈，你觉得是什么呢？",
-      "narrativeEN": "Is it a ball? Woof! Is it a bone? Woof! 6",
+      "narrativeCN": "小饼干闻了闻，左看看右看看，他在想，这是不是一个ball啊？ball就是球，他可喜欢追着球跑啦！或者，是不是一块bone呢？bone就是骨头！小狗狗最爱骨头了！你觉得他找到的是球还是骨头呀？",
+      "narrativeEN": "Is it a ball? Woof! Is it a bone? Woof!",
       "keywords": [
         "ball",
         "bone"
@@ -60,8 +60,8 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_03.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "Quack！哎呀，不是球也不是骨头！你们听，这是什么声音？原来呀，It is a little duck！duck就是小鸭子！你看他好小一只，黄黄的，多可爱呀！可是这个little duck好像有点可怜，the little duck is lost！Lost就是迷路了！他是不是找不到爸爸妈妈了呀？",
-      "narrativeEN": "Quack! It is a little duck. The little duck is lost. Woof! Woof! 8",
+      "narrativeCN": "哎呀！这不是球也不是骨头！听，什么声音呀？Quack Quack！原来是一只小鸭子呀！你看，这只little duck就是小鸭子。但是小鸭子好像有点着急，他是不是迷路了呀？lost就是迷路了。小饼干也急得Woof Woof 叫呢！",
+      "narrativeEN": "Quack! It is a little duck. The little duck is lost. Woof! Woof!",
       "keywords": [
         "duck",
         "lost"
@@ -79,10 +79,10 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_04.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "小女孩和Biscuit看到小鸭子迷路了，都好着急呀！小女孩轻轻地抱起小鸭子，对Biscuit说：We will bring the little duck back to the pond。bring back就是带回去，pond就是池塘。小鸭子应该住在池塘里，对不对？他们要去帮小鸭子回家啦！",
-      "narrativeEN": "We will bring the little duck back to the pond. 10 * Woof! Woof!",
+      "narrativeCN": "小饼干好像明白了，这只小鸭子是找不到家了！他想帮助小鸭子。他说我们要把小鸭子带回pond，pond就是池塘。小鸭子的家肯定在池塘里，对不对？小饼干真是个热心肠的小狗狗！他是不是很善良呀？",
+      "narrativeEN": "We will bring the little duck back to the pond. * Woof! Woof!",
       "keywords": [
-        "bring back",
+        "bring",
         "pond"
       ],
       "audioCN": "friend_p4_cn",
@@ -97,8 +97,8 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_05.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "他们走啊走，终于走到了池塘边。哇！你们看，池塘里有好多鸭子！小女孩指着鸭子们说：Here are your mother and your father！Mother就是妈妈，father就是爸爸！小鸭子高兴地Quack！Quack！大声叫着，它找到爸爸妈妈了！",
-      "narrativeEN": "Here are your mother your father. Quack! Here, little duck. and Here is the pond. 12",
+      "narrativeCN": "哇！小饼干真棒！他带着小鸭子找到了池塘！你看，小鸭子的爸爸妈妈就在这里呢！mother就是妈妈，father就是爸爸。小鸭子高兴地 Quack Quack 叫着跑向爸爸妈妈，是不是很开心呀？终于找到家人啦！",
+      "narrativeEN": "Here are your mother your father. Quack! Here, little duck. and Here is the pond.",
       "keywords": [
         "mother",
         "father"
@@ -116,8 +116,8 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_06.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "不仅仅是爸爸妈妈，还有好多跟小鸭子一样的小鸭子！小女孩又说：Here are your brothers and your sisters！Brothers就是哥哥们或者弟弟们，sisters就是姐姐们或者妹妹们！哇，一家人终于团聚了！鸭子们开心地说Thank you！Thank you就是谢谢！谢谢你们帮小鸭子回家！",
-      "narrativeEN": "Here are your brothers and your sisters. Quack! Quack! The ducks say thank you. Thank you for finding the little duck. 14",
+      "narrativeCN": "不只爸爸妈妈，还有好多小鸭子呢！brothers就是兄弟，sisters就是姐妹。原来小鸭子有这么多兄弟姐妹呀！所有的鸭子都 Quack Quack 地叫着，好像在说 Thank you！谢谢你，小饼干！小饼干是不是很自豪呀？",
+      "narrativeEN": "Here are your brothers and your sisters. Quack! Quack! The ducks say thank you. Thank you for finding the little duck.",
       "keywords": [
         "brothers",
         "sisters",
@@ -135,8 +135,8 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_07.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "小鸭子回到家，可开心啦！它看到Biscuit，高兴地Quack！Quack！原来呀，The little duck wants to play！Play就是玩耍！它想和Biscuit一起玩呢！一个Quack，一个Woof！哈哈，他们玩得可真开心呀！你觉得他们会玩什么呢？",
-      "narrativeEN": "Quack! The little duck wants to play. 16 Quack! Woof! 17 Quack! Woof!",
+      "narrativeCN": "小鸭子回到家，可高兴啦！他一点也不害怕了，还想跟小饼干一起玩呢！你看，小鸭子 Quack Quack 叫着，小饼干 Woof Woof 叫着，他们俩是不是玩得很开心呀？你觉得他们会玩什么呢？",
+      "narrativeEN": "Quack! The little duck wants to play. Quack! Woof! Quack! Woof!",
       "keywords": [
         "play"
       ],
@@ -153,10 +153,11 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_08.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "他们玩着玩着，突然——Splash！哎呀，发生了什么？Biscuit玩得太兴奋了，一不小心，fell into the pond！Fell就是掉进去了！哈哈，Silly Biscuit，真是一个调皮的Biscuit！你看，You are all wet！Wet就是湿了！他全身都湿透啦！",
-      "narrativeEN": "Splash! Biscuit fell into the pond! Silly Biscuit. You are all wet! 18",
+      "narrativeCN": "哎呀，小心！Splash！小饼干一不小心，扑通一声掉到池塘里啦！哈哈，Silly Biscuit！Silly就是有点傻傻的，调皮的意思。你看，他全身都wet啦！wet就是湿漉漉的。他是不是变成一只“落汤狗”啦？",
+      "narrativeEN": "Splash! Biscuit fell into the pond! Silly Biscuit. You are all wet!",
       "keywords": [
-        "fell",
+        "Splash",
+        "Silly",
         "wet"
       ],
       "audioCN": "friend_p8_cn",
@@ -171,11 +172,11 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_09.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "Biscuit从水里爬出来，全身湿漉漉的！他想做什么呀？Woof！他要甩水了！小女孩赶紧说：Oh no, Biscuit！Not a big shake！Shake就是甩水！要是Biscuit甩水，水花会溅得到处都是！小女孩说：Time to go home, Biscuit！Go home就是回家！是时候回家了！",
-      "narrativeEN": "Woof! Oh no, Biscuit. Not a big shake! Woof! Time to go home, Biscuit. 20",
+      "narrativeCN": "小饼干全身湿透了，他想怎么办呀？他想用力 shake！shake就是抖一抖，把身上的水抖掉！但是小女孩说，Oh no！不要大大的抖，不然水花会溅得到处都是！她说，Time to go home，Biscuit。该回家啦！",
+      "narrativeEN": "Woof! Oh no, Biscuit. Not a big shake! Woof! Time to go home, Biscuit.",
       "keywords": [
         "shake",
-        "go home"
+        "home"
       ],
       "audioCN": "friend_p9_cn",
       "audioEN": "friend_p9_en",
@@ -189,8 +190,8 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_10.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "小女孩和Biscuit要回家了，小鸭子们都跑过来，Quack！Quack！来跟他们告别！小女孩说：Say good-bye, Biscuit！Good-bye就是再见！Biscuit也Woof！Woof！大声地对小鸭子说：Good-bye, little duck！他们都好舍不得对方呀！",
-      "narrativeEN": "Quack! Quack! Say good-bye, Biscuit. Woof! Woof! Good-bye, little duck. 22",
+      "narrativeCN": "小饼干要回家啦，小鸭子们又 Quack Quack 叫着来送他。小女孩说，快跟小鸭子们说 good-bye！good-bye就是再见！小饼干也 Woof Woof 地叫着，跟他的新朋友说再见。他们是不是很舍不得呀？",
+      "narrativeEN": "Quack! Quack! Say good-bye, Biscuit. Woof! Woof! Good-bye, little duck.",
       "keywords": [
         "good-bye"
       ],
@@ -206,10 +207,10 @@
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_11.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "虽然要回家了，但是Biscuit一点也不难过！因为呀，他今天收获了一个非常棒的东西！你们看，Biscuit has found a new friend！New friend就是新朋友！小鸭子就是Biscuit的新朋友！哇，找到新朋友是不是一件很开心的事情呀！",
+      "narrativeCN": "哇！小饼干今天可真棒！他不仅帮助了迷路的小鸭子，还交到了一个新朋友！你看，他们俩是不是很开心呀？friend就是朋友。你们也喜欢交新朋友吗？小饼干真是个善良又勇敢的小狗狗！",
       "narrativeEN": "Biscuit has found a new friend.",
       "keywords": [
-        "new friend"
+        "friend"
       ],
       "audioCN": "friend_p11_cn",
       "audioEN": "friend_p11_en",
@@ -236,5 +237,23 @@
       }
     }
   ],
-  "phonicsWords": []
+  "phonicsWords": [
+    {
+      "word": "ball",
+      "phonemes": [
+        "b",
+        "all"
+      ],
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_02.webp"
+    },
+    {
+      "word": "duck",
+      "phonemes": [
+        "d",
+        "u",
+        "ck"
+      ],
+      "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_03.webp"
+    }
+  ]
 }

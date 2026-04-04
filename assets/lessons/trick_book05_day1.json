@@ -3,7 +3,7 @@
   "bookTitle": "Biscuit's New Trick",
   "characterName": "Biscuit",
   "characterAsset": "assets/characters/teacher_default.webp",
-  "featuredSentence": "Here, Biscuit!",
+  "featuredSentence": "You learned a new trick!",
   "originalAudio": "books/05Biscuits_New_Trick/audio.mp3",
   "pages": [
     {
@@ -23,7 +23,7 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_01.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Look就是Look的意思。Here, Biscuit! Look what I have。你能跟我说一遍 Look 吗？",
+      "narrativeCN": "你听到了吗？Look就是Look的意思。Here, Biscuit! Look what I have。",
       "narrativeEN": "Here, Biscuit! Look what I have. Woof, woof!",
       "keywords": [
         "look"
@@ -41,8 +41,8 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_02.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？time就是time的意思。It's time to learn a new trick, Biscuit。你能跟我说一遍 time 吗？",
-      "narrativeEN": "It's time to learn a new trick, Biscuit. Woof, woof! 6 It's time to learn to fetch the ball. Ready?",
+      "narrativeCN": "你听到了吗？time就是time的意思。It's time to learn a new trick, Biscuit。",
+      "narrativeEN": "It's time to learn a new trick, Biscuit. Woof, woof! It's time to learn to fetch the ball. Ready?",
       "keywords": [
         "learn",
         "trick"
@@ -60,8 +60,8 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_03.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Fetch就是Fetch的意思。Fetch the ball, Biscuit。你能跟我说一遍 Fetch 吗？",
-      "narrativeEN": "Fetch the ball, Biscuit. Woof, woof! 8 Silly puppy! Don't roll over now. Get the ball, Biscuit.",
+      "narrativeCN": "你听到了吗？Fetch就是Fetch的意思。Fetch the ball, Biscuit。",
+      "narrativeEN": "Fetch the ball, Biscuit. Woof, woof! Silly puppy! Don't roll over now. Get the ball, Biscuit.",
       "keywords": [
         "fetch",
         "ball"
@@ -79,7 +79,7 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_04.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Fetch就是Fetch的意思。Fetch the ball, Biscuit。你能跟我说一遍 Fetch 吗？",
+      "narrativeCN": "你听到了吗？Fetch就是Fetch的意思。Fetch the ball, Biscuit。",
       "narrativeEN": "Fetch the ball, Biscuit. Woof, woof! Where are you going, Biscuit? Woof!",
       "keywords": [
         "fetch",
@@ -98,8 +98,8 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_05.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Funny就是Funny的意思。Funny puppy! Fetch the ball, not your bone。你能跟我说一遍 Funny 吗？",
-      "narrativeEN": "Funny puppy! Fetch the ball, not your bone. 12 Let's try again. Fetch the ball, Biscuit! Woof, woof!",
+      "narrativeCN": "你听到了吗？Funny就是Funny的意思。Funny puppy! Fetch the ball, not your bone。",
+      "narrativeEN": "Funny puppy! Fetch the ball, not your bone. Let's try again. Fetch the ball, Biscuit! Woof, woof!",
       "keywords": [
         "funny",
         "puppy"
@@ -117,7 +117,7 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_06.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Good就是Good的意思。Good puppy! You got the ball。你能跟我说一遍 Good 吗？",
+      "narrativeCN": "你听到了吗？Good就是Good的意思。Good puppy! You got the ball。",
       "narrativeEN": "Good puppy! You got the ball. Woof!",
       "keywords": [
         "good",
@@ -136,8 +136,8 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_07.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Wait就是Wait的意思。Wait, Biscuit。你能跟我说一遍 Wait 吗？",
-      "narrativeEN": "Wait, Biscuit. 16 Bring the ball back! Woof, woof!",
+      "narrativeCN": "你听到了吗？Wait就是Wait的意思。Wait, Biscuit。",
+      "narrativeEN": "Wait, Biscuit. Bring the ball back! Woof, woof!",
       "keywords": [
         "wait",
         "bring"
@@ -155,8 +155,8 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_08.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Lets就是Lets的意思。Let's try one more time。你能跟我说一遍 Lets 吗？",
-      "narrativeEN": "Let's try one more time. Fetch the ball, Biscuit! Woof, woof! 18 Oh no! Not in the mud!",
+      "narrativeCN": "你听到了吗？Lets就是Lets的意思。Let's try one more time。",
+      "narrativeEN": "Let's try one more time. Fetch the ball, Biscuit! Woof, woof! Oh no! Not in the mud!",
       "keywords": [
         "fetch",
         "ball"
@@ -174,7 +174,7 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_09.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？Stop就是Stop的意思。Stop, Biscuit! Don't fetch it now! Woof!。你能跟我说一遍 Stop 吗？",
+      "narrativeCN": "你听到了吗？Stop就是Stop的意思。Stop, Biscuit! Don't fetch it now! Woof!。",
       "narrativeEN": "Stop, Biscuit! Don't fetch it now! Woof!",
       "keywords": [
         "stop",
@@ -209,7 +209,7 @@
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_11.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "你听到了吗？learned就是learned的意思。You did it! You learned a new trick! Woof, woof!。你能跟我说一遍 learned 吗？",
+      "narrativeCN": "你听到了吗？learned就是learned的意思。You did it! You learned a new trick! Woof, woof!。",
       "narrativeEN": "You did it! You learned a new trick! Woof, woof!",
       "keywords": [
         "learned",
@@ -240,5 +240,24 @@
       }
     }
   ],
-  "phonicsWords": []
+  "phonicsWords": [
+    {
+      "word": "learn",
+      "phonemes": [
+        "l",
+        "ear",
+        "n"
+      ],
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_02.webp"
+    },
+    {
+      "word": "fetch",
+      "phonemes": [
+        "f",
+        "et",
+        "ch"
+      ],
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_03.webp"
+    }
+  ]
 }
