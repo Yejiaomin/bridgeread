@@ -52,3 +52,7 @@ app.*.map.json
 node_modules/
 baidunetdiskdownload/
 scripts/eng.traineddata
+*.mp4
+_temp_*
+*.pdf
+baidunetdiskdownload/
