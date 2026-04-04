@@ -287,6 +287,8 @@ const _kBooks = [
   _BookDay(1, 'Biscuit', '小饼干', 'biscuit_book1_day1', 'assets/books/01Biscuit/cover.webp'),
   _BookDay(2, 'Biscuit and the Baby', '小饼干和宝宝', 'biscuit_baby_book2_day1', 'assets/books/02Biscuit_and_the_Baby/cover.webp'),
   _BookDay(3, 'Biscuit Loves the Library', '小饼干爱图书馆', 'biscuit_library_book3_day1', 'assets/books/03Biscuit_Loves_the_Library/cover.webp'),
+  _BookDay(4, 'Biscuit Finds a Friend', '小饼干找朋友', 'friend_book04_day1', 'assets/books/04Biscuit_Finds_a_Friend/cover.webp'),
+  _BookDay(5, "Biscuit's New Trick", '小饼干的新把戏', 'trick_book05_day1', 'assets/books/05Biscuits_New_Trick/cover.webp'),
   // 后续书籍在这里添加
 ];
 

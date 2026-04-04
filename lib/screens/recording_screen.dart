@@ -145,6 +145,8 @@ class _RecordingScreenState extends State<RecordingScreen>
     'biscuit_book1_day1': 'audio/featured_time_for_bed.mp3',
     'biscuit_baby_book2_day1': 'audio/biscuit_baby_featured.mp3',
     'biscuit_library_book3_day1': 'audio/library_featured.mp3',
+      'friend_book04_day1': 'audio/friend_featured.mp3',
+      'trick_book05_day1': 'audio/trick_featured.mp3',
   };
 
   Future<void> _loadLessonData() async {

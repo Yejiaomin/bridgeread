@@ -93,6 +93,8 @@ flutter:
     - assets/shop/
     - assets/shop/items/
     - assets/shop/items/1month/
+    - assets/books/04Biscuit_Finds_a_Friend/
+    - assets/books/05Biscuits_New_Trick/
     - assets/video/
 
   # An image asset can refer to one or more resolution-specific "variants", see

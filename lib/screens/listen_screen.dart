@@ -116,6 +116,8 @@ class _ListenScreenState extends State<ListenScreen>
     ('biscuit_book1_day1',          'Biscuit',                    'audio/biscuit_original.mp3'),
     ('biscuit_baby_book2_day1',     'Biscuit and the Baby',       'audio/biscuit_baby_original.mp3'),
     ('biscuit_library_book3_day1',  'Biscuit Loves the Library',  'books/03Biscuit_Loves_the_Library/audio.mp3'),
+    ('friend_book04_day1',          'Biscuit Finds a Friend',     'books/04Biscuit_Finds_a_Friend/audio.mp3'),
+    ('trick_book05_day1',           "Biscuit's New Trick",        'books/05Biscuits_New_Trick/audio.mp3'),
   ];
 
   Future<void> _loadListenData() async {

@@ -1,0 +1,244 @@
+{
+  "id": "trick_book05_day1",
+  "bookTitle": "Biscuit's New Trick",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "Here, Biscuit!",
+  "originalAudio": "books/05Biscuits_New_Trick/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit's New Trick的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "trick_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_01.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Look就是Look的意思。Here, Biscuit! Look what I have。你能跟我说一遍 Look 吗？",
+      "narrativeEN": "Here, Biscuit! Look what I have. Woof, woof!",
+      "keywords": [
+        "look"
+      ],
+      "audioCN": "trick_p1_cn",
+      "audioEN": "trick_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 12800
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？time就是time的意思。It's time to learn a new trick, Biscuit。你能跟我说一遍 time 吗？",
+      "narrativeEN": "It's time to learn a new trick, Biscuit. Woof, woof! 6 It's time to learn to fetch the ball. Ready?",
+      "keywords": [
+        "learn",
+        "trick"
+      ],
+      "audioCN": "trick_p2_cn",
+      "audioEN": "trick_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 25900
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Fetch就是Fetch的意思。Fetch the ball, Biscuit。你能跟我说一遍 Fetch 吗？",
+      "narrativeEN": "Fetch the ball, Biscuit. Woof, woof! 8 Silly puppy! Don't roll over now. Get the ball, Biscuit.",
+      "keywords": [
+        "fetch",
+        "ball"
+      ],
+      "audioCN": "trick_p3_cn",
+      "audioEN": "trick_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 33500
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Fetch就是Fetch的意思。Fetch the ball, Biscuit。你能跟我说一遍 Fetch 吗？",
+      "narrativeEN": "Fetch the ball, Biscuit. Woof, woof! Where are you going, Biscuit? Woof!",
+      "keywords": [
+        "fetch",
+        "ball"
+      ],
+      "audioCN": "trick_p4_cn",
+      "audioEN": "trick_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 37300
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Funny就是Funny的意思。Funny puppy! Fetch the ball, not your bone。你能跟我说一遍 Funny 吗？",
+      "narrativeEN": "Funny puppy! Fetch the ball, not your bone. 12 Let's try again. Fetch the ball, Biscuit! Woof, woof!",
+      "keywords": [
+        "funny",
+        "puppy"
+      ],
+      "audioCN": "trick_p5_cn",
+      "audioEN": "trick_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 59400
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Good就是Good的意思。Good puppy! You got the ball。你能跟我说一遍 Good 吗？",
+      "narrativeEN": "Good puppy! You got the ball. Woof!",
+      "keywords": [
+        "good",
+        "puppy"
+      ],
+      "audioCN": "trick_p6_cn",
+      "audioEN": "trick_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 73400
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Wait就是Wait的意思。Wait, Biscuit。你能跟我说一遍 Wait 吗？",
+      "narrativeEN": "Wait, Biscuit. 16 Bring the ball back! Woof, woof!",
+      "keywords": [
+        "wait",
+        "bring"
+      ],
+      "audioCN": "trick_p7_cn",
+      "audioEN": "trick_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 79000
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Lets就是Lets的意思。Let's try one more time。你能跟我说一遍 Lets 吗？",
+      "narrativeEN": "Let's try one more time. Fetch the ball, Biscuit! Woof, woof! 18 Oh no! Not in the mud!",
+      "keywords": [
+        "fetch",
+        "ball"
+      ],
+      "audioCN": "trick_p8_cn",
+      "audioEN": "trick_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 85600
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？Stop就是Stop的意思。Stop, Biscuit! Don't fetch it now! Woof!。你能跟我说一遍 Stop 吗？",
+      "narrativeEN": "Stop, Biscuit! Don't fetch it now! Woof!",
+      "keywords": [
+        "stop",
+        "fetch"
+      ],
+      "audioCN": "trick_p9_cn",
+      "audioEN": "trick_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 99000
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "我们来听听看发生了什么。Oh, Biscuit!。",
+      "narrativeEN": "Oh, Biscuit!",
+      "keywords": [],
+      "audioCN": "trick_p10_cn",
+      "audioEN": "trick_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 99400
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你听到了吗？learned就是learned的意思。You did it! You learned a new trick! Woof, woof!。你能跟我说一遍 learned 吗？",
+      "narrativeEN": "You did it! You learned a new trick! Woof, woof!",
+      "keywords": [
+        "learned",
+        "trick"
+      ],
+      "audioCN": "trick_p11_cn",
+      "audioEN": "trick_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 107200
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_11.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit's New Trick真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "trick_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": []
+}
