@@ -1,11 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show DefaultAssetBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../main.dart' show routeObserver;
 import '../utils/cdn_asset.dart';
+
+class _RecapPage {
+  final String imageAsset;
+  final int startMs;
+  const _RecapPage(this.imageAsset, this.startMs);
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Zone data
@@ -297,6 +305,12 @@ class _RecapScreenState extends State<RecapScreen>
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
 
+  // Book page display for recap
+  List<_RecapPage> _pageTimings = [];
+  int _currentPageIdx = 0;
+  String _coverImage = '';
+  String _recapTitle = '';
+
   // Waveform: 5 bars (same style as ListenScreen)
   late final List<AnimationController> _waveCtrl;
   late final List<Animation<double>>   _waveAnim;
@@ -315,7 +329,10 @@ class _RecapScreenState extends State<RecapScreen>
 
     _subs.addAll([
       _player.onPositionChanged.listen((p) {
-        if (mounted) setState(() => _position = p);
+        if (mounted) {
+          setState(() => _position = p);
+          _updatePageForPosition(p);
+        }
       }),
       _player.onDurationChanged.listen((d) {
         if (mounted) setState(() => _duration = d);
@@ -328,6 +345,21 @@ class _RecapScreenState extends State<RecapScreen>
     ]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _play());
+  }
+
+  void _updatePageForPosition(Duration pos) {
+    if (_pageTimings.isEmpty) return;
+    final ms = pos.inMilliseconds;
+    int pageIdx = 0;
+    for (int i = _pageTimings.length - 1; i >= 0; i--) {
+      if (ms >= _pageTimings[i].startMs) {
+        pageIdx = i;
+        break;
+      }
+    }
+    if (pageIdx != _currentPageIdx) {
+      setState(() => _currentPageIdx = pageIdx);
+    }
   }
 
   @override
@@ -345,19 +377,47 @@ class _RecapScreenState extends State<RecapScreen>
     await prefs.setString('today_recap_done', d);
   }
 
+  // Map lessonId -> previous book's lesson ID and audio
+  static const _prevBookMap = {
+    'biscuit_book1_day1': ('biscuit_book1_day1', 'audio/biscuit_original.mp3'),
+    'biscuit_baby_book2_day1': ('biscuit_book1_day1', 'audio/biscuit_original.mp3'),
+    'biscuit_library_book3_day1': ('biscuit_baby_book2_day1', 'audio/biscuit_baby_original.mp3'),
+  };
+
   Future<void> _play() async {
-    // Play previous day's original audio for recap
     final service = LessonService();
     final lessonId = await service.restoreCurrentLessonId();
 
-    // Map of lessonId -> previous book's original audio
-    const prevAudioMap = {
-      'biscuit_book1_day1': 'audio/biscuit_original.mp3', // Day 1 has no previous, play own
-      'biscuit_baby_book2_day1': 'audio/biscuit_original.mp3', // Day 2 recaps Day 1
-      'biscuit_library_book3_day1': 'audio/biscuit_baby_original.mp3', // Day 3 recaps Day 2
-    };
+    final prev = _prevBookMap[lessonId] ?? ('biscuit_book1_day1', 'audio/biscuit_original.mp3');
+    final prevLessonId = prev.$1;
+    final audioPath = prev.$2;
 
-    final audioPath = prevAudioMap[lessonId] ?? 'audio/biscuit_original.mp3';
+    // Load previous book's page timings for book display
+    try {
+      final jsonString = await DefaultAssetBundle.of(context)
+          .loadString('assets/lessons/$prevLessonId.json');
+      final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
+      final timings = <_RecapPage>[];
+      for (final p in jsonMap['pages'] as List) {
+        final ms = p['pageStartMs'] as int?;
+        if (ms != null) {
+          timings.add(_RecapPage(p['imageAsset'] as String, ms));
+        }
+      }
+      // Get cover image (first page) and book title
+      final pages = jsonMap['pages'] as List;
+      final cover = pages.isNotEmpty ? (pages[0]['imageAsset'] as String? ?? '') : '';
+      final bookTitle = jsonMap['bookTitle'] as String? ?? '';
+
+      if (mounted && timings.isNotEmpty) {
+        setState(() {
+          _pageTimings = timings;
+          _coverImage = cover;
+          _recapTitle = bookTitle;
+        });
+      }
+    } catch (_) {}
+
     await _player.play(cdnAudioSource(audioPath));
     _setPlaying(true);
   }
@@ -382,6 +442,79 @@ class _RecapScreenState extends State<RecapScreen>
     }
   }
 
+  Widget _buildRecapCover() {
+    return Row(
+      children: [
+        Expanded(
+          child: ColoredBox(
+            color: const Color(0xFFFFF8F0),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: cdnImage(_coverImage, fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => const SizedBox()),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFFFE8D6), Color(0xFFFFCBA4), Color(0xFFFFAD7A)],
+              ),
+            ),
+            child: Stack(
+              children: [
+                Positioned(top: -30, right: -30,
+                  child: Container(width: 120, height: 120,
+                    decoration: BoxDecoration(shape: BoxShape.circle,
+                      color: Colors.white.withValues(alpha: 0.18)))),
+                Positioned(bottom: 40, left: -20,
+                  child: Container(width: 90, height: 90,
+                    decoration: BoxDecoration(shape: BoxShape.circle,
+                      color: Colors.white.withValues(alpha: 0.13)))),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [BoxShadow(
+                            color: const Color(0xFFFF8C42).withValues(alpha: 0.25),
+                            blurRadius: 12, offset: const Offset(0, 4))],
+                        ),
+                        child: const Text('还记得这个故事吗？\n让我们再听一遍~',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800,
+                            color: Color(0xFFFF6B35), height: 1.5)),
+                      ),
+                      const CustomPaint(size: Size(20, 10), painter: _RecapBubbleTailPainter()),
+                      const SizedBox(height: 4),
+                      cdnImage('assets/pet/eggy_transparent_bg.webp',
+                        width: 300, height: 300, fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(Icons.pets, size: 180, color: Color(0xFFFFAD7A))),
+                      const SizedBox(height: 16),
+                      Text(_recapTitle,
+                        style: const TextStyle(fontSize: 42, fontWeight: FontWeight.w900,
+                          color: Color(0xFFB84A00), letterSpacing: 1.5)),
+                      const SizedBox(height: 4),
+                      const Text("Let's listen again!",
+                        style: TextStyle(fontSize: 20, color: Color(0xFFCC6622), fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   String _fmt(Duration d) {
     final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
     final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
@@ -398,16 +531,36 @@ class _RecapScreenState extends State<RecapScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // ── Sleepy eggy background ───────────────────────────────────────
-          cdnImage('assets/pet/cards/spleepy.webp',
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            errorBuilder: (_, __, ___) =>
-                Container(color: const Color(0xFF1A2A4A)),
-          ),
-          // ── Dark overlay ─────────────────────────────────────────────────
-          Container(color: Colors.black.withValues(alpha: 0.52)),
+          // ── Background: cover intro, book pages, or sleepy eggy ──────
+          if (_pageTimings.isNotEmpty && _currentPageIdx == 0 && _position.inMilliseconds < _pageTimings[0].startMs && _coverImage.isNotEmpty) ...[
+            // Cover intro: left = book cover, right = eggy
+            Positioned.fill(child: _buildRecapCover()),
+          ] else if (_pageTimings.isNotEmpty) ...[
+            Positioned.fill(
+              child: Container(
+                color: const Color(0xFFFFF8F0),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: cdnImage(
+                    _pageTimings[_currentPageIdx].imageAsset,
+                    key: ValueKey(_currentPageIdx),
+                    fit: BoxFit.contain,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
+                ),
+              ),
+            ),
+          ] else ...[
+            cdnImage('assets/pet/cards/spleepy.webp',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (_, __, ___) =>
+                  Container(color: const Color(0xFF1A2A4A)),
+            ),
+            Container(color: Colors.black.withValues(alpha: 0.52)),
+          ],
 
           // ── Content ──────────────────────────────────────────────────────
           SafeArea(
@@ -577,4 +730,20 @@ class _RecapScreenState extends State<RecapScreen>
       ),
     );
   }
+}
+
+class _RecapBubbleTailPainter extends CustomPainter {
+  const _RecapBubbleTailPainter();
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.white;
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width / 2, size.height)
+      ..lineTo(size.width, 0)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+  @override
+  bool shouldRepaint(_RecapBubbleTailPainter _) => false;
 }

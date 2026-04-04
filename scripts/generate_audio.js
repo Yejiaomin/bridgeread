@@ -67,6 +67,59 @@ const audioScripts = [
   { id: 'bubble_pop', text: 'Pop!', lang: 'en', keywords: [] },
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // Book 3: Biscuit Loves the Library
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // 开场
+  { id: 'library_intro', text: 'Hello Hello, my dear friend！I am Amy! How are you？...... I\'m good！Good！今天我们要一起去图书馆啦！Biscuit Loves the Library！library就是图书馆，Biscuit最喜欢图书馆了！Are you ready？Let\'s go！', lang: 'cn' },
+  // 第1页
+  { id: 'library_p1_cn', text: '哇！今天图书馆有一个特别的活动！Read to a Pet Day！就是带宠物去图书馆，读书给宠物听的日子！special就是特别的。小女孩要带Biscuit去图书馆，你觉得Biscuit开心吗？', lang: 'cn' },
+  { id: 'library_p1_en', text: 'It\'s a very special day at the library, Biscuit. Woof, woof!', lang: 'en', keywords: ['special', 'library'] },
+  // 第2页
+  { id: 'library_p2_cn', text: '到了图书馆啦！今天是Read to a Pet Day！小女孩说——我可以读书给你听哦，Biscuit！read就是读，read to you就是读给你听。Biscuit好开心，Woof woof！', lang: 'cn' },
+  { id: 'library_p2_en', text: 'It\'s Read to a Pet Day! I can read to you, Biscuit. Woof, woof!', lang: 'en', keywords: ['read'] },
+  // 第3页
+  { id: 'library_p3_cn', text: '小女孩说——来吧Biscuit，我们去找一本书！come along就是一起来吧。find a book就是找一本书。图书馆里有好多好多的书，你最喜欢看什么书呀？', lang: 'cn' },
+  { id: 'library_p3_en', text: 'Come along, Biscuit. Let\'s find a book. Woof, woof!', lang: 'en', keywords: ['find', 'book'] },
+  // 第4页
+  { id: 'library_p4_cn', text: '你看！图书馆里有关于bunnies小兔子的书，还有关于bears小熊的书！bunnies就是小兔子们，bears就是小熊们。Biscuit看到这些书好开心呀！', lang: 'cn' },
+  { id: 'library_p4_en', text: 'See, Biscuit? There are books about bunnies and bears. Woof, woof!', lang: 'en', keywords: ['bunnies', 'bears'] },
+  // 第5页
+  { id: 'library_p5_cn', text: '哇！还有关于大恐龙的书呢！big dinosaurs！dinosaurs就是恐龙。Biscuit看到恐龙的书，叫了一声大大的Woof！是不是被吓到了呀，哈哈！', lang: 'cn' },
+  { id: 'library_p5_en', text: 'And big dinosaurs, too! Woof!', lang: 'en', keywords: ['big', 'dinosaurs'] },
+  // 第6页
+  { id: 'library_p6_cn', text: '哈哈！Biscuit这个小调皮！他在恐龙书里看到了一根骨头bone，他以为是真的骨头呢！小女孩说——Funny puppy！那不是真的骨头呀！real就是真的。', lang: 'cn' },
+  { id: 'library_p6_en', text: 'Funny puppy! That\'s not a real bone! Woof, woof!', lang: 'en', keywords: ['funny', 'real', 'bone'] },
+  // 第7页
+  { id: 'library_p7_cn', text: '小女孩说——看，Biscuit！这边还有更多的书呢！more books就是更多的书。over here就是这边。图书馆真的好大呀，到处都是书！', lang: 'cn' },
+  { id: 'library_p7_en', text: 'Look, Biscuit. There are more books over here. Woof, woof!', lang: 'en', keywords: ['more', 'books'] },
+  // 第8页
+  { id: 'library_p8_cn', text: '咦？Biscuit跑到哪里去了？小女孩找不到Biscuit了！Where are you就是你在哪里呀？Biscuit一定是看到什么好玩的东西跑掉了！', lang: 'cn' },
+  { id: 'library_p8_en', text: 'Biscuit! Where are you? Woof!', lang: 'en', keywords: ['where'] },
+  // 第9页
+  { id: 'library_p9_cn', text: '原来Biscuit找到了手偶玩具！puppets就是手偶。你玩过手偶吗？就是套在手上可以动来动去的小玩偶！Biscuit觉得好有趣呀！', lang: 'cn' },
+  { id: 'library_p9_en', text: 'You found the puppets, Biscuit.', lang: 'en', keywords: ['found', 'puppets'] },
+  // 第10页
+  { id: 'library_p10_cn', text: 'Biscuit还发现了可以听故事的地方！listen就是听。stories就是故事们。图书馆不光可以看书，还可以听故事呢！', lang: 'cn' },
+  { id: 'library_p10_en', text: 'And you even found stories we can listen to. Woof!', lang: 'en', keywords: ['stories', 'listen'] },
+  // 第11页
+  { id: 'library_p11_cn', text: '好啦，现在该选一本书来读啦！which book就是哪本书。小女孩问——我们要读哪一本呢？你觉得Biscuit会选哪本书呀？', lang: 'cn' },
+  { id: 'library_p11_en', text: 'Now, which book will it be?', lang: 'en', keywords: ['which', 'book'] },
+  // 第12页
+  { id: 'library_p12_cn', text: 'Biscuit找到了图书管理员！librarian就是图书管理员。还找到了一本刚刚好的书！just right就是刚刚好。图书管理员帮他们选了一本最棒的书！', lang: 'cn' },
+  { id: 'library_p12_en', text: 'You found the librarian and a book that\'s just right. Woof, woof!', lang: 'en', keywords: ['librarian', 'right'] },
+  // 第13页
+  { id: 'library_p13_cn', text: 'Biscuit还找到了一个舒服的位置，周围都是朋友！cozy就是舒舒服服暖暖的。friends就是朋友们。大家一起坐在图书馆里读书，多开心呀！', lang: 'cn' },
+  { id: 'library_p13_en', text: 'You found a cozy spot filled with friends, too.', lang: 'en', keywords: ['cozy', 'friends'] },
+  // 第14页
+  { id: 'library_p14_cn', text: '每个人都喜欢图书馆！Everyone loves the library！everyone就是每一个人。你喜欢图书馆吗？下次让爸爸妈妈带你去图书馆看书吧！', lang: 'cn' },
+  { id: 'library_p14_en', text: 'Everyone loves the library, Biscuit. Woof, woof!', lang: 'en', keywords: ['everyone', 'loves'] },
+  // 结尾
+  { id: 'library_done', text: '好啦！Let\'s read！今天的故事告诉我们，图书馆是一个非常special的地方，可以看书，听故事，还能交到好朋友！你学会了哪些新单词呀？我们明天再见哦！', lang: 'cn' },
+  // 录音页示范句
+  { id: 'library_featured', text: 'It\'s Read to a Pet Day!', lang: 'en', keywords: [] },
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // Book 2: Biscuit and the Baby
   // ═══════════════════════════════════════════════════════════════════════════
 
