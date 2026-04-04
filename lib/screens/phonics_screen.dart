@@ -782,12 +782,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         ),
       );
     } else {
-      // Not the last word — play amazing, show stars, then reveal Next button
-      _playAudio('assets/audio/phonemes/amazing.mp3');
-      _starController.forward(from: 0);
-      setState(() => _showAmazing = true);
-      await Future.delayed(const Duration(seconds: 2));
-      if (mounted) setState(() => _showNextBtn = true);
+      // Not the last word — go directly to next word
+      _onNextPressed();
     }
   }
 
