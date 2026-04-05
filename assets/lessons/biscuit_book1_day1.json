@@ -425,5 +425,20 @@
       "imageAsset": "assets/books/01Biscuit/spread_06.webp"
     }
   ],
-  "originalAudioDurationMs": 166300
+  "originalAudioDurationMs": 166300,
+  "recordingPage": {
+    "imageAsset": "assets/books/01Biscuit/spread_02.webp",
+    "sentences": [
+      {
+        "text": "Time for bed, Biscuit!",
+        "audio": "audio/biscuit_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Biscuit wants to play.",
+        "audio": "audio/biscuit_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
 }

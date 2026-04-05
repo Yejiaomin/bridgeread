@@ -279,5 +279,20 @@
       ],
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_04.webp"
     }
-  ]
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_03.webp",
+    "sentences": [
+      {
+        "text": "There will be lots of pets, and prizes, too!",
+        "audio": "audio/prize_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Come along, sweet puppy.",
+        "audio": "audio/prize_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
 }

@@ -256,5 +256,20 @@
       ],
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_06.webp"
     }
-  ]
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_04.webp",
+    "sentences": [
+      {
+        "text": "Stay with me, Biscuit.",
+        "audio": "audio/city_rec_1.mp3",
+        "side": "right"
+      },
+      {
+        "text": "It's very busy in the big city!",
+        "audio": "audio/city_rec_2.mp3",
+        "side": "left"
+      }
+    ]
+  }
 }

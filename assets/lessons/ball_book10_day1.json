@@ -271,5 +271,20 @@
       ],
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_04.webp"
     }
-  ]
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_04.webp",
+    "sentences": [
+      {
+        "text": "You can't play ball now, Biscuit.",
+        "audio": "audio/ball_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "There are no dogs in this ball game.",
+        "audio": "audio/ball_rec_right.mp3",
+        "side": "left"
+      }
+    ]
+  }
 }

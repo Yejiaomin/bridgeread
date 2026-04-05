@@ -255,5 +255,20 @@
       ],
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_03.webp"
     }
-  ]
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_02.webp",
+    "sentences": [
+      {
+        "text": "Is it a ball?",
+        "audio": "audio/friend_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Is it a bone?",
+        "audio": "audio/friend_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
 }

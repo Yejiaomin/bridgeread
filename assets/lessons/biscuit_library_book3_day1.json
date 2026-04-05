@@ -256,5 +256,20 @@
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_02.webp"
     }
   ],
-  "originalAudioDurationMs": 198400
+  "originalAudioDurationMs": 198400,
+  "recordingPage": {
+    "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_03.webp",
+    "sentences": [
+      {
+        "text": "It's Read to a Pet Day!",
+        "audio": "audio/library_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "I can read to you, Biscuit.",
+        "audio": "audio/library_rec_right.mp3",
+        "side": "left"
+      }
+    ]
+  }
 }

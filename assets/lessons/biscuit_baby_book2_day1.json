@@ -380,5 +380,20 @@
       "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_11.webp"
     }
   ],
-  "originalAudioDurationMs": 184300
+  "originalAudioDurationMs": 184300,
+  "recordingPage": {
+    "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_03.webp",
+    "sentences": [
+      {
+        "text": "Biscuit wants to meet the baby!",
+        "audio": "audio/baby_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Quiet, Biscuit. The baby is sleeping.",
+        "audio": "audio/baby_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
 }
