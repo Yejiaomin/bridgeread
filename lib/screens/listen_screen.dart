@@ -8,6 +8,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
+import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
 
 // ── Playlist ──────────────────────────────────────────────────────────────────
@@ -111,44 +112,12 @@ class _ListenScreenState extends State<ListenScreen>
     });
   }
 
-  // Ordered list of all lessons for building listen playlists
-  static const _kLessonOrder = [
-    ('biscuit_book1_day1',          'Biscuit',                    'audio/biscuit_original.mp3'),
-    ('biscuit_baby_book2_day1',     'Biscuit and the Baby',       'audio/biscuit_baby_original.mp3'),
-    ('biscuit_library_book3_day1',  'Biscuit Loves the Library',  'books/03Biscuit_Loves_the_Library/audio.mp3'),
-    ('friend_book04_day1',          'Biscuit Finds a Friend',     'books/04Biscuit_Finds_a_Friend/audio.mp3'),
-    ('trick_book05_day1',           "Biscuit's New Trick",        'books/05Biscuits_New_Trick/audio.mp3'),
-  ];
-
-  /// Get current time in China timezone (UTC+8)
-  DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
-
-  /// How many study days this week (handles partial first week)
-  Future<int> _studyDaysThisWeek() async {
-    final prefs = await SharedPreferences.getInstance();
-    final startStr = prefs.getString('book_start_date');
-    if (startStr == null) return 5;
-    final parts = startStr.split('-');
-    final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
-    final now = _chinaTime();
-    final monday = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: now.weekday - 1));
-    if (start.isAfter(monday)) {
-      return (5 - start.weekday + 1).clamp(1, 5);
-    }
-    return 5;
-  }
-
   Future<void> _loadListenData() async {
     final service = LessonService();
     final lessonId = await service.restoreCurrentLessonId();
     final lesson = await service.loadLesson(lessonId);
 
     if (lesson.originalAudio.isEmpty) return;
-
-    // Find current day index (0-based) in the lesson order
-    int dayIndex = _kLessonOrder.indexWhere((e) => e.$1 == lessonId);
-    if (dayIndex < 0) dayIndex = 0;
 
     final playlist = <_Track>[];
 
@@ -163,17 +132,17 @@ class _ListenScreenState extends State<ListenScreen>
       return null;
     }
 
-    final now = _chinaTime();
+    final now = DateTime.now().toUtc().add(const Duration(hours: 8));
     final isWeekend = now.weekday == 6 || now.weekday == 7;
 
     if (isWeekend) {
-      // Weekend: play all lessons studied this week (Book1 → Book N)
-      final studyDays = await _studyDaysThisWeek();
-      for (int i = 0; i < studyDays && i < _kLessonOrder.length; i++) {
-        final entry = _kLessonOrder[i];
-        final cover = await getCover(entry.$1);
-        playlist.add(_Track('${entry.$2} (${i + 1}/$studyDays)',
-            entry.$3, showBook: true, lessonId: entry.$1, coverImage: cover));
+      // Weekend: play all books studied this week
+      final weekBooks = await WeekService.thisWeekBooks();
+      for (int i = 0; i < weekBooks.length; i++) {
+        final book = weekBooks[i];
+        final cover = await getCover(book.lessonId);
+        playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
+            book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
       }
     } else {
       // Weekday: today's new story + yesterday's review
@@ -181,17 +150,19 @@ class _ListenScreenState extends State<ListenScreen>
       final todayAudio = lesson.originalAudio;
       final todayCover = await getCover(lessonId);
 
-      if (dayIndex == 0) {
+      // Find previous book in global order
+      final allIdx = kAllBooks.indexWhere((b) => b.lessonId == lessonId);
+
+      if (allIdx <= 0) {
+        // First book ever: play twice
         playlist.add(_Track('$todayTitle (1/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
         playlist.add(_Track('$todayTitle (2/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
       } else {
-        final prevLessonId = _kLessonOrder[dayIndex - 1].$1;
-        final prevTitle = _kLessonOrder[dayIndex - 1].$2;
-        final prevAudio = _kLessonOrder[dayIndex - 1].$3;
-        final prevCover = await getCover(prevLessonId);
+        final prev = kAllBooks[allIdx - 1];
+        final prevCover = await getCover(prev.lessonId);
 
         playlist.add(_Track('$todayTitle - 新故事', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
-        playlist.add(_Track('$prevTitle - 复习', prevAudio, showBook: true, lessonId: prevLessonId, coverImage: prevCover));
+        playlist.add(_Track('${prev.title} - 复习', prev.originalAudio, showBook: true, lessonId: prev.lessonId, coverImage: prevCover));
         playlist.add(_Track('$todayTitle - 巩固', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
       }
     }

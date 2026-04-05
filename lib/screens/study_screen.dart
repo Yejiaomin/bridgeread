@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show DefaultAssetBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
+import '../services/week_service.dart';
 import '../main.dart' show routeObserver;
 import '../utils/cdn_asset.dart';
 
@@ -405,20 +406,23 @@ class _RecapScreenState extends State<RecapScreen>
     await prefs.setString('today_recap_done', d);
   }
 
-  // Map lessonId -> previous book's lesson ID and audio
-  static const _prevBookMap = {
-    'biscuit_book1_day1': ('biscuit_book1_day1', 'audio/biscuit_original.mp3'),
-    'biscuit_baby_book2_day1': ('biscuit_book1_day1', 'audio/biscuit_original.mp3'),
-    'biscuit_library_book3_day1': ('biscuit_baby_book2_day1', 'audio/biscuit_baby_original.mp3'),
-      'friend_book04_day1': ('biscuit_library_book3_day1', 'books/03Biscuit_Loves_the_Library/audio.mp3'),
-      'trick_book05_day1': ('friend_book04_day1', 'books/04Biscuit_Finds_a_Friend/audio.mp3'),
-  };
+  // Get previous book from global order (no hardcoded map needed)
+  static (String, String) _prevBook(String lessonId) {
+    final idx = kAllBooks.indexWhere((b) => b.lessonId == lessonId);
+    if (idx <= 0) {
+      // First book: recap itself
+      final first = kAllBooks[0];
+      return (first.lessonId, first.originalAudio);
+    }
+    final prev = kAllBooks[idx - 1];
+    return (prev.lessonId, prev.originalAudio);
+  }
 
   Future<void> _play() async {
     final service = LessonService();
     final lessonId = await service.restoreCurrentLessonId();
 
-    final prev = _prevBookMap[lessonId] ?? ('biscuit_book1_day1', 'audio/biscuit_original.mp3');
+    final prev = _prevBook(lessonId);
     final prevLessonId = prev.$1;
     final audioPath = prev.$2;
 
