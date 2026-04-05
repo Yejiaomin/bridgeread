@@ -111,16 +111,79 @@ console.log(`   Lesson: ${lessonId}\n`);
 async function splitAndMerge() {
   const existing = fs.readdirSync(bookDir).filter(f => f.startsWith('spread_') && f.endsWith('.webp'));
   if (existing.length > 0) { console.log(`⏭ Step 1-2: Already has ${existing.length} spreads`); return; }
-  if (!fs.existsSync(pdfPath)) { console.log('⏭ Step 1-2: No book.pdf'); return; }
 
-  console.log('── Step 1: Splitting PDF ──');
   const sharp = require('sharp');
+  const singleDir = path.join(bookDir, 'single');
+
+  // ── Option A: Use manually prepared single pages (from website PDF→image conversion)
+  if (fs.existsSync(singleDir)) {
+    console.log('── Step 1-2: Using manually prepared single/ pages ──');
+    const files = fs.readdirSync(singleDir)
+      .filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f))
+      .sort((a, b) => parseInt(a) - parseInt(b));
+    console.log(`  ${files.length} pages found`);
+
+    // Page 0 = cover
+    await sharp(path.join(singleDir, files[0])).webp({ quality: 82 }).toFile(path.join(bookDir, 'cover.webp'));
+    console.log('  cover done');
+
+    // Validate: each page should be portrait (height > width)
+    const firstMeta = await sharp(path.join(singleDir, files[1] || files[0])).metadata();
+    if (firstMeta.width > firstMeta.height) {
+      console.warn(`  ⚠ WARNING: pages are landscape (${firstMeta.width}x${firstMeta.height}), expected portrait. Check single/ images.`);
+    } else {
+      console.log(`  Page size: ${firstMeta.width}x${firstMeta.height} (portrait ✓)`);
+    }
+
+    // Merge remaining pairs into spreads
+    const singles = files.slice(1);
+    let num = 1;
+    for (let i = 0; i < singles.length; i += 2) {
+      const out = path.join(bookDir, `spread_${String(num).padStart(2, '0')}.webp`);
+      const left = path.join(singleDir, singles[i]);
+      const right = i + 1 < singles.length ? path.join(singleDir, singles[i + 1]) : null;
+      if (!right) {
+        await sharp(left).webp({ quality: 82 }).toFile(out);
+      } else {
+        const lm = await sharp(left).metadata();
+        const rm = await sharp(right).metadata();
+        const h = Math.max(lm.height, rm.height);
+        const lb = await sharp(left).resize({ height: h, fit: 'contain' }).toBuffer();
+        const rb = await sharp(right).resize({ height: h, fit: 'contain' }).toBuffer();
+        await sharp({ create: { width: lm.width + rm.width, height: h, channels: 3, background: { r: 255, g: 255, b: 255 } } })
+          .composite([{ input: lb, left: 0, top: 0 }, { input: rb, left: lm.width, top: 0 }])
+          .webp({ quality: 82 }).toFile(out);
+      }
+      num++;
+    }
+    console.log(`  ✓ ${num - 1} spreads from single/ pages`);
+    return;
+  }
+
+  // ── Option B: Auto-split PDF with ImageMagick
+  if (!fs.existsSync(pdfPath)) { console.log('⏭ Step 1-2: No book.pdf and no single/ folder'); return; }
+
+  console.log('── Step 1: Splitting PDF (auto, cropbox) ──');
   const tmpDir = path.join(bookDir, '_tmp');
   if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
   execSync(`${MAGICK} -density 200 -define pdf:use-cropbox=true "${pdfPath}" -quality 90 "${tmpDir}/page_%02d.png"`, { stdio: 'pipe', timeout: 300000 });
 
   const pngFiles = fs.readdirSync(tmpDir).filter(f => f.endsWith('.png')).sort();
   console.log(`  ${pngFiles.length} pages`);
+
+  // Validate page dimensions — should be portrait (single page, not spread)
+  const firstPage = path.join(tmpDir, pngFiles[1] || pngFiles[0]);
+  const meta = await sharp(firstPage).metadata();
+  if (meta.width > meta.height * 1.3) {
+    console.error(`  ✗ Pages are too wide (${meta.width}x${meta.height}). PDF may have spread-sized MediaBox.`);
+    console.error(`  → Convert PDF to images manually and put them in ${singleDir}/0.jpg, 1.jpg, ...`);
+    console.error(`  → Each image should be a single portrait page (height > width).`);
+    // Cleanup
+    for (const f of pngFiles) fs.unlinkSync(path.join(tmpDir, f));
+    fs.rmdirSync(tmpDir);
+    process.exit(1);
+  }
+  console.log(`  Page size: ${meta.width}x${meta.height} (portrait ✓)`);
 
   // Convert: page 1 = cover, rest = singles
   const singles = [];
