@@ -18,6 +18,47 @@ class PhonicsWord {
       );
 }
 
+class RecordingSentence {
+  final String text;
+  final String audio;
+  final String side; // "left" or "right"
+
+  const RecordingSentence({required this.text, required this.audio, required this.side});
+
+  factory RecordingSentence.fromJson(Map<String, dynamic> json) => RecordingSentence(
+        text: json['text'] as String,
+        audio: json['audio'] as String,
+        side: json['side'] as String,
+      );
+}
+
+class RecordingPage {
+  final String imageAsset;
+  final List<RecordingSentence> sentences;
+
+  const RecordingPage({required this.imageAsset, required this.sentences});
+
+  factory RecordingPage.fromJson(Map<String, dynamic> json) {
+    // Support both old format (leftSentence/rightSentence) and new (sentences array)
+    if (json.containsKey('sentences')) {
+      return RecordingPage(
+        imageAsset: json['imageAsset'] as String,
+        sentences: (json['sentences'] as List)
+            .map((s) => RecordingSentence.fromJson(s as Map<String, dynamic>))
+            .toList(),
+      );
+    }
+    // Legacy: convert old format
+    return RecordingPage(
+      imageAsset: json['imageAsset'] as String,
+      sentences: [
+        RecordingSentence(text: json['leftSentence'] as String, audio: json['leftAudio'] as String, side: 'left'),
+        RecordingSentence(text: json['rightSentence'] as String, audio: json['rightAudio'] as String, side: 'right'),
+      ],
+    );
+  }
+}
+
 class Lesson {
   final String id;
   final String bookTitle;
@@ -27,6 +68,7 @@ class Lesson {
   final List<PhonicsWord> phonicsWords;
   final String featuredSentence;
   final String originalAudio;
+  final RecordingPage? recordingPage;
 
   const Lesson({
     required this.id,
@@ -37,6 +79,7 @@ class Lesson {
     required this.phonicsWords,
     required this.featuredSentence,
     this.originalAudio = '',
+    this.recordingPage,
   });
 
   factory Lesson.fromJson(Map<String, dynamic> json) => Lesson(
@@ -52,5 +95,8 @@ class Lesson {
             .toList(),
         featuredSentence: json['featuredSentence'] as String,
         originalAudio: (json['originalAudio'] as String?) ?? '',
+        recordingPage: json['recordingPage'] != null
+            ? RecordingPage.fromJson(json['recordingPage'] as Map<String, dynamic>)
+            : null,
       );
 }

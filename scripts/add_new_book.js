@@ -428,20 +428,49 @@ async function buildLesson(ocrResults, sttWords) {
   console.log(`  Phonics words: ${phonicsWords.map(w => `${w.word} [${w.phonemes.join('-')}] @ ${w.imageAsset.split('/').pop()}`).join(', ') || 'none'}`);
 
 
+  // Auto-select recording page: find a spread with sentences on both left & right
+  const skipRec = /^(woof|bow wow|oink|coo|honk|quack)/i;
+  let recordingPage = null;
+  for (const sp of storyPages) {
+    const leftSet = new Set(sp.leftWords || []);
+    const rightSet = new Set(sp.rightWords || []);
+    if (leftSet.size < 2 || rightSet.size < 2) continue;
+    const page = pages.find(p => p.imageAsset.includes(sp.page));
+    if (!page || !page.narrativeEN) continue;
+    const sents = page.narrativeEN.split(/[.!?]+/).map(s => s.trim())
+      .filter(s => s.length > 10 && s.split(/\s+/).length >= 3 && !skipRec.test(s) && !s.match(/ISBN|HOORAY|copyright/i));
+    if (sents.length >= 2) {
+      // Detect side for each sentence based on OCR word positions
+      function detectSide(sentence) {
+        const words = sentence.toLowerCase().split(/[^a-z]+/).filter(w => w.length >= 3);
+        let leftScore = 0, rightScore = 0;
+        for (const w of words) {
+          if (leftSet.has(w)) leftScore++;
+          if (rightSet.has(w)) rightScore++;
+        }
+        return leftScore >= rightScore ? 'left' : 'right';
+      }
+      recordingPage = { imageAsset: page.imageAsset, sentences: [] };
+      for (let si = 0; si < sents.length && si < 4; si++) {
+        recordingPage.sentences.push({
+          text: sents[si] + '.',
+          audio: `audio/${prefix}_rec_${si + 1}.mp3`,
+          side: detectSide(sents[si]),
+        });
+      }
+      break;
+    }
+  }
+  console.log(`  Recording page: ${recordingPage ? recordingPage.imageAsset.split('/').pop() + ' (' + recordingPage.sentences.length + ' sentences)' : 'NONE — add manually'}`);
+
   const lesson = {
     id: lessonId, bookTitle, characterName: 'Biscuit',
     characterAsset: 'assets/characters/teacher_default.webp',
-    featuredSentence: (() => {
-      // Pick a good sentence: at least 4 words, from any story page
-      for (const sp of storyPages) {
-        const sentences = sp.text.replace(/\n/g, ' ').split(/[.!?]+/).map(s => s.replace(/\b\d{1,3}\b/g, '').trim()).filter(s => s.split(/\s+/).length >= 4 && s.length > 10 && !/ISBN|HOORAY|copyright/i.test(s));
-        if (sentences.length) return sentences[0] + (sentences[0].endsWith('!') ? '' : '!');
-      }
-      return bookTitle;
-    })(),
+    featuredSentence: recordingPage?.sentences?.[0]?.text || bookTitle,
     originalAudio: `books/${folderName}/audio.mp3`,
     pages,
     phonicsWords,
+    recordingPage,
   };
 
   fs.writeFileSync(lessonFile, JSON.stringify(lesson, null, 2));
@@ -460,8 +489,11 @@ async function generateAudio() {
       scripts.push({ id: page.audioEN, text: page.narrativeEN, lang: 'en', keywords: page.keywords || [] });
     }
   }
-  // Featured sentence for recording
-  scripts.push({ id: `${prefix}_featured`, text: lesson.featuredSentence, lang: 'en', keywords: [] });
+  // Recording sentence audio (replaces old featured audio)
+  for (const sent of lesson.recordingPage?.sentences || []) {
+    const audioId = sent.audio.replace('audio/', '').replace('.mp3', '');
+    scripts.push({ id: audioId, text: sent.text, lang: 'en', keywords: [] });
+  }
 
   // Phonics word audio: generate with "The word is: X" then trim to just the word
   const PHONICS_DIR = path.join(__dirname, '..', 'assets', 'audio', 'phonics_sounds');
@@ -590,16 +622,7 @@ function registerInApp() {
     console.log('  ✓ week_service.dart (kAllBooks)');
   }
 
-  // 2. recording_screen.dart → _featuredAudioMap
-  const recFile = path.join(LIB_DIR, 'screens', 'recording_screen.dart');
-  let rec = fs.readFileSync(recFile, 'utf8');
-  if (!rec.includes(lessonId)) {
-    rec = rec.replace(/(_featuredAudioMap = \{[^}]*)(};)/s, `$1    '${lessonId}': 'audio/${prefix}_featured.mp3',\n  $2`);
-    fs.writeFileSync(recFile, rec);
-    console.log('  ✓ recording_screen.dart');
-  }
-
-  // 3. pubspec.yaml
+  // 2. pubspec.yaml
   const pubFile = path.join(__dirname, '..', 'pubspec.yaml');
   let pub = fs.readFileSync(pubFile, 'utf8');
   const assetLine = `    - assets/books/${folderName}/`;

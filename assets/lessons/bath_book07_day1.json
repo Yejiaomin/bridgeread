@@ -257,5 +257,20 @@
       ],
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_04.webp"
     }
-  ]
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_04.webp",
+    "sentences": [
+      {
+        "text": "Time for a bath, Biscuit!",
+        "audio": "audio/bath_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Time to get nice and clean.",
+        "audio": "audio/bath_rec_right.mp3",
+        "side": "left"
+      }
+    ]
+  }
 }

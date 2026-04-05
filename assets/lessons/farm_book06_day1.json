@@ -279,5 +279,20 @@
       ],
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_04.webp"
     }
-  ]
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_04.webp",
+    "sentences": [
+      {
+        "text": "We can feed the pigs, too.",
+        "audio": "audio/farm_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "The pigpen is empty, Biscuit.",
+        "audio": "audio/farm_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
 }
