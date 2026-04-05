@@ -47,8 +47,8 @@ const _kZones = [
 
 // Weekend: 2 zones: game / listen (positions adjusted for weekend_bg.webp)
 const _kWeekendZones = [
-  _Zone(0.34, 0.35, 0.18, 0.30, '/weekend-game', 'audio/sfx/pop-click.wav'),    // GAME
-  _Zone(0.68, 0.40, 0.18, 0.30, '/listen',       'audio/sfx/magic-sparkle.wav'), // LISTEN
+  _Zone(0.398, 0.367, 0.155, 0.267, '/weekend-game', 'audio/sfx/pop-click.wav'),    // GAME
+  _Zone(0.746, 0.432, 0.179, 0.291, '/listen',       'audio/sfx/magic-sparkle.wav'), // LISTEN
 ];
 
 const _kWeekendZoneColors = [Colors.green, Colors.purple];

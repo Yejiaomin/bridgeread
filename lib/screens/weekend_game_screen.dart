@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/lesson_service.dart';
 import 'quiz_screen.dart';
 import 'phonics_screen.dart';
@@ -8,12 +9,13 @@ import 'eggy_celebration_screen.dart';
 /// Weekend Review Game Screen
 /// Chains through multiple days of quiz → phonics → recording.
 ///
-/// Saturday: Mon-Wed lessons (first 3)
-/// Sunday: Thu-Fri lessons (last 2)
-///
-/// Flow: quiz(day1) → quiz(day2) → quiz(day3) → [celebration] →
-///       phonics(day1) → phonics(day2) → phonics(day3) → [celebration] →
-///       recording(day1) → recording(day2) → recording(day3) → [celebration] → done
+/// Reviews only the lessons actually studied this week.
+/// Full week (Mon start): Sat = first 3, Sun = last 2
+/// Partial week examples:
+///   Tue start (4 days): Sat = first 2, Sun = last 2
+///   Wed start (3 days): Sat = first 1, Sun = last 2
+///   Thu start (2 days): Sat & Sun = all 2
+///   Fri start (1 day):  Sat & Sun = all 1
 
 DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
 
@@ -32,7 +34,7 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
     'trick_book05_day1',
   ];
 
-  late final List<String> _reviewLessons;
+  List<String> _reviewLessons = [];
   int _phase = 0; // 0=quiz, 1=phonics, 2=recording
   int _dayIdx = 0; // which day within current phase
   bool _started = false;
@@ -40,19 +42,57 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
   @override
   void initState() {
     super.initState();
-    final isSaturday = _chinaTime().weekday == 6;
-    _reviewLessons = isSaturday
-        ? _weekLessons.sublist(0, 3)
-        : _weekLessons.sublist(3, 5);
+    _loadReviewLessons();
+  }
+
+  Future<void> _loadReviewLessons() async {
+    final prefs = await SharedPreferences.getInstance();
+    final startStr = prefs.getString('book_start_date');
+    final now = _chinaTime();
+    final isSaturday = now.weekday == 6;
+
+    // This week's Monday
+    final monday = now.subtract(Duration(days: now.weekday - 1));
+    final mondayDate = DateTime(monday.year, monday.month, monday.day);
+
+    // How many weekdays were studied this week?
+    int studyDays = 5; // default full week
+    if (startStr != null) {
+      final parts = startStr.split('-');
+      final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+      if (start.isAfter(mondayDate)) {
+        // Partial first week: count weekdays from start to Friday
+        studyDays = (5 - start.weekday + 1).clamp(1, 5);
+      }
+    }
+
+    // Get only the lessons that were studied this week
+    final studied = _weekLessons.sublist(0, studyDays);
+
+    // Split for Saturday / Sunday
+    if (studyDays <= 2) {
+      // 1-2 days: both Sat and Sun review everything
+      _reviewLessons = studied;
+    } else {
+      // 3+ days: Sat = first (n-2), Sun = last 2
+      _reviewLessons = isSaturday
+          ? studied.sublist(0, studyDays - 2)
+          : studied.sublist(studyDays - 2);
+    }
+
+    if (mounted) {
+      setState(() {});
+      if (!_started && _reviewLessons.isNotEmpty) {
+        _started = true;
+        Future.microtask(() => _runCurrentStep());
+      }
+    }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_started) {
-      _started = true;
-      Future.microtask(() => _runCurrentStep());
-    }
+    // _started is triggered from _loadReviewLessons after async load
   }
 
   Future<void> _runCurrentStep() async {
