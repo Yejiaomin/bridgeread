@@ -325,11 +325,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
+  /// Current study day (1-5) within the week.
+  /// First week may be partial (e.g. started Wednesday → day 1,2,3 for Wed,Thu,Fri).
+  /// Subsequent weeks are full: Mon=1, Tue=2, …, Fri=5.
   int get _currentDay {
     if (_startDate == null) return 1;
     final parts = _startDate!.split('-');
     final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
-    return DateTime.now().difference(start).inDays + 1;
+    final now = DateTime.now();
+
+    // This week's Monday
+    final monday = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: now.weekday - 1));
+    final startDateOnly = DateTime(start.year, start.month, start.day);
+
+    if (startDateOnly.isAfter(monday)) {
+      // First (partial) week: day = weekdays since start + 1
+      // e.g. started Wed(3), today Thu(4) → 4-3+1 = 2
+      return now.weekday - startDateOnly.weekday + 1;
+    }
+    // Full week: Mon=1, Tue=2, …, Fri=5
+    return now.weekday; // 1-5 on weekdays
   }
 
   @override

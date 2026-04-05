@@ -120,6 +120,25 @@ class _ListenScreenState extends State<ListenScreen>
     ('trick_book05_day1',           "Biscuit's New Trick",        'books/05Biscuits_New_Trick/audio.mp3'),
   ];
 
+  /// Get current time in China timezone (UTC+8)
+  DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
+
+  /// How many study days this week (handles partial first week)
+  Future<int> _studyDaysThisWeek() async {
+    final prefs = await SharedPreferences.getInstance();
+    final startStr = prefs.getString('book_start_date');
+    if (startStr == null) return 5;
+    final parts = startStr.split('-');
+    final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    final now = _chinaTime();
+    final monday = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: now.weekday - 1));
+    if (start.isAfter(monday)) {
+      return (5 - start.weekday + 1).clamp(1, 5);
+    }
+    return 5;
+  }
+
   Future<void> _loadListenData() async {
     final service = LessonService();
     final lessonId = await service.restoreCurrentLessonId();
@@ -130,9 +149,6 @@ class _ListenScreenState extends State<ListenScreen>
     // Find current day index (0-based) in the lesson order
     int dayIndex = _kLessonOrder.indexWhere((e) => e.$1 == lessonId);
     if (dayIndex < 0) dayIndex = 0;
-
-    final todayTitle = lesson.bookTitle;
-    final todayAudio = lesson.originalAudio;
 
     final playlist = <_Track>[];
 
@@ -147,20 +163,37 @@ class _ListenScreenState extends State<ListenScreen>
       return null;
     }
 
-    final todayCover = await getCover(lessonId);
+    final now = _chinaTime();
+    final isWeekend = now.weekday == 6 || now.weekday == 7;
 
-    if (dayIndex == 0) {
-      playlist.add(_Track('$todayTitle (1/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
-      playlist.add(_Track('$todayTitle (2/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+    if (isWeekend) {
+      // Weekend: play all lessons studied this week (Book1 → Book N)
+      final studyDays = await _studyDaysThisWeek();
+      for (int i = 0; i < studyDays && i < _kLessonOrder.length; i++) {
+        final entry = _kLessonOrder[i];
+        final cover = await getCover(entry.$1);
+        playlist.add(_Track('${entry.$2} (${i + 1}/$studyDays)',
+            entry.$3, showBook: true, lessonId: entry.$1, coverImage: cover));
+      }
     } else {
-      final prevLessonId = _kLessonOrder[dayIndex - 1].$1;
-      final prevTitle = _kLessonOrder[dayIndex - 1].$2;
-      final prevAudio = _kLessonOrder[dayIndex - 1].$3;
-      final prevCover = await getCover(prevLessonId);
+      // Weekday: today's new story + yesterday's review
+      final todayTitle = lesson.bookTitle;
+      final todayAudio = lesson.originalAudio;
+      final todayCover = await getCover(lessonId);
 
-      playlist.add(_Track('$todayTitle - 新故事', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
-      playlist.add(_Track('$prevTitle - 复习', prevAudio, showBook: true, lessonId: prevLessonId, coverImage: prevCover));
-      playlist.add(_Track('$todayTitle - 巩固', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+      if (dayIndex == 0) {
+        playlist.add(_Track('$todayTitle (1/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+        playlist.add(_Track('$todayTitle (2/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+      } else {
+        final prevLessonId = _kLessonOrder[dayIndex - 1].$1;
+        final prevTitle = _kLessonOrder[dayIndex - 1].$2;
+        final prevAudio = _kLessonOrder[dayIndex - 1].$3;
+        final prevCover = await getCover(prevLessonId);
+
+        playlist.add(_Track('$todayTitle - 新故事', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+        playlist.add(_Track('$prevTitle - 复习', prevAudio, showBook: true, lessonId: prevLessonId, coverImage: prevCover));
+        playlist.add(_Track('$todayTitle - 巩固', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+      }
     }
 
     // Load page timings for all needed lessons
