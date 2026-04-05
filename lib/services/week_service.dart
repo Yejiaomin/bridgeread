@@ -1,3 +1,4 @@
+import 'dart:math' show min;
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Book metadata for the ordered book list.
@@ -20,6 +21,12 @@ const kAllBooks = [
   // 新书追加到这里
 ];
 
+/// Series sizes. Each entry = number of books in that series.
+/// Example: [5, 15] → books 0-4 are series 1, books 5-19 are series 2.
+/// When series ends mid-week, remaining weekdays are review (复习).
+/// Next series always starts on Monday.
+const kSeriesSizes = [5];
+
 DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
 
 class WeekService {
@@ -35,54 +42,104 @@ class WeekService {
     return count;
   }
 
+  /// Core scheduling: map a weekday count (1-based) to a book index in kAllBooks.
+  /// Returns null if it's a review/padding day (series ended mid-week)
+  /// or if all books are exhausted.
+  ///
+  /// [startWeekday]: 1=Mon..5=Fri, the day the child first started.
+  static int? _bookForWeekdayCount(int weekdayCount, int startWeekday) {
+    int bookIdx = 0;         // next book to assign
+    int daysProcessed = 0;   // weekday slots consumed so far
+    int weekCapacity = 5 - startWeekday + 1; // first week may be partial
+
+    int seriesStart = 0;
+    int si = 0;
+
+    while (seriesStart < kAllBooks.length) {
+      // Current series size
+      final seriesSize = si < kSeriesSizes.length
+          ? kSeriesSizes[si]
+          : kAllBooks.length - seriesStart;
+      final seriesEnd = min(seriesStart + seriesSize, kAllBooks.length);
+
+      // Assign books to weeks within this series
+      while (bookIdx < seriesEnd) {
+        final booksLeft = seriesEnd - bookIdx;
+        final booksThisWeek = min(booksLeft, weekCapacity);
+
+        // Target day is in the "new book" portion of this week?
+        if (weekdayCount <= daysProcessed + booksThisWeek) {
+          return bookIdx + (weekdayCount - daysProcessed - 1);
+        }
+
+        // Target day is in the "review padding" portion of this week?
+        if (weekdayCount <= daysProcessed + weekCapacity) {
+          return null; // review day
+        }
+
+        // Move to next week
+        bookIdx += booksThisWeek;
+        daysProcessed += weekCapacity;
+        weekCapacity = 5; // subsequent weeks are always full
+      }
+
+      // Series done → next series starts next Monday (padding already handled above)
+      si++;
+      seriesStart = seriesEnd;
+    }
+
+    return null; // all books exhausted
+  }
+
   /// Today's book index (0-based) in kAllBooks.
-  /// Returns null on weekends or if all books are finished.
+  /// Returns null on weekends, review days, or if all books are finished.
   static Future<int?> todayBookIndex() async {
     final prefs = await SharedPreferences.getInstance();
     final startStr = prefs.getString('book_start_date');
     if (startStr == null) return 0;
-    final parts = startStr.split('-');
-    final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    final start = parseDate(startStr)!;
     final now = _chinaTime();
     if (now.weekday > 5) return null; // weekend
-    final idx = _weekdaysBetween(start, now) - 1; // 0-based
-    if (idx < 0 || idx >= kAllBooks.length) return null;
-    return idx;
+    final wdCount = _weekdaysBetween(start, now);
+    if (wdCount <= 0) return null;
+    return _bookForWeekdayCount(wdCount, start.weekday);
   }
 
-  /// This week's books (the books studied Mon-Fri of current calendar week).
-  /// On weekends, returns all books from Mon-Fri of this week.
+  /// Whether today is a review/padding day (series ended but week hasn't).
+  static Future<bool> isReviewDay() async {
+    final now = _chinaTime();
+    if (now.weekday > 5) return false; // weekends are handled separately
+    final idx = await todayBookIndex();
+    return idx == null;
+  }
+
+  /// This week's books (only actual new-book days, not review padding).
+  /// Works for both weekdays and weekends.
   static Future<List<BookInfo>> thisWeekBooks() async {
     final prefs = await SharedPreferences.getInstance();
     final startStr = prefs.getString('book_start_date');
     if (startStr == null) return kAllBooks.take(5).toList();
-    final parts = startStr.split('-');
-    final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    final start = parseDate(startStr)!;
     final now = _chinaTime();
 
-    // Find this week's Monday and Friday
+    // This week's Monday and Friday
     final monday = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     final friday = monday.add(const Duration(days: 4));
 
-    // Effective start: max(start_date, this_monday)
-    final effectiveStart = start.isAfter(monday) ? start : monday;
-
-    // If start is after Friday, no books this week
-    if (effectiveStart.isAfter(friday)) return [];
-
-    // Book index for effectiveStart = weekdays from original start to effectiveStart
-    final startIdx = _weekdaysBetween(start, effectiveStart) - 1;
-
-    // Book index for Friday (or today if weekday)
-    final effectiveEnd = now.weekday <= 5 ? now : friday;
-    final endIdx = _weekdaysBetween(start, effectiveEnd) - 1;
-
-    // Clamp to available books
-    final from = startIdx.clamp(0, kAllBooks.length);
-    final to = (endIdx + 1).clamp(0, kAllBooks.length);
-    if (from >= to) return [];
-    return kAllBooks.sublist(from, to);
+    final books = <BookInfo>[];
+    var day = start.isAfter(monday) ? start : monday;
+    while (!day.isAfter(friday)) {
+      if (day.weekday <= 5) {
+        final wdCount = _weekdaysBetween(start, day);
+        final idx = _bookForWeekdayCount(wdCount, start.weekday);
+        if (idx != null && idx < kAllBooks.length) {
+          books.add(kAllBooks[idx]);
+        }
+      }
+      day = day.add(const Duration(days: 1));
+    }
+    return books;
   }
 
   /// This week's lesson IDs (convenience).
