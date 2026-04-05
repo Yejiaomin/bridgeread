@@ -148,6 +148,11 @@ class _RecordingScreenState extends State<RecordingScreen>
     'biscuit_library_book3_day1': 'audio/library_featured.mp3',
       'friend_book04_day1': 'audio/friend_featured.mp3',
       'trick_book05_day1': 'audio/trick_featured.mp3',
+      'farm_book06_day1': 'audio/farm_featured.mp3',
+      'bath_book07_day1': 'audio/bath_featured.mp3',
+      'prize_book08_day1': 'audio/prize_featured.mp3',
+      'city_book09_day1': 'audio/city_featured.mp3',
+      'ball_book10_day1': 'audio/ball_featured.mp3',
   };
 
   String _bookImage = 'assets/books/01Biscuit/spread_02.webp';

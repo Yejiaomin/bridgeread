@@ -77,7 +77,7 @@ async function splitAndMerge() {
   const sharp = require('sharp');
   const tmpDir = path.join(bookDir, '_tmp');
   if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
-  execSync(`${MAGICK} -density 200 "${pdfPath}" -quality 90 "${tmpDir}/page_%02d.png"`, { stdio: 'pipe', timeout: 120000 });
+  execSync(`${MAGICK} -density 200 -define pdf:use-cropbox=true "${pdfPath}" -quality 90 "${tmpDir}/page_%02d.png"`, { stdio: 'pipe', timeout: 300000 });
 
   const pngFiles = fs.readdirSync(tmpDir).filter(f => f.endsWith('.png')).sort();
   console.log(`  ${pngFiles.length} pages`);
@@ -255,40 +255,46 @@ ${fullStory}
   ...
 ]`;
 
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.8, maxOutputTokens: 8192, responseMimeType: 'application/json' },
-        }),
-      }
-    );
-
-    const data = await res.json();
-    const allParts = data.candidates?.[0]?.content?.parts || [];
-    const text = allParts.map(p => p.text || '').join('');
-
-    let narratives;
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      narratives = JSON.parse(text);
-    } catch {
-      // Fallback: try extracting JSON array from text
-      const jsonMatch = text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) {
-        console.error('  ✗ Gemini did not return valid JSON');
-        return null;
+      console.log(`  Attempt ${attempt}/3...`);
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 8192, responseMimeType: 'application/json' },
+          }),
+        }
+      );
+
+      const data = await res.json();
+      const allParts = data.candidates?.[0]?.content?.parts || [];
+      const text = allParts.map(p => p.text || '').join('');
+
+      let narratives;
+      try {
+        narratives = JSON.parse(text);
+      } catch {
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) {
+          console.error(`  ✗ Attempt ${attempt}: Gemini did not return valid JSON`);
+          if (attempt < 3) { console.log('  Waiting 65s for rate limit...'); await new Promise(r => setTimeout(r, 65000)); continue; }
+          console.error('  ✗ All 3 attempts failed. Stopping.');
+          process.exit(1);
+        }
+        narratives = JSON.parse(jsonMatch[0]);
       }
-      narratives = JSON.parse(jsonMatch[0]);
+      console.log(`  ✓ Generated ${narratives.length} page narratives`);
+      return narratives;
+    } catch (e) {
+      console.error(`  ✗ Attempt ${attempt}: ${e.message}`);
+      if (attempt < 3) { console.log('  Waiting 65s for rate limit...'); await new Promise(r => setTimeout(r, 65000)); continue; }
+      console.error('  ✗ All 3 attempts failed. Stopping.');
+      process.exit(1);
     }
-    console.log(`  ✓ Generated ${narratives.length} page narratives`);
-    return narratives;
-  } catch (e) {
-    console.error('  ✗ Gemini error:', e.message);
-    return null;
   }
 }
 
@@ -314,8 +320,7 @@ async function buildLesson(ocrResults, sttWords) {
     !p.text.includes('HarperCollins') && !p.text.includes('copyright')
   );
 
-  // Try Gemini AI first for high-quality narratives
-  const aiNarratives = await generateNarrativesWithAI(storyPages);
+  // CN narratives are written by Claude after script runs — leave as TODO placeholders
 
   const pages = [{
     imageAsset: `assets/books/${folderName}/cover.webp`,
@@ -346,10 +351,9 @@ async function buildLesson(ocrResults, sttWords) {
     const common = new Set(['biscuit','woof','that','this','what','where','there','here','with','have','does','will','your','they','them','just','very','come','more','over','even','found','want','wants','time','it\'s']);
     const keywords = [...new Set(text.toLowerCase().split(/[^a-z]+/).filter(w => w.length > 3 && !common.has(w)))].slice(0, 2);
 
-    // Use AI narrative if available, fallback to template
-    const aiPage = aiNarratives?.[i];
-    const narrativeCN = aiPage?.narrativeCN || generateNarrativeCN(text);
-    const aiKeywords = aiPage?.keywords || keywords;
+    // Placeholder — Claude writes real narratives after script completes
+    const narrativeCN = `TODO_PAGE_${i + 1}`;
+    const aiKeywords = keywords;
 
     const page = {
       imageAsset: `assets/books/${folderName}/${sp.page}`,
@@ -431,9 +435,7 @@ async function generateAudio() {
 
   const scripts = [];
   for (const page of lesson.pages) {
-    if (page.audioCN) {
-      scripts.push({ id: page.audioCN, text: page.narrativeCN, lang: 'cn' });
-    }
+    // Skip CN audio — generated later after Claude writes narratives
     if (page.audioEN && page.narrativeEN) {
       scripts.push({ id: page.audioEN, text: page.narrativeEN, lang: 'en', keywords: page.keywords || [] });
     }
@@ -561,7 +563,8 @@ function registerInApp() {
   const weekFile = path.join(LIB_DIR, 'services', 'week_service.dart');
   let week = fs.readFileSync(weekFile, 'utf8');
   if (!week.includes(lessonId)) {
-    const entry = `  BookInfo('${bookTitle}', '${titleCN || bookTitle}', '${lessonId}', 'assets/books/${folderName}/cover.webp', 'books/${folderName}/audio.mp3'),`;
+    // Use double quotes for title to handle apostrophes (e.g. Biscuit's)
+    const entry = `  BookInfo("${bookTitle}", '${titleCN || bookTitle}', '${lessonId}', 'assets/books/${folderName}/cover.webp', 'books/${folderName}/audio.mp3'),`;
     week = week.replace('  // 新书追加到这里', `${entry}\n  // 新书追加到这里`);
     fs.writeFileSync(weekFile, week);
     console.log('  ✓ week_service.dart (kAllBooks)');
@@ -600,13 +603,12 @@ async function main() {
 
   console.log(`
 ══════════════════════════════════════════════
-  ✅ Book ${bookNum} "${bookTitle}" complete!
+  ✅ Book ${bookNum} "${bookTitle}" — Step 1 done!
 
-  📝 Please review:
-  1. ${lessonFile}
-     - Check narrativeCN (auto-generated, may need polish)
-     - Check pageStartMs timing
-     - Add phonicsWords if needed
+  ⏭ Next: Ask Claude to write CN narratives + generate CN audio
+     1. Claude reads ${lessonFile} and writes Amy-style narrativeCN
+     2. Claude updates the JSON and generates CN TTS audio
+     3. Check pageStartMs timing, phonicsWords
   2. Run: flutter run -d chrome (test all modules)
   3. Push: git add -A && git commit && git push
 ══════════════════════════════════════════════
