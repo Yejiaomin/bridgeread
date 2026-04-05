@@ -1,19 +1,21 @@
 /**
- * Split English words into phonemes based on available audio files.
- * Only uses phoneme units that have corresponding .mp3 files in phonics_sounds/.
+ * Split English words into phonemes for phonics teaching.
  *
- * Usage:
- *   const { splitWord } = require('./phoneme_splitter');
- *   splitWord('duck')  // → ['d', 'u', 'ck']
- *   splitWord('ball')  // → ['b', 'all']
- *   splitWord('bone')  // → ['b', 'o', 'n', 'e']  (silent e treated as separate for now)
- *   splitWord('ship')  // → ['sh', 'i', 'p']
+ * Rules (layered):
+ *   Layer 1 — CVC: split every letter individually (p-i-g, c-a-t)
+ *   Layer 2 — Digraphs/Blends: keep multi-letter units together (sh-i-p, ch-i-n)
+ *   Layer 3 — Long vowels: vowel teams stay together (b-oa-t, r-ai-n)
+ *
+ * Digraphs (never split): sh, ch, th, ph, wh, ck, ng, nk, tch
+ * Blends (keep together): bl, br, cl, cr, dr, fl, fr, gl, gr, pl, pr, sc, sk, sl, sm, sn, sp, st, sw, tr, tw
+ * Double consonants: ll, ss, ff, zz, dd, mm, nn, pp, rr, tt
+ * Vowel teams: ai, ay, ea, ee, oa, oo, ou, ow, oi, oy, igh, ar, er, ir, or, ur
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// Load all available phoneme units from audio files
+// Load available phoneme audio files
 const PHONICS_DIR = path.join(__dirname, '..', 'assets', 'audio', 'phonics_sounds');
 const availablePhonemes = new Set(
   fs.readdirSync(PHONICS_DIR)
@@ -21,22 +23,19 @@ const availablePhonemes = new Set(
     .map(f => f.replace('.mp3', ''))
 );
 
-// Multi-character phonemes sorted by length (longest first for greedy matching)
-const multiPhonemes = [...availablePhonemes]
-  .filter(p => p.length > 1 && !p.includes('_')) // exclude a_e style (magic e patterns)
-  .sort((a, b) => b.length - a.length);
+// Multi-letter units sorted longest first
+const DIGRAPHS = ['tch', 'sh', 'ch', 'th', 'ph', 'wh', 'ck', 'ng', 'nk'];
+const BLENDS = ['spl', 'spr', 'str', 'scr', 'bl', 'br', 'cl', 'cr', 'dr', 'fl', 'fr', 'gl', 'gr', 'pl', 'pr', 'sc', 'sk', 'sl', 'sm', 'sn', 'sp', 'st', 'sw', 'tr', 'tw'];
+const DOUBLES = ['ll', 'ss', 'ff', 'zz', 'dd', 'mm', 'nn', 'pp', 'rr', 'tt'];
+const VOWEL_TEAMS = ['igh', 'ai', 'ay', 'ea', 'ee', 'oa', 'oo', 'ou', 'ow', 'oi', 'oy', 'ar', 'er', 'ir', 'or', 'ur'];
 
-// Common word family endings (from our audio files)
-const wordFamilies = [...availablePhonemes]
-  .filter(p => p.length >= 2 && /^[aeiou]/.test(p)) // starts with vowel: all, ell, ill, igh, etc.
+// All multi-letter units, longest first
+const UNITS = [...new Set([...DIGRAPHS, ...BLENDS, ...DOUBLES, ...VOWEL_TEAMS])]
   .sort((a, b) => b.length - a.length);
 
 /**
- * Split a word into phonemes using greedy matching from right to left.
- * Strategy:
- * 1. First check if the word ends with a known word family (all, ell, igh, etc.)
- * 2. Then scan left-to-right for multi-char consonant blends/digraphs
- * 3. Single letters as fallback
+ * Split a word into phonemes.
+ * Scans left-to-right, matching multi-letter units first, single letters as fallback.
  */
 function splitWord(word) {
   word = word.toLowerCase().trim();
@@ -45,82 +44,75 @@ function splitWord(word) {
   const result = [];
   let i = 0;
 
-  // 1. Check for ending consonant digraphs/trigraphs first (tch, ck, ng, nk, etc.)
-  const endConsonants = multiPhonemes.filter(p => !/^[aeiou]/.test(p)); // consonant clusters
-  let endMatch = null;
-  for (const ec of endConsonants) {
-    if (word.endsWith(ec) && word.length > ec.length) {
-      endMatch = ec;
-      break;
-    }
-  }
-
-  // 2. Then check for word family ending (all, ell, igh, etc.) — but only if no end consonant matched
-  let familyMatch = null;
-  if (!endMatch) {
-    for (const fam of wordFamilies) {
-      if (word.endsWith(fam) && word.length > fam.length) {
-        familyMatch = fam;
-        break;
-      }
-    }
-  }
-
-  const suffix = endMatch || familyMatch;
-  const endIdx = suffix ? word.length - suffix.length : word.length;
-
-  // 3. Scan left to right for the beginning/middle part
-  while (i < endIdx) {
+  while (i < word.length) {
     let matched = false;
 
-    // Try multi-character phonemes (longest first): sh, ch, th, bl, tr, str, etc.
-    for (const mp of multiPhonemes) {
-      if (i + mp.length <= endIdx && word.substring(i, i + mp.length) === mp) {
-        result.push(mp);
-        i += mp.length;
+    // Try multi-letter units (longest first)
+    for (const unit of UNITS) {
+      if (i + unit.length <= word.length && word.substring(i, i + unit.length) === unit) {
+        result.push(unit);
+        i += unit.length;
         matched = true;
         break;
       }
     }
 
     if (!matched) {
-      // Single letter
       result.push(word[i]);
       i++;
     }
-  }
-
-  // Add suffix (consonant cluster or word family)
-  if (suffix) {
-    result.push(suffix);
   }
 
   return result;
 }
 
 /**
- * Check if all phonemes in the split have corresponding audio files.
+ * Strip common suffixes to get base form for phonics.
+ * pigs → pig, runs → run, played → play
+ */
+function baseForm(word) {
+  word = word.toLowerCase().trim();
+  // Don't strip if word is too short
+  if (word.length <= 3) return word;
+  // Don't strip words where 's' is part of the word (bus, his, this)
+  const keepS = new Set(['bus', 'his', 'this', 'yes', 'us', 'gas', 'plus']);
+  if (keepS.has(word)) return word;
+  // Strip trailing 's' for plurals (pigs→pig, hens→hen)
+  if (word.endsWith('s') && !word.endsWith('ss')) return word.slice(0, -1);
+  return word;
+}
+
+/**
+ * Check if all phonemes have corresponding audio files.
  */
 function validateSplit(phonemes) {
   return phonemes.every(p => availablePhonemes.has(p));
 }
 
-// Export
-module.exports = { splitWord, validateSplit, availablePhonemes };
+module.exports = { splitWord, validateSplit, availablePhonemes, baseForm };
 
 // CLI test mode
 if (require.main === module) {
   const testWords = [
-    'bed', 'hug', 'fun', 'pet', 'nap', 'big', 'wet', 'got', 'mud', 'dog', 'cat', 'sit',
-    'ball', 'duck', 'bone', 'ship', 'chin', 'thin', 'fish', 'bell', 'hill', 'miss',
+    // Layer 1: CVC
+    'pig', 'cat', 'dog', 'bed', 'hug', 'fun', 'pet', 'nap', 'big', 'wet', 'got', 'mud', 'sit',
+    // Layer 2: Digraphs & Blends
+    'ship', 'chin', 'thin', 'fish', 'duck', 'back', 'kick', 'lock', 'bath',
     'play', 'tree', 'frog', 'stop', 'swim', 'bring', 'splash',
-    'lost', 'pond', 'back', 'kick', 'lock',
+    // Layer 2: Double consonants
+    'ball', 'bell', 'hill', 'miss',
+    // Layer 3: Vowel teams
+    'boat', 'rain', 'moon', 'food', 'night',
+    // Plurals (should use baseForm first)
+    'pigs', 'hens', 'dogs',
   ];
 
   console.log('Phoneme Splitter Test:\n');
   for (const w of testWords) {
-    const split = splitWord(w);
+    const base = baseForm(w);
+    const split = splitWord(base);
     const valid = validateSplit(split);
-    console.log(`  ${w.padEnd(10)} → [${split.join('-')}] ${valid ? '✓' : '✗ missing: ' + split.filter(p => !availablePhonemes.has(p)).join(',')}`);
+    const baseNote = base !== w ? ` (${w}→${base})` : '';
+    console.log(`  ${w.padEnd(10)} → [${split.join('-')}]${baseNote} ${valid ? '✓' : '✗ missing: ' + split.filter(p => !availablePhonemes.has(p)).join(',')}`);
   }
 }

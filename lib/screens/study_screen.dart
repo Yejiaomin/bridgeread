@@ -55,17 +55,14 @@ const _kWeekendZones = [
 const _kWeekendZoneColors = [Colors.green, Colors.purple];
 const _kWeekendZoneLabels = ['GAME', 'LISTEN'];
 
-/// Get current time in China timezone (UTC+8)
-DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
-
-/// Check if today is weekend in China timezone
+/// Check if active date is weekend
 bool _isWeekend() {
-  final day = _chinaTime().weekday; // 6 = Saturday, 7 = Sunday
+  final day = activeDate().weekday; // 6 = Saturday, 7 = Sunday
   return day == 6 || day == 7;
 }
 
-/// Check if today is Saturday (true) or Sunday (false) in China timezone
-bool _isSaturday() => _chinaTime().weekday == 6;
+/// Check if active date is Saturday
+bool _isSaturday() => activeDate().weekday == 6;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // StudyScreen

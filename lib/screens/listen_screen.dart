@@ -132,20 +132,27 @@ class _ListenScreenState extends State<ListenScreen>
       return null;
     }
 
-    final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+    final now = activeDate();
     final isWeekend = now.weekday == 6 || now.weekday == 7;
 
     if (isWeekend) {
-      // Weekend: play all books studied this week
+      // Weekend: play all books studied this week in order, loop
       final weekBooks = await WeekService.thisWeekBooks();
-      for (int i = 0; i < weekBooks.length; i++) {
-        final book = weekBooks[i];
-        final cover = await getCover(book.lessonId);
-        playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
-            book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
+      if (weekBooks.isNotEmpty) {
+        for (int i = 0; i < weekBooks.length; i++) {
+          final book = weekBooks[i];
+          final cover = await getCover(book.lessonId);
+          playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
+              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
+        }
+      } else {
+        // Fallback: play current lesson (testing or no scheduled books)
+        final todayCover = await getCover(lessonId);
+        playlist.add(_Track(lesson.bookTitle, lesson.originalAudio,
+            showBook: true, lessonId: lessonId, coverImage: todayCover));
       }
     } else {
-      // Weekday: today's new story + yesterday's review
+      // Weekday: today → yesterday → today, then loop
       final todayTitle = lesson.bookTitle;
       final todayAudio = lesson.originalAudio;
       final todayCover = await getCover(lessonId);
@@ -154,14 +161,14 @@ class _ListenScreenState extends State<ListenScreen>
       final allIdx = kAllBooks.indexWhere((b) => b.lessonId == lessonId);
 
       if (allIdx <= 0) {
-        // First book ever: play twice
+        // First book ever: play twice then loop
         playlist.add(_Track('$todayTitle (1/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
         playlist.add(_Track('$todayTitle (2/2)', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
       } else {
         final prev = kAllBooks[allIdx - 1];
         final prevCover = await getCover(prev.lessonId);
 
-        playlist.add(_Track('$todayTitle - 新故事', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
+        playlist.add(_Track(todayTitle, todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
         playlist.add(_Track('${prev.title} - 复习', prev.originalAudio, showBook: true, lessonId: prev.lessonId, coverImage: prevCover));
         playlist.add(_Track('$todayTitle - 巩固', todayAudio, showBook: true, lessonId: lessonId, coverImage: todayCover));
       }
@@ -185,6 +192,10 @@ class _ListenScreenState extends State<ListenScreen>
         _allPageTimings[lid!] = timings;
       } catch (_) {}
     }
+
+    // Weekday 3-track playlist: loop from track 1 (skip initial "today")
+    // Weekend / 2-track / 1-track: loop from start
+    _loopStart = (!isWeekend && playlist.length == 3) ? 1 : 0;
 
     if (mounted) {
       setState(() {
@@ -293,18 +304,19 @@ class _ListenScreenState extends State<ListenScreen>
   }
 
   bool _allTracksCompleted = false;
+  int _loopStart = 0; // where to loop back to after completion
 
   void _nextTrack() {
     if (_trackIdx + 1 >= _tracks.length) {
-      // All tracks played once — mark done, show completion button, loop back
+      // All tracks played once — mark done, show completion, start loop
       if (!_allTracksCompleted) {
         _allTracksCompleted = true;
         ProgressService.markModuleComplete('listen', 10);
         _saveListenTime();
       }
       setState(() {});
-      // Loop back to first track for continued listening
-      _playTrack(0);
+      // Loop: weekday = skip first track (yesterday+today only), weekend = all
+      _playTrack(_loopStart);
     } else {
       _playTrack(_trackIdx + 1);
     }
@@ -544,30 +556,29 @@ class _ListenScreenState extends State<ListenScreen>
                   color: Colors.black.withValues(alpha: 0.4),
                   child: Center(
                     child: Container(
-                      width: 200,
-                      height: 200,
+                      width: 300,
+                      height: 300,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFFFF8C42),
+                        color: const Color(0xFFFFF5EB).withValues(alpha: 0.95),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFFF8C42).withValues(alpha: 0.5),
-                            blurRadius: 30,
+                            color: const Color(0xFFFF8C42).withValues(alpha: 0.2),
+                            blurRadius: 40,
                             spreadRadius: 5,
                           ),
                         ],
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.check_circle_outline, color: Colors.white, size: 48),
-                          SizedBox(height: 8),
-                          Text('全部完成啦！',
-                            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                          const Text('全部完成啦！',
+                            style: TextStyle(color: Color(0xFFFF8C42), fontSize: 20, fontWeight: FontWeight.w900),
                           ),
-                          SizedBox(height: 4),
-                          Text('点击返回',
-                            style: TextStyle(color: Colors.white70, fontSize: 13),
+                          cdnImage('assets/pet/eggy_transparent_bg.webp',
+                            width: 170, height: 170, fit: BoxFit.contain),
+                          const Text('点击返回',
+                            style: TextStyle(color: Color(0xFFFFAA66), fontSize: 14, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),

@@ -17,7 +17,7 @@ import 'eggy_celebration_screen.dart';
 ///   2 days: Sat & Sun = all 2
 ///   1 day:  Sat & Sun = all 1
 
-DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
+// Uses activeDate() from week_service.dart
 
 class WeekendGameScreen extends StatefulWidget {
   const WeekendGameScreen({super.key});
@@ -40,7 +40,7 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
   Future<void> _loadReviewLessons() async {
     final weekBooks = await WeekService.thisWeekBooks();
     final studied = weekBooks.map((b) => b.lessonId).toList();
-    final isSaturday = _chinaTime().weekday == 6;
+    final isSaturday = activeDate().weekday == 6;
     final n = studied.length;
 
     // Split for Saturday / Sunday

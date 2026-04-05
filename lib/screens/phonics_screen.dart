@@ -1016,57 +1016,6 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                         letterSpacing: 6,
                       ),
                     ),
-                    const SizedBox(width: 14),
-                    // Speaker icon with shake animation + bubble overlay
-                    AnimatedBuilder(
-                      animation: _speakerShakeCtrl,
-                      builder: (context, child) => Transform.translate(
-                        offset: Offset(_speakerShakeAnim.value * 6, 0),
-                        child: child,
-                      ),
-                      child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        const Icon(Icons.volume_up_rounded,
-                            size: 38, color: _kOrange),
-                        Positioned(
-                          left: 0,
-                          bottom: 44,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ScaleTransition(
-                                scale: _wordBubbleScaleAnim,
-                                alignment: Alignment.bottomLeft,
-                                child: FadeTransition(
-                                  opacity: _wordMsgController,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFFFD93D),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      _isYouGotIt
-                                          ? 'You got it!'
-                                          : 'One more time!',
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    ), // AnimatedBuilder
                     const SizedBox(width: 10),
                     // Stars to the right of the speaker, one per tap
                     Row(
@@ -1148,8 +1097,6 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                 Text(word.word,
                     style: const TextStyle(fontSize: 52, fontWeight: FontWeight.bold,
                         color: Color(0xFF333333), letterSpacing: 4)),
-                const SizedBox(width: 10),
-                const Icon(Icons.volume_up_rounded, size: 30, color: _kOrange),
               ],
             ),
           ),

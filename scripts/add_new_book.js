@@ -380,7 +380,24 @@ async function buildLesson(ocrResults, sttWords) {
 
   // Auto-select phonicsWords: pick 2 simple CVC words from LEFT side of spreads
   // Then use Gemini to get correct phoneme splits
-  const skipWords = new Set(['biscuit','woof','quack','that','this','what','with','here','your','will','back','into','have','from','they','them','does','just','very','come','more','over','even','want','wants','time','the','and','are','for','not','but','was','his','her','she','all','can','had','one','our','out','has','its','let','say']);
+  // Skip function words, be/have/do forms, modals, pronouns, prepositions, etc.
+  // Keep only concrete nouns, verbs, adjectives that kids can visualize
+  const skipWords = new Set([
+    // character/sound words
+    'biscuit','woof','quack','meow','oink','honk',
+    // be / have / do forms
+    'is','am','are','was','were','been','being','has','have','had','does','did','done',
+    // modals & auxiliaries
+    'can','could','will','would','shall','should','may','might','must',
+    // pronouns
+    'you','your','yours','he','him','his','she','her','hers','they','them','their','its','our','ours','we',
+    // prepositions & conjunctions
+    'the','and','for','not','but','with','into','from','that','this','what','where','when','which','who','how',
+    // common short function words
+    'here','there','just','very','come','more','over','even','want','wants','time','back',
+    'all','one','out','let','say','said','too','also','now','then','some','than',
+    'got','get','put','see','saw','look','went','goes','going','come','came',
+  ]);
   let phonicsWords = [];
   const usedWords = new Set();
 
@@ -398,13 +415,16 @@ async function buildLesson(ocrResults, sttWords) {
     }
   }
 
-  // Split phonemes using rule-based splitter (100% accurate, no AI needed)
-  const { splitWord, validateSplit } = require('./phoneme_splitter');
-  phonicsWords = phonicsWords.map(pw => ({
-    word: pw.word,
-    phonemes: splitWord(pw.word),
-    imageAsset: `assets/books/${folderName}/${pw.page}`,
-  }));
+  // Strip plurals and split phonemes
+  const { splitWord, validateSplit, baseForm } = require('./phoneme_splitter');
+  phonicsWords = phonicsWords.map(pw => {
+    const base = baseForm(pw.word);
+    return {
+      word: base,
+      phonemes: splitWord(base),
+      imageAsset: `assets/books/${folderName}/${pw.page}`,
+    };
+  });
   console.log(`  Phonics words: ${phonicsWords.map(w => `${w.word} [${w.phonemes.join('-')}] @ ${w.imageAsset.split('/').pop()}`).join(', ') || 'none'}`);
 
 
