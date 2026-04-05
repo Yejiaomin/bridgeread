@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../services/lesson_service.dart';
+import '../services/week_service.dart';
 import 'quiz_screen.dart';
 import 'phonics_screen.dart';
 import 'recording_screen.dart';
@@ -10,12 +10,12 @@ import 'eggy_celebration_screen.dart';
 /// Chains through multiple days of quiz → phonics → recording.
 ///
 /// Reviews only the lessons actually studied this week.
-/// Full week (Mon start): Sat = first 3, Sun = last 2
+/// Full week (5 days): Sat = first 3, Sun = last 2
 /// Partial week examples:
-///   Tue start (4 days): Sat = first 2, Sun = last 2
-///   Wed start (3 days): Sat = first 1, Sun = last 2
-///   Thu start (2 days): Sat & Sun = all 2
-///   Fri start (1 day):  Sat & Sun = all 1
+///   4 days: Sat = first 2, Sun = last 2
+///   3 days: Sat = first 1, Sun = last 2
+///   2 days: Sat & Sun = all 2
+///   1 day:  Sat & Sun = all 1
 
 DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
 
@@ -26,14 +26,6 @@ class WeekendGameScreen extends StatefulWidget {
 }
 
 class _WeekendGameScreenState extends State<WeekendGameScreen> {
-  static const _weekLessons = [
-    'biscuit_book1_day1',
-    'biscuit_baby_book2_day1',
-    'biscuit_library_book3_day1',
-    'friend_book04_day1',
-    'trick_book05_day1',
-  ];
-
   List<String> _reviewLessons = [];
   int _phase = 0; // 0=quiz, 1=phonics, 2=recording
   int _dayIdx = 0; // which day within current phase
@@ -46,38 +38,18 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
   }
 
   Future<void> _loadReviewLessons() async {
-    final prefs = await SharedPreferences.getInstance();
-    final startStr = prefs.getString('book_start_date');
-    final now = _chinaTime();
-    final isSaturday = now.weekday == 6;
-
-    // This week's Monday
-    final monday = now.subtract(Duration(days: now.weekday - 1));
-    final mondayDate = DateTime(monday.year, monday.month, monday.day);
-
-    // How many weekdays were studied this week?
-    int studyDays = 5; // default full week
-    if (startStr != null) {
-      final parts = startStr.split('-');
-      final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
-      if (start.isAfter(mondayDate)) {
-        // Partial first week: count weekdays from start to Friday
-        studyDays = (5 - start.weekday + 1).clamp(1, 5);
-      }
-    }
-
-    // Get only the lessons that were studied this week
-    final studied = _weekLessons.sublist(0, studyDays);
+    final weekBooks = await WeekService.thisWeekBooks();
+    final studied = weekBooks.map((b) => b.lessonId).toList();
+    final isSaturday = _chinaTime().weekday == 6;
+    final n = studied.length;
 
     // Split for Saturday / Sunday
-    if (studyDays <= 2) {
-      // 1-2 days: both Sat and Sun review everything
+    if (n <= 2) {
       _reviewLessons = studied;
     } else {
-      // 3+ days: Sat = first (n-2), Sun = last 2
       _reviewLessons = isSaturday
-          ? studied.sublist(0, studyDays - 2)
-          : studied.sublist(studyDays - 2);
+          ? studied.sublist(0, n - 2)
+          : studied.sublist(n - 2);
     }
 
     if (mounted) {
@@ -97,13 +69,11 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
 
   Future<void> _runCurrentStep() async {
     if (_phase >= 3) {
-      // All 3 phases done → go home
       if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
       return;
     }
 
     if (_dayIdx >= _reviewLessons.length) {
-      // Current phase done → show celebration, then move to next phase
       await _showCelebration();
       _phase++;
       _dayIdx = 0;
@@ -111,11 +81,9 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
       return;
     }
 
-    // Set lesson for current day
     await LessonService().setCurrentLesson(_reviewLessons[_dayIdx]);
     if (!mounted) return;
 
-    // Navigate to the right screen (weekendMode=true → no internal celebration)
     Widget screen;
     switch (_phase) {
       case 0:
@@ -134,7 +102,6 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
     await Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
     if (!mounted) return;
 
-    // Move to next day
     _dayIdx++;
     _runCurrentStep();
   }
@@ -149,7 +116,7 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
       context,
       MaterialPageRoute(
         builder: (_) => EggyCelebrationScreen(
-          nextRoute: '', // won't be used — we pop manually
+          nextRoute: '',
           nextLabel: _phase < 2 ? nextLabels[_phase] : '完成！',
           moduleKey: ['quiz', 'phonics', 'recording'][_phase],
           modulePoints: 15,

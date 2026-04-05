@@ -6,6 +6,7 @@ import '../utils/test_data.dart';
 import '../main.dart' show routeObserver;
 import 'reader_screen.dart';
 import '../services/lesson_service.dart';
+import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -274,23 +275,7 @@ class _DevBtn extends StatelessWidget {
 // CalendarScreen — book calendar (one book per day)
 // ─────────────────────────────────────────────────────────────────────────────
 
-class _BookDay {
-  final int day;
-  final String title;
-  final String titleCN;
-  final String lessonId;
-  final String coverAsset;
-  const _BookDay(this.day, this.title, this.titleCN, this.lessonId, this.coverAsset);
-}
-
-const _kBooks = [
-  _BookDay(1, 'Biscuit', '小饼干', 'biscuit_book1_day1', 'assets/books/01Biscuit/cover.webp'),
-  _BookDay(2, 'Biscuit and the Baby', '小饼干和宝宝', 'biscuit_baby_book2_day1', 'assets/books/02Biscuit_and_the_Baby/cover.webp'),
-  _BookDay(3, 'Biscuit Loves the Library', '小饼干爱图书馆', 'biscuit_library_book3_day1', 'assets/books/03Biscuit_Loves_the_Library/cover.webp'),
-  _BookDay(4, 'Biscuit Finds a Friend', '小饼干找朋友', 'friend_book04_day1', 'assets/books/04Biscuit_Finds_a_Friend/cover.webp'),
-  _BookDay(5, "Biscuit's New Trick", '小饼干的新把戏', 'trick_book05_day1', 'assets/books/05Biscuits_New_Trick/cover.webp'),
-  // 后续书籍在这里添加
-];
+// Book data is now in week_service.dart → kAllBooks
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -300,7 +285,7 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   int _streakDays = 0;
-  String? _startDate;
+  int? _todayBookIndex; // index in kAllBooks (0-based), null = weekend or done
   bool _testMode = true; // 测试阶段：全部可读
 
   @override
@@ -311,41 +296,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
+    // Ensure book_start_date exists
     var start = prefs.getString('book_start_date');
     if (start == null) {
       final now = DateTime.now();
       start = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       await prefs.setString('book_start_date', start);
     }
+    final todayIdx = await WeekService.todayBookIndex();
     if (mounted) {
       setState(() {
         _streakDays = prefs.getInt('streak_days') ?? 0;
-        _startDate = start;
+        _todayBookIndex = todayIdx;
       });
     }
-  }
-
-  /// Current study day (1-5) within the week.
-  /// First week may be partial (e.g. started Wednesday → day 1,2,3 for Wed,Thu,Fri).
-  /// Subsequent weeks are full: Mon=1, Tue=2, …, Fri=5.
-  int get _currentDay {
-    if (_startDate == null) return 1;
-    final parts = _startDate!.split('-');
-    final start = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
-    final now = DateTime.now();
-
-    // This week's Monday
-    final monday = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: now.weekday - 1));
-    final startDateOnly = DateTime(start.year, start.month, start.day);
-
-    if (startDateOnly.isAfter(monday)) {
-      // First (partial) week: day = weekdays since start + 1
-      // e.g. started Wed(3), today Thu(4) → 4-3+1 = 2
-      return now.weekday - startDateOnly.weekday + 1;
-    }
-    // Full week: Mon=1, Tue=2, …, Fri=5
-    return now.weekday; // 1-5 on weekdays
   }
 
   @override
@@ -440,11 +404,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
             // Book list
             Expanded(
               child: ListView.builder(
-                itemCount: _kBooks.length,
+                itemCount: kAllBooks.length,
                 itemBuilder: (context, index) {
-                  final book = _kBooks[index];
-                  final unlocked = _testMode || book.day <= _currentDay;
-                  final isToday = book.day == _currentDay;
+                  final book = kAllBooks[index];
+                  final unlocked = _testMode || (_todayBookIndex != null && index <= _todayBookIndex!);
+                  final isToday = index == _todayBookIndex;
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
@@ -486,7 +450,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         : Colors.grey.shade300,
                               ),
                               child: Center(
-                                child: Text('${book.day}',
+                                child: Text('${index + 1}',
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w900,

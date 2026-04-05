@@ -557,23 +557,14 @@ async function generateAudio() {
 function registerInApp() {
   console.log('── Step 7: Registering in app ──');
 
-  // Find previous book's lesson ID and audio
-  const lessonOrderFile = path.join(LIB_DIR, 'screens', 'listen_screen.dart');
-  const listenContent = fs.readFileSync(lessonOrderFile, 'utf8');
-  const orderMatch = [...listenContent.matchAll(/\('([^']+)',\s*'([^']+)',\s*'([^']+)'\)/g)];
-  const prevEntry = orderMatch[orderMatch.length - 1];
-  const prevLessonId = prevEntry ? prevEntry[1] : 'biscuit_book1_day1';
-  const prevAudio = prevEntry ? prevEntry[3] : 'audio/biscuit_original.mp3';
-  const bookNumInt = parseInt(bookNum);
-
-  // 1. home_screen.dart → _kBooks
-  const homeFile = path.join(LIB_DIR, 'screens', 'home_screen.dart');
-  let home = fs.readFileSync(homeFile, 'utf8');
-  const homeEntry = `  _BookDay(${bookNumInt}, '${bookTitle}', '${titleCN || bookTitle}', '${lessonId}', 'assets/books/${folderName}/cover.webp'),`;
-  if (!home.includes(lessonId)) {
-    home = home.replace('  // 后续书籍在这里添加', `${homeEntry}\n  // 后续书籍在这里添加`);
-    fs.writeFileSync(homeFile, home);
-    console.log('  ✓ home_screen.dart');
+  // 1. week_service.dart → kAllBooks (single source of truth for all books)
+  const weekFile = path.join(LIB_DIR, 'services', 'week_service.dart');
+  let week = fs.readFileSync(weekFile, 'utf8');
+  if (!week.includes(lessonId)) {
+    const entry = `  BookInfo('${bookTitle}', '${titleCN || bookTitle}', '${lessonId}', 'assets/books/${folderName}/cover.webp', 'books/${folderName}/audio.mp3'),`;
+    week = week.replace('  // 新书追加到这里', `${entry}\n  // 新书追加到这里`);
+    fs.writeFileSync(weekFile, week);
+    console.log('  ✓ week_service.dart (kAllBooks)');
   }
 
   // 2. recording_screen.dart → _featuredAudioMap
@@ -585,24 +576,7 @@ function registerInApp() {
     console.log('  ✓ recording_screen.dart');
   }
 
-  // 3. study_screen.dart → _prevBookMap
-  const studyFile = path.join(LIB_DIR, 'screens', 'study_screen.dart');
-  let study = fs.readFileSync(studyFile, 'utf8');
-  if (!study.includes(lessonId)) {
-    study = study.replace(/(_prevBookMap = \{[^}]*)(};)/s, `$1    '${lessonId}': ('${prevLessonId}', '${prevAudio}'),\n  $2`);
-    fs.writeFileSync(studyFile, study);
-    console.log('  ✓ study_screen.dart');
-  }
-
-  // 4. listen_screen.dart → _kLessonOrder
-  if (!listenContent.includes(lessonId)) {
-    const newEntry = `    ('${lessonId}', '${bookTitle}', 'books/${folderName}/audio.mp3'),`;
-    const updated = listenContent.replace(/(static const _kLessonOrder = \[[^\]]*)(];)/s, `$1${newEntry}\n  $2`);
-    fs.writeFileSync(lessonOrderFile, updated);
-    console.log('  ✓ listen_screen.dart');
-  }
-
-  // 5. pubspec.yaml
+  // 3. pubspec.yaml
   const pubFile = path.join(__dirname, '..', 'pubspec.yaml');
   let pub = fs.readFileSync(pubFile, 'utf8');
   const assetLine = `    - assets/books/${folderName}/`;
