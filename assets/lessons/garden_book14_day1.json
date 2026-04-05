@@ -1,0 +1,298 @@
+{
+  "id": "garden_book14_day1",
+  "bookTitle": "Biscuit in the Garden",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "The garden is filled with so many things, Biscuit.",
+  "originalAudio": "books/14Biscuit_in_the_Garden/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit in the Garden的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "garden_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_1",
+      "narrativeEN": "2018 Come along, Biscuit. It is time to visit the garden. Woof, woof!",
+      "keywords": [
+        "along",
+        "visit"
+      ],
+      "audioCN": "garden_p1_cn",
+      "audioEN": "garden_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 27900
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_2",
+      "narrativeEN": "The garden is filled with so many things, Biscuit. Woof, woof! Just look at all the flowers and plants. Woof, woof! ΑΛΛ",
+      "keywords": [
+        "garden",
+        "filled"
+      ],
+      "audioCN": "garden_p2_cn",
+      "audioEN": "garden_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 31300
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_3",
+      "narrativeEN": "You found a butterfly, Biscuit. Woof, woof! You found a worm, too. Woof!",
+      "keywords": [
+        "butterfly",
+        "worm"
+      ],
+      "audioCN": "garden_p3_cn",
+      "audioEN": "garden_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 51100
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_4",
+      "narrativeEN": "LT Silly puppy! Don't dig now! Woof, woof! Oh, Biscuit. You found a little bird.",
+      "keywords": [
+        "silly",
+        "puppy"
+      ],
+      "audioCN": "garden_p4_cn",
+      "audioEN": "garden_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 63300
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_5",
+      "narrativeEN": "Is the little bird hungry? Woof, woof! Tweet! Let's feed the bird, Biscuit.",
+      "keywords": [
+        "little",
+        "bird"
+      ],
+      "audioCN": "garden_p5_cn",
+      "audioEN": "garden_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 76700
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_6",
+      "narrativeEN": "Woof, woof! Wait, Biscuit. What do you see? Woof! Two more little birds!",
+      "keywords": [
+        "wait",
+        "little"
+      ],
+      "audioCN": "garden_p6_cn",
+      "audioEN": "garden_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 155400
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_7",
+      "narrativeEN": "Tweet! Tweet! Here, little birds. Here is some bird seed.",
+      "keywords": [
+        "tweet",
+        "little"
+      ],
+      "audioCN": "garden_p7_cn",
+      "audioEN": "garden_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_8",
+      "narrativeEN": "D Woof, woof! Come along, Biscuit. There's lots more to see.",
+      "keywords": [
+        "along",
+        "lots"
+      ],
+      "audioCN": "garden_p8_cn",
+      "audioEN": "garden_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 156600
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_9",
+      "narrativeEN": "Tweet! Woof, woof! B Tweet! Tweet! Woof!",
+      "keywords": [
+        "tweet"
+      ],
+      "audioCN": "garden_p9_cn",
+      "audioEN": "garden_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_10",
+      "narrativeEN": "Oh no, Biscuit. D D D D Not the bird seed! Woof, woof!",
+      "keywords": [
+        "bird",
+        "seed"
+      ],
+      "audioCN": "garden_p10_cn",
+      "audioEN": "garden_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 178500
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_11",
+      "narrativeEN": "Tweet! Tweet! Tweet! Tweet! Just look at all of the birds now! Woof, woof! The garden is filled with so many things, Biscuit.",
+      "keywords": [
+        "tweet",
+        "look"
+      ],
+      "audioCN": "garden_p11_cn",
+      "audioEN": "garden_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_12",
+      "narrativeEN": "Woof, woof! But you filled the garden with lots of birds, too! Tweet! Tweet! Woof!",
+      "keywords": [
+        "filled",
+        "garden"
+      ],
+      "audioCN": "garden_p12_cn",
+      "audioEN": "garden_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit in the Garden真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "garden_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "many",
+      "phonemes": [
+        "m",
+        "a",
+        "n",
+        "y"
+      ],
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_03.webp"
+    },
+    {
+      "word": "found",
+      "phonemes": [
+        "f",
+        "ou",
+        "n",
+        "d"
+      ],
+      "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_04.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_03.webp",
+    "sentences": [
+      {
+        "text": "The garden is filled with so many things, Biscuit.",
+        "audio": "audio/garden_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Just look at all the flowers and plants.",
+        "audio": "audio/garden_rec_2.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}
