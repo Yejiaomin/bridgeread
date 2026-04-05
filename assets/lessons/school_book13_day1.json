@@ -1,0 +1,287 @@
+{
+  "id": "school_book13_day1",
+  "bookTitle": "Biscuit Goes to School",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "Where is Biscuit going.",
+  "originalAudio": "books/13Biscuit_Goes_to_School/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Goes to School的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "school_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_1",
+      "narrativeEN": "Here comes the school bus! Woof, woof!",
+      "keywords": [
+        "comes",
+        "school"
+      ],
+      "audioCN": "school_p1_cn",
+      "audioEN": "school_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 17400
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_2",
+      "narrativeEN": "Stay here, Biscuit. Dogs don't go to school. Woof!",
+      "keywords": [
+        "stay",
+        "dogs"
+      ],
+      "audioCN": "school_p2_cn",
+      "audioEN": "school_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 32500
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_3",
+      "narrativeEN": "Where is Biscuit going? Is Biscuit going to the pond? Woof! Is Biscuit going to the park? Woof!",
+      "keywords": [
+        "going",
+        "pond"
+      ],
+      "audioCN": "school_p3_cn",
+      "audioEN": "school_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 39900
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_4",
+      "narrativeEN": "Biscuit is going to school! Woof, woof!",
+      "keywords": [
+        "going",
+        "school"
+      ],
+      "audioCN": "school_p4_cn",
+      "audioEN": "school_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 40600
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_5",
+      "narrativeEN": "Biscuit wants to play ball. Woof, woof!",
+      "keywords": [
+        "play",
+        "ball"
+      ],
+      "audioCN": "school_p5_cn",
+      "audioEN": "school_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 43000
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_6",
+      "narrativeEN": "THE TIME THE EL THE D vite you Biscuit wants to hear a story. Woof, woof! Shhh!",
+      "keywords": [
+        "vite",
+        "hear"
+      ],
+      "audioCN": "school_p6_cn",
+      "audioEN": "school_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 44200
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_7",
+      "narrativeEN": "B Biscuit wants a snack. Woof, woof! Oh, Biscuit! What are you doing here? Dogs don't go to school!",
+      "keywords": [
+        "snack",
+        "doing"
+      ],
+      "audioCN": "school_p7_cn",
+      "audioEN": "school_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 47600
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_8",
+      "narrativeEN": "Oh, no! Here comes the teacher! Woof!",
+      "keywords": [
+        "comes",
+        "teacher"
+      ],
+      "audioCN": "school_p8_cn",
+      "audioEN": "school_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 77300
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_9",
+      "narrativeEN": "Clesign AaEeli Oou Biscuit wants to meet the teacher. Woof! Biscuit wants to meet the class. Woof, woof!",
+      "keywords": [
+        "clesign",
+        "aaeeli"
+      ],
+      "audioCN": "school_p9_cn",
+      "audioEN": "school_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_10",
+      "narrativeEN": "Biscuit likes school! Woof, woof!",
+      "keywords": [
+        "likes",
+        "school"
+      ],
+      "audioCN": "school_p10_cn",
+      "audioEN": "school_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 87800
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "TODO_PAGE_11",
+      "narrativeEN": "And everyone at school likes Biscuit! Woof!",
+      "keywords": [
+        "everyone",
+        "school"
+      ],
+      "audioCN": "school_p11_cn",
+      "audioEN": "school_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 103700
+    },
+    {
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_12.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit Goes to School真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "school_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "pond",
+      "phonemes": [
+        "p",
+        "o",
+        "n",
+        "d"
+      ],
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_04.webp"
+    },
+    {
+      "word": "bus",
+      "phonemes": [
+        "b",
+        "u",
+        "s"
+      ],
+      "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_07.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_04.webp",
+    "sentences": [
+      {
+        "text": "Where is Biscuit going.",
+        "audio": "audio/school_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Is Biscuit going to the pond.",
+        "audio": "audio/school_rec_2.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Is Biscuit going to the park.",
+        "audio": "audio/school_rec_3.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

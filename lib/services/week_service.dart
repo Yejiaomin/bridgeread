@@ -23,6 +23,11 @@ const kAllBooks = [
   BookInfo('Biscuit Wins a Prize', '小饼干赢奖啦', 'prize_book08_day1', 'assets/books/08Biscuit_Wins_a_Prize/cover.webp', 'books/08Biscuit_Wins_a_Prize/audio.mp3'),
   BookInfo('Biscuit Visits the Big City', '小饼干游大城市', 'city_book09_day1', 'assets/books/09Biscuit_Visits_the_Big_City/cover.webp', 'books/09Biscuit_Visits_the_Big_City/audio.mp3'),
   BookInfo('Biscuit Plays Ball', '小饼干打球', 'ball_book10_day1', 'assets/books/10Biscuit_Plays_Ball/cover.webp', 'books/10Biscuit_Plays_Ball/audio.mp3'),
+  BookInfo("Biscuit and the Little Pup", '小饼干和小狗崽', 'pup_book11_day1', 'assets/books/11Biscuit_and_the_Little_Pup/cover.webp', 'books/11Biscuit_and_the_Little_Pup/audio.mp3'),
+  BookInfo("Biscuit's Big Friend", '小饼干的大朋友', 'bigfriend_book12_day1', 'assets/books/12Biscuits_Big_Friend/cover.webp', 'books/12Biscuits_Big_Friend/audio.mp3'),
+  BookInfo("Biscuit Goes to School", '小饼干上学啦', 'school_book13_day1', 'assets/books/13Biscuit_Goes_to_School/cover.webp', 'books/13Biscuit_Goes_to_School/audio.mp3'),
+  BookInfo("Biscuit in the Garden", '小饼干的花园', 'garden_book14_day1', 'assets/books/14Biscuit_in_the_Garden/cover.webp', 'books/14Biscuit_in_the_Garden/audio.mp3'),
+  BookInfo("Biscuit Takes a Walk", '小饼干去散步', 'walk_book15_day1', 'assets/books/15Biscuit_Takes_a_Walk/cover.webp', 'books/15Biscuit_Takes_a_Walk/audio.mp3'),
   // 新书追加到这里
 ];
 

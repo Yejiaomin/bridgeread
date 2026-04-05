@@ -1,0 +1,327 @@
+[
+  {
+    "page": "cover.webp",
+    "text": "I Can Read!\nTM\nSHARED\nMy\nFirst\nREADING\nBiscuit\nTakes a Walk",
+    "leftWords": [
+      "can",
+      "read",
+      "biscuit",
+      "takes"
+    ],
+    "rightWords": [
+      "shared",
+      "first",
+      "reading",
+      "walk"
+    ]
+  },
+  {
+    "page": "spread_01.webp",
+    "text": "HOORAY!\ncan read this book!\nI Can Read!\nTM\nSHARED\nMy\nFirst\nREADING\nBiscuit\nTakes a Walk\nISBN 978-0-06-117746-0\nUSA $3.99 / $4.99 CAN\nBOOK NEWS, GAMES, CONTESTS, AND MORE\nwww.harpercollinschildrens.com\n15 14\n9780061 177460\n50399\nS\nstory by ALYSSA SATIN CAPUCILLI\npictures by PAT SCHORIES\nHarperCollins Publishers",
+    "leftWords": [
+      "hooray",
+      "can",
+      "read",
+      "this",
+      "book",
+      "isbn",
+      "usa",
+      "news",
+      "games",
+      "contests",
+      "and",
+      "more",
+      "wwwharpercollinschildrenscom"
+    ],
+    "rightWords": [
+      "can",
+      "read",
+      "shared",
+      "first",
+      "reading",
+      "biscuit",
+      "takes",
+      "walk",
+      "story",
+      "alyssa",
+      "satin",
+      "capucilli",
+      "pictures",
+      "pat",
+      "schories",
+      "harpercollins",
+      "publishers"
+    ]
+  },
+  {
+    "page": "spread_02.webp",
+    "text": "2\nA-L\nTime for a walk, Biscuit.\nWoof, woof!\n3",
+    "leftWords": [],
+    "rightWords": [
+      "time",
+      "for",
+      "walk",
+      "biscuit",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_03.webp",
+    "text": "It's time for a walk\nto Grandpa's house.\n4\nJiu Let's go!\nWoof, woof!",
+    "leftWords": [
+      "its",
+      "time",
+      "for",
+      "walk",
+      "grandpas",
+      "house"
+    ],
+    "rightWords": [
+      "jiu",
+      "lets",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_04.webp",
+    "text": "Time for a walk, Biscuit.\nWoof, woof!\nBiscuit wants to dig.\nTime for a walk, Biscuit.\nWoof, woof!\nBiscuit wants to roll.\n7",
+    "leftWords": [
+      "time",
+      "for",
+      "walk",
+      "biscuit",
+      "woof",
+      "wants",
+      "dig"
+    ],
+    "rightWords": [
+      "time",
+      "for",
+      "walk",
+      "biscuit",
+      "woof",
+      "wants",
+      "roll"
+    ]
+  },
+  {
+    "page": "spread_05.webp",
+    "text": "1722\nFunny puppy!\nIt's time for a walk\nto Grandpa's house.\n8\nLet's go!\nWoof, woof!\n9",
+    "leftWords": [
+      "funny",
+      "puppy",
+      "its",
+      "time",
+      "for",
+      "walk",
+      "grandpas",
+      "house"
+    ],
+    "rightWords": [
+      "lets",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_06.webp",
+    "text": "Time for a walk, Biscuit.\nWoof, woof!\nBiscuit wants to see\nthe squirrels.",
+    "leftWords": [
+      "time",
+      "for",
+      "woof",
+      "biscuit",
+      "wants",
+      "the",
+      "squirrels"
+    ],
+    "rightWords": [
+      "walk",
+      "biscuit",
+      "see"
+    ]
+  },
+  {
+    "page": "spread_07.webp",
+    "text": "Time for a walk, Biscuit.\nWoof, woof!\n12\nBiscuit wants\nto see the birds.\n13",
+    "leftWords": [
+      "time",
+      "for",
+      "walk",
+      "biscuit",
+      "woof"
+    ],
+    "rightWords": [
+      "biscuit",
+      "wants",
+      "see",
+      "the",
+      "birds"
+    ]
+  },
+  {
+    "page": "spread_08.webp",
+    "text": "Silly puppy!\nIt's time for a walk\nto Grandpa's house.\nWoof!\n15",
+    "leftWords": [],
+    "rightWords": [
+      "silly",
+      "puppy",
+      "its",
+      "time",
+      "for",
+      "walk",
+      "grandpas",
+      "house",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_09.webp",
+    "text": "S\nWait, Biscuit. Come back.\n16\nGrandpa's house is this way!\n17",
+    "leftWords": [
+      "wait",
+      "biscuit",
+      "come",
+      "back"
+    ],
+    "rightWords": [
+      "grandpas",
+      "house",
+      "this",
+      "way"
+    ]
+  },
+  {
+    "page": "spread_10.webp",
+    "text": "ell\n200\n000\n000\n00\n000\nell ele\nWoof, woof! brin\n18\nOh, Biscuit!\nWhat do you see now?\n19",
+    "leftWords": [
+      "ell",
+      "ele",
+      "woof",
+      "brin"
+    ],
+    "rightWords": [
+      "biscuit",
+      "what",
+      "you",
+      "see",
+      "now"
+    ]
+  },
+  {
+    "page": "spread_11.webp",
+    "text": "Woof, woof! W\n20\nIt's Grandpa!\n21",
+    "leftWords": [
+      "woof"
+    ],
+    "rightWords": [
+      "its",
+      "grandpa"
+    ]
+  },
+  {
+    "page": "spread_12.webp",
+    "text": "Woof, woof!\nA walk to Grandpa's house\nis fun, Biscuit.\n22\nBut a walk with Grandpa\nis the best walk of all.\n23",
+    "leftWords": [
+      "woof",
+      "walk",
+      "grandpas",
+      "house",
+      "fun",
+      "biscuit"
+    ],
+    "rightWords": [
+      "but",
+      "walk",
+      "with",
+      "grandpa",
+      "the",
+      "best",
+      "all"
+    ]
+  },
+  {
+    "page": "spread_13.webp",
+    "text": "Time for a walk, Biscuit.\nA walk for everyone.\n24\nWoof, woof!",
+    "leftWords": [
+      "time",
+      "for",
+      "walk",
+      "biscuit",
+      "everyone"
+    ],
+    "rightWords": [
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_14.webp",
+    "text": "I Can Read!\nWhat could be more\nfun than a walk to\nGrandpa's house?\nMy\nFirst\nSHARED\nMy\nTM\nFirst\nREADING\nIdeal for sharing with emergent readers\n1 Simple sentences for eager new readers\n2 High-interest stories for developing readers\n3 Complex plots for confident readers\n4 The perfect bridge to chapter books\nFor more information about the\nI Can Read BookⓇ series, see inside!\nHarper TrophyⓇ\nAn Imprint of HarperCollins Publishers\nwww.icanread.com\nCover art © 2009 by Pat Schories\nwww.harpercollinschildrens.com\nBOOK NEWS, GAMES, CONTESTS, AND MORE\nUS $3.99 / $4.25 CAN\nISBN 978-0-06-117746-0\n50399\n1004",
+    "leftWords": [
+      "can",
+      "read",
+      "what",
+      "could",
+      "more",
+      "fun",
+      "than",
+      "walk",
+      "grandpas",
+      "house",
+      "first",
+      "ideal",
+      "for",
+      "sharing",
+      "simple",
+      "sentences",
+      "high",
+      "interest",
+      "stories",
+      "complex",
+      "plots",
+      "the",
+      "perfect",
+      "bridge",
+      "information",
+      "book",
+      "series",
+      "harper",
+      "trophy",
+      "imprint",
+      "harpercollins",
+      "publishers",
+      "wwwicanreadcom",
+      "cover",
+      "art",
+      "pat",
+      "schories"
+    ],
+    "rightWords": [
+      "shared",
+      "first",
+      "reading",
+      "with",
+      "emergent",
+      "readers",
+      "for",
+      "eager",
+      "new",
+      "developing",
+      "confident",
+      "chapter",
+      "books",
+      "about",
+      "the",
+      "see",
+      "inside",
+      "wwwharpercollinschildrenscom",
+      "book",
+      "news",
+      "games",
+      "contests",
+      "and",
+      "more",
+      "can",
+      "isbn"
+    ]
+  }
+]
