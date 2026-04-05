@@ -164,9 +164,10 @@ class _RecordingScreenState extends State<RecordingScreen>
     if (mounted) {
       // Find the page that contains the featured sentence
       String image = lesson.pages.isNotEmpty ? lesson.pages[0].imageAsset : _bookImage;
-      final sentenceLower = lesson.featuredSentence.toLowerCase();
+      // Strip punctuation for matching (e.g. "today!" vs "today.")
+      final sentenceCore = lesson.featuredSentence.toLowerCase().replaceAll(RegExp(r'[.!?,;:\s]+$'), '');
       for (final page in lesson.pages) {
-        if (page.narrativeEN.toLowerCase().contains(sentenceLower)) {
+        if (page.narrativeEN.toLowerCase().contains(sentenceCore)) {
           image = page.imageAsset;
           break;
         }

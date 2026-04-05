@@ -277,6 +277,8 @@ class _DevBtn extends StatelessWidget {
 
 // Book data is now in week_service.dart → kAllBooks
 
+DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
+
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
   @override
@@ -284,244 +286,211 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  int _streakDays = 0;
-  int? _todayBookIndex; // index in kAllBooks (0-based), null = weekend or done
-  bool _testMode = true; // 测试阶段：全部可读
+  DateTime? _startDate;
+  late DateTime _viewMonth; // which month is displayed
+  bool _testMode = true;
 
   @override
   void initState() {
     super.initState();
+    final now = _chinaTime();
+    _viewMonth = DateTime(now.year, now.month);
     _load();
   }
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
-    // Ensure book_start_date exists
     var start = prefs.getString('book_start_date');
     if (start == null) {
-      final now = DateTime.now();
+      final now = _chinaTime();
       start = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       await prefs.setString('book_start_date', start);
     }
-    final todayIdx = await WeekService.todayBookIndex();
     if (mounted) {
-      setState(() {
-        _streakDays = prefs.getInt('streak_days') ?? 0;
-        _todayBookIndex = todayIdx;
-      });
+      setState(() => _startDate = WeekService.parseDate(start));
     }
+  }
+
+  void _prevMonth() {
+    setState(() {
+      _viewMonth = DateTime(_viewMonth.year, _viewMonth.month - 1);
+    });
+  }
+
+  void _nextMonth() {
+    setState(() {
+      _viewMonth = DateTime(_viewMonth.year, _viewMonth.month + 1);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     const orange = Color(0xFFFF8C42);
+    final now = _chinaTime();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // Month header text
+    const monthNames = ['', '一月', '二月', '三月', '四月', '五月', '六月',
+        '七月', '八月', '九月', '十月', '十一月', '十二月'];
+    final monthLabel = '${_viewMonth.year}年 ${monthNames[_viewMonth.month]}';
+
+    // Build calendar grid
+    final firstOfMonth = DateTime(_viewMonth.year, _viewMonth.month, 1);
+    final daysInMonth = DateTime(_viewMonth.year, _viewMonth.month + 1, 0).day;
+    final startWeekday = firstOfMonth.weekday; // 1=Mon
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFF4E6),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.transparent, elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded, color: orange),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text('学习日历',
-            style: TextStyle(
-                color: orange,
-                fontWeight: FontWeight.w900,
-                fontSize: 20)),
+            style: TextStyle(color: orange, fontWeight: FontWeight.w900, fontSize: 20)),
         centerTitle: true,
         actions: [
-          // 测试模式开关
           IconButton(
-            icon: Icon(_testMode ? Icons.lock_open_rounded : Icons.lock_rounded,
-                color: orange, size: 22),
+            icon: Icon(_testMode ? Icons.lock_open_rounded : Icons.lock_rounded, color: orange, size: 22),
             onPressed: () => setState(() => _testMode = !_testMode),
-            tooltip: _testMode ? '测试模式(全部开放)' : '正常模式',
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Streak card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    colors: [Color(0xFFFFB347), Color(0xFFFF7043)]),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      color: const Color(0xFFFF7043).withValues(alpha: 0.35),
-                      blurRadius: 16,
-                      offset: const Offset(0, 6))
-                ],
-              ),
-              child: Row(
-                children: [
-                  const Text('🔥', style: TextStyle(fontSize: 36)),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('$_streakDays 天连续学习！',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900)),
-                      Text('每天一本绘本',
-                          style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.8),
-                              fontSize: 14)),
-                    ],
-                  ),
-                  const Spacer(),
-                  if (_testMode)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text('TEST',
-                          style: TextStyle(color: Colors.white,
-                              fontSize: 12, fontWeight: FontWeight.bold)),
-                    ),
-                ],
-              ),
+            // Month navigation
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(icon: const Icon(Icons.chevron_left, color: orange), onPressed: _prevMonth),
+                Text(monthLabel, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFFE65100))),
+                IconButton(icon: const Icon(Icons.chevron_right, color: orange), onPressed: _nextMonth),
+              ],
             ),
-            const SizedBox(height: 20),
-            const Text('绘本日历',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFFE65100))),
-            const SizedBox(height: 12),
-            // Book list
+            const SizedBox(height: 8),
+            // Weekday headers
+            Row(
+              children: ['一', '二', '三', '四', '五', '六', '日'].map((d) =>
+                Expanded(child: Center(child: Text(d,
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700,
+                    color: d == '六' || d == '日' ? Colors.grey : orange))))).toList(),
+            ),
+            const SizedBox(height: 6),
+            // Calendar grid
             Expanded(
-              child: ListView.builder(
-                itemCount: kAllBooks.length,
-                itemBuilder: (context, index) {
-                  final book = kAllBooks[index];
-                  final unlocked = _testMode || (_todayBookIndex != null && index <= _todayBookIndex!);
-                  final isToday = index == _todayBookIndex;
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7, childAspectRatio: 0.65, crossAxisSpacing: 6, mainAxisSpacing: 6,
+                ),
+                padding: const EdgeInsets.all(2),
+                itemCount: 42, // 6 weeks max
+                itemBuilder: (context, idx) {
+                  final dayNum = idx - (startWeekday - 1) + 1;
+                  if (dayNum < 1 || dayNum > daysInMonth) {
+                    return const SizedBox(); // empty cell
+                  }
+                  final date = DateTime(_viewMonth.year, _viewMonth.month, dayNum);
+                  final isToday = date == today;
+                  final isWeekend = date.weekday > 5;
+                  final isPast = date.isBefore(today) || date == today;
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: GestureDetector(
-                      onTap: unlocked
-                          ? () async {
-                              await LessonService().setCurrentLesson(book.lessonId);
-                              if (context.mounted) {
-                                Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-                              }
-                            }
-                          : null,
-                      child: Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: unlocked ? Colors.white : Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(18),
-                          border: isToday
-                              ? Border.all(color: orange, width: 2.5)
-                              : null,
-                          boxShadow: unlocked
-                              ? [BoxShadow(
-                                  color: orange.withValues(alpha: 0.15),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4))]
-                              : null,
-                        ),
-                        child: Row(
-                          children: [
-                            // Day number
-                            Container(
-                              width: 44, height: 44,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isToday
-                                    ? orange
-                                    : unlocked
-                                        ? const Color(0xFFFFE0B2)
-                                        : Colors.grey.shade300,
-                              ),
-                              child: Center(
-                                child: Text('${index + 1}',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w900,
-                                        color: isToday
-                                            ? Colors.white
-                                            : unlocked
-                                                ? orange
-                                                : Colors.grey)),
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            // Cover thumbnail
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: cdnImage(book.coverAsset,
-                                width: 56, height: 56,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
-                                  width: 56, height: 56,
-                                  color: Colors.grey.shade200,
-                                  child: const Icon(Icons.book, color: Colors.grey),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            // Title
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(book.title,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: unlocked
-                                              ? const Color(0xFF333333)
-                                              : Colors.grey)),
-                                  const SizedBox(height: 2),
-                                  Text(book.titleCN,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: unlocked
-                                              ? const Color(0xFF999999)
-                                              : Colors.grey.shade400)),
-                                ],
-                              ),
-                            ),
-                            // Status icon
-                            if (!unlocked)
-                              const Icon(Icons.lock_rounded,
-                                  color: Colors.grey, size: 22)
-                            else if (isToday)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: orange,
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                child: const Text('TODAY',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold)),
-                              )
-                            else
-                              const Icon(Icons.check_circle_rounded,
-                                  color: Color(0xFF4CAF50), size: 22),
-                          ],
-                        ),
+                  // Get book for this date
+                  int? bookIdx;
+                  if (_startDate != null && !date.isBefore(_startDate!)) {
+                    bookIdx = WeekService.bookIndexForDate(date, _startDate!);
+                  }
+                  final book = bookIdx != null && bookIdx < kAllBooks.length ? kAllBooks[bookIdx] : null;
+                  final unlocked = _testMode || (isPast && book != null);
+                  final isActiveWeekend = isWeekend && _startDate != null && !date.isBefore(_startDate!);
+
+                  return GestureDetector(
+                    onTap: (unlocked && book != null) || isActiveWeekend ? () async {
+                      // Set this date as the active date for all screens
+                      WeekService.overrideDate = date;
+                      if (book != null) {
+                        await LessonService().setCurrentLesson(book.lessonId);
+                      }
+                      if (context.mounted) {
+                        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                      }
+                    } : null,
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: isWeekend ? const Color(0xFFF5EDE3)
+                            : unlocked ? Colors.white
+                            : Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            final cellW = constraints.maxWidth;
+                            final imgW = cellW * 0.55;
+                            final imgH = imgW * 1.4; // book cover aspect ratio
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Date circle
+                                Container(
+                                  width: 24, height: 24,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isToday ? orange : Colors.black.withValues(alpha: 0.3),
+                                  ),
+                                  child: Center(child: Text('$dayNum',
+                                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Colors.white))),
+                                ),
+                                const SizedBox(height: 3),
+                                // Image
+                                if (book != null)
+                                  Container(
+                                    width: imgW, height: imgH,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      boxShadow: isToday ? [
+                                        BoxShadow(color: orange.withValues(alpha: 0.5), blurRadius: 10, spreadRadius: 2),
+                                      ] : [
+                                        BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 4, offset: const Offset(0, 2)),
+                                      ],
+                                    ),
+                                    child: Stack(children: [
+                                      Positioned.fill(child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(6),
+                                        child: cdnImage(book.coverAsset, fit: BoxFit.cover,
+                                          errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade200)),
+                                      )),
+                                      if (!unlocked)
+                                        Positioned.fill(child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(alpha: 0.6),
+                                            borderRadius: BorderRadius.circular(6)),
+                                          child: Center(child: Icon(Icons.lock_rounded, size: 16, color: Colors.grey.shade400)),
+                                        )),
+                                    ]),
+                                  )
+                                else if (isActiveWeekend)
+                                  SizedBox(
+                                    height: imgH,
+                                    child: cdnImage('assets/pet/eggy_transparent_bg.webp', fit: BoxFit.contain),
+                                  )
+                                else
+                                  SizedBox(height: imgH),
+                                const SizedBox(height: 3),
+                                // Label
+                                Text(
+                                  book != null ? book.titleCN : isActiveWeekend ? '游戏+放松' : '',
+                                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700,
+                                    color: book != null ? const Color(0xFF666666) : const Color(0xFFFFB74D)),
+                                  maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                     ),
                   );
                 },

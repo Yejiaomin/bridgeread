@@ -34,7 +34,13 @@ const kSeriesSizes = [20];
 
 DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
 
+/// The "active" date — set by calendar selection, defaults to real China time.
+/// All screens use this instead of raw _chinaTime() for day-of-week logic.
+DateTime activeDate() => WeekService.overrideDate ?? _chinaTime();
+
 class WeekService {
+  /// Set by calendar to simulate a specific date. null = use real time.
+  static DateTime? overrideDate;
   /// Count weekdays (Mon-Fri) from [start] to [end], inclusive.
   static int _weekdaysBetween(DateTime start, DateTime end) {
     int count = 0;
@@ -47,12 +53,12 @@ class WeekService {
     return count;
   }
 
-  /// Core scheduling: map a weekday count (1-based) to a book index in kAllBooks.
+  /// Map a weekday count (1-based) to a book index in kAllBooks.
   /// Returns null if it's a review/padding day (series ended mid-week)
   /// or if all books are exhausted.
   ///
   /// [startWeekday]: 1=Mon..5=Fri, the day the child first started.
-  static int? _bookForWeekdayCount(int weekdayCount, int startWeekday) {
+  static int? bookForWeekdayCount(int weekdayCount, int startWeekday) {
     int bookIdx = 0;         // next book to assign
     int daysProcessed = 0;   // weekday slots consumed so far
     int weekCapacity = 5 - startWeekday + 1; // first week may be partial
@@ -107,7 +113,7 @@ class WeekService {
     if (now.weekday > 5) return null; // weekend
     final wdCount = _weekdaysBetween(start, now);
     if (wdCount <= 0) return null;
-    return _bookForWeekdayCount(wdCount, start.weekday);
+    return bookForWeekdayCount(wdCount, start.weekday);
   }
 
   /// Whether today is a review/padding day (series ended but week hasn't).
@@ -137,7 +143,7 @@ class WeekService {
     while (!day.isAfter(friday)) {
       if (day.weekday <= 5) {
         final wdCount = _weekdaysBetween(start, day);
-        final idx = _bookForWeekdayCount(wdCount, start.weekday);
+        final idx = bookForWeekdayCount(wdCount, start.weekday);
         if (idx != null && idx < kAllBooks.length) {
           books.add(kAllBooks[idx]);
         }
@@ -145,6 +151,15 @@ class WeekService {
       day = day.add(const Duration(days: 1));
     }
     return books;
+  }
+
+  /// Book index for a specific date (null if weekend, review, or no book).
+  static int? bookIndexForDate(DateTime date, DateTime startDate) {
+    if (date.weekday > 5) return null; // weekend
+    if (date.isBefore(startDate)) return null; // before start
+    final wdCount = _weekdaysBetween(startDate, date);
+    if (wdCount <= 0) return null;
+    return bookForWeekdayCount(wdCount, startDate.weekday);
   }
 
   /// This week's lesson IDs (convenience).

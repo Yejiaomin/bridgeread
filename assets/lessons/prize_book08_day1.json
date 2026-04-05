@@ -260,10 +260,12 @@
   ],
   "phonicsWords": [
     {
-      "word": "there",
+      "word": "prize",
       "phonemes": [
-        "th",
-        "ere"
+        "pr",
+        "i",
+        "z",
+        "e"
       ],
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_03.webp"
     },
