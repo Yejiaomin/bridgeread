@@ -10,14 +10,54 @@
  *
  * Prerequisites:
  *   - assets/books/<folder>/book.pdf + audio.mp3
+ *   - If PDF has wide pages (MediaBox > CropBox), use pdf:use-cropbox flag
+ *   - If auto split fails, put manually cropped pages in <folder>/single/0.jpg, 1.jpg...
  *
- * Automates ALL steps:
- *   1. Split PDF → merge spreads
- *   2. OCR pages (Google Vision)
+ * This script automates:
+ *   1. Split PDF → merge spreads (with cropbox support)
+ *   2. OCR pages (Google Vision, with word positions for left/right detection)
  *   3. STT page timing (Google Speech-to-Text)
- *   4. Generate lesson JSON with Chinese narration
- *   5. Generate all audio (火山引擎 CN + ElevenLabs EN)
- *   6. Register in 4 Dart files + pubspec.yaml
+ *   4. Generate lesson JSON skeleton (narrativeCN = TODO placeholders)
+ *   5. Generate EN audio only (ElevenLabs) + phonics word audio + recording sentence audio
+ *   6. Register in week_service.dart + pubspec.yaml
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ * AFTER SCRIPT: Claude must complete these manually:
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * 【中文讲解 — Amy风格】
+ *   - Claude 参考 Book 1 (biscuit_book1_day1.json) 的 narrativeCN 风格
+ *   - 语气活泼亲切，像跟小朋友面对面说话
+ *   - 每页选1-2个关键英文单词，用"xxx就是xxx"自然解释
+ *   - 前后页有故事连贯性，经常问互动问题
+ *   - 中英文自然穿插，不要生硬翻译
+ *   - 每页50-100字，不要太长
+ *   - 写完后用火山引擎 TTS 生成 CN 音频
+ *   - ❌ 不要用 fallback 模板（"你听到了吗？X就是X的意思"）
+ *
+ * 【Phonics 选词规则】
+ *   - 选有意义的实词（名词、动词、形容词），孩子能记住的
+ *   - ❌ 不选: 功能词(the/is/are/was/were)、代词(you/he/she)、
+ *     助动词(can/could/will)、介词(with/from/into)、语气词(woof/oink)
+ *   - 自动去掉复数 -s (pigs → pig)，用 baseForm()
+ *   - 选词来自绘本左半页 (leftWords)，3-5个字母
+ *
+ * 【Phonics 拆分规则 — 三层】
+ *   Layer 1 — CVC: 每个字母独立拆 (pig → p-i-g, cat → c-a-t)
+ *   Layer 2 — Digraphs/Blends: 保持组合 (ship → sh-i-p, play → pl-ay)
+ *     - Digraphs: sh, ch, th, ph, wh, ck, ng, nk, tch
+ *     - Blends: bl, br, cl, cr, dr, fl, fr, gl, gr, pl, pr, sc, sk, sl, sm, sn, sp, st, sw, tr
+ *     - Doubles: ll, ss, ff, zz
+ *   Layer 3 — Vowel teams: 保持元音组合 (boat → b-oa-t, rain → r-ai-n)
+ *     - ai, ay, ea, ee, oa, oo, ou, ow, oi, oy, igh, ar, er, ir, or, ur
+ *   ❌ 不要用 word family 合并 (-ig, -ed, -at)
+ *
+ * 【Recording 录音页】
+ *   - 脚本自动选一个左右都有文字的 spread
+ *   - 用 OCR leftWords/rightWords 检测每句在哪边
+ *   - 提取2-4个有意义的句子，跳过 Woof/Oink 等
+ *   - 生成每句的英文音频 {prefix}_rec_1.mp3, _rec_2.mp3...
+ * ═══════════════════════════════════════════════════════════════════════════
  */
 
 const fs = require('fs');
