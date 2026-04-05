@@ -1,0 +1,344 @@
+[
+  {
+    "page": "cover.webp",
+    "text": "I Can Read!\nSHARED\nMy\nFirst\nREADING\nBiscuit's\nDay at the Farm\nby ALYSSA SATIN CAPUCILLI\npictures by PAT SCHORIES",
+    "leftWords": [
+      "can",
+      "read",
+      "biscuits",
+      "day",
+      "alyssa",
+      "satin",
+      "pictures"
+    ],
+    "rightWords": [
+      "shared",
+      "first",
+      "reading",
+      "the",
+      "farm",
+      "capucilli",
+      "pat",
+      "schories"
+    ]
+  },
+  {
+    "page": "spread_01.webp",
+    "text": "HOORAY!\ncan read this book!\nI Can Read!\nSHARED\nMy\nFirst\nREADING\nBiscuit's\nDay at the Farm\n3\nBOOK NEWS, GAMES, CONTESTS, AND MORE\nwww.harpercollinschildrens.com\nISBN 978-0-06-074169-3\nUSA $3.99 / $4.99 CAN\n50399\n15 32\n9780060 741693\nS\nstory by ALYSSA SATIN CAPUCILLI\npictures by PAT SCHORIES\nHarperCollins Publishers",
+    "leftWords": [
+      "hooray",
+      "can",
+      "read",
+      "this",
+      "book",
+      "news",
+      "games",
+      "contests",
+      "and",
+      "more",
+      "wwwharpercollinschildrenscom",
+      "isbn",
+      "usa"
+    ],
+    "rightWords": [
+      "can",
+      "read",
+      "shared",
+      "first",
+      "reading",
+      "biscuits",
+      "day",
+      "the",
+      "farm",
+      "story",
+      "alyssa",
+      "satin",
+      "capucilli",
+      "pictures",
+      "pat",
+      "schories",
+      "harpercollins",
+      "publishers"
+    ]
+  },
+  {
+    "page": "spread_02.webp",
+    "text": "Come along, Biscuit.\nWe're going to help\non the farm today.\n7",
+    "leftWords": [],
+    "rightWords": [
+      "come",
+      "along",
+      "biscuit",
+      "were",
+      "going",
+      "help",
+      "the",
+      "farm",
+      "today"
+    ]
+  },
+  {
+    "page": "spread_03.webp",
+    "text": "Woof, woof!\nWe can feed the hens, Biscuit.\n8\nU",
+    "leftWords": [
+      "woof",
+      "can",
+      "feed",
+      "the",
+      "hens",
+      "biscuit"
+    ],
+    "rightWords": []
+  },
+  {
+    "page": "spread_04.webp",
+    "text": "Woof, woof!\nWe can feed the pigs, too.\n10\nThe pigpen\nis empty, Biscuit.\nWhere can the pigs be?\n11",
+    "leftWords": [
+      "woof",
+      "can",
+      "feed",
+      "the",
+      "pigs",
+      "too"
+    ],
+    "rightWords": [
+      "the",
+      "pigpen",
+      "empty",
+      "biscuit",
+      "where",
+      "can",
+      "pigs"
+    ]
+  },
+  {
+    "page": "spread_05.webp",
+    "text": "Woof, woof!\nFunny puppy.\n12\nYou found the pig\nand the piglets, too.\nWoof!\n13",
+    "leftWords": [
+      "woof",
+      "funny",
+      "puppy"
+    ],
+    "rightWords": [
+      "you",
+      "found",
+      "the",
+      "pig",
+      "and",
+      "piglets",
+      "too",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_06.webp",
+    "text": "Let's feed the goats,\nBiscuit.\nWoof, woof!\n14\nOink!\nOh. Biscuit.\nThe piglet is out of the pen.\n15",
+    "leftWords": [
+      "lets",
+      "feed",
+      "the",
+      "goats",
+      "biscuit",
+      "woof"
+    ],
+    "rightWords": [
+      "oink",
+      "biscuit",
+      "the",
+      "piglet",
+      "out",
+      "pen"
+    ]
+  },
+  {
+    "page": "spread_07.webp",
+    "text": "We must put\nthe piglet back.\nWoof, woof!\n16\nLet's feed the sheep, Biscuit.\nWoof, woof!",
+    "leftWords": [
+      "must",
+      "put",
+      "the",
+      "piglet",
+      "back",
+      "woof"
+    ],
+    "rightWords": [
+      "lets",
+      "feed",
+      "the",
+      "sheep",
+      "biscuit",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_08.webp",
+    "text": "Oink!\nOh no, Biscuit.\nIt's the piglet!\nWe must put the piglet back\none more time.\nWoof, woof!\n19",
+    "leftWords": [
+      "oink",
+      "biscuit",
+      "its",
+      "the",
+      "piglet"
+    ],
+    "rightWords": [
+      "must",
+      "put",
+      "the",
+      "piglet",
+      "back",
+      "one",
+      "more",
+      "time",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_09.webp",
+    "text": "Here are the geese,\nBiscuit.\nWoof, woof!\nOink!\nHere is the piglet again.\n21",
+    "leftWords": [
+      "here",
+      "are",
+      "the",
+      "geese",
+      "biscuit"
+    ],
+    "rightWords": [
+      "woof",
+      "oink",
+      "here",
+      "the",
+      "piglet",
+      "again"
+    ]
+  },
+  {
+    "page": "spread_10.webp",
+    "text": "Woof, woof!\nOink! Oink!\nHonk!\n9",
+    "leftWords": [],
+    "rightWords": [
+      "woof",
+      "oink",
+      "honk"
+    ]
+  },
+  {
+    "page": "spread_11.webp",
+    "text": "Wait, Biscuit!\nThe geese are just\nsaying hello.\n24\nWoof!",
+    "leftWords": [
+      "wait",
+      "biscuit",
+      "the",
+      "geese",
+      "are",
+      "just",
+      "saying",
+      "hello"
+    ],
+    "rightWords": [
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_12.webp",
+    "text": "Silly puppy!\nThe piglet is back\nin the pen.\n26\nAnd so are you, Biscuit!",
+    "leftWords": [
+      "silly",
+      "puppy",
+      "the",
+      "piglet",
+      "back",
+      "pen"
+    ],
+    "rightWords": [
+      "and",
+      "are",
+      "you",
+      "biscuit"
+    ]
+  },
+  {
+    "page": "spread_13.webp",
+    "text": "Oink!\nWoof, woof!\n28",
+    "leftWords": [],
+    "rightWords": [
+      "oink",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_14.webp",
+    "text": "I Can Read!\nWhen Biscuit meets\na little piglet, his new\nfriend wants to follow\nhim everywhere!\nSHARED\nMy\nTM\nFirst\nREADING\nMy\nFirst\nIdeal for sharing with emergent readers\n1 Simple sentences for eager new readers\n2 High-interest stories for developing readers\n3 Complex plots for confident readers\n4 The perfect bridge to chapter books\nFor more information about the\nI Can Read BookⓇ series, see inside!\nHarper TrophyⓇ\nAn Imprint of HarperCollins Publishers\nwww.icanread.com\nCover art © 2007 by Pat Schorles\nwww.harpercollinschildrens.com\nBOOK NEWS, GAMES, CONTESTS, AND MORE\nUS $3.99 / $4.99 CAN\nISBN 978-0-06-074169-3\n50399\n10 18",
+    "leftWords": [
+      "can",
+      "read",
+      "when",
+      "biscuit",
+      "meets",
+      "little",
+      "piglet",
+      "his",
+      "new",
+      "friend",
+      "wants",
+      "follow",
+      "him",
+      "everywhere",
+      "first",
+      "ideal",
+      "for",
+      "sharing",
+      "simple",
+      "sentences",
+      "high",
+      "interest",
+      "stories",
+      "complex",
+      "plots",
+      "the",
+      "perfect",
+      "bridge",
+      "more",
+      "information",
+      "book",
+      "harper",
+      "trophy",
+      "imprint",
+      "harpercollins",
+      "publishers",
+      "wwwicanreadcom",
+      "cover",
+      "art",
+      "pat",
+      "schorles"
+    ],
+    "rightWords": [
+      "shared",
+      "first",
+      "reading",
+      "with",
+      "emergent",
+      "readers",
+      "for",
+      "eager",
+      "new",
+      "developing",
+      "confident",
+      "chapter",
+      "books",
+      "about",
+      "the",
+      "series",
+      "see",
+      "inside",
+      "wwwharpercollinschildrenscom",
+      "book",
+      "news",
+      "games",
+      "contests",
+      "and",
+      "more",
+      "can",
+      "isbn"
+    ]
+  }
+]

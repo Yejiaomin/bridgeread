@@ -1,0 +1,360 @@
+[
+  {
+    "page": "cover.webp",
+    "text": "I Can Read!\nSHARED\nMy\nFirst\nREADING\nBiscuit\nWins a Prize\nby ALYSSA SATIN CAPUCILLI • pictures by PAT SCHORIES",
+    "leftWords": [
+      "can",
+      "read",
+      "biscuit",
+      "wins",
+      "alyssa",
+      "satin",
+      "capucilli"
+    ],
+    "rightWords": [
+      "shared",
+      "first",
+      "reading",
+      "prize",
+      "pictures",
+      "pat",
+      "schories"
+    ]
+  },
+  {
+    "page": "spread_01.webp",
+    "text": "HOORAY!\ncan read this book!\nI Can Read!\nSHARED\nMy\nFirst\nREADING\nBiscuit\nWins a Prize\n1\n9 780060 094584\n1SBN 978-0-06-009458-4\nUSA $3.99 / $4.99 CAN\n50399\nS\nZZ SL\nstory by ALYSSA SATIN CAPUCILLI\npictures by PAT SCHORIES\nHarperCollins Publishers",
+    "leftWords": [
+      "hooray",
+      "can",
+      "read",
+      "this",
+      "book",
+      "sbn",
+      "usa"
+    ],
+    "rightWords": [
+      "can",
+      "read",
+      "shared",
+      "first",
+      "reading",
+      "biscuit",
+      "wins",
+      "prize",
+      "story",
+      "alyssa",
+      "satin",
+      "capucilli",
+      "pictures",
+      "pat",
+      "schories",
+      "harpercollins",
+      "publishers"
+    ]
+  },
+  {
+    "page": "spread_02.webp",
+    "text": "Here, Biscuit.\nIt's time for the pet show!\nWoof, woof!\n3",
+    "leftWords": [],
+    "rightWords": [
+      "here",
+      "biscuit",
+      "its",
+      "time",
+      "for",
+      "the",
+      "pet",
+      "show",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_03.webp",
+    "text": "There will be lots of pets,\nand prizes, too!\nWoof, woof!\n4\nCome along, sweet puppy.\nYou want to look your best.\nWoof!\n5",
+    "leftWords": [
+      "there",
+      "will",
+      "lots",
+      "pets",
+      "and",
+      "prizes",
+      "too",
+      "woof"
+    ],
+    "rightWords": [
+      "come",
+      "along",
+      "sweet",
+      "puppy",
+      "you",
+      "want",
+      "look",
+      "your",
+      "best",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_04.webp",
+    "text": "Hold still, Biscuit.\nWoof, woof!\nFunny puppy! Don't tug now!\n7221\nHold still, Biscuit.\nWoof, woof!\n7",
+    "leftWords": [
+      "hold",
+      "still",
+      "biscuit",
+      "woof",
+      "funny",
+      "puppy",
+      "dont",
+      "tug",
+      "now"
+    ],
+    "rightWords": [
+      "hold",
+      "still",
+      "biscuit",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_05.webp",
+    "text": "Oh, Biscuit!\nIt's not time to roll over.\n8\nWoof, woof!\nIt's time for the pet show!",
+    "leftWords": [
+      "biscuit",
+      "its",
+      "not",
+      "time",
+      "roll",
+      "over"
+    ],
+    "rightWords": [
+      "woof",
+      "its",
+      "time",
+      "for",
+      "the",
+      "pet",
+      "show"
+    ]
+  },
+  {
+    "page": "spread_06.webp",
+    "text": "Look at all the pets, Biscuit.\nWoof, woof!\nBiscuit sees his friend Puddles.\nBow wow!\nWoof, woof!\n10\n11",
+    "leftWords": [
+      "look",
+      "all",
+      "the",
+      "pets",
+      "biscuit",
+      "woof",
+      "sees",
+      "his",
+      "friend",
+      "puddles"
+    ],
+    "rightWords": [
+      "bow",
+      "wow",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_07.webp",
+    "text": "Biscuit sees his friend Sam.\nRuff!\nWoof, woof!\n12\n13",
+    "leftWords": [
+      "biscuit",
+      "sees",
+      "his",
+      "friend",
+      "sam"
+    ],
+    "rightWords": [
+      "ruff",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_08.webp",
+    "text": "Biscuit sees\nlots of new friends, too.\n14\nWoof, woof!",
+    "leftWords": [
+      "biscuit",
+      "sees",
+      "lots",
+      "new",
+      "friends",
+      "too"
+    ],
+    "rightWords": [
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_09.webp",
+    "text": "Hold still now, Biscuit.\nHere comes the judge.\n16\nWoof!\nOh no, Biscuit. Come back!",
+    "leftWords": [
+      "hold",
+      "still",
+      "now",
+      "biscuit",
+      "here",
+      "comes",
+      "the",
+      "judge"
+    ],
+    "rightWords": [
+      "woof",
+      "biscuit",
+      "come",
+      "back"
+    ]
+  },
+  {
+    "page": "spread_10.webp",
+    "text": "Biscuit wants\nto see the fish.\nWoof!\nBiscuit wants\nto see the bunnies.\nWoof!",
+    "leftWords": [
+      "biscuit",
+      "wants",
+      "see",
+      "the",
+      "fish",
+      "woof"
+    ],
+    "rightWords": [
+      "biscuit",
+      "wants",
+      "see",
+      "the",
+      "bunnies",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_11.webp",
+    "text": "Woof, woof!\nBiscuit wants\nto see all of the pets\nat the pet show!",
+    "leftWords": [
+      "woof"
+    ],
+    "rightWords": [
+      "biscuit",
+      "wants",
+      "see",
+      "all",
+      "the",
+      "pets",
+      "pet",
+      "show"
+    ]
+  },
+  {
+    "page": "spread_12.webp",
+    "text": "Silly puppy! Here you are.\n22\nWhat prize will you win now?\nWoof, woof!",
+    "leftWords": [
+      "silly",
+      "puppy",
+      "here",
+      "you",
+      "are"
+    ],
+    "rightWords": [
+      "what",
+      "prize",
+      "will",
+      "you",
+      "win",
+      "now",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_13.webp",
+    "text": "1\nFRIEND\nOh, Biscuit!\nYou won the best prize of all!\nWoof!\n24\n1\nFRIEND",
+    "leftWords": [
+      "friend",
+      "biscuit",
+      "you",
+      "won",
+      "the",
+      "best",
+      "prize",
+      "all",
+      "woof"
+    ],
+    "rightWords": [
+      "friend"
+    ]
+  },
+  {
+    "page": "spread_14.webp",
+    "text": "Can Read!\nSHARED\nMy\nFirst\nREADING\nIt's the day of the pet show,\nand Biscuit sees so many\nfriends that he can't stay still.\nCan he sit in one place long\nenough to win a prize?\nMy\nFirst\nIdeal for sharing with emergent readers\n1 Simple sentences for eager new readers\n2 High-interest stories for developing readers\n3 Complex plots for confident readers\n4 The perfect bridge to chapter books\nFor more information about\nI Can Read Books, see inside!\nUSA $3.99 / $4.99 CAN\nHarper TrophyⓇ\nAn Imprint of HarperCollinsPublishers\nwww.icanread.com\nCover art © 2004 by Pat Schories\nISBN 978-0-06-009458-4\n50399\n15 27\n'S\n9780060 094584",
+    "leftWords": [
+      "can",
+      "read",
+      "its",
+      "the",
+      "day",
+      "pet",
+      "show",
+      "and",
+      "biscuit",
+      "sees",
+      "many",
+      "friends",
+      "that",
+      "cant",
+      "stay",
+      "sit",
+      "one",
+      "place",
+      "enough",
+      "win",
+      "prize",
+      "first",
+      "ideal",
+      "for",
+      "sharing",
+      "simple",
+      "sentences",
+      "high",
+      "interest",
+      "stories",
+      "complex",
+      "plots",
+      "perfect",
+      "bridge",
+      "more",
+      "information",
+      "harper",
+      "trophy",
+      "imprint",
+      "harpercollinspublishers",
+      "wwwicanreadcom",
+      "cover",
+      "art",
+      "pat",
+      "schories"
+    ],
+    "rightWords": [
+      "shared",
+      "first",
+      "reading",
+      "still",
+      "long",
+      "with",
+      "emergent",
+      "readers",
+      "for",
+      "eager",
+      "new",
+      "developing",
+      "confident",
+      "chapter",
+      "books",
+      "about",
+      "see",
+      "inside",
+      "usa",
+      "can",
+      "isbn"
+    ]
+  }
+]

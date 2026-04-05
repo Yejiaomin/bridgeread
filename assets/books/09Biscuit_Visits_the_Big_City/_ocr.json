@@ -1,0 +1,350 @@
+[
+  {
+    "page": "cover.webp",
+    "text": "I Can Read!\nBiscuit\nVisits\nthe\nSHARED\nMy\nFirst\nREADING\nBig City\nJON",
+    "leftWords": [
+      "can",
+      "read",
+      "biscuit",
+      "visits",
+      "big"
+    ],
+    "rightWords": [
+      "the",
+      "shared",
+      "first",
+      "reading",
+      "city",
+      "jon"
+    ]
+  },
+  {
+    "page": "spread_01.webp",
+    "text": "HOORAY!\ncan read this book!\n9780060 741662\"\nISBN 978-0-06-074166-2\nUSA $3.99 / $4.99 CAN\n50399\nS\nI Can Read!\nSHARED\nMy\nFirst\nREADING\nBiscuit\nVisits\nthe\nBig City\nstory by ALYSSA SATIN CAPUCILLI\npictures by PAT SCHORIES\nHarperCollins Publishers",
+    "leftWords": [
+      "hooray",
+      "can",
+      "read",
+      "this",
+      "book",
+      "isbn",
+      "usa"
+    ],
+    "rightWords": [
+      "can",
+      "read",
+      "shared",
+      "first",
+      "reading",
+      "biscuit",
+      "visits",
+      "the",
+      "big",
+      "city",
+      "story",
+      "alyssa",
+      "satin",
+      "capucilli",
+      "pictures",
+      "pat",
+      "schories",
+      "harpercollins",
+      "publishers"
+    ]
+  },
+  {
+    "page": "spread_02.webp",
+    "text": "20\nHere we are, Biscuit.\nWoof, woof!\nWe're in the big city.",
+    "leftWords": [],
+    "rightWords": [
+      "here",
+      "are",
+      "biscuit",
+      "woof",
+      "were",
+      "the",
+      "big",
+      "city"
+    ]
+  },
+  {
+    "page": "spread_03.webp",
+    "text": "We're going to visit\nour friend Jack.\n8\nWoof, woof!\nCoo, coo!\n9\nHN MIO+ M4\nGVAO",
+    "leftWords": [
+      "were",
+      "going",
+      "visit",
+      "our",
+      "friend",
+      "jack"
+    ],
+    "rightWords": [
+      "woof",
+      "coo",
+      "mio",
+      "gvao"
+    ]
+  },
+  {
+    "page": "spread_04.webp",
+    "text": "Stay with me, Biscuit.\nIt's very busy in the big city!\nWoof, woof!\n11",
+    "leftWords": [],
+    "rightWords": [
+      "stay",
+      "with",
+      "biscuit",
+      "its",
+      "very",
+      "busy",
+      "the",
+      "big",
+      "city",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_05.webp",
+    "text": "There are lots of tall buildings\nin the big city, Biscuit.\nWoof, woof!\n吾",
+    "leftWords": [],
+    "rightWords": [
+      "there",
+      "are",
+      "lots",
+      "tall",
+      "buildings",
+      "the",
+      "big",
+      "city",
+      "biscuit",
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_06.webp",
+    "text": "There are lots of people, too.\nWoof, woof!\nFunny puppy!\nYou want to say hello\nto everyone.\n15",
+    "leftWords": [
+      "there",
+      "are",
+      "lots",
+      "people",
+      "too",
+      "woof"
+    ],
+    "rightWords": [
+      "funny",
+      "puppy",
+      "you",
+      "want",
+      "say",
+      "hello",
+      "everyone"
+    ]
+  },
+  {
+    "page": "spread_07.webp",
+    "text": "Stay with me, Biscuit.\nIt's very busy here!\nWoof, woof!\nThero\n10\nBeep! Beep! Horizo\nWoof!\nDOY\nIt's only a big bus, Biscuit.\n17",
+    "leftWords": [
+      "stay",
+      "with",
+      "biscuit",
+      "its",
+      "very",
+      "busy",
+      "here",
+      "woof",
+      "thero"
+    ],
+    "rightWords": [
+      "beep",
+      "horizo",
+      "woof",
+      "doy",
+      "its",
+      "only",
+      "big",
+      "bus",
+      "biscuit"
+    ]
+  },
+  {
+    "page": "spread_08.webp",
+    "text": "هم\nWoof, woof!\nYou found the fountain,\nBiscuit.\n18\nThere's so much to see\nin the big city,\nisn't there, Biscuit?\n19",
+    "leftWords": [
+      "woof",
+      "you",
+      "found",
+      "the",
+      "fountain",
+      "biscuit"
+    ],
+    "rightWords": [
+      "theres",
+      "much",
+      "see",
+      "the",
+      "big",
+      "city",
+      "isnt",
+      "there",
+      "biscuit"
+    ]
+  },
+  {
+    "page": "spread_09.webp",
+    "text": "Woof!\nCoo, coo!\n20\ntoo Woof, woof! doo\nCoo, coo!\n21",
+    "leftWords": [
+      "woof",
+      "coo"
+    ],
+    "rightWords": [
+      "too",
+      "woof",
+      "doo",
+      "coo"
+    ]
+  },
+  {
+    "page": "spread_10.webp",
+    "text": "90\nJACK'S\nSNACKS\nWoof, woof! Woof, woof!\nOh no, Biscuit! Come back!\n22\nBiscuit, where are you going?\n23",
+    "leftWords": [
+      "woof",
+      "biscuit",
+      "come",
+      "back"
+    ],
+    "rightWords": [
+      "jacks",
+      "snacks",
+      "biscuit",
+      "where",
+      "are",
+      "you",
+      "going"
+    ]
+  },
+  {
+    "page": "spread_11.webp",
+    "text": "24\nJACK'S\nSNACKS\nWoof!\nSilly puppy! Here you are.h\n25",
+    "leftWords": [],
+    "rightWords": [
+      "jacks",
+      "snacks",
+      "woof",
+      "silly",
+      "puppy",
+      "here",
+      "you",
+      "areh"
+    ]
+  },
+  {
+    "page": "spread_12.webp",
+    "text": "JACK'S\nSNACKS\nThis is a big, busy city, Biscuit.\nBut you found our friend Jack,\nand some new friends, too!\n26\nCoo, coo!\ntooW",
+    "leftWords": [
+      "jacks",
+      "snacks",
+      "this",
+      "big",
+      "busy",
+      "city",
+      "biscuit",
+      "but",
+      "you",
+      "found",
+      "our",
+      "friend",
+      "jack",
+      "and",
+      "some",
+      "new",
+      "friends",
+      "too"
+    ],
+    "rightWords": [
+      "coo",
+      "toow"
+    ]
+  },
+  {
+    "page": "spread_13.webp",
+    "text": "Woof!\n28",
+    "leftWords": [],
+    "rightWords": [
+      "woof"
+    ]
+  },
+  {
+    "page": "spread_14.webp",
+    "text": "I Can Read!\nThe city is a big and busy\nplace for a little puppy―\nthere are tall buildings,\nhonking cars, and all kinds\nof new friends to make!\nSHARED\nMy\nFirst\nREADING\nMy\nFirst\nIdeal for sharing with emergent readers\nSimple sentences for eager new readers\n2 High-interest stories for developing readers\n3 Complex plots for confident readers\n4 The perfect bridge to chapter books\nFor more information about the\nI Can Read Book® series, see inside!\nUS $3.99 / $4.99 CAN\nISBN 978-0-06-074166-2\nHarper Trophy\nAn Imprint of HarperCollinsPublishers\nwww.icanread.com\nCover art © 2006 by Pat Schories\n50399\nS",
+    "leftWords": [
+      "can",
+      "read",
+      "the",
+      "city",
+      "big",
+      "and",
+      "busy",
+      "place",
+      "for",
+      "little",
+      "puppy",
+      "there",
+      "are",
+      "tall",
+      "buildings",
+      "honking",
+      "cars",
+      "all",
+      "new",
+      "friends",
+      "make",
+      "first",
+      "ideal",
+      "sharing",
+      "simple",
+      "sentences",
+      "high",
+      "interest",
+      "stories",
+      "complex",
+      "plots",
+      "perfect",
+      "bridge",
+      "more",
+      "information",
+      "book",
+      "harper",
+      "trophy",
+      "imprint",
+      "harpercollinspublishers",
+      "wwwicanreadcom",
+      "cover",
+      "art",
+      "pat",
+      "schories"
+    ],
+    "rightWords": [
+      "kinds",
+      "shared",
+      "first",
+      "reading",
+      "with",
+      "emergent",
+      "readers",
+      "for",
+      "eager",
+      "new",
+      "developing",
+      "confident",
+      "chapter",
+      "books",
+      "about",
+      "the",
+      "series",
+      "see",
+      "inside",
+      "can",
+      "isbn"
+    ]
+  }
+]

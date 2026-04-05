@@ -1,0 +1,261 @@
+{
+  "id": "bath_book07_day1",
+  "bookTitle": "Bathtime for Biscuit",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "Time for a bath, Biscuit!",
+  "originalAudio": "books/07Bathtime_for_Biscuit/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Bathtime for Biscuit的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "bath_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "呀，你们看！小女孩叫Biscuit去洗澡啦！她说：\"Time for a bath, Biscuit!\" 这里的bath就是洗澡的意思。可是小狗狗Biscuit想干嘛呀？他才不想洗澡呢，他\"Woof, woof\"地叫着，他想玩！play就是玩。你猜Biscuit想干嘛呀？",
+      "narrativeEN": "Time for a bath, Biscuit! Woof, woof! Biscuit wants to play.",
+      "keywords": [
+        "bath",
+        "play"
+      ],
+      "audioCN": "bath_p1_cn",
+      "audioEN": "bath_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 19600
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩又叫了一次：\"Time for a bath, Biscuit!\" 可是Biscuit还是不想去洗澡，他大声地叫着，然后跑去\"dig\"！dig就是挖洞，你看他把土都挖起来了！挖完洞，他又开始\"roll\"！roll就是打滚。哎呀，他这是越玩越脏了呀，是不是很有趣？",
+      "narrativeEN": "Time for a bath, Biscuit! Woof, woof! Biscuit wants to dig. Time for a bath, Biscuit! Woof, woof! Biscuit wants to roll.",
+      "keywords": [
+        "dig",
+        "roll"
+      ],
+      "audioCN": "bath_p2_cn",
+      "audioEN": "bath_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 27500
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩有点着急了，她说：\"Time for a bath, Biscuit! Time to get nice and clean.\" clean就是干净。她想让Biscuit变得香香的、干净的。小女孩说：\"In you go!\" 想让Biscuit进去浴缸。可是Biscuit \"Woof\"地叫了一声，他还是\"does not want a bath\"！他就是不想洗澡，怎么办呀？",
+      "narrativeEN": "Time for a bath, Biscuit! Time to get nice and clean. Woof, woof! In you go! Woof! Biscuit does not want a bath!",
+      "keywords": [
+        "clean",
+        "does not want"
+      ],
+      "audioCN": "bath_p3_cn",
+      "audioEN": "bath_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 35000
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "就在这时，\"Bow wow!\" 咦？谁来了呀？Biscuit看到了他的\"friend\"！friend就是朋友。原来是他的好朋友Puddles来了！Biscuit\"Woof, woof\"地叫着，他想\"climb out\"！climb out就是爬出来。他想从浴缸里爬出去找朋友玩！你猜猜看，他会成功吗？",
+      "narrativeEN": "Bow wow! Biscuit sees his friend Puddles. Woof, woof! Biscuit wants to climb out.",
+      "keywords": [
+        "friend",
+        "climb out"
+      ],
+      "audioCN": "bath_p4_cn",
+      "audioEN": "bath_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 59400
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哎呀，小女孩要怎么抓住这两个顽皮的狗狗呀？她赶紧叫：\"Come back, Biscuit!\" \"Come back, Puddles!\" come back就是回来。可是Biscuit \"Woof\"地叫着，Puddles也\"Bow wow\"地叫着，他们才不听话呢，他们开心地跑掉了！他们会去哪里玩呢？",
+      "narrativeEN": "Come back, Biscuit! Woof! Come back, Puddles! Bow wow!",
+      "keywords": [
+        "Come back"
+      ],
+      "audioCN": "bath_p5_cn",
+      "audioEN": "bath_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 69600
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你看，Biscuit和Puddles跑到院子里玩啦！他们想在\"sprinkler\"里玩！sprinkler就是洒水器，水花四溅，好凉快呀！玩完水，他们又跑去\"dig in the mud\"！mud就是泥巴。哇，他们玩的真开心，可是这样会变得更脏，是不是？",
+      "narrativeEN": "Biscuit and Puddles want to play in the sprinkler. Biscuit and Puddles want to dig in the mud.",
+      "keywords": [
+        "sprinkler",
+        "mud"
+      ],
+      "audioCN": "bath_p6_cn",
+      "audioEN": "bath_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 70500
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "这两个小家伙玩得可真疯呀！他们还跑去\"roll in the flower bed\"！flower bed就是花坛，他们在花丛里打滚！这下身上都是泥巴和花瓣啦！小女孩终于追上了他们，她抓住了其中一只，开心地说：\"Now I have you!\" have就是抓住了。太好啦！",
+      "narrativeEN": "Biscuit and Puddles want to roll in the flower bed. Now I have you! ebb",
+      "keywords": [
+        "flower bed",
+        "have"
+      ],
+      "audioCN": "bath_p7_cn",
+      "audioEN": "bath_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 77700
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩拿着大毛巾，想给狗狗们擦干净。可是Biscuit \"Woof, woof\"地叫着，Puddles也\"Bow wow\"地叫着，他们就是不肯乖乖地被擦！小女孩说：\"Let go of the towel, Biscuit! Let go of the towel, Puddles!\" let go就是放手。他们是不是在跟毛巾拔河呀？",
+      "narrativeEN": "Woof, woof! Let go of the towel, Biscuit! Bow wow! Let go of the towel, Puddles!",
+      "keywords": [
+        "Let go",
+        "towel"
+      ],
+      "audioCN": "bath_p8_cn",
+      "audioEN": "bath_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哎呀，这两个\"silly puppies\"！silly就是傻傻的，顽皮的。puppies就是小狗们。小女孩又叫着：\"Let go!\" 她想让这两个小淘气快点放开毛巾。你觉得他们会听话吗？他们是不是玩得有点太忘我啦？",
+      "narrativeEN": "Silly puppies! Let go!",
+      "keywords": [
+        "Silly",
+        "puppies"
+      ],
+      "audioCN": "bath_p9_cn",
+      "audioEN": "bath_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 105800
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈，你猜猜看，毛巾最后被谁抢走了？\"Woof, woof! Bow wow!\" 狗狗们\"Oh!\"地叫了一声，小女孩也\"Oh!\"地叫了一声！原来，毛巾被狗狗们扯掉了，还溅了小女孩一身水！哎呀，这下小女孩也被弄湿啦！是不是很搞笑呀？",
+      "narrativeEN": "||||| Woof, woof! Bow wow! Oh!",
+      "keywords": [
+        "Oh"
+      ],
+      "audioCN": "bath_p10_cn",
+      "audioEN": "bath_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩看着湿漉漉的自己和两个脏兮兮的狗狗，终于想到了一个好办法！她笑着说：\"Time for a bath, Biscuit!\" 然后又开心地说：\"A bath for all of us!\" all of us就是我们所有人！哈哈，这下大家都要一起洗香香啦！是不是一个开心的结局呀？",
+      "narrativeEN": "Time for a bath, Biscuit! Woof, woof! A bath for all of us!",
+      "keywords": [
+        "all of us"
+      ],
+      "audioCN": "bath_p11_cn",
+      "audioEN": "bath_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 116200
+    },
+    {
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_12.webp",
+      "narrativeCN": "今天的故事讲完啦！Bathtime for Biscuit真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "bath_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "bath",
+      "phonemes": [
+        "b",
+        "a",
+        "th"
+      ],
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_03.webp"
+    },
+    {
+      "word": "get",
+      "phonemes": [
+        "g",
+        "et"
+      ],
+      "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_04.webp"
+    }
+  ]
+}

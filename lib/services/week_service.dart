@@ -18,6 +18,11 @@ const kAllBooks = [
   BookInfo('Biscuit Loves the Library', '小饼干爱图书馆', 'biscuit_library_book3_day1', 'assets/books/03Biscuit_Loves_the_Library/cover.webp', 'books/03Biscuit_Loves_the_Library/audio.mp3'),
   BookInfo('Biscuit Finds a Friend', '小饼干找朋友', 'friend_book04_day1', 'assets/books/04Biscuit_Finds_a_Friend/cover.webp', 'books/04Biscuit_Finds_a_Friend/audio.mp3'),
   BookInfo("Biscuit's New Trick", '小饼干的新把戏', 'trick_book05_day1', 'assets/books/05Biscuits_New_Trick/cover.webp', 'books/05Biscuits_New_Trick/audio.mp3'),
+  BookInfo("Biscuit's Day at the Farm", '小饼干的农场日', 'farm_book06_day1', 'assets/books/06Biscuits_Day_at_the_Farm/cover.webp', 'books/06Biscuits_Day_at_the_Farm/audio.mp3'),
+  BookInfo('Bathtime for Biscuit', '小饼干洗澡啦', 'bath_book07_day1', 'assets/books/07Bathtime_for_Biscuit/cover.webp', 'books/07Bathtime_for_Biscuit/audio.mp3'),
+  BookInfo('Biscuit Wins a Prize', '小饼干赢奖啦', 'prize_book08_day1', 'assets/books/08Biscuit_Wins_a_Prize/cover.webp', 'books/08Biscuit_Wins_a_Prize/audio.mp3'),
+  BookInfo('Biscuit Visits the Big City', '小饼干游大城市', 'city_book09_day1', 'assets/books/09Biscuit_Visits_the_Big_City/cover.webp', 'books/09Biscuit_Visits_the_Big_City/audio.mp3'),
+  BookInfo('Biscuit Plays Ball', '小饼干打球', 'ball_book10_day1', 'assets/books/10Biscuit_Plays_Ball/cover.webp', 'books/10Biscuit_Plays_Ball/audio.mp3'),
   // 新书追加到这里
 ];
 
@@ -25,7 +30,7 @@ const kAllBooks = [
 /// Example: [5, 15] → books 0-4 are series 1, books 5-19 are series 2.
 /// When series ends mid-week, remaining weekdays are review (复习).
 /// Next series always starts on Monday.
-const kSeriesSizes = [5];
+const kSeriesSizes = [20];
 
 DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
 

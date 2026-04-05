@@ -1,0 +1,274 @@
+{
+  "id": "ball_book10_day1",
+  "bookTitle": "Biscuit Plays Ball",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "It's time to play ball, Biscuit!",
+  "originalAudio": "books/10Biscuit_Plays_Ball/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Plays Ball的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "ball_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "今天呀，小女孩要带Biscuit去看球赛啦！play ball就是打球。她说快来呀Biscuit，比赛马上就要开始了！game就是比赛。你喜欢看球赛吗？",
+      "narrativeEN": "It's time to play ball, Biscuit. Woof, woof! Look, Biscuit. The game is about to begin.",
+      "keywords": [
+        "play",
+        "ball"
+      ],
+      "audioCN": "ball_p1_cn",
+      "audioEN": "ball_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 27600
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩说你在这里等着，stay就是待着的意思。你可以看比赛，watch就是看。可是Biscuit坐得住吗？哈哈，他往哪里跑呀！",
+      "narrativeEN": "Woof, woof! Stay here now, Biscuit. You can watch. Woof, woof! Wait, Biscuit. Where are you going?",
+      "keywords": [
+        "stay",
+        "watch"
+      ],
+      "audioCN": "ball_p2_cn",
+      "audioEN": "ball_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 87000
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩着急地说，Biscuit你不能上场打球呀！这个球赛里没有小狗的！no dogs就是没有狗狗。可是Biscuit才不管呢！Woof woof！",
+      "narrativeEN": "Woof! You can't play ball now, Biscuit. There are no dogs in this ball game. Stay here, Biscuit. Woof, woof!",
+      "keywords": [
+        "play",
+        "ball"
+      ],
+      "audioCN": "ball_p3_cn",
+      "audioEN": "ball_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 88300
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哎呀，Biscuit又跑过去啦！Uh-oh就是糟糕的意思。Not again就是又来了！Biscuit你怎么老是忍不住呀，哈哈！",
+      "narrativeEN": "him Uh-oh, Biscuit. Not again! Woof, woof!",
+      "keywords": [
+        "again"
+      ],
+      "audioCN": "ball_p4_cn",
+      "audioEN": "ball_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩又把Biscuit拉回来说，乖乖待在这里好不好？Won't you stay就是你能不能待着呀？可是你猜Biscuit听话了吗？",
+      "narrativeEN": "Come along, Biscuit. There are no dogs in this ball game. Won't you stay here, Biscuit? Woof, woof!",
+      "keywords": [
+        "along",
+        "dogs"
+      ],
+      "audioCN": "ball_p5_cn",
+      "audioEN": "ball_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 120300
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit才不想乖乖坐着呢！他也想玩！Biscuit does not want to stay，他不想待着。他也想play，也想玩！你说Biscuit是不是特别调皮呀？",
+      "narrativeEN": "Biscuit does not want to stay. Woof, woof! Biscuit wants to play, too. Woof!",
+      "keywords": [
+        "stay",
+        "play"
+      ],
+      "audioCN": "ball_p6_cn",
+      "audioEN": "ball_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 135900
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你看Biscuit多兴奋！他想跑，run就是跑。他想跳，jump就是跳！又跑又跳的，Biscuit玩得好开心啊！",
+      "narrativeEN": "Biscuit wants to run. Woof! Biscuit wants to jump. Woof!",
+      "keywords": [
+        "jump"
+      ],
+      "audioCN": "ball_p7_cn",
+      "audioEN": "ball_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 151100
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "天哪！Biscuit把球叼走啦！play ball，他就是想打球嘛！小女孩喊，Come back with the ball！快把球还回来！哈哈，Biscuit你也太调皮了吧！",
+      "narrativeEN": "Biscuit wants to play ball! Woof, woof! Oh no, Biscuit. Come back with the ball!",
+      "keywords": [
+        "play",
+        "ball"
+      ],
+      "audioCN": "ball_p8_cn",
+      "audioEN": "ball_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 170900
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "球被Biscuit叼走了，大家都没法玩了。silly puppy就是傻乎乎的小狗。How can we play now，我们现在怎么玩呀？你说怎么办？",
+      "narrativeEN": "Silly puppy. How can we play now?",
+      "keywords": [
+        "silly",
+        "puppy"
+      ],
+      "audioCN": "ball_p9_cn",
+      "audioEN": "ball_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哇！Biscuit找到了他的好朋友Puddles！Puddles也带了一个球！found就是找到了。现在有两个球了，大家都可以一起玩啦！",
+      "narrativeEN": "Woof, woof! Woof, woof! Bow wow! Oh. Biscuit! You found your friend Puddles. And Puddles has a ball, too! Woof, woof! Bow wow!",
+      "keywords": [
+        "friend",
+        "puddles"
+      ],
+      "audioCN": "ball_p10_cn",
+      "audioEN": "ball_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩笑着说，好吧Biscuit，现在轮到你打球啦！It's time to play ball，该打球啦！",
+      "narrativeEN": "It's time to play ball, Biscuit.",
+      "keywords": [
+        "play",
+        "ball"
+      ],
+      "audioCN": "ball_p11_cn",
+      "audioEN": "ball_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "最后大家一起打球啦！Time for all of us，大家一起来！Biscuit终于如愿以偿了，是不是很开心呀？你有没有像Biscuit一样特别想玩的时候呢？",
+      "narrativeEN": "Time for all of us! Woof!",
+      "keywords": [],
+      "audioCN": "ball_p12_cn",
+      "audioEN": "ball_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit虽然很调皮，但是最后大家都玩得很开心呢！你学会run和jump了吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "ball_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "stay",
+      "phonemes": [
+        "st",
+        "ay"
+      ],
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_03.webp"
+    },
+    {
+      "word": "you",
+      "phonemes": [
+        "y",
+        "ou"
+      ],
+      "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_04.webp"
+    }
+  ]
+}
