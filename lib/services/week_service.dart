@@ -119,7 +119,7 @@ class WeekService {
     final startStr = prefs.getString('book_start_date');
     if (startStr == null) return 0;
     final start = parseDate(startStr)!;
-    final now = _chinaTime();
+    final now = activeDate();
     if (now.weekday > 5) return null; // weekend
     final wdCount = _weekdaysBetween(start, now);
     if (wdCount <= 0) return null;
@@ -128,7 +128,7 @@ class WeekService {
 
   /// Whether today is a review/padding day (series ended but week hasn't).
   static Future<bool> isReviewDay() async {
-    final now = _chinaTime();
+    final now = activeDate();
     if (now.weekday > 5) return false; // weekends are handled separately
     final idx = await todayBookIndex();
     return idx == null;
@@ -141,7 +141,7 @@ class WeekService {
     final startStr = prefs.getString('book_start_date');
     if (startStr == null) return kAllBooks.take(5).toList();
     final start = parseDate(startStr)!;
-    final now = _chinaTime();
+    final now = activeDate();
 
     // This week's Monday and Friday
     final monday = DateTime(now.year, now.month, now.day)

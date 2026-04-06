@@ -10,6 +10,7 @@ import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 // ── Playlist ──────────────────────────────────────────────────────────────────
 
@@ -421,11 +422,11 @@ class _ListenScreenState extends State<ListenScreen>
                             ),
                           ],
                         ),
-                        child: const Text(
+                        child: Text(
                           'Almost there!\n马上就要通关啦~',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: R.s(24),
                             fontWeight: FontWeight.w800,
                             color: Color(0xFFFF6B35),
                             height: 1.5,
@@ -442,19 +443,19 @@ class _ListenScreenState extends State<ListenScreen>
                       // Eggy
                       cdnImage(
                         'assets/pet/eggy_transparent_bg.webp',
-                        width: 300,
-                        height: 300,
+                        width: R.s(300),
+                        height: R.s(300),
                         fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.pets, size: 180, color: Color(0xFFFFAD7A)),
+                        errorBuilder: (_, __, ___) => Icon(
+                          Icons.pets, size: R.s(180), color: const Color(0xFFFFAD7A)),
                       ),
                       const SizedBox(height: 16),
 
                       // Book title
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontSize: 42,
+                        style: TextStyle(
+                          fontSize: R.s(42),
                           fontWeight: FontWeight.w900,
                           color: Color(0xFFB84A00),
                           letterSpacing: 1.5,
@@ -556,8 +557,8 @@ class _ListenScreenState extends State<ListenScreen>
                   color: Colors.black.withValues(alpha: 0.4),
                   child: Center(
                     child: Container(
-                      width: 300,
-                      height: 300,
+                      width: R.s(300),
+                      height: R.s(300),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: const Color(0xFFFFF5EB).withValues(alpha: 0.95),
@@ -576,7 +577,7 @@ class _ListenScreenState extends State<ListenScreen>
                             style: TextStyle(color: Color(0xFFFF8C42), fontSize: 20, fontWeight: FontWeight.w900),
                           ),
                           cdnImage('assets/pet/eggy_transparent_bg.webp',
-                            width: 170, height: 170, fit: BoxFit.contain),
+                            width: R.s(170), height: R.s(170), fit: BoxFit.contain),
                           const Text('点击返回',
                             style: TextStyle(color: Color(0xFFFFAA66), fontSize: 14, fontWeight: FontWeight.w600),
                           ),
@@ -747,8 +748,8 @@ class _ListenScreenState extends State<ListenScreen>
         GestureDetector(
           onTap: _togglePlay,
           child: Container(
-            width: 80,
-            height: 80,
+            width: R.s(80),
+            height: R.s(80),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
@@ -762,7 +763,7 @@ class _ListenScreenState extends State<ListenScreen>
             child: Icon(
               _playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
               color: const Color(0xFF0D1B2A),
-              size: 46,
+              size: R.s(46),
             ),
           ),
         ),

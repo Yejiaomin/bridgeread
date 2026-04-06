@@ -11,6 +11,7 @@ import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
 import '../widgets/highlighter_overlay.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 class ReaderScreen extends StatefulWidget {
   final String? lessonId;
@@ -363,17 +364,17 @@ class _ReaderScreenState extends State<ReaderScreen>
                 children: [
                   // Decorative circles background
                   Positioned(top: -30, right: -30,
-                    child: Container(width: 120, height: 120,
+                    child: Container(width: R.s(120), height: R.s(120),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white.withValues(alpha: 0.18)))),
                   Positioned(bottom: 40, left: -20,
-                    child: Container(width: 90, height: 90,
+                    child: Container(width: R.s(90), height: R.s(90),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white.withValues(alpha: 0.13)))),
                   Positioned(top: 60, left: 30,
-                    child: Container(width: 50, height: 50,
+                    child: Container(width: R.s(50), height: R.s(50),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white.withValues(alpha: 0.10)))),
@@ -405,11 +406,11 @@ class _ReaderScreenState extends State<ReaderScreen>
                               ),
                             ],
                           ),
-                          child: const Text(
+                          child: Text(
                             '谢谢你来看我，\n陪我一起听故事~',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: R.s(24),
                               fontWeight: FontWeight.w800,
                               color: Color(0xFFFF6B35),
                               height: 1.5,
@@ -428,15 +429,15 @@ class _ReaderScreenState extends State<ReaderScreen>
                       ScaleTransition(
                         scale: _breathAnim,
                         alignment: Alignment.center,
-                        child: _buildEggyAvatar(450),
+                        child: _buildEggyAvatar(R.s(450)),
                       ),
                       const SizedBox(height: 16),
 
                       // Book title
-                      const Text(
+                      Text(
                         'Biscuit',
                         style: TextStyle(
-                          fontSize: 42,
+                          fontSize: R.s(42),
                           fontWeight: FontWeight.w900,
                           color: Color(0xFFB84A00),
                           letterSpacing: 1.5,
@@ -716,7 +717,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                       child: ScaleTransition(
                         scale: _breathAnim,
                         alignment: Alignment.bottomCenter,
-                        child: _buildEggyAvatar(140),
+                        child: _buildEggyAvatar(R.s(140)),
                       ),
                     ),
                   // 🔊 Pulsing speaker icon while audio plays

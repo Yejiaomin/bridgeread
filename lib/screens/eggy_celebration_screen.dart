@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/progress_service.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 // ── Praise options ────────────────────────────────────────────────────────────
 
@@ -260,7 +261,7 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                               child: Text(
                                 _praiseWord,
                                 style: GoogleFonts.nunito(
-                                  fontSize: 52,
+                                  fontSize: R.s(52),
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                   shadows: const [
@@ -276,11 +277,11 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
 
                           const SizedBox(height: 24),
 
-                          // Eggy — 400 px (2× the quiz 200 px)
+                          // Eggy — scaled for screen size
                           Transform.scale(
                             scale: eggyScale,
                             child: cdnImage('assets/pet/eggy_transparent_bg.webp',
-                              height: 400,
+                              height: R.s(400),
                               fit: BoxFit.contain,
                             ),
                           ),

@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Item pools & helpers
@@ -571,7 +572,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
   // ── Eggy with costume overlays ─────────────────────────────────────────────
 
   Widget _buildEggy(double w, double h) {
-    const size = 300.0;
+    final size = R.s(300);
     return Positioned(
       left: w * 0.478 - size / 2,
       top:  h * 0.797 - size / 2,
@@ -588,14 +589,14 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
               errorBuilder: (_, __, ___) => cdnImage('assets/pet/eggy_transparent_bg.webp',
                 width: size, height: size,
                 errorBuilder: (_, __, ___) =>
-                    const SizedBox(width: size, height: size),
+                    SizedBox(width: size, height: size),
               ),
             ),
             // Accessory overlay (single slot — hat/glasses share)
             if (_equippedAccessory != null)
               cdnImage(_itemPath(_equippedAccessory!),
                 width: size, height: size, fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => const SizedBox(width: size, height: size),
+                errorBuilder: (_, __, ___) => SizedBox(width: size, height: size),
               ),
           ],
         ),
@@ -788,7 +789,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
         child: GestureDetector(
             onTap: () {},
             child: Container(
-              width: 300,
+              width: R.s(300),
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -810,9 +811,9 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                         color: Color(0xFFD4521A))),
                   const SizedBox(height: 10),
                   cdnImage(_itemPath(item),
-                    width: 156, height: 156, fit: BoxFit.contain,
+                    width: R.s(156), height: R.s(156), fit: BoxFit.contain,
                     errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.star, color: Colors.amber, size: 156),
+                        Icon(Icons.star, color: Colors.amber, size: R.s(156)),
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
@@ -975,7 +976,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
       final fy     = _slots[i][1];
       final placed = _placed[i];
 
-      const double itemSize = 120;
+      final double itemSize = R.s(120);
       return Positioned(
         left: w * fx - itemSize / 2,
         top:  h * fy - itemSize / 2,

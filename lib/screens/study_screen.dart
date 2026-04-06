@@ -9,6 +9,7 @@ import '../services/lesson_service.dart';
 import '../services/week_service.dart';
 import '../main.dart' show routeObserver;
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 class _RecapPage {
   final String imageAsset;
@@ -518,20 +519,20 @@ class _RecapScreenState extends State<RecapScreen>
                             color: const Color(0xFFFF8C42).withValues(alpha: 0.25),
                             blurRadius: 12, offset: const Offset(0, 4))],
                         ),
-                        child: const Text('还记得这个故事吗？\n让我们再听一遍~',
+                        child: Text('还记得这个故事吗？\n让我们再听一遍~',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800,
-                            color: Color(0xFFFF6B35), height: 1.5)),
+                          style: TextStyle(fontSize: R.s(24), fontWeight: FontWeight.w800,
+                            color: const Color(0xFFFF6B35), height: 1.5)),
                       ),
                       const CustomPaint(size: Size(20, 10), painter: _RecapBubbleTailPainter()),
                       const SizedBox(height: 4),
                       cdnImage('assets/pet/eggy_transparent_bg.webp',
-                        width: 300, height: 300, fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.pets, size: 180, color: Color(0xFFFFAD7A))),
+                        width: R.s(300), height: R.s(300), fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Icon(Icons.pets, size: R.s(180), color: const Color(0xFFFFAD7A))),
                       const SizedBox(height: 16),
                       Text(_recapTitle,
-                        style: const TextStyle(fontSize: 42, fontWeight: FontWeight.w900,
-                          color: Color(0xFFB84A00), letterSpacing: 1.5)),
+                        style: TextStyle(fontSize: R.s(42), fontWeight: FontWeight.w900,
+                          color: const Color(0xFFB84A00), letterSpacing: 1.5)),
                       const SizedBox(height: 4),
                       const Text("Let's listen again!",
                         style: TextStyle(fontSize: 20, color: Color(0xFFCC6622), fontWeight: FontWeight.w600)),
@@ -657,8 +658,8 @@ class _RecapScreenState extends State<RecapScreen>
                 GestureDetector(
                   onTap: _togglePlay,
                   child: Container(
-                    width: 80,
-                    height: 80,
+                    width: R.s(80),
+                    height: R.s(80),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
@@ -673,7 +674,7 @@ class _RecapScreenState extends State<RecapScreen>
                     child: Icon(
                       _playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
                       color: const Color(0xFF0D1B2A),
-                      size: 46,
+                      size: R.s(46),
                     ),
                   ),
                 ),

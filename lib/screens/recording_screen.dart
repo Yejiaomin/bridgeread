@@ -10,6 +10,7 @@ import '../services/lesson_service.dart';
 import '../models/lesson.dart';
 import 'eggy_celebration_screen.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 const _kOrange = Color(0xFFFF8C42);
 
@@ -237,9 +238,9 @@ class _RecordingScreenState extends State<RecordingScreen>
                       child: Text(
                         _current!.text,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 28, fontWeight: FontWeight.w900,
-                          color: Color(0xFF333333), height: 1.3,
+                        style: TextStyle(
+                          fontSize: R.s(28), fontWeight: FontWeight.w900,
+                          color: const Color(0xFF333333), height: 1.3,
                         ),
                       ),
                     ),
@@ -272,7 +273,7 @@ class _RecordingScreenState extends State<RecordingScreen>
                       child: GestureDetector(
                         onTap: _isPlaying ? null : _playSentence,
                         child: Container(
-                          width: 150, height: 150,
+                          width: R.s(150), height: R.s(150),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white.withValues(alpha: 0.9),
@@ -286,10 +287,10 @@ class _RecordingScreenState extends State<RecordingScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(_isPlaying ? Icons.hearing : Icons.play_circle_fill,
-                                  size: 56, color: _kOrange),
+                                  size: R.s(56), color: _kOrange),
                               const SizedBox(height: 10),
                               Text(_isPlaying ? 'Listening...' : 'Hear it first',
-                                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: _kOrange)),
+                                  style: TextStyle(fontSize: R.s(22), fontWeight: FontWeight.w800, color: _kOrange)),
                             ],
                           ),
                         ),
@@ -323,7 +324,7 @@ class _RecordingScreenState extends State<RecordingScreen>
                     GestureDetector(
                       onTap: _isRecording ? _stopRecording : _startRecording,
                       child: Container(
-                        width: 88, height: 88,
+                        width: R.s(88), height: R.s(88),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _isRecording ? Colors.red : _kOrange,
@@ -333,7 +334,7 @@ class _RecordingScreenState extends State<RecordingScreen>
                           )],
                         ),
                         child: Icon(_isRecording ? Icons.stop_rounded : Icons.mic_rounded,
-                            color: Colors.white, size: 42),
+                            color: Colors.white, size: R.s(42)),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -362,7 +363,7 @@ class _RecordingScreenState extends State<RecordingScreen>
                     GestureDetector(
                       onTap: _next,
                       child: Container(
-                        width: 220,
+                        width: R.s(220),
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                         decoration: BoxDecoration(
                           color: _kOrange,
@@ -397,7 +398,7 @@ class _RecordingScreenState extends State<RecordingScreen>
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 220,
+        width: R.s(220),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
           color: color,
