@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'utils/cdn_asset.dart';
 import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
@@ -8,6 +9,7 @@ import 'screens/reader_screen.dart';
 import 'screens/phonics_screen.dart';
 import 'screens/quiz_screen.dart';
 import 'screens/recording_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/listen_screen.dart';
 import 'screens/card_gacha_screen.dart';
 import 'screens/study_room_screen.dart';
@@ -49,7 +51,8 @@ class BridgeReadApp extends StatelessWidget {
       navigatorObservers: [routeObserver],
       initialRoute: '/',
       routes: {
-        '/':          (context) => const _OrientationGate(child: HomeScreen()),
+        '/':          (context) => const _AuthGate(),
+        '/login':     (context) => const LoginScreen(),
         '/home':      (context) => const _OrientationGate(child: HomeScreen()),
         '/study':     (context) => const _OrientationGate(child: StudyScreen()),
         '/calendar':  (context) => const _OrientationGate(child: CalendarScreen()),
@@ -62,6 +65,40 @@ class BridgeReadApp extends StatelessWidget {
         '/weekend-game': (context) => const _OrientationGate(child: WeekendGameScreen()),
         '/studyroom':    (context) => const _OrientationGate(child: StudyRoomScreen()),
       },
+    );
+  }
+}
+
+/// Check auth token — if logged in go to home, otherwise show login
+class _AuthGate extends StatefulWidget {
+  const _AuthGate();
+  @override
+  State<_AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<_AuthGate> {
+  @override
+  void initState() {
+    super.initState();
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (!mounted) return;
+    if (token != null && token.isNotEmpty) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Color(0xFFFFF8F0),
+      body: Center(child: CircularProgressIndicator(color: Color(0xFFFF8C42))),
     );
   }
 }
