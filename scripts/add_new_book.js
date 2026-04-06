@@ -506,6 +506,7 @@ async function buildLesson(ocrResults, sttWords) {
     'many','any','some','come','done','gone','give','live','love','move','none',
     'once','only','other','water','want','what','were','where','who','why',
     'said','says','does','sure','sugar',
+    'walk','talk','chalk','half','calm','palm','could','would','should',
   ]);
   let phonicsWords = [];
   const usedWords = new Set();
