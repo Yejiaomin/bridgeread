@@ -69,7 +69,8 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
 
   Future<void> _runCurrentStep() async {
     if (_phase >= 3) {
-      if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
+      // All review phases done → go to listen
+      if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/listen', (r) => false);
       return;
     }
 
