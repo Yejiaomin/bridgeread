@@ -55,6 +55,7 @@ jobs:
           scp -i ~/.ssh/hk_key /tmp/web.tar.gz root@47.243.220.248:/tmp/
           ssh -i ~/.ssh/hk_key root@47.243.220.248 'cd /var/www/bridgeread && rm -rf * && tar xzf /tmp/web.tar.gz && rm /tmp/web.tar.gz'
 
-          # Sync nginx config and reload
-          scp -i ~/.ssh/hk_key deploy/nginx-bridgeread.conf root@47.243.220.248:/etc/nginx/sites-enabled/bridgeread
+          # Sync nginx config (convert CRLF to LF) and reload
+          sed 's/\r$//' deploy/nginx-bridgeread.conf > /tmp/nginx-bridgeread.conf
+          scp -i ~/.ssh/hk_key /tmp/nginx-bridgeread.conf root@47.243.220.248:/etc/nginx/sites-enabled/bridgeread
           ssh -i ~/.ssh/hk_key root@47.243.220.248 'nginx -t && systemctl reload nginx'
