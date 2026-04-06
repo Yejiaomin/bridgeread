@@ -23,7 +23,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_02.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_1",
+      "narrativeCN": "嘟嘟嘟！school bus来啦！school bus就是校车。黄色的大校车要带小朋友们去上学啦！Biscuit也好想去！",
       "narrativeEN": "Here comes the school bus! Woof, woof!",
       "keywords": [
         "comes",
@@ -42,7 +42,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_03.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_2",
+      "narrativeCN": "小女孩说Stay here——你留在这里！Dogs don't go to school——小狗不能去上学。可是Biscuit听话了吗？",
       "narrativeEN": "Stay here, Biscuit. Dogs don't go to school. Woof!",
       "keywords": [
         "stay",
@@ -61,7 +61,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_04.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_3",
+      "narrativeCN": "Biscuit跑到哪里去了？是去pond——池塘吗？还是去park——公园？都不是！他要去哪里呀？",
       "narrativeEN": "Where is Biscuit going? Is Biscuit going to the pond? Woof! Is Biscuit going to the park? Woof!",
       "keywords": [
         "going",
@@ -80,7 +80,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_05.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_4",
+      "narrativeCN": "原来Biscuit跑去school——学校了！他偷偷溜进去了！这只小狗真是太调皮了！",
       "narrativeEN": "Biscuit is going to school! Woof, woof!",
       "keywords": [
         "going",
@@ -99,7 +99,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_06.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_5",
+      "narrativeCN": "Biscuit到了学校想干什么？他想play ball——打球！学校里有操场有球，好好玩呀！",
       "narrativeEN": "Biscuit wants to play ball. Woof, woof!",
       "keywords": [
         "play",
@@ -118,7 +118,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_07.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_6",
+      "narrativeCN": "Biscuit还想hear a story——听故事！Shhh——嘘！要安静呀，小朋友们在上课呢！",
       "narrativeEN": "THE TIME THE EL THE D vite you Biscuit wants to hear a story. Woof, woof! Shhh!",
       "keywords": [
         "vite",
@@ -137,7 +137,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_08.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_7",
+      "narrativeCN": "哈哈，Biscuit还想吃snack——零食！他在教室里到处跑。小女孩说Dogs don't go to school——小狗不能上学呀！",
       "narrativeEN": "B Biscuit wants a snack. Woof, woof! Oh, Biscuit! What are you doing here? Dogs don't go to school!",
       "keywords": [
         "snack",
@@ -156,7 +156,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_09.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_8",
+      "narrativeCN": "糟糕！teacher来了！teacher就是老师。Biscuit会被发现吗？",
       "narrativeEN": "Oh, no! Here comes the teacher! Woof!",
       "keywords": [
         "comes",
@@ -175,7 +175,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_10.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_9",
+      "narrativeCN": "Biscuit才不怕呢！他想meet the teacher——认识老师！还想认识所有的小朋友！Biscuit真的很友好呀！",
       "narrativeEN": "Clesign AaEeli Oou Biscuit wants to meet the teacher. Woof! Biscuit wants to meet the class. Woof, woof!",
       "keywords": [
         "clesign",
@@ -193,7 +193,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_11.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_10",
+      "narrativeCN": "Biscuit likes school——他喜欢学校！学校里有球有故事有零食还有朋友，当然喜欢啦！",
       "narrativeEN": "Biscuit likes school! Woof, woof!",
       "keywords": [
         "likes",
@@ -212,7 +212,7 @@
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_12.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_11",
+      "narrativeCN": "而且学校里的everyone——每个人，都喜欢Biscuit！谁能不喜欢这么可爱的小狗呢？",
       "narrativeEN": "And everyone at school likes Biscuit! Woof!",
       "keywords": [
         "everyone",
@@ -230,7 +230,7 @@
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_12.webp",
-      "narrativeCN": "今天的故事讲完啦！Biscuit Goes to School真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeCN": "今天的故事讲完啦！Biscuit偷偷跑去了学校，你还记得school和teacher是什么意思吗？我们明天再见哦！",
       "narrativeEN": "",
       "keywords": [],
       "audioCN": "school_done",
