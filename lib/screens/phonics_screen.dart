@@ -803,6 +803,19 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       setState(() {
         _wordIndex++;
         _celebration = false;
+        // Reset arrays immediately to match new word length (prevents RangeError in build)
+        final count = _words[_wordIndex].letters.length;
+        _slots = List.filled(count, null);
+        _slotSad = List.filled(count, false);
+        _shuffledOrder = List.generate(count, (i) => i);
+        _placedLetters.clear();
+        _tilesShown = 0;
+        _tilesLit = 0;
+        _letterStarsTapped.clear();
+        _nextTileToTap = 0;
+        _wordComplete = false;
+        _showAmazing = false;
+        _showNextBtn = false;
       });
       _enterTiles();
     } else {
