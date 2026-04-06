@@ -150,13 +150,13 @@
     }
   </script>
   <script>
-    // Block requests to fonts.gstatic.com (blocked in China)
-    // Flutter uses this for font fallback; we abort these requests
-    // so the app doesn't hang waiting for blocked Google CDN
+    // Redirect Google font requests to our own server (gstatic.com blocked in China)
+    // Flutter CanvasKit fetches fonts like: https://fonts.gstatic.com/s/a/{hash}.ttf
+    // We rewrite these to: /gfonts/a/{hash}.ttf served by nginx reverse proxy cache
     var _origFetch = window.fetch;
     window.fetch = function(url, opts) {
-      if (typeof url === 'string' && url.includes('fonts.gstatic.com')) {
-        return Promise.reject(new Error('Blocked: fonts.gstatic.com'));
+      if (typeof url === 'string' && url.includes('fonts.gstatic.com/s/')) {
+        url = url.replace('https://fonts.gstatic.com/s/', '/gfonts/');
       }
       return _origFetch.call(this, url, opts);
     };
