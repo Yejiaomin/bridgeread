@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../services/progress_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
@@ -260,7 +259,7 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                               ).createShader(bounds),
                               child: Text(
                                 _praiseWord,
-                                style: GoogleFonts.nunito(
+                                style: TextStyle(
                                   fontSize: R.s(52),
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
