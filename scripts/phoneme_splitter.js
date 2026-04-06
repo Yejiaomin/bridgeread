@@ -100,7 +100,8 @@ function isGoodForPhonics(word) {
   // Irregular pronunciation — letters don't match sounds
   const irregular = new Set([
     // silent letters
-    'walk','talk','chalk','half','calm','palm','could','would','should','know','knee','knit','knife',
+    'walk','talk','chalk','half','calm','palm','could','would','should',
+    'ball','tall','call','fall','wall','all','small','hall',  // a before ll = /ɔː/ not /æ/'know','knee','knit','knife',
     'write','wrong','wrap','lamb','climb','comb','doubt','debt','island','listen','castle','whistle',
     // vowel not standard
     'many','any','some','come','done','gone','give','live','love','move','none','once','only',
