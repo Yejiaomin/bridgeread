@@ -255,10 +255,11 @@
   ],
   "phonicsWords": [
     {
-      "word": "stay",
+      "word": "stop",
       "phonemes": [
         "st",
-        "ay"
+        "o",
+        "p"
       ],
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_03.webp"
     },

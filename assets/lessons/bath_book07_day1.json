@@ -250,10 +250,11 @@
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_03.webp"
     },
     {
-      "word": "play",
+      "word": "mud",
       "phonemes": [
-        "pl",
-        "ay"
+        "m",
+        "u",
+        "d"
       ],
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_04.webp"
     }
