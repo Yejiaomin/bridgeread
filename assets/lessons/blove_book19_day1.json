@@ -18,7 +18,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 0
     },
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_01.webp",
@@ -37,7 +38,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 1700
+      "pageStartMs": 4000
     },
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_02.webp",
@@ -61,7 +62,7 @@
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_03.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "爱在Grandma——奶奶织的woolly sweater——毛衣里！奶奶专门给我们织的毛衣，暖暖的，就是爱呀！",
+      "narrativeCN": "爱在奶奶织的毛衣里！Grandma就是奶奶，sweater就是毛衣。奶奶专门给我们织的毛衣，暖暖的，就是爱呀！",
       "narrativeEN": "\"Where is love, Biscuit?\" Woof! Woof! \"Love is in the woolly sweaters Grandma knits especially for us.\"",
       "keywords": [
         "love",
