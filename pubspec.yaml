@@ -81,7 +81,7 @@ flutter:
     - assets/audio/phonics_sounds/
     - assets/audio/sfx/
     - assets/audio/items/
-    - assets/characters/
+
     - assets/home/
     - assets/pet/
     - assets/pet/cards/
@@ -110,7 +110,7 @@ flutter:
     - assets/books/18Biscuit_and_the_Lost_Teddy_Bear/
     - assets/books/19Biscuit_where_is_love/
     - assets/books/20Biscuits_Snowy_Day/
-    - assets/video/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

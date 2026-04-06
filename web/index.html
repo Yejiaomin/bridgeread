@@ -178,13 +178,16 @@
     // Redirect Google font requests to our own server (gstatic.com blocked in China)
     // Flutter CanvasKit fetches fonts like: https://fonts.gstatic.com/s/a/{hash}.ttf
     // We rewrite these to: /gfonts/a/{hash}.ttf served by nginx reverse proxy cache
-    var _origFetch = window.fetch;
-    window.fetch = function(url, opts) {
-      if (typeof url === 'string' && url.includes('fonts.gstatic.com/s/')) {
-        url = url.replace('https://fonts.gstatic.com/s/', '/gfonts/');
-      }
-      return _origFetch.call(this, url, opts);
-    };
+    var _isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    if (_isProduction) {
+      var _origFetch = window.fetch;
+      window.fetch = function(url, opts) {
+        if (typeof url === 'string' && url.includes('fonts.gstatic.com/s/')) {
+          url = url.replace('https://fonts.gstatic.com/s/', '/gfonts/');
+        }
+        return _origFetch.call(this, url, opts);
+      };
+    }
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
