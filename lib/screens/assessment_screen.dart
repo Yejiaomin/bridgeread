@@ -21,48 +21,66 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   int _selectedLevel = -1;
 
   // ── Test data ─────────────────────────────────────────────────────────────
-  static const _steps = [
-    // Step 0: Basic listening — can you understand simple English?
+  // ── A Level (Biscuit — beginner) ──
+  static const _levelA = [
     _TestStep(
-      type: 'listen',
+      type: 'listen', level: 'A',
       instruction: '听一听，这句话是什么意思？',
-      audio: 'audio/biscuit_rec_left.mp3', // "Time for bed, Biscuit!"
+      audio: 'audio/biscuit_rec_left.mp3',
       options: ['小饼干该睡觉啦', '小饼干想吃东西', '小饼干在玩球'],
       correctIndex: 0,
     ),
-    // Step 1: Word recognition — do you know basic words?
     _TestStep(
-      type: 'word',
+      type: 'word', level: 'A',
       instruction: '这个单词是什么意思？',
       displayWord: 'dog',
       options: ['猫', '狗', '鸟'],
       correctIndex: 1,
     ),
-    // Step 2: Harder listening
     _TestStep(
-      type: 'listen',
+      type: 'listen', level: 'A',
       instruction: '再听一句，这句话是什么意思？',
-      audio: 'audio/farm_rec_left.mp3', // "We can feed the pigs, too."
+      audio: 'audio/farm_rec_left.mp3',
       options: ['我们也可以喂小猪', '小猪在睡觉', '我们去看小鸟'],
       correctIndex: 0,
     ),
-    // Step 3: Harder word
+  ];
+
+  // ── B Level (Pete the Cat — intermediate) ──
+  static const _levelB = [
     _TestStep(
-      type: 'word',
-      instruction: '这个单词是什么意思？',
-      displayWord: 'garden',
-      options: ['厨房', '花园', '学校'],
-      correctIndex: 1,
+      type: 'listen', level: 'B',
+      instruction: '听听这句话，Pete the Cat 在做什么？',
+      audio: 'audio/assessment_b1.mp3',
+      options: ['Pete 穿着新白鞋走在街上', 'Pete 在家里睡觉', 'Pete 在吃东西'],
+      correctIndex: 0,
     ),
-    // Step 4: Sentence comprehension
     _TestStep(
-      type: 'listen',
-      instruction: '听听看，故事里发生了什么？',
-      audio: 'audio/pup_rec_1.mp3', // "You found your ball, Biscuit."
-      options: ['小饼干找到了他的球', '小饼干想要吃东西', '小饼干在游泳'],
+      type: 'word', level: 'B',
+      instruction: '这个单词是什么意思？',
+      displayWord: 'street',
+      options: ['街道', '学校', '公园'],
+      correctIndex: 0,
+    ),
+    _TestStep(
+      type: 'listen', level: 'B',
+      instruction: 'Pete 哭了吗？',
+      audio: 'audio/assessment_b2.mp3',
+      options: ['没有，他继续走继续唱歌', '他大哭了一场', '他回家了'],
       correctIndex: 0,
     ),
   ];
+
+  List<_TestStep> _steps = [];
+
+  void _buildSteps() {
+    // Start with A level
+    _steps = List.of(_levelA);
+  }
+
+  int _aCorrect = 0;
+  int _bCorrect = 0;
+  bool _bAdded = false;
 
   _TestStep get _current => _step < _steps.length ? _steps[_step] : _steps.last;
   bool get _isTestDone => _step >= _steps.length;
@@ -77,18 +95,27 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   }
 
   void _selectOption(int index) {
-    if (_selected >= 0) return; // already answered
+    if (_selected >= 0) return;
     setState(() => _selected = index);
-    if (index == _current.correctIndex) _score++;
+    final correct = index == _current.correctIndex;
+    if (correct) {
+      _score++;
+      if (_current.level == 'A') _aCorrect++;
+      if (_current.level == 'B') _bCorrect++;
+    }
 
-    // Auto advance after 1 second
+    // After finishing A level, if mostly correct → add B level questions
+    if (_step == _levelA.length - 1 && !_bAdded && _aCorrect >= 2) {
+      _steps.addAll(_levelB);
+      _bAdded = true;
+    }
+
     Future.delayed(const Duration(milliseconds: 1000), () {
       if (!mounted) return;
       setState(() {
         _step++;
         _selected = -1;
       });
-      // Auto play audio for listen questions
       if (!_isTestDone && _steps[_step].type == 'listen') {
         Future.delayed(const Duration(milliseconds: 500), _playAudio);
       }
@@ -96,10 +123,9 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   }
 
   int get _recommendedLevel {
-    // 0-1 correct = A (beginner), 2-3 = B, 4-5 = C
-    if (_score <= 1) return 0;
-    if (_score <= 3) return 1;
-    return 2;
+    if (_bAdded && _bCorrect >= 2) return 2; // C level
+    if (_aCorrect >= 2) return 1; // B level
+    return 0; // A level
   }
 
   Future<void> _finish() async {
@@ -115,7 +141,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   @override
   void initState() {
     super.initState();
-    // Auto play first audio
+    _buildSteps();
     Future.delayed(const Duration(milliseconds: 800), () {
       if (_steps[0].type == 'listen') _playAudio();
     });
@@ -380,6 +406,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
 
 class _TestStep {
   final String type; // 'listen' or 'word'
+  final String level; // 'A', 'B', 'C'
   final String instruction;
   final String? audio;
   final String? displayWord;
@@ -388,6 +415,7 @@ class _TestStep {
 
   const _TestStep({
     required this.type,
+    required this.level,
     required this.instruction,
     this.audio,
     this.displayWord,
