@@ -1,0 +1,313 @@
+[
+  {
+    "page": "cover.webp",
+    "text": "SHARED\nMy\nFirst\nI Can Read! READING\nBiscuit\nWants to Play\n.\nby ALYSSA SATIN CAPUCILLI ⚫ pictures by PAT SCHORIES",
+    "leftWords": [
+      "can",
+      "read",
+      "biscuit",
+      "wants",
+      "alyssa",
+      "satin",
+      "capucilli"
+    ],
+    "rightWords": [
+      "shared",
+      "first",
+      "reading",
+      "play",
+      "pictures",
+      "pat",
+      "schories"
+    ]
+  },
+  {
+    "page": "spread_01.webp",
+    "text": "HOORAY!\ncan read this book!\nI Can Read!\nSHARED\nMy\nFirst\nREADING\nBiscuit\nWants to Play\nISBN 978-0-06-444315-9\nUSA $3.99 / $4.99 CAN\n50399\n9780064 443159\nS\n07 SL\nstory by ALYSSA SATIN CAPUCILLI\npictures by PAT SCHORIES\nHarperCollinsPublishers",
+    "leftWords": [
+      "hooray",
+      "can",
+      "read",
+      "this",
+      "book",
+      "isbn",
+      "usa"
+    ],
+    "rightWords": [
+      "can",
+      "read",
+      "shared",
+      "first",
+      "reading",
+      "biscuit",
+      "wants",
+      "play",
+      "story",
+      "alyssa",
+      "satin",
+      "capucilli",
+      "pictures",
+      "pat",
+      "schories",
+      "harpercollinspublishers"
+    ]
+  },
+  {
+    "page": "spread_02.webp",
+    "text": "Woof, woof!\nWhat's in the basket,\nBiscuit?\n5",
+    "leftWords": [],
+    "rightWords": [
+      "woof",
+      "whats",
+      "the",
+      "basket",
+      "biscuit"
+    ]
+  },
+  {
+    "page": "spread_03.webp",
+    "text": "Meow.\nIt's Daisy!\n6\nMeow. Meow.\nDaisy has two kittens.",
+    "leftWords": [
+      "meow",
+      "its",
+      "daisy"
+    ],
+    "rightWords": [
+      "meow",
+      "daisy",
+      "has",
+      "two",
+      "kittens"
+    ]
+  },
+  {
+    "page": "spread_04.webp",
+    "text": "Woof, woof!\nBiscuit wants to play\nwith the kittens.",
+    "leftWords": [],
+    "rightWords": [
+      "woof",
+      "biscuit",
+      "wants",
+      "play",
+      "with",
+      "the",
+      "kittens"
+    ]
+  },
+  {
+    "page": "spread_05.webp",
+    "text": "Meow. Meow.\nThe kittens want to play\nwith a leaf.\n10\nWoof, woof!\nBiscuit wants to play, too.\n11",
+    "leftWords": [
+      "meow",
+      "the",
+      "kittens",
+      "want",
+      "play",
+      "with",
+      "leaf"
+    ],
+    "rightWords": [
+      "woof",
+      "biscuit",
+      "wants",
+      "play",
+      "too"
+    ]
+  },
+  {
+    "page": "spread_06.webp",
+    "text": "Woof!\nBiscuit sees his ball.\n12\nMeow. Meow.\nThe kittens see a cricket.\n13",
+    "leftWords": [
+      "woof",
+      "biscuit",
+      "sees",
+      "his",
+      "ball"
+    ],
+    "rightWords": [
+      "meow",
+      "the",
+      "kittens",
+      "see",
+      "cricket"
+    ]
+  },
+  {
+    "page": "spread_07.webp",
+    "text": "Woof, woof!\nBiscuit wants to play, too!\n14\nMeow. Meow.\nThe kittens see a butterfly.",
+    "leftWords": [
+      "woof",
+      "biscuit",
+      "wants",
+      "play",
+      "too"
+    ],
+    "rightWords": [
+      "meow",
+      "the",
+      "kittens",
+      "see",
+      "butterfly"
+    ]
+  },
+  {
+    "page": "spread_08.webp",
+    "text": "Meow. Meow.\nThe kittens run.\n16\nThe kittens jump.\n17",
+    "leftWords": [
+      "meow",
+      "the",
+      "kittens",
+      "run"
+    ],
+    "rightWords": [
+      "the",
+      "kittens",
+      "jump"
+    ]
+  },
+  {
+    "page": "spread_09.webp",
+    "text": "Meow! Meow!\nThe kittens are stuck\nin the tree!\nWoof!\nBiscuit sees\nthe kittens.",
+    "leftWords": [
+      "meow",
+      "the",
+      "kittens",
+      "are",
+      "stuck",
+      "tree"
+    ],
+    "rightWords": [
+      "woof",
+      "biscuit",
+      "sees",
+      "the",
+      "kittens"
+    ]
+  },
+  {
+    "page": "spread_10.webp",
+    "text": "Woof, woof, woof!\nBiscuit can help the kittens!\n21",
+    "leftWords": [],
+    "rightWords": [
+      "woof",
+      "biscuit",
+      "can",
+      "help",
+      "the",
+      "kittens"
+    ]
+  },
+  {
+    "page": "spread_11.webp",
+    "text": "Woof, woof!\nBiscuit wants to play\nwith the kittens.\n23",
+    "leftWords": [
+      "woof"
+    ],
+    "rightWords": [
+      "biscuit",
+      "wants",
+      "play",
+      "with",
+      "the",
+      "kittens"
+    ]
+  },
+  {
+    "page": "spread_12.webp",
+    "text": "Meow! Meow!\nThe kittens want to play\nwith Biscuit, too!\nA",
+    "leftWords": [
+      "meow",
+      "the",
+      "kittens",
+      "with",
+      "biscuit"
+    ],
+    "rightWords": [
+      "want",
+      "play",
+      "too"
+    ]
+  },
+  {
+    "page": "spread_13.webp",
+    "text": "",
+    "leftWords": [],
+    "rightWords": []
+  },
+  {
+    "page": "spread_14.webp",
+    "text": "+Can Read!]\nBiscuit wants to play with\ntwo kittens. However, the\nkittens are too busy to\nnotice him. But when\nthe kittens need help,\nit's Biscuit to the rescue!\nWoof! Woof!\nSHARED\nMy\nFirst\nREADING\nMy\nFirst\nIdeal for sharing with emergent readers\n1 Simple sentences for eager new readers\n2 High-interest stories for developing readers\n3 Complex plots for confident readers\n4 The perfect bridge to chapter books\nFor more information about the\nI Can Read Book® series, see inside!\nUSA $3.99 / $4.99 CAN\nISBN 978-0-06-444315-9\nHarper TrophyⓇ\nAn Imprint of HarperCollinsPublishers\nwww.icanread.com\nCover art © 2001 by Pat Schories\n9780064 443159\n50399\nS\n15 40",
+    "leftWords": [
+      "can",
+      "read",
+      "biscuit",
+      "wants",
+      "play",
+      "with",
+      "two",
+      "kittens",
+      "however",
+      "are",
+      "too",
+      "busy",
+      "notice",
+      "him",
+      "but",
+      "when",
+      "the",
+      "need",
+      "help",
+      "its",
+      "rescue",
+      "woof",
+      "first",
+      "ideal",
+      "for",
+      "sharing",
+      "simple",
+      "sentences",
+      "high",
+      "interest",
+      "stories",
+      "complex",
+      "plots",
+      "perfect",
+      "bridge",
+      "more",
+      "information",
+      "book",
+      "series",
+      "harper",
+      "trophy",
+      "imprint",
+      "harpercollinspublishers",
+      "wwwicanreadcom",
+      "cover",
+      "art",
+      "pat",
+      "schories"
+    ],
+    "rightWords": [
+      "the",
+      "shared",
+      "first",
+      "reading",
+      "with",
+      "emergent",
+      "readers",
+      "for",
+      "eager",
+      "new",
+      "developing",
+      "confident",
+      "chapter",
+      "books",
+      "about",
+      "see",
+      "inside",
+      "usa",
+      "can",
+      "isbn"
+    ]
+  }
+]
