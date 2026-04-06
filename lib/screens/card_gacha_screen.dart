@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 const _kCardBack = 'assets/pet/cards/card.webp';
 
@@ -217,8 +218,8 @@ class _CardGachaScreenState extends State<CardGachaScreen>
                   GestureDetector(
                     onTap: _startGacha,
                     child: Container(
-                      width: 220,
-                      height: 220,
+                      width: R.s(220),
+                      height: R.s(220),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.amber.withValues(alpha: 0.18),
@@ -237,12 +238,12 @@ class _CardGachaScreenState extends State<CardGachaScreen>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('🎰', style: TextStyle(fontSize: 52)),
+                          Text('🎰', style: TextStyle(fontSize: R.s(52))),
                           const SizedBox(height: 6),
                           Text(
                             'START',
                             style: TextStyle(
-                              fontSize: 26,
+                              fontSize: R.s(26),
                               fontWeight: FontWeight.w900,
                               color: Colors.amber.shade200,
                               letterSpacing: 3,
@@ -355,7 +356,7 @@ class _CardGachaScreenState extends State<CardGachaScreen>
                           '$_countdown',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 64,
+                            fontSize: R.s(64),
                             fontWeight: FontWeight.w900,
                             color: Colors.white.withValues(alpha: 0.70),
                             shadows: [

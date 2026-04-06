@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'utils/cdn_asset.dart';
+import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
 import 'screens/study_screen.dart';
 import 'screens/reader_screen.dart';
@@ -71,6 +72,8 @@ class _OrientationGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize responsive scaling for all child screens
+    R.init(context);
     return OrientationBuilder(
       builder: (context, orientation) {
         if (orientation == Orientation.portrait) {

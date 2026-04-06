@@ -10,6 +10,7 @@ import '../services/lesson_service.dart';
 import '../models/lesson.dart';
 import 'eggy_celebration_screen.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 // ---------------------------------------------------------------------------
 // Constants & data
@@ -1111,8 +1112,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(word.word,
-                    style: const TextStyle(fontSize: 52, fontWeight: FontWeight.bold,
-                        color: Color(0xFF333333), letterSpacing: 4)),
+                    style: TextStyle(fontSize: R.s(52), fontWeight: FontWeight.bold,
+                        color: const Color(0xFF333333), letterSpacing: 4)),
               ],
             ),
           ),
@@ -1161,7 +1162,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
               Widget tileBtn = GestureDetector(
                 onTap: (isCurrentTarget && shown) ? () => _onLetterTileTap(i) : null,
                 child: Container(
-                  width: 96, height: 96,
+                  width: R.s(96), height: R.s(96),
                   decoration: BoxDecoration(
                     color: letter.tileColor,
                     borderRadius: BorderRadius.circular(20),
@@ -1171,8 +1172,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                     )],
                   ),
                   alignment: Alignment.center,
-                  child: Text(letter.char, style: const TextStyle(
-                      fontSize: 56, fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text(letter.char, style: TextStyle(
+                      fontSize: R.s(56), fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
               );
 
@@ -1212,7 +1213,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
           // Fixed-height area: mic/recording OR scored buttons share this space
           SizedBox(
-            height: 320,
+            height: R.s(320),
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -1267,7 +1268,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                               child: child,
                             ),
                             child: Container(
-                              width: 120, height: 120,
+                              width: R.s(120), height: R.s(120),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: const Color(0xFFCC0000),
@@ -1276,10 +1277,10 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                                   blurRadius: 28, spreadRadius: 6,
                                 )],
                               ),
-                              child: const Column(
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.stop_rounded, color: Colors.white, size: 50),
+                                  Icon(Icons.stop_rounded, color: Colors.white, size: R.s(50)),
                                   SizedBox(height: 4),
                                   Text('Stop', style: TextStyle(color: Colors.white,
                                       fontSize: 14, fontWeight: FontWeight.w600)),
@@ -1302,7 +1303,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                     child: GestureDetector(
                       onTap: _toggleEchoRecording,
                       child: Container(
-                        width: 120, height: 120,
+                        width: R.s(120), height: R.s(120),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.red,
@@ -1312,10 +1313,10 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                             offset: const Offset(0, 5),
                           )],
                         ),
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.mic_rounded, color: Colors.white, size: 50),
+                            Icon(Icons.mic_rounded, color: Colors.white, size: R.s(50)),
                             SizedBox(height: 4),
                             Text('Record', style: TextStyle(color: Colors.white,
                                 fontSize: 14, fontWeight: FontWeight.w600)),
@@ -1394,8 +1395,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                           opacity: _echoShowButtons ? 1.0 : 0.0,
                           duration: const Duration(milliseconds: 300),
                           child: SizedBox(
-                            height: 56,
-                            width: 260,
+                            height: R.s(56),
+                            width: R.s(260),
                             child: ElevatedButton(
                               onPressed: _echoShowButtons ? _onEchoConfirmed : null,
                               style: ElevatedButton.styleFrom(
@@ -1464,13 +1465,13 @@ class _PhonicsScreenState extends State<PhonicsScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ...word.letters.map((l) => Container(
-                      width: 68, height: 68,
+                      width: R.s(68), height: R.s(68),
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(color: l.tileColor,
                           borderRadius: BorderRadius.circular(14)),
                       alignment: Alignment.center,
-                      child: Text(l.char, style: const TextStyle(
-                          fontSize: 40, fontWeight: FontWeight.bold,
+                      child: Text(l.char, style: TextStyle(
+                          fontSize: R.s(40), fontWeight: FontWeight.bold,
                           color: Colors.white)),
                     )),
                 const Padding(
@@ -1478,8 +1479,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                   child: Text('→', style: TextStyle(fontSize: 28,
                       color: Color(0xFFCCCCCC))),
                 ),
-                Text(word.word, style: const TextStyle(fontSize: 44,
-                    fontWeight: FontWeight.bold, color: Color(0xFF333333))),
+                Text(word.word, style: TextStyle(fontSize: R.s(44),
+                    fontWeight: FontWeight.bold, color: const Color(0xFF333333))),
               ],
             ),
           ),
@@ -1588,7 +1589,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
               child: GestureDetector(
                 onTap: _toggleEchoRecording,
                 child: Container(
-                  width: 110, height: 110,
+                  width: R.s(110), height: R.s(110),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: isRecording ? Colors.red : _kOrange,
@@ -1600,7 +1601,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                   ),
                   child: Icon(
                     isRecording ? Icons.stop_rounded : Icons.mic_rounded,
-                    color: Colors.white, size: 54,
+                    color: Colors.white, size: R.s(54),
                   ),
                 ),
               ),
@@ -1679,7 +1680,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: _shuffledOrder.map((letterIdx) {
                 if (_placedLetters.contains(letterIdx)) {
-                  return const SizedBox(width: 112, height: 96);
+                  return SizedBox(width: R.s(112), height: R.s(96));
                 }
                 return _buildDraggableLetter(word, letterIdx);
               }).toList(),
@@ -1711,8 +1712,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
               children: [
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
-                  width: 96,
-                  height: 96,
+                  width: R.s(96),
+                  height: R.s(96),
                   decoration: BoxDecoration(
                     color: isFilled
                         ? word.letters[placedIdx].tileColor
@@ -1790,8 +1791,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     Widget tile({double opacity = 1.0}) => Opacity(
           opacity: opacity,
           child: Container(
-            width: 96,
-            height: 96,
+            width: R.s(96),
+            height: R.s(96),
             margin: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
               color: letter.tileColor,
@@ -1846,10 +1847,10 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                 duration: const Duration(milliseconds: 450),
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       'Amazing!',
                       style: TextStyle(
-                        fontSize: 52,
+                        fontSize: R.s(52),
                         fontWeight: FontWeight.bold,
                         color: _kOrange,
                         shadows: [
@@ -1905,8 +1906,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                 opacity: _showNextBtn ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 400),
                 child: SizedBox(
-                  height: 64,
-                  width: 280,
+                  height: R.s(64),
+                  width: R.s(280),
                   child: ElevatedButton(
                     onPressed: _showNextBtn ? _onNextPressed : null,
                     style: ElevatedButton.styleFrom(

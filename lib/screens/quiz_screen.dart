@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 
 // ---------------------------------------------------------------------------
 // Data
@@ -298,7 +299,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     final colorOrder = List.generate(6, (i) => i)..shuffle(_rng);
 
     // Pre-generate sizes so _scatter can use per-bubble radii for collision
-    final sizes = List.generate(5, (_) => 200.0 + _rng.nextDouble() * 60.0);
+    final sizes = List.generate(5, (_) => R.s(200.0 + _rng.nextDouble() * 60.0));
     final pos   = _scatter(sizes);
 
     if (r.type == _RType.image) {
@@ -717,14 +718,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     }
     if (b.emoji != null) {
       return Center(
-          child: Text(b.emoji!, style: const TextStyle(fontSize: 90)));
+          child: Text(b.emoji!, style: TextStyle(fontSize: R.s(90))));
     }
     return Center(
       child: Text(
         b.text!,
         textAlign: TextAlign.center,
         style: GoogleFonts.nunito(
-          fontSize: 56,
+          fontSize: R.s(56),
           fontWeight: FontWeight.w900,
           color: const Color(0xFFFFFFFF),
           shadows: const [
@@ -1060,7 +1061,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                               child: Text(
                                 _praiseWord,
                                 style: GoogleFonts.nunito(
-                                  fontSize: 52,
+                                  fontSize: R.s(52),
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
                                   shadows: const [
@@ -1076,11 +1077,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
                           const SizedBox(height: 24),
 
-                          // Eggy image with bounce + jiggle — 400 px (2× size)
+                          // Eggy image with bounce + jiggle
                           Transform.scale(
                             scale: eggyScale,
                             child: cdnImage('assets/pet/eggy_transparent_bg.webp',
-                              height: 400,
+                              height: R.s(400),
                               fit: BoxFit.contain,
                             ),
                           ),
