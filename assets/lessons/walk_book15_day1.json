@@ -23,7 +23,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_02.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_1",
+      "narrativeCN": "今天要去散步啦！walk就是散步。Time for a walk——该散步了！Biscuit好开心！",
       "narrativeEN": "A-L Time for a walk, Biscuit. Woof, woof!",
       "keywords": [
         "walk"
@@ -41,7 +41,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_03.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_2",
+      "narrativeCN": "他们要走去Grandpa's house——爷爷家！Let's go——出发吧！",
       "narrativeEN": "It's time for a walk to Grandpa's house. Jiu Let's go! Woof, woof!",
       "keywords": [
         "walk",
@@ -60,7 +60,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_04.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_3",
+      "narrativeCN": "可是Biscuit一直想停下来！他想dig——挖土。不行不行，该走了！",
       "narrativeEN": "Time for a walk, Biscuit. Woof, woof! Biscuit wants to dig. Time for a walk, Biscuit. Woof, woof! Biscuit wants to roll.",
       "keywords": [
         "walk",
@@ -79,7 +79,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_05.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_4",
+      "narrativeCN": "Funny puppy！Biscuit怎么老是走不动呀！快走吧，爷爷家还在前面呢！",
       "narrativeEN": "1722 Funny puppy! It's time for a walk to Grandpa's house. Let's go! Woof, woof!",
       "keywords": [
         "funny",
@@ -98,7 +98,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_06.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_5",
+      "narrativeCN": "这次Biscuit又停下来了，他想看squirrels——松鼠！小松鼠好可爱呀，但我们要继续走！",
       "narrativeEN": "Time for a walk, Biscuit. Woof, woof! Biscuit wants to see the squirrels.",
       "keywords": [
         "walk",
@@ -117,7 +117,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_07.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_6",
+      "narrativeCN": "又停了！Biscuit想看birds——小鸟。小鸟在树上唱歌呢。可是我们要去爷爷家呀！",
       "narrativeEN": "Time for a walk, Biscuit. Woof, woof! Biscuit wants to see the birds.",
       "keywords": [
         "walk",
@@ -136,7 +136,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_08.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_7",
+      "narrativeCN": "Silly puppy！每次走一会儿就停下来。It's time for a walk to Grandpa's house——该去爷爷家了！",
       "narrativeEN": "Silly puppy! It's time for a walk to Grandpa's house. Woof!",
       "keywords": [
         "silly",
@@ -155,7 +155,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_09.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_8",
+      "narrativeCN": "Wait Biscuit, come back！等等，回来！Grandpa's house is this way——爷爷家在这边！Biscuit你走错方向了！",
       "narrativeEN": "S Wait, Biscuit. Come back. Grandpa's house is this way!",
       "keywords": [
         "wait",
@@ -174,7 +174,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_10.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_9",
+      "narrativeCN": "Biscuit又发现什么了？他看到了什么？Oh Biscuit！你这次又看到什么了呀？",
       "narrativeEN": "ell ell ele Woof, woof! brin Oh, Biscuit! What do you see now?",
       "keywords": [
         "brin"
@@ -191,7 +191,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_11.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_10",
+      "narrativeCN": "是Grandpa——爷爷！终于到了！Biscuit一看到爷爷就扑过去了！",
       "narrativeEN": "Woof, woof! W It's Grandpa!",
       "keywords": [
         "grandpa"
@@ -208,7 +208,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_12.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_11",
+      "narrativeCN": "散步去爷爷家很fun——很好玩。但是和爷爷一起散步更好玩！a walk with Grandpa is the best！",
       "narrativeEN": "Woof, woof! A walk to Grandpa's house is fun, Biscuit. But a walk with Grandpa is the best walk of all.",
       "keywords": [
         "walk",
@@ -226,7 +226,7 @@
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_13.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_12",
+      "narrativeCN": "大家一起走！A walk for everyone——所有人一起散步！爷爷也来了，多开心呀！",
       "narrativeEN": "Time for a walk, Biscuit. A walk for everyone. Woof, woof!",
       "keywords": [
         "walk",
@@ -244,7 +244,7 @@
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_13.webp",
-      "narrativeCN": "今天的故事讲完啦！Biscuit Takes a Walk真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeCN": "今天的故事讲完啦！Biscuit虽然一路上东看西看，但最后还是到了爷爷家！你还记得walk和Grandpa是什么意思吗？我们明天再见哦！",
       "narrativeEN": "",
       "keywords": [],
       "audioCN": "walk_done",

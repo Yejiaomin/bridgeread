@@ -23,7 +23,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_02.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_1",
+      "narrativeCN": "今天小女孩带Biscuit去garden——花园！花园里有好多好多东西，我们一起去看看吧！",
       "narrativeEN": "2018 Come along, Biscuit. It is time to visit the garden. Woof, woof!",
       "keywords": [
         "along",
@@ -42,7 +42,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_03.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_2",
+      "narrativeCN": "花园里filled with so many things——装满了好多东西！看，有好多漂亮的flowers——花！还有什么呢？",
       "narrativeEN": "The garden is filled with so many things, Biscuit. Woof, woof! Just look at all the flowers and plants. Woof, woof! ΑΛΛ",
       "keywords": [
         "garden",
@@ -61,7 +61,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_04.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_3",
+      "narrativeCN": "Biscuit发现了一只butterfly——蝴蝶！好漂亮呀！他还发现了一条worm——蚯蚓！你怕不怕蚯蚓？",
       "narrativeEN": "You found a butterfly, Biscuit. Woof, woof! You found a worm, too. Woof!",
       "keywords": [
         "butterfly",
@@ -80,7 +80,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_05.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_4",
+      "narrativeCN": "Silly puppy！Biscuit在花园里dig——挖土！别挖了！哎呀，他还发现了一只little bird——小鸟！",
       "narrativeEN": "LT Silly puppy! Don't dig now! Woof, woof! Oh, Biscuit. You found a little bird.",
       "keywords": [
         "silly",
@@ -99,7 +99,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_06.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_5",
+      "narrativeCN": "小鸟hungry——饿了吗？Tweet tweet！我们来feed the bird——喂小鸟吧！",
       "narrativeEN": "Is the little bird hungry? Woof, woof! Tweet! Let's feed the bird, Biscuit.",
       "keywords": [
         "little",
@@ -118,7 +118,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_07.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_6",
+      "narrativeCN": "等等！Biscuit又发现了什么？Two more little birds——又来了两只小鸟！越来越多啦！",
       "narrativeEN": "Woof, woof! Wait, Biscuit. What do you see? Woof! Two more little birds!",
       "keywords": [
         "wait",
@@ -137,7 +137,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_08.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_7",
+      "narrativeCN": "Tweet tweet！来吧小鸟们！这里有bird seed——鸟食。小鸟们都飞过来吃了！",
       "narrativeEN": "Tweet! Tweet! Here, little birds. Here is some bird seed.",
       "keywords": [
         "tweet",
@@ -155,7 +155,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_09.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_8",
+      "narrativeCN": "Come along Biscuit——跟上！花园里还有lots more to see——还有好多东西可以看！",
       "narrativeEN": "D Woof, woof! Come along, Biscuit. There's lots more to see.",
       "keywords": [
         "along",
@@ -174,7 +174,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_10.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_9",
+      "narrativeCN": "可是小鸟们一直跟着Biscuit！Tweet tweet！Woof woof！他们玩得好开心！",
       "narrativeEN": "Tweet! Woof, woof! B Tweet! Tweet! Woof!",
       "keywords": [
         "tweet"
@@ -191,7 +191,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_11.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_10",
+      "narrativeCN": "哎呀！Biscuit把bird seed——鸟食全撒了！Not the bird seed！别撒鸟食呀！",
       "narrativeEN": "Oh no, Biscuit. D D D D Not the bird seed! Woof, woof!",
       "keywords": [
         "bird",
@@ -210,7 +210,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_12.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_11",
+      "narrativeCN": "结果好多好多小鸟都飞来了！花园里到处都是鸟！本来是一个花的花园，现在变成鸟的花园啦！",
       "narrativeEN": "Tweet! Tweet! Tweet! Tweet! Just look at all of the birds now! Woof, woof! The garden is filled with so many things, Biscuit.",
       "keywords": [
         "tweet",
@@ -228,7 +228,7 @@
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_13.webp",
       "teacherExpression": "happy",
-      "narrativeCN": "TODO_PAGE_12",
+      "narrativeCN": "哈哈，Biscuit虽然把花园弄得乱七八糟，但是他让花园变得更热闹了！好多小鸟都来做客了！",
       "narrativeEN": "Woof, woof! But you filled the garden with lots of birds, too! Tweet! Tweet! Woof!",
       "keywords": [
         "filled",
@@ -245,7 +245,7 @@
     },
     {
       "imageAsset": "assets/books/14Biscuit_in_the_Garden/spread_13.webp",
-      "narrativeCN": "今天的故事讲完啦！Biscuit in the Garden真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeCN": "今天的故事讲完啦！Biscuit在花园里交了好多小鸟朋友！你还记得garden和butterfly是什么意思吗？我们明天再见哦！",
       "narrativeEN": "",
       "keywords": [],
       "audioCN": "garden_done",
