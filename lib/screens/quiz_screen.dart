@@ -264,6 +264,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
             .toList();
         _wordSet = [...words, ...fillers.take(3)];
         _rounds = _buildRoundsFromLesson(words)..shuffle(_rng);
+      } else {
+        _rounds = List.of(_kDefaultRounds)..shuffle(_rng);
       }
     } catch (_) {
       _rounds = List.of(_kDefaultRounds)..shuffle(_rng);
