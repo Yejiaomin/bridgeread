@@ -298,6 +298,28 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
           style: const TextStyle(fontSize: 18, color: Color(0xFF666666))),
         const SizedBox(height: 8),
         const Text('推荐学习级别', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Color(0xFF333333))),
+        if (_bAdded && _bCorrect >= 2) ...[
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.amber.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.amber.shade300),
+            ),
+            child: const Row(
+              children: [
+                Text('⭐', style: TextStyle(fontSize: 20)),
+                SizedBox(width: 8),
+                Expanded(child: Text(
+                  '孩子基础不错！想挑战更高难度，请私信 Amy 老师进行 1:1 面试定级',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF7B6B00)),
+                )),
+              ],
+            ),
+          ),
+        ],
         const SizedBox(height: 20),
 
         ...List.generate(3, (i) {
