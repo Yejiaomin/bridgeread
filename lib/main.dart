@@ -10,6 +10,7 @@ import 'screens/phonics_screen.dart';
 import 'screens/quiz_screen.dart';
 import 'screens/recording_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/assessment_screen.dart';
 import 'screens/listen_screen.dart';
 import 'screens/card_gacha_screen.dart';
 import 'screens/study_room_screen.dart';
@@ -53,6 +54,7 @@ class BridgeReadApp extends StatelessWidget {
       routes: {
         '/':          (context) => const _AuthGate(),
         '/login':     (context) => const LoginScreen(),
+        '/assessment': (context) => const AssessmentScreen(),
         '/home':      (context) => const _OrientationGate(child: HomeScreen()),
         '/study':     (context) => const _OrientationGate(child: StudyScreen()),
         '/calendar':  (context) => const _OrientationGate(child: CalendarScreen()),
@@ -88,7 +90,12 @@ class _AuthGateState extends State<_AuthGate> {
     final token = prefs.getString('auth_token');
     if (!mounted) return;
     if (token != null && token.isNotEmpty) {
-      Navigator.pushReplacementNamed(context, '/home');
+      final assessmentDone = prefs.getBool('assessment_done') ?? false;
+      if (assessmentDone) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        Navigator.pushReplacementNamed(context, '/assessment');
+      }
     } else {
       Navigator.pushReplacementNamed(context, '/login');
     }

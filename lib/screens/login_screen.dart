@@ -67,7 +67,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final data = jsonDecode(res.body);
       if (res.statusCode == 200 && data['success'] == true) {
         await _saveToken(data['token'], data['user']);
-        if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
+        // New user → go to assessment first
+        if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/assessment', (r) => false);
       } else {
         setState(() => _error = data['error'] ?? '注册失败');
       }
