@@ -500,6 +500,10 @@ async function buildLesson(ocrResults, sttWords) {
     'here','there','just','very','come','more','over','even','want','wants','time','back',
     'all','one','out','let','say','said','too','also','now','then','some','than',
     'got','get','put','see','saw','look','went','goes','going','come','came',
+    // irregular pronunciation — bad for phonics (letter ≠ sound)
+    'many','any','some','come','done','gone','give','live','love','move','none',
+    'once','only','other','water','want','what','were','where','who','why',
+    'said','says','does','sure','sugar',
   ]);
   let phonicsWords = [];
   const usedWords = new Set();
