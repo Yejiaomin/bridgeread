@@ -126,6 +126,34 @@ function isGoodForPhonics(word) {
   // Phonemes should reconstruct the original word
   if (phonemes.join('') !== word) return { ok: false, reason: 'phonemes don\'t reconstruct word' };
 
+  // Rule-based pronunciation checks:
+
+  // "c" before e/i/y makes /s/ not /k/ (city, cell, cycle)
+  if (/c[eiy]/i.test(word)) return { ok: false, reason: 'soft c (c before e/i/y = /s/)' };
+
+  // "g" before e/i makes /j/ not /g/ (gem, giant) — but not always (get, give)
+  const softGExceptions = new Set(['get','got','give','girl','gift','gig']);
+  if (/g[ei]/i.test(word) && !softGExceptions.has(word)) return { ok: false, reason: 'possible soft g (g before e/i)' };
+
+  // Silent e at end: changes vowel sound (cake, bone, cute — not simple CVC)
+  if (word.length >= 4 && word.endsWith('e') && /[bcdfghjklmnpqrstvwxyz]e$/.test(word)) {
+    // Check if it's a_e, i_e, o_e, u_e pattern (magic e)
+    const beforeE = word[word.length - 2];
+    const twoBeforeE = word[word.length - 3];
+    if ('aeiou'.includes(twoBeforeE) && !'aeiou'.includes(beforeE)) {
+      return { ok: false, reason: 'magic e (silent e changes vowel)' };
+    }
+  }
+
+  // Double vowels that don't follow standard rules
+  if (/[aeiou]{3}/.test(word)) return { ok: false, reason: 'triple vowel cluster' };
+
+  // "tion", "sion" endings
+  if (/[ts]ion/.test(word)) return { ok: false, reason: 'tion/sion ending' };
+
+  // "ght" — the gh is silent
+  if (word.includes('ght')) return { ok: false, reason: 'silent gh in ght' };
+
   return { ok: true };
 }
 
