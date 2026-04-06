@@ -26,6 +26,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/web
+          force_orphan: true
 
       # Build for HK server (no base-href, local canvaskit — gstatic.com blocked in China)
       - run: flutter build web --no-web-resources-cdn
