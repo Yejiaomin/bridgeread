@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api_service.dart';
 
 class ProgressService {
   static const _kTotalStars    = 'total_stars';
@@ -37,6 +38,14 @@ class ProgressService {
     if (!wasAlreadyDone) {
       final current = prefs.getInt(_kTotalStars) ?? 0;
       await prefs.setInt(_kTotalStars, current + stars);
+
+      // Sync to server (fire-and-forget, offline-safe)
+      ApiService().syncProgress(
+        date: _today,
+        module: module,
+        done: true,
+        stars: stars,
+      );
     }
 
     // Record this date as active (any module completion = active day)
