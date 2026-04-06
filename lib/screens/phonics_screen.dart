@@ -115,6 +115,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   List<_WordData> _words = _kDefaultWords;
   int _wordIndex = 0;
+  int _revealId = 0; // incremented on each new word to cancel stale async reveals
   _Step _step = _Step.intro;
   bool _celebration = false;
 
@@ -454,27 +455,29 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       _echoRecordStart = null;
       _recordingPath = null;
     });
-    _revealTilesSequentially();
+    _revealId++;
+    _revealTilesSequentially(_revealId);
   }
 
   /// Reveals each tile one-by-one: bounce in → play audio → light up → next.
-  Future<void> _revealTilesSequentially() async {
+  Future<void> _revealTilesSequentially(int id) async {
     await Future.delayed(const Duration(milliseconds: 400));
+    if (!mounted || id != _revealId) return;
     final word = _words[_wordIndex];
     final letters = word.letters;
 
     // 1. Play full word first
     await _playAndWait(word.wordAudioPath);
-    if (!mounted) return;
+    if (!mounted || id != _revealId) return;
     await Future.delayed(const Duration(milliseconds: 350));
 
     // 2. Reveal each letter tile with its phoneme audio (b → e → d)
     for (int i = 0; i < letters.length; i++) {
-      if (!mounted) return;
+      if (!mounted || id != _revealId) return;
       _tileControllers[i].forward();
       setState(() => _tilesShown = i + 1);
       await _playAndWait(letters[i].audioPath);
-      if (!mounted) return;
+      if (!mounted || id != _revealId) return;
       setState(() => _tilesLit = i + 1);
       if (i < letters.length - 1) {
         await Future.delayed(const Duration(milliseconds: 200));
