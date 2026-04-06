@@ -159,7 +159,7 @@ class _RecordingScreenState extends State<RecordingScreen>
     } else {
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (_) => EggyCelebrationScreen(
-          nextRoute: '/home', nextLabel: '回到主页',
+          nextRoute: '/listen', nextLabel: '开始听力 🎧',
           moduleKey: 'recording', modulePoints: 10,
         ),
       ));
