@@ -124,6 +124,31 @@
   </script>
 
   <script>
+    // Auto-clear old caches on version change
+    (function() {
+      var APP_VERSION = '2026040601';
+      var stored = localStorage.getItem('app_version');
+      if (stored !== APP_VERSION) {
+        localStorage.setItem('app_version', APP_VERSION);
+        if (stored) {
+          // Version changed — clear all caches and service workers
+          if ('caches' in window) {
+            caches.keys().then(function(names) {
+              names.forEach(function(name) { caches.delete(name); });
+            });
+          }
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              regs.forEach(function(r) { r.unregister(); });
+            });
+          }
+          window.location.reload();
+          return;
+        }
+      }
+    })();
+  </script>
+  <script>
     // Remove loading screen once Flutter renders first frame
     window.addEventListener('flutter-first-frame', function() {
       var el = document.getElementById('loading');
