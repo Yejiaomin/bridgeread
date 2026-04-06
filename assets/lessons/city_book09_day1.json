@@ -247,12 +247,11 @@
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_03.webp"
     },
     {
-      "word": "city",
+      "word": "dog",
       "phonemes": [
-        "c",
-        "i",
-        "t",
-        "y"
+        "d",
+        "o",
+        "g"
       ],
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_06.webp"
     }
