@@ -56,3 +56,10 @@ scripts/eng.traineddata
 _temp_*
 *.pdf
 baidunetdiskdownload/
+
+
+# Book source files (not needed in build/deploy)
+assets/books/*/book.pdf
+assets/books/*/single/
+assets/books/*/_ocr.json
+assets/books/*/_tmp/
