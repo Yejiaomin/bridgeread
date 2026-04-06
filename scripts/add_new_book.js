@@ -511,17 +511,31 @@ async function buildLesson(ocrResults, sttWords) {
   let phonicsWords = [];
   const usedWords = new Set();
 
-  // Find candidates: 3-5 letter words from left side of spreads
+  // Find candidates: words from LEFT side of spreads ONLY
   // IMPORTANT: Both words MUST have the same number of phonemes to avoid
-  // RangeError in phonics_screen when switching words (arrays sized for word 1
-  // get accessed with word 2's indices if lengths differ).
+  // RangeError in phonics_screen when switching words.
+  // Words can repeat across books but max 3 times total.
   const { splitWord, validateSplit, baseForm, isGoodForPhonics } = require('./phoneme_splitter');
+
+  // Count how many times each word is already used across all existing lessons
+  const LESSONS_DIR = path.join(__dirname, '..', 'assets', 'lessons');
+  const wordUsageCount = {};
+  for (const f of fs.readdirSync(LESSONS_DIR).filter(f => f.endsWith('.json') && !f.startsWith('vocab'))) {
+    try {
+      const existing = JSON.parse(fs.readFileSync(path.join(LESSONS_DIR, f), 'utf8'));
+      for (const pw of existing.phonicsWords || []) {
+        wordUsageCount[pw.word] = (wordUsageCount[pw.word] || 0) + 1;
+      }
+    } catch (_) {}
+  }
+
   const candidates = [];
   for (const sp of storyPages) {
-    const leftWords = sp.leftWords || [];
+    const leftWords = sp.leftWords || [];  // ⚠ LEFT side only
     for (const w of leftWords) {
       const b = baseForm(w);
       if (skipWords.has(b) || usedWords.has(b)) continue;
+      if ((wordUsageCount[b] || 0) >= 3) continue;  // max 3 times across all books
       const check = isGoodForPhonics(b);
       if (!check.ok) continue;
       const phonemes = splitWord(b);
