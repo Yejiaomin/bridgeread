@@ -125,16 +125,16 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: _kCream,
       body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width / 3,
+          child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Logo
-              Image.asset('assets/pet/eggy_transparent_bg.webp', width: 120, height: 120),
-              const SizedBox(height: 16),
+              Image.asset('assets/pet/eggy_transparent_bg.webp', width: 180, height: 180),
+              const SizedBox(height: 12),
               const Text('BridgeRead', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: _kOrange)),
-              const Text('桥读英语', style: TextStyle(fontSize: 16, color: Color(0xFF999999))),
               const SizedBox(height: 32),
 
               // Toggle login/register
@@ -220,6 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ),
+        ),
       ),
     );
   }
@@ -256,7 +257,11 @@ class _LoginScreenState extends State<LoginScreen> {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
