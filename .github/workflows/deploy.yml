@@ -31,6 +31,14 @@ jobs:
       # Build for HK server (no base-href, local canvaskit — gstatic.com blocked in China)
       - run: flutter build web --no-web-resources-cdn
 
+      # Pre-compress large files for nginx gzip_static
+      - name: Pre-compress assets
+        run: |
+          cd build/web
+          find . -type f \( -name "*.js" -o -name "*.json" -o -name "*.wasm" -o -name "*.css" -o -name "*.html" -o -name "*.map" \) | while read f; do
+            gzip -9 -k "$f"
+          done
+
       # Deploy to HK server — single tar with everything
       - name: Deploy to HK Server
         env:
