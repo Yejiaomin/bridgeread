@@ -89,7 +89,47 @@ function validateSplit(phonemes) {
   return phonemes.every(p => availablePhonemes.has(p));
 }
 
-module.exports = { splitWord, validateSplit, availablePhonemes, baseForm };
+/**
+ * Check if a word is good for phonics teaching.
+ * Rejects irregular words where letters don't match their standard sounds.
+ * Returns { ok: true } or { ok: false, reason: string }
+ */
+function isGoodForPhonics(word) {
+  word = word.toLowerCase().trim();
+
+  // Irregular pronunciation — letters don't match sounds
+  const irregular = new Set([
+    // silent letters
+    'walk','talk','chalk','half','calm','palm','could','would','should','know','knee','knit','knife',
+    'write','wrong','wrap','lamb','climb','comb','doubt','debt','island','listen','castle','whistle',
+    // vowel not standard
+    'many','any','some','come','done','gone','give','live','love','move','none','once','only',
+    'other','water','want','what','were','where','who','why','said','says','does','sure','sugar',
+    'put','push','pull','full','bull','busy','built','buy','eye','friend','great','break',
+    'city','nice','rice','ice','face','race','place','cent','cell','age','page','cage','huge',
+    'heart','learn','earn','earth','heard','pearl','bear','pear','wear','swear',
+    // too short or ambiguous
+    'the','are','is','am','was','to','do','go','no','so',
+  ]);
+  if (irregular.has(word)) return { ok: false, reason: 'irregular pronunciation' };
+
+  // Must be 3-5 letters
+  if (word.length < 3 || word.length > 5) return { ok: false, reason: 'length not 3-5' };
+
+  // Must be only letters
+  if (!/^[a-z]+$/.test(word)) return { ok: false, reason: 'non-letter chars' };
+
+  // All phonemes must have audio files
+  const phonemes = splitWord(word);
+  if (!validateSplit(phonemes)) return { ok: false, reason: 'missing phoneme audio: ' + phonemes.filter(p => !availablePhonemes.has(p)).join(',') };
+
+  // Phonemes should reconstruct the original word
+  if (phonemes.join('') !== word) return { ok: false, reason: 'phonemes don\'t reconstruct word' };
+
+  return { ok: true };
+}
+
+module.exports = { splitWord, validateSplit, availablePhonemes, baseForm, isGoodForPhonics };
 
 // CLI test mode
 if (require.main === module) {

@@ -515,19 +515,18 @@ async function buildLesson(ocrResults, sttWords) {
   // IMPORTANT: Both words MUST have the same number of phonemes to avoid
   // RangeError in phonics_screen when switching words (arrays sized for word 1
   // get accessed with word 2's indices if lengths differ).
-  const { splitWord, validateSplit, baseForm } = require('./phoneme_splitter');
+  const { splitWord, validateSplit, baseForm, isGoodForPhonics } = require('./phoneme_splitter');
   const candidates = [];
   for (const sp of storyPages) {
     const leftWords = sp.leftWords || [];
     for (const w of leftWords) {
       const b = baseForm(w);
-      if (b.length >= 3 && b.length <= 5 && !skipWords.has(b) && !usedWords.has(b) && /^[a-z]+$/.test(b)) {
-        const phonemes = splitWord(b);
-        if (validateSplit(phonemes)) {
-          candidates.push({ word: b, page: sp.page, phonemes, count: phonemes.length });
-          usedWords.add(b);
-        }
-      }
+      if (skipWords.has(b) || usedWords.has(b)) continue;
+      const check = isGoodForPhonics(b);
+      if (!check.ok) continue;
+      const phonemes = splitWord(b);
+      candidates.push({ word: b, page: sp.page, phonemes, count: phonemes.length });
+      usedWords.add(b);
     }
   }
 
