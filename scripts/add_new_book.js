@@ -41,6 +41,8 @@
  *     助动词(can/could/will)、介词(with/from/into)、语气词(woof/oink)
  *   - 自动去掉复数 -s (pigs → pig)，用 baseForm()
  *   - 选词来自绘本左半页 (leftWords)，3-5个字母
+ *   - ⚠ 两个词的 phoneme 数量必须相同（防止 RangeError）
+ *   - 优先选 3-phoneme CVC 词（如 pig, dog, run）
  *
  * 【Phonics 拆分规则 — 三层】
  *   Layer 1 — CVC: 每个字母独立拆 (pig → p-i-g, cat → c-a-t)
@@ -509,29 +511,53 @@ async function buildLesson(ocrResults, sttWords) {
   const usedWords = new Set();
 
   // Find candidates: 3-5 letter words from left side of spreads
+  // IMPORTANT: Both words MUST have the same number of phonemes to avoid
+  // RangeError in phonics_screen when switching words (arrays sized for word 1
+  // get accessed with word 2's indices if lengths differ).
+  const { splitWord, validateSplit, baseForm } = require('./phoneme_splitter');
+  const candidates = [];
   for (const sp of storyPages) {
-    if (phonicsWords.length >= 2) break;
     const leftWords = sp.leftWords || [];
     for (const w of leftWords) {
-      if (phonicsWords.length >= 2) break;
-      if (w.length >= 3 && w.length <= 5 && !skipWords.has(w) && !usedWords.has(w) && /^[a-z]+$/.test(w)) {
-        phonicsWords.push({ word: w, page: sp.page });
-        usedWords.add(w);
-        break;
+      const b = baseForm(w);
+      if (b.length >= 3 && b.length <= 5 && !skipWords.has(b) && !usedWords.has(b) && /^[a-z]+$/.test(b)) {
+        const phonemes = splitWord(b);
+        if (validateSplit(phonemes)) {
+          candidates.push({ word: b, page: sp.page, phonemes, count: phonemes.length });
+          usedWords.add(b);
+        }
       }
     }
   }
 
-  // Strip plurals and split phonemes
-  const { splitWord, validateSplit, baseForm } = require('./phoneme_splitter');
-  phonicsWords = phonicsWords.map(pw => {
-    const base = baseForm(pw.word);
-    return {
-      word: base,
-      phonemes: splitWord(base),
-      imageAsset: `assets/books/${folderName}/${pw.page}`,
-    };
-  });
+  // Pick 2 words with matching phoneme count (prefer 3-phoneme CVC words)
+  if (candidates.length >= 2) {
+    // Group by phoneme count
+    const byCount = {};
+    for (const c of candidates) {
+      (byCount[c.count] = byCount[c.count] || []).push(c);
+    }
+    // Prefer groups with 2+ words, prefer 3-phoneme CVC words
+    for (const count of [3, 4, 2, 5]) {
+      if (byCount[count] && byCount[count].length >= 2) {
+        phonicsWords = byCount[count].slice(0, 2);
+        break;
+      }
+    }
+    // Fallback: just take first 2 regardless of count match
+    if (phonicsWords.length < 2) {
+      phonicsWords = candidates.slice(0, 2);
+      console.log(`  ⚠ Phonics words have different phoneme counts — may need manual fix`);
+    }
+  } else {
+    phonicsWords = candidates.slice(0, 2);
+  }
+
+  phonicsWords = phonicsWords.map(pw => ({
+    word: pw.word,
+    phonemes: pw.phonemes,
+    imageAsset: `assets/books/${folderName}/${pw.page}`,
+  }));
   console.log(`  Phonics words: ${phonicsWords.map(w => `${w.word} [${w.phonemes.join('-')}] @ ${w.imageAsset.split('/').pop()}`).join(', ') || 'none'}`);
 
 
