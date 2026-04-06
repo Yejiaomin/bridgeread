@@ -31,6 +31,8 @@ const kAllBooks = [
   BookInfo("Biscuit Meets the Class Pet", '小饼干认识班级宠物', 'classpet_book16_day1', 'assets/books/16Biscuit_Meets_the_Class_Pet/cover.webp', 'books/16Biscuit_Meets_the_Class_Pet/audio.mp3'),
   BookInfo("Biscuit Wants to Play", '小饼干想玩耍', 'wantsplay_book17_day1', 'assets/books/17Biscuit_Wants_to_Play/cover.webp', 'books/17Biscuit_Wants_to_Play/audio.mp3'),
   BookInfo("Biscuit and the Lost Teddy Bear", '小饼干和丢失的泰迪熊', 'teddy_book18_day1', 'assets/books/18Biscuit_and_the_Lost_Teddy_Bear/cover.webp', 'books/18Biscuit_and_the_Lost_Teddy_Bear/audio.mp3'),
+  BookInfo("Where is Love Biscuit", '小饼干爱在哪里', 'blove_book19_day1', 'assets/books/19Biscuit_where_is_love/cover.webp', 'books/19Biscuit_where_is_love/audio.mp3'),
+  BookInfo("Biscuit's Snowy Day", '小饼干的雪天', 'snowy_book20_day1', 'assets/books/20Biscuits_Snowy_Day/cover.webp', 'books/20Biscuits_Snowy_Day/audio.mp3'),
   // 新书追加到这里
 ];
 
