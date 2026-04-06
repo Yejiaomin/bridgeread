@@ -108,6 +108,8 @@ flutter:
     - assets/books/16Biscuit_Meets_the_Class_Pet/
     - assets/books/17Biscuit_Wants_to_Play/
     - assets/books/18Biscuit_and_the_Lost_Teddy_Bear/
+    - assets/books/19Biscuit_where_is_love/
+    - assets/books/20Biscuits_Snowy_Day/
     - assets/video/
 
   # An image asset can refer to one or more resolution-specific "variants", see

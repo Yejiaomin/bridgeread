@@ -1,0 +1,168 @@
+{
+  "id": "blove_book19_day1",
+  "bookTitle": "Where is Love Biscuit",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "\"Where is love, Biscuit.",
+  "originalAudio": "books/19Biscuit_where_is_love/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/19Biscuit_where_is_love/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Where is Love Biscuit的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "blove_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_01.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Where is love——爱在哪里呀？你看，Daisy猫咪把soft blanket——柔软的毯子跟小猫咪们分享！blanket就是毯子。分享就是爱呀！",
+      "narrativeEN": "\"Where is love, Biscuit?\" Woof! Woof! \"Love is in the soft blanket Daisy shares with her kittens.\"",
+      "keywords": [
+        "love",
+        "soft"
+      ],
+      "audioCN": "blove_p1_cn",
+      "audioEN": "blove_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 1700
+    },
+    {
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "爱还在哪里呢？Love is in the cookies——爱在饼干里！我们和Dad——爸爸一起bake——烘焙饼干！跟家人一起做东西就是爱！",
+      "narrativeEN": "A \"Where is love, Biscuit?\" Woof! Woof! \"Love is in the crunchy cookies we bake with Dad.\"",
+      "keywords": [
+        "love",
+        "crunchy"
+      ],
+      "audioCN": "blove_p2_cn",
+      "audioEN": "blove_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 11600
+    },
+    {
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "爱在Grandma——奶奶织的woolly sweater——毛衣里！奶奶专门给我们织的毛衣，暖暖的，就是爱呀！",
+      "narrativeEN": "\"Where is love, Biscuit?\" Woof! Woof! \"Love is in the woolly sweaters Grandma knits especially for us.\"",
+      "keywords": [
+        "love",
+        "woolly"
+      ],
+      "audioCN": "blove_p3_cn",
+      "audioEN": "blove_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 27300
+    },
+    {
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "爱还在bedtime story——睡前故事里！我们跟baby——宝宝一起分享故事。一起读书就是爱！",
+      "narrativeEN": "\"Where is love, Biscuit?\" Woof! Woof! \"Love is in the story we share with the baby at bedtime.\"",
+      "keywords": [
+        "love",
+        "story"
+      ],
+      "audioCN": "blove_p4_cn",
+      "audioEN": "blove_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 42700
+    },
+    {
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "最后呀，love is in the hugs and kisses——爱在拥抱和亲亲里！Biscuit每天都给我们hugs和kisses！Sweet puppy！",
+      "narrativeEN": "\"Where is love, Biscuit?\" Woof! Woof! \"Love is in the hugs and kisses you give me every day! Sweet puppy!\" Woof!",
+      "keywords": [
+        "love",
+        "hugs"
+      ],
+      "audioCN": "blove_p5_cn",
+      "audioEN": "blove_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 60900
+    },
+    {
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_05.webp",
+      "narrativeCN": "今天的故事讲完啦！爱无处不在！在毯子里，在饼干里，在毛衣里，在拥抱里！你觉得爱在哪里呢？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "blove_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "hug",
+      "phonemes": [
+        "h",
+        "u",
+        "g"
+      ],
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_05.webp"
+    },
+    {
+      "word": "kiss",
+      "phonemes": [
+        "k",
+        "i",
+        "ss"
+      ],
+      "imageAsset": "assets/books/19Biscuit_where_is_love/spread_05.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/19Biscuit_where_is_love/spread_01.webp",
+    "sentences": [
+      {
+        "text": "\"Where is love, Biscuit.",
+        "audio": "audio/blove_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "\"Love is in the soft blanket Daisy shares with her kittens.",
+        "audio": "audio/blove_rec_2.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}
