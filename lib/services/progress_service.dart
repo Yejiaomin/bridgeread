@@ -45,7 +45,9 @@ class ProgressService {
         module: module,
         done: true,
         stars: stars,
-      );
+      ).then((result) {
+        print('[SYNC] $module: $result');
+      });
     }
 
     // Record this date as active (any module completion = active day)
