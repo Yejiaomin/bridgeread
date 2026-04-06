@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,9 +47,10 @@ class ApiService {
           'lessonId': lessonId,
         }),
       ).timeout(const Duration(seconds: 5));
+      debugPrint('[API] syncProgress ${res.statusCode}: ${res.body}');
       if (res.statusCode == 200) return jsonDecode(res.body);
-    } catch (_) {
-      // Offline — silently fail, local progress still saved
+    } catch (e) {
+      debugPrint('[API] syncProgress error: $e');
     }
     return null;
   }

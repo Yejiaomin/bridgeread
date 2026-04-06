@@ -13,6 +13,14 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Request logger
+app.use((req, _res, next) => {
+  if (req.path !== '/api/health') {
+    console.log(`[${new Date().toLocaleTimeString()}] ${req.method} ${req.path}`);
+  }
+  next();
+});
 app.use('/recordings', express.static(path.join(__dirname, 'data', 'recordings')));
 
 // Public
