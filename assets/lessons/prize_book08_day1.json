@@ -260,22 +260,20 @@
   ],
   "phonicsWords": [
     {
-      "word": "prize",
+      "word": "pet",
       "phonemes": [
-        "pr",
-        "i",
-        "z",
-        "e"
+        "p",
+        "e",
+        "t"
       ],
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_03.webp"
     },
     {
-      "word": "hold",
+      "word": "rub",
       "phonemes": [
-        "h",
-        "o",
-        "l",
-        "d"
+        "r",
+        "u",
+        "b"
       ],
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_04.webp"
     }
