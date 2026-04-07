@@ -162,6 +162,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   bool _done          = false;
   bool _locked   = false; // block taps during animations
   bool _firstTry = true;
+  int  _wrongCount = 0;   // wrong attempts for current round
 
   String _randomPositive()     => _kPositiveAudio[_rng.nextInt(_kPositiveAudio.length)];
   String _randomEncouragement()=> _kEncouragementAudio[_rng.nextInt(_kEncouragementAudio.length)];
@@ -350,10 +351,11 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
     setState(() {
       _bubbles  = bubbles;
-      _locked   = false;
-      _firstTry = true;
-      _popIdx   = null;
-      _wobIdx   = null;
+      _locked     = false;
+      _firstTry   = true;
+      _wrongCount = 0;
+      _popIdx     = null;
+      _wobIdx     = null;
     });
     _popCtrl.reset();
     _wobCtrl.reset();
@@ -458,6 +460,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   void _wrong(int i) {
     _firstTry = false;
+    _wrongCount++;
     setState(() => _wobIdx = i);
     _play(_randomEncouragement());
     _wobCtrl.repeat(reverse: true);
@@ -467,6 +470,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         ..stop()
         ..reset();
       setState(() => _wobIdx = null);
+      // Skip after 3 wrong attempts — no stars for this round
+      if (_wrongCount >= 3) {
+        _timer = Timer(const Duration(milliseconds: 300), _advance);
+      }
     });
   }
 
@@ -596,11 +603,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-                // Prompt bar pinned to bottom
-                Positioned(
-                  left: 0, right: 0, bottom: 0,
-                  child: _buildPrompt(r),
-                ),
+                // Prompt bar removed — children find the word by listening
               ],
             ),
           ),
