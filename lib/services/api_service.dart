@@ -98,6 +98,18 @@ class ApiService {
     }
   }
 
+  /// Get ranking/leaderboard data.
+  Future<Map<String, dynamic>?> getRanking({String period = 'week'}) async {
+    try {
+      final res = await http.get(
+        Uri.parse('$_baseUrl/ranking?period=$period'),
+        headers: await _authHeaders(),
+      ).timeout(const Duration(seconds: 5));
+      if (res.statusCode == 200) return jsonDecode(res.body);
+    } catch (_) {}
+    return null;
+  }
+
   /// Upload recording file.
   Future<bool> uploadRecording({
     required String filePath,

@@ -6,6 +6,7 @@ const { getDb } = require('./db');
 const authRoutes = require('./routes/auth');
 const progressRoutes = require('./routes/progress');
 const recordingsRoutes = require('./routes/recordings');
+const rankingRoutes = require('./routes/ranking');
 const authMiddleware = require('./middleware/auth');
 
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api/auth', authRoutes);
 // Protected
 app.use('/api/progress', authMiddleware, progressRoutes);
 app.use('/api/recordings', authMiddleware, recordingsRoutes);
+app.use('/api/ranking', authMiddleware, rankingRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

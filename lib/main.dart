@@ -15,6 +15,7 @@ import 'screens/listen_screen.dart';
 import 'screens/card_gacha_screen.dart';
 import 'screens/study_room_screen.dart';
 import 'screens/weekend_game_screen.dart';
+import 'screens/ranking_screen.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
 
@@ -66,6 +67,7 @@ class BridgeReadApp extends StatelessWidget {
         '/listen':       (context) => _OrientationGate(child: ListenScreen()),
         '/weekend-game': (context) => const _OrientationGate(child: WeekendGameScreen()),
         '/studyroom':    (context) => const _OrientationGate(child: StudyRoomScreen()),
+        '/ranking':      (context) => const _OrientationGate(child: RankingScreen()),
       },
     );
   }
@@ -92,7 +94,7 @@ class _AuthGateState extends State<_AuthGate> {
     if (token != null && token.isNotEmpty) {
       final assessmentDone = prefs.getBool('assessment_done') ?? false;
       if (assessmentDone) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/ranking');
       } else {
         Navigator.pushReplacementNamed(context, '/assessment');
       }

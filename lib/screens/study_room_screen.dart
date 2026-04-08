@@ -232,10 +232,8 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     final today = DateTime.now().toIso8601String().substring(0, 10);
     await prefs.setString('last_gacha_date', today);
 
-    // TODO: restore odd/even split before release
-    // final dayOfYear = DateTime.now().difference(DateTime(DateTime.now().year)).inDays + 1;
-    // final pool = dayOfYear.isOdd ? _accessoryPool : _decorationPool;
-    final pool = [..._accessoryPool, ..._decorationPool]; // testing: all items
+    // Only decoration items (shelf items), no accessories (wearable)
+    final pool = _decorationPool;
     final dropped = pool[_rng.nextInt(pool.length)];
 
     // Shake jar, play sound
@@ -820,13 +818,8 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                     onTap: () {
                       _player.play(cdnAudioSource('audio/sfx/pop-click.wav'));
                       setState(() {
-                        // Apply item on OK
-                        if (_isAccessory(item)) {
-                          if (_equippedAccessory != null) _treasureBoxItems.add(_equippedAccessory!);
-                          _equippedAccessory = item;
-                        } else {
-                          _autoPlaceDecoration(item);
-                        }
+                        // Place decoration on shelf
+                        _autoPlaceDecoration(item);
                         _treasureBoxItems.add(item);
                         _showDropResult = false;
                         _droppedItem    = null;
