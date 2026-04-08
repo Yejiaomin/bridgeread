@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show DefaultAssetBundle;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../services/week_service.dart';
@@ -86,6 +87,9 @@ class _StudyScreenState extends State<StudyScreen>
 
   // Progress state
   int _completedCount = 0; // 0-4
+  // Module done flags for badge display: [recap, reader, quiz, listen]
+  // Only reader(1) and quiz(2) are tracked in daily_progress for debt
+  List<bool> _zoneDone = [false, false, false, false];
 
   // Glow animations (420 ms)
   late final List<AnimationController> _ctrls;
@@ -134,26 +138,43 @@ class _StudyScreenState extends State<StudyScreen>
   }
 
   Future<void> _loadProgress() async {
-    await ProgressService.resetTodayIfNewDay();
-    final prefs = await SharedPreferences.getInstance();
+    final active = activeDate();
+    // When overrideDate is null, activeDate() returns chinaTime — compare with itself
+    final isViewingToday = WeekService.overrideDate == null;
 
-    // Check recap (stored as date string)
-    final today = DateTime.now();
-    final todayStr = '${today.year}-${today.month.toString().padLeft(2,'0')}-${today.day.toString().padLeft(2,'0')}';
-    final recapDone = prefs.getString('today_recap_done') == todayStr;
+    bool recapDone, readerDone, quizDone, listenDone;
 
-    // Check listen (the final module — stored as bool by ProgressService)
-    final listenDone = prefs.getBool('today_listen_done') == true;
+    if (isViewingToday) {
+      // Today: read from local SharedPreferences
+      await ProgressService.resetTodayIfNewDay();
+      final prefs = await SharedPreferences.getInstance();
+      final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+      final todayStr = '${now.year}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')}';
+      recapDone = prefs.getString('today_recap_done') == todayStr;
+      readerDone = prefs.getBool('today_reader_done') == true;
+      quizDone = prefs.getBool('today_quiz_done') == true;
+      listenDone = prefs.getBool('today_listen_done') == true;
+    } else {
+      // Past date (from calendar): read from server-cached module status
+      final dateStr = '${active.year}-${active.month.toString().padLeft(2,'0')}-${active.day.toString().padLeft(2,'0')}';
+      final status = await ProgressService.getModuleStatusForDate(dateStr);
+      recapDone = status['recap'] ?? false;
+      readerDone = status['reader'] ?? false;
+      quizDone = status['quiz'] ?? false;
+      listenDone = status['listen'] ?? false;
+    }
 
     // Count completed modules (for zone-enable logic)
-    int count = recapDone ? 1 : 0;
-    for (final key in ['today_reader_done', 'today_phonics_done', 'today_quiz_done', 'today_recording_done']) {
-      if (prefs.getBool(key) == true) count++;
-    }
+    int count = 0;
+    if (recapDone) count++;
+    if (readerDone) count++;
+    if (quizDone) count++;
+    if (listenDone) count++;
 
     if (mounted) setState(() {
       _completedCount = count;
       _listenDone = listenDone;
+      _zoneDone = [recapDone, readerDone, quizDone, listenDone];
     });
   }
 
@@ -161,8 +182,8 @@ class _StudyScreenState extends State<StudyScreen>
 
   String get _bgImage {
     if (_weekend) return 'assets/home/weekend_bg.webp';
-    if (_listenDone) return 'assets/home/study_bg_end.webp';
-    if (_completedCount == 0) return 'assets/home/study_bg_start.webp';
+    if (_completedCount == 4) return 'assets/home/study_bg_end.webp';
+    if (!_zoneDone[0]) return 'assets/home/study_bg_start.webp'; // recap not done
     return 'assets/home/study_bg_mid.webp';
   }
 
@@ -191,7 +212,7 @@ class _StudyScreenState extends State<StudyScreen>
     if (i < _ctrls.length) _ctrls[i].forward(from: 0).then((_) => _ctrls[i].reverse());
     // Per-zone SFX
     try { _player.stop(); } catch (_) {}
-    _player.play(cdnAudioSource(_zones[i].sfx));
+    try { _player.play(cdnAudioSource(_zones[i].sfx)); } catch (_) {}
 
     await Future.delayed(const Duration(milliseconds: 160));
     if (!mounted) return;
@@ -247,6 +268,8 @@ class _StudyScreenState extends State<StudyScreen>
                   // ── Tap zones ─────────────────────────────────────────
                   ...List.generate(_zones.length, (i) {
                     final z = _zones[i];
+                    // Show "1" badge on all incomplete zones
+                    final showBadge = !_weekend && i < _zoneDone.length && !_zoneDone[i];
                     return Positioned(
                       left:   z.x * w,
                       top:    z.y * h,
@@ -263,39 +286,74 @@ class _StudyScreenState extends State<StudyScreen>
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () => _onZoneTap(i),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  color: _kDebugZones
-                                      ? _kZoneColors[i].withValues(alpha: 0.35)
-                                      : Colors.white.withValues(alpha: v * 0.22),
-                                  border: _kDebugZones
-                                      ? Border.all(
-                                          color: _kZoneColors[i], width: 2)
-                                      : null,
-                                  boxShadow: !_kDebugZones && v > 0.02
-                                      ? [
-                                          BoxShadow(
-                                            color: Colors.yellowAccent
-                                                .withValues(alpha: v * 0.65),
-                                            blurRadius: 28 * v,
-                                            spreadRadius: 6 * v,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: _kDebugZones
+                                          ? _kZoneColors[i].withValues(alpha: 0.35)
+                                          : Colors.white.withValues(alpha: v * 0.22),
+                                      border: _kDebugZones
+                                          ? Border.all(
+                                              color: _kZoneColors[i], width: 2)
+                                          : null,
+                                      boxShadow: !_kDebugZones && v > 0.02
+                                          ? [
+                                              BoxShadow(
+                                                color: Colors.yellowAccent
+                                                    .withValues(alpha: v * 0.65),
+                                                blurRadius: 28 * v,
+                                                spreadRadius: 6 * v,
+                                              )
+                                            ]
+                                          : null,
+                                    ),
+                                    child: _kDebugZones
+                                        ? Center(
+                                            child: Text(
+                                              _kZoneLabels[i],
+                                              style: TextStyle(
+                                                color: _kZoneColors[i],
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 12,
+                                              ),
+                                            ),
                                           )
-                                        ]
-                                      : null,
-                                ),
-                                child: _kDebugZones
-                                    ? Center(
-                                        child: Text(
-                                          _kZoneLabels[i],
-                                          style: TextStyle(
-                                            color: _kZoneColors[i],
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 12,
+                                        : null,
+                                  ),
+                                  // Red debt badge
+                                  if (showBadge)
+                                    Positioned(
+                                      right: i == 2 ? -22 : 2,
+                                      top: -4,
+                                      child: Container(
+                                        height: 22,
+                                        width: 32,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFF6B35),
+                                          borderRadius: BorderRadius.circular(11),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Color(0x66FF6B35),
+                                              blurRadius: 6,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: const Center(
+                                          child: Text('1',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w900,
+                                            ),
                                           ),
                                         ),
-                                      )
-                                    : null,
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
                           );
@@ -355,13 +413,13 @@ class _RecapScreenState extends State<RecapScreen>
             CurvedAnimation(parent: c, curve: Curves.easeInOut))).toList();
 
     _subs.addAll([
-      _player.onPositionChanged.listen((p) {
+      _player.onPositionChanged.handleError((_) {}).listen((p) {
         if (mounted) {
           setState(() => _position = p);
           _updatePageForPosition(p);
         }
       }),
-      _player.onDurationChanged.listen((d) {
+      _player.onDurationChanged.handleError((_) {}).listen((d) {
         if (mounted) setState(() => _duration = d);
       }),
       _player.onPlayerComplete.listen((_) async {
@@ -399,9 +457,12 @@ class _RecapScreenState extends State<RecapScreen>
 
   Future<void> _markRecapDone() async {
     final prefs = await SharedPreferences.getInstance();
-    final today = DateTime.now();
+    final today = DateTime.now().toUtc().add(const Duration(hours: 8));
     final d = '${today.year}-${today.month.toString().padLeft(2,'0')}-${today.day.toString().padLeft(2,'0')}';
     await prefs.setString('today_recap_done', d);
+    // Sync to server using activeDate (for debt makeup)
+    final syncDate = '${activeDate().year}-${activeDate().month.toString().padLeft(2,'0')}-${activeDate().day.toString().padLeft(2,'0')}';
+    ApiService().syncProgress(date: syncDate, module: 'recap', done: true, stars: 0);
   }
 
   // Get previous book from global order (no hardcoded map needed)

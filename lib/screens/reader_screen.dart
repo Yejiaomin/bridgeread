@@ -590,12 +590,13 @@ class _ReaderScreenState extends State<ReaderScreen>
                         ),
                       ),
                       const SizedBox(height: 4),
-                      // Progress bar
+                      // Progress bar — subtle transparent style
                       LinearProgressIndicator(
                         value: (_currentPage + 1) / totalPages,
-                        backgroundColor: Colors.white24,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                            Color(0xFFFFD93D)),
+                        backgroundColor: Colors.white10,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white.withValues(alpha: 0.35)),
+                        minHeight: 2,
                       ),
                     ],
                   ),

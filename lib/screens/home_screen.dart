@@ -6,6 +6,7 @@ import '../utils/test_data.dart';
 import '../main.dart' show routeObserver;
 import 'reader_screen.dart';
 import '../services/lesson_service.dart';
+import '../services/progress_service.dart';
 import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
 
@@ -24,6 +25,8 @@ class _HomeScreenState extends State<HomeScreen>
   final _player = AudioPlayer();
   int _streakDays  = 0;
   int _totalStars  = 0;
+  int _totalOwed   = 0;   // total debt across all past days
+  int _todayPending = 4;  // modules not yet done today
 
   // Study room unlock state — true only when all 4 daily modules done
   bool _studyRoomUnlocked = false;
@@ -94,11 +97,25 @@ class _HomeScreenState extends State<HomeScreen>
     // Same condition as study_screen end background: today_listen_done == true
     final allDone = prefs.getBool('today_listen_done') ?? false;
 
+    // Fetch debt data from server (fire-and-forget for speed, then update UI)
+    ProgressService.syncDebtFromServer().then((_) async {
+      final owed = await ProgressService.getTotalOwed();
+      final prefs2 = await SharedPreferences.getInstance();
+      final todayPending = prefs2.getInt('today_owed') ?? 0;
+      if (mounted) setState(() { _totalOwed = owed; _todayPending = todayPending; });
+    });
+
+    // Also load cached values immediately
+    final owed = await ProgressService.getTotalOwed();
+    final pending = prefs.getInt('today_owed') ?? 0;
+
     if (mounted) {
       setState(() {
         _streakDays         = prefs.getInt('streak_days') ?? 0;
         _totalStars         = prefs.getInt('total_stars') ?? 0;
         _studyRoomUnlocked  = allDone;
+        _totalOwed          = owed;
+        _todayPending       = pending;
       });
       // Start or stop the pulse based on unlock state
       if (allDone) {
@@ -113,8 +130,23 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> _onBooksTap(BuildContext ctx) async {
     _pressCtrl.forward(from: 0);
     _glowCtrl.forward(from: 0).then((_) => _glowCtrl.reverse());
-    _player.play(cdnAudioSource('audio/sfx/book-open.wav'));
+    try { _player.play(cdnAudioSource('audio/sfx/book-open.wav')); } catch (_) {}
     await Future.delayed(const Duration(milliseconds: 180));
+    // Reset overrideDate so study page shows today's content
+    WeekService.overrideDate = null;
+    // Set today's lesson based on book_start_date
+    final prefs = await SharedPreferences.getInstance();
+    final startStr = prefs.getString('book_start_date');
+    if (startStr != null) {
+      final startDate = WeekService.parseDate(startStr);
+      if (startDate != null) {
+        final today = DateTime.now().toUtc().add(const Duration(hours: 8));
+        final bookIdx = WeekService.bookIndexForDate(today, startDate);
+        if (bookIdx != null && bookIdx < kAllBooks.length) {
+          await LessonService().setCurrentLesson(kAllBooks[bookIdx].lessonId);
+        }
+      }
+    }
     if (mounted) Navigator.pushNamed(ctx, '/study').then((_) => _loadStats());
   }
 
@@ -222,12 +254,118 @@ class _HomeScreenState extends State<HomeScreen>
               // ── Streak badge (top-left) ───────────────────────────────
               Positioned(
                 left: 16,
-                top:  MediaQuery.of(ctx).padding.top + 12,
+                top:  MediaQuery.of(ctx).padding.top + 2,
                 child: GestureDetector(
                   onTap: () => Navigator.pushNamed(ctx, '/calendar'),
                   child: _StreakBadge(days: _streakDays),
                 ),
               ),
+
+              // ── Today badge (above books, right side) ───────────────
+              if (_todayPending > 0)
+                Positioned(
+                  left: w * 0.84,
+                  top:  h * 0.40,
+                  child: GestureDetector(
+                    onTap: () => _onBooksTap(ctx),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF8F00).withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFF8F00).withValues(alpha: 0.40),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('🎯', style: TextStyle(fontSize: 16)),
+                          const SizedBox(width: 5),
+                          Text('今日 $_todayPending',
+                            style: const TextStyle(
+                              color: Color(0xFF795548),
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+              // ── Makeup debt badge (inside calendar widget) ──────────
+              if (_totalOwed > 0)
+                Positioned(
+                  left:  w * 0.80,
+                  top:   h * 0.16,
+                  width: w * 0.20,
+                  child: GestureDetector(
+                    onTap: () => Navigator.pushNamed(ctx, '/calendar'),
+                    child: Center(
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFFFD54F), Color(0xFFFFB300)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFFFFB300).withValues(alpha: 0.35),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Text('待补卡($_totalOwed)',
+                              style: const TextStyle(
+                                color: Color(0xFF795548),
+                                fontWeight: FontWeight.w900,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          // Bell icon — centered above, tilted 45°
+                          Positioned(
+                            left: -8,
+                            right: 8,
+                            top: -36,
+                            child: Center(
+                              child: Transform.rotate(
+                                angle: -0.785, // -45 degrees
+                                child: const Text('🔔', style: TextStyle(fontSize: 28)),
+                              ),
+                            ),
+                          ),
+                          // Red dot — top-right corner of pill
+                          Positioned(
+                            right: -2,
+                            top: -2,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFE53935),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
 
 
 
@@ -289,6 +427,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? _startDate;
   late DateTime _viewMonth; // which month is displayed
   bool _testMode = true;
+  Map<String, int> _debtByDate = {};
 
   @override
   void initState() {
@@ -306,8 +445,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
       start = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       await prefs.setString('book_start_date', start);
     }
+
+    // Sync latest debt from server, then load cached
+    await ProgressService.syncDebtFromServer();
+    final debt = await ProgressService.getDebtByDate();
+
     if (mounted) {
-      setState(() => _startDate = WeekService.parseDate(start));
+      setState(() {
+        _startDate = WeekService.parseDate(start);
+        _debtByDate = debt;
+      });
     }
   }
 
@@ -406,15 +553,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   final unlocked = _testMode || (isPast && book != null);
                   final isActiveWeekend = isWeekend && _startDate != null && !date.isBefore(_startDate!);
 
+                  // Debt count for this date
+                  final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+                  final debt = _debtByDate[dateKey] ?? 0;
+
                   return GestureDetector(
-                    onTap: (unlocked && book != null) || isActiveWeekend ? () async {
+                    onTap: (unlocked && book != null) || isActiveWeekend || debt > 0 ? () async {
                       // Set this date as the active date for all screens
                       WeekService.overrideDate = date;
                       if (book != null) {
                         await LessonService().setCurrentLesson(book.lessonId);
                       }
                       if (context.mounted) {
-                        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                        // Always go directly to study page
+                        Navigator.pushNamed(context, '/study').then((_) => _load());
                       }
                     } : null,
                     child: Container(
@@ -434,7 +586,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Date circle
+                                // Date circle (no red for today or debt)
                                 Container(
                                   width: 24, height: 24,
                                   decoration: BoxDecoration(
@@ -445,32 +597,60 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Colors.white))),
                                 ),
                                 const SizedBox(height: 3),
-                                // Image
+                                // Image with debt badge on top-right of book cover
                                 if (book != null)
-                                  Container(
-                                    width: imgW, height: imgH,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      boxShadow: isToday ? [
-                                        BoxShadow(color: orange.withValues(alpha: 0.5), blurRadius: 10, spreadRadius: 2),
-                                      ] : [
-                                        BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 4, offset: const Offset(0, 2)),
-                                      ],
-                                    ),
-                                    child: Stack(children: [
-                                      Positioned.fill(child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
-                                        child: cdnImage(book.coverAsset, fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade200)),
-                                      )),
-                                      if (!unlocked)
-                                        Positioned.fill(child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white.withValues(alpha: 0.6),
-                                            borderRadius: BorderRadius.circular(6)),
-                                          child: Center(child: Icon(Icons.lock_rounded, size: 16, color: Colors.grey.shade400)),
-                                        )),
-                                    ]),
+                                  Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        width: imgW, height: imgH,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(6),
+                                          boxShadow: isToday ? [
+                                            BoxShadow(color: orange.withValues(alpha: 0.5), blurRadius: 10, spreadRadius: 2),
+                                          ] : [
+                                            BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 4, offset: const Offset(0, 2)),
+                                          ],
+                                        ),
+                                        child: Stack(children: [
+                                          Positioned.fill(child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(6),
+                                            child: cdnImage(book.coverAsset, fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade200)),
+                                          )),
+                                          if (!unlocked)
+                                            Positioned.fill(child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white.withValues(alpha: 0.6),
+                                                borderRadius: BorderRadius.circular(6)),
+                                              child: Center(child: Icon(Icons.lock_rounded, size: 16, color: Colors.grey.shade400)),
+                                            )),
+                                        ]),
+                                      ),
+                                      // Debt badge on book cover top-right
+                                      if (debt > 0)
+                                        Positioned(
+                                          right: -10,
+                                          top: -8,
+                                          child: Container(
+                                            height: 20,
+                                            width: 30,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFFF6B35),
+                                              borderRadius: BorderRadius.circular(10),
+                                              boxShadow: const [
+                                                BoxShadow(color: Color(0x66FF6B35), blurRadius: 4, offset: Offset(0, 1)),
+                                              ],
+                                            ),
+                                            child: Center(child: Text('$debt',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w900,
+                                              ))),
+                                          ),
+                                        ),
+                                    ],
                                   )
                                 else if (isActiveWeekend)
                                   SizedBox(
@@ -590,11 +770,11 @@ class _StreakBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFFF6B35),
+        color: const Color(0xFFFF8F00).withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFFF6B35).withValues(alpha: 0.40),
+            color: const Color(0xFFFF8F00).withValues(alpha: 0.40),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -619,15 +799,94 @@ class _StreakBadge extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 2),
-          Text(
-            _message,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Debt badge — shows today's pending + accumulated debt
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _DebtBadge extends StatelessWidget {
+  final int totalOwed;
+  final int todayPending;
+  const _DebtBadge({required this.totalOwed, required this.todayPending});
+
+  @override
+  Widget build(BuildContext context) {
+    final total = totalOwed + todayPending;
+    if (total == 0) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFF4CAF50),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF4CAF50).withValues(alpha: 0.40),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
+          ],
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('✅', style: TextStyle(fontSize: 16)),
+            SizedBox(width: 5),
+            Text('全部完成！', style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w900, fontSize: 15)),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: totalOwed > 0 ? const Color(0xFFFF6B35) : const Color(0xFFFF8F00),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: (totalOwed > 0 ? const Color(0xFFFF6B35) : const Color(0xFFFF8F00))
+                .withValues(alpha: 0.40),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(totalOwed > 0 ? '📋' : '📚', style: const TextStyle(fontSize: 16)),
+              const SizedBox(width: 5),
+              Text(
+                '待打卡 $total',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+          if (totalOwed > 0) ...[
+            const SizedBox(height: 2),
+            Text(
+              '今日 $todayPending + 欠卡 $totalOwed',
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -637,6 +896,24 @@ class _StreakBadge extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // Orbiting colorful stars around the Eggy unlock zone
 // ─────────────────────────────────────────────────────────────────────────────
+
+class _TriangleBadgePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = const Color(0xFFFF8F00);
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width, size.height * 0.7)
+      ..lineTo(size.width / 2, size.height)
+      ..lineTo(0, size.height * 0.7)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
 
 class _EggyOrbitPainter extends CustomPainter {
   final double t; // 0.0 → 1.0, repeating
