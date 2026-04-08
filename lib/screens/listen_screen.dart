@@ -61,6 +61,7 @@ class _ListenScreenState extends State<ListenScreen>
   // Eggy display (matches study room)
   int _eggyMonth = 1;
   String? _equippedAccessory;
+  bool _showEggyBg = true; // toggle: true = eggy background (default), false = book pages
 
   // Book page display — timings per lesson
   final Map<String, List<_PageTiming>> _allPageTimings = {};
@@ -88,14 +89,14 @@ class _ListenScreenState extends State<ListenScreen>
             CurvedAnimation(parent: c, curve: Curves.easeInOut))).toList();
 
     _subs.addAll([
-      _player.onPlayerComplete.listen((_) => _nextTrack()),
-      _player.onPositionChanged.listen((p) {
+      _player.onPlayerComplete.handleError((_) {}).listen((_) => _nextTrack()),
+      _player.onPositionChanged.handleError((_) {}).listen((p) {
         if (mounted) {
           setState(() => _position = p);
           _updatePageForPosition(p);
         }
       }),
-      _player.onDurationChanged.listen((d) {
+      _player.onDurationChanged.handleError((_) {}).listen((d) {
         if (mounted) setState(() => _duration = d);
       }),
     ]);
@@ -489,13 +490,13 @@ class _ListenScreenState extends State<ListenScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // ── Background: cover intro, book pages, or eggy ─────────────
-          if (_isBookMode && _currentPageIdx == 0 && _position.inMilliseconds < (_pageTimings.isNotEmpty ? _pageTimings[0].startMs : 0)) ...[
+          // ── Background: book pages or eggy (toggled by user) ─────────
+          if (!_showEggyBg && _isBookMode && _currentPageIdx == 0 && _position.inMilliseconds < (_pageTimings.isNotEmpty ? _pageTimings[0].startMs : 0)) ...[
             // Cover intro: left = book cover, right = eggy + bubble
             Positioned.fill(
               child: _buildListenCover(),
             ),
-          ] else if (_isBookMode) ...[
+          ] else if (!_showEggyBg && _isBookMode) ...[
             // Book mode: show current page spread
             Positioned.fill(
               child: Container(
@@ -513,7 +514,7 @@ class _ListenScreenState extends State<ListenScreen>
               ),
             ),
           ] else ...[
-            // Eggy mode: dark background with pet
+            // Eggy mode: full-screen eggy from study room
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -650,6 +651,22 @@ class _ListenScreenState extends State<ListenScreen>
                       fontSize: 13,
                       fontWeight: FontWeight.w700)),
             ]),
+          ),
+          const SizedBox(width: 8),
+          // Toggle: book pages vs eggy background
+          GestureDetector(
+            onTap: () => setState(() => _showEggyBg = !_showEggyBg),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                _showEggyBg ? '📖' : '🥚',
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
           ),
           const SizedBox(width: 8),
           // Done button — shows Eggy celebration

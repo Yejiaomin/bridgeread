@@ -11,7 +11,7 @@ const authMiddleware = require('./middleware/auth');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 // Request logger
@@ -35,9 +35,13 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
 
-// Init DB then start server
-getDb().then(() => {
-  app.listen(PORT, () => {
-    console.log(`BridgeRead API running on port ${PORT}`);
+// Init DB then start server (only when run directly, not when imported for tests)
+if (require.main === module) {
+  getDb().then(() => {
+    app.listen(PORT, () => {
+      console.log(`BridgeRead API running on port ${PORT}`);
+    });
   });
-});
+}
+
+module.exports = { app, getDb };

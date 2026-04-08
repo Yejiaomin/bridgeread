@@ -116,10 +116,15 @@ function run(sql, params = []) {
   return { lastInsertRowid: id };
 }
 
+// Helper: run statement without saving (for batch operations)
+function runNoSave(sql, params = []) {
+  db.run(sql, params);
+}
+
 // Debug: log userId lookup
 function debugUser(userId) {
   const all = query('SELECT id, phone, child_name FROM users');
   console.log('[DEBUG] All users:', all, 'looking for:', userId);
 }
 
-module.exports = { getDb, query, queryOne, run, saveDb, debugUser };
+module.exports = { getDb, query, queryOne, run, runNoSave, saveDb, debugUser };

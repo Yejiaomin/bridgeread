@@ -14,7 +14,10 @@ class AudioService {
   bool get isPlaying => _isPlaying;
 
   /// Stream of playback position updates for the current track.
-  Stream<Duration> get onPositionChanged => _player.onPositionChanged;
+  /// Wrapped to suppress "Bad state: No element" errors from audioplayers
+  /// when the player is stopped but the stream is still being listened to.
+  Stream<Duration> get onPositionChanged =>
+      _player.onPositionChanged.handleError((_) {});
 
   /// Loads an audio source.
   Source _source(String name) {
@@ -25,8 +28,10 @@ class AudioService {
   Future<void> playAsset(String name) async {
     _cancelled = false;
     _isPlaying = true;
-    await _player.play(_source(name));
-    await _waitForTrackEnd();
+    try {
+      await _player.play(_source(name));
+      await _waitForTrackEnd();
+    } catch (_) {}
     _isPlaying = false;
   }
 
@@ -43,8 +48,10 @@ class AudioService {
     _isPlaying = true;
 
     // Play CN track
-    await _player.play(_source(cn));
-    await _waitForTrackEnd();
+    try {
+      await _player.play(_source(cn));
+      await _waitForTrackEnd();
+    } catch (_) {}
 
     if (_cancelled) {
       _isPlaying = false;
@@ -62,8 +69,10 @@ class AudioService {
     onENStart?.call();
 
     // Play EN track
-    await _player.play(_source(en));
-    await _waitForTrackEnd();
+    try {
+      await _player.play(_source(en));
+      await _waitForTrackEnd();
+    } catch (_) {}
 
     _isPlaying = false;
     if (!_cancelled) onComplete?.call();
