@@ -75,6 +75,27 @@ async function getDb() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS weekly_groups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      week_start TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS weekly_group_members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      group_id INTEGER NOT NULL,
+      user_id INTEGER,
+      fake_name TEXT,
+      fake_stars INTEGER DEFAULT 0,
+      avatar_month INTEGER DEFAULT 1,
+      FOREIGN KEY (group_id) REFERENCES weekly_groups(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `);
+
   // Auto-save every 30 seconds
   setInterval(() => saveDb(), 30000);
 
