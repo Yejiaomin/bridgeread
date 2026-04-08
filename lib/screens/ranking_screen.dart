@@ -12,20 +12,78 @@ class RankingScreen extends StatefulWidget {
   State<RankingScreen> createState() => _RankingScreenState();
 }
 
-class _RankingScreenState extends State<RankingScreen> {
+class _RankingScreenState extends State<RankingScreen>
+    with TickerProviderStateMixin {
+  // Data
+  String _period = 'week';
   bool _loading = true;
-  List<Map<String, dynamic>> _dayEntries = [];
-  List<Map<String, dynamic>> _weekEntries = [];
-  List<Map<String, dynamic>> _monthEntries = [];
+  Map<String, List<Map<String, dynamic>>> _data = {};
 
+  // Countdown
   int _countdown = 30;
   Timer? _countdownTimer;
 
+  // Egg avatar cache
   final Map<String, int> _eggCache = {};
+
+  // Podium animations (3 controllers: gold, silver, bronze)
+  late final List<AnimationController> _podiumCtrls;
+  late final List<Animation<Offset>> _podiumSlides;
+  late final List<Animation<double>> _podiumFades;
+
+  // List item animations
+  late AnimationController _listCtrl;
+
+  // Star breathing animation
+  late final AnimationController _starBreathCtrl;
+  late final Animation<double> _starBreathAnim;
+
+  // "Me" floating animation
+  late final AnimationController _meFloatCtrl;
+  late final Animation<double> _meFloatAnim;
+
+  final _tabs = [
+    {'label': '今日', 'value': 'day'},
+    {'label': '本周', 'value': 'week'},
+    {'label': '本月', 'value': 'month'},
+  ];
 
   @override
   void initState() {
     super.initState();
+
+    // Podium: 3 controllers with staggered delays
+    _podiumCtrls = List.generate(3, (i) => AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 600),
+    ));
+    _podiumSlides = _podiumCtrls.map((c) =>
+      Tween<Offset>(begin: const Offset(0, 1.5), end: Offset.zero)
+          .animate(CurvedAnimation(parent: c, curve: Curves.elasticOut))
+    ).toList();
+    _podiumFades = _podiumCtrls.map((c) =>
+      Tween<double>(begin: 0, end: 1)
+          .animate(CurvedAnimation(parent: c, curve: Curves.easeIn))
+    ).toList();
+
+    // List stagger
+    _listCtrl = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 800),
+    );
+
+    // Star breathing
+    _starBreathCtrl = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+    _starBreathAnim = Tween<double>(begin: 0.7, end: 1.0)
+        .animate(CurvedAnimation(parent: _starBreathCtrl, curve: Curves.easeInOut));
+
+    // Me floating
+    _meFloatCtrl = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 2000),
+    )..repeat(reverse: true);
+    _meFloatAnim = Tween<double>(begin: -2, end: 2)
+        .animate(CurvedAnimation(parent: _meFloatCtrl, curve: Curves.easeInOut));
+
     _fetchAll();
     _startCountdown();
   }
@@ -34,10 +92,7 @@ class _RankingScreenState extends State<RankingScreen> {
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) { timer.cancel(); return; }
       setState(() => _countdown--);
-      if (_countdown <= 0) {
-        timer.cancel();
-        _goHome();
-      }
+      if (_countdown <= 0) { timer.cancel(); _goHome(); }
     });
   }
 
@@ -49,12 +104,15 @@ class _RankingScreenState extends State<RankingScreen> {
   @override
   void dispose() {
     _countdownTimer?.cancel();
+    for (final c in _podiumCtrls) c.dispose();
+    _listCtrl.dispose();
+    _starBreathCtrl.dispose();
+    _meFloatCtrl.dispose();
     super.dispose();
   }
 
-  int _eggMonth(String name) {
-    return _eggCache.putIfAbsent(name, () => Random().nextInt(6) + 1);
-  }
+  int _eggMonth(String name) =>
+      _eggCache.putIfAbsent(name, () => Random().nextInt(6) + 1);
 
   String _maskName(String name) {
     if (name.isEmpty) return '*';
@@ -82,13 +140,47 @@ class _RankingScreenState extends State<RankingScreen> {
     ]);
     if (mounted) {
       setState(() {
-        _dayEntries = _normalize(results[0]);
-        _weekEntries = _normalize(results[1]);
-        _monthEntries = _normalize(results[2]);
+        _data = {
+          'day': _normalize(results[0]),
+          'week': _normalize(results[1]),
+          'month': _normalize(results[2]),
+        };
         _loading = false;
       });
+      _playAnimations();
     }
   }
+
+  void _playAnimations() {
+    // Reset
+    for (final c in _podiumCtrls) c.reset();
+    _listCtrl.reset();
+
+    // Staggered podium: gold(0ms), silver(200ms), bronze(400ms)
+    // Order: gold=index1, silver=index0, bronze=index2 in display
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) _podiumCtrls[0].forward(); // gold
+    });
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) _podiumCtrls[1].forward(); // silver
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) _podiumCtrls[2].forward(); // bronze
+    });
+
+    // List stagger
+    Future.delayed(const Duration(milliseconds: 400), () {
+      if (mounted) _listCtrl.forward();
+    });
+  }
+
+  void _switchTab(String period) {
+    if (_period == period) return;
+    setState(() => _period = period);
+    _playAnimations();
+  }
+
+  List<Map<String, dynamic>> get _currentEntries => _data[_period] ?? [];
 
   @override
   Widget build(BuildContext context) {
@@ -97,62 +189,24 @@ class _RankingScreenState extends State<RankingScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFFFF5E6), Color(0xFFFFE8CC), Color(0xFFFFF0DB)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFFFE0B2), Color(0xFFFFF8E1), Color(0xFFFFF3E0)],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Top bar — just the button
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: R.s(16), vertical: R.s(6)),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _goHome,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: R.s(14), vertical: R.s(8)),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFF8C42),
-                          borderRadius: BorderRadius.circular(R.s(20)),
-                        ),
-                        child: Text('进入学习 $_countdown',
-                          style: TextStyle(color: Colors.white, fontSize: R.s(14), fontWeight: FontWeight.w800)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: R.s(40)),
-              // Title — right above the columns
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('🏆', style: TextStyle(fontSize: R.s(24))),
-                  SizedBox(width: R.s(6)),
-                  Text('排行榜', style: TextStyle(fontSize: R.s(22), fontWeight: FontWeight.bold, color: const Color(0xFFFF8C42))),
-                ],
-              ),
+              _buildTopBar(),
+              SizedBox(height: R.s(6)),
+              _buildTabBar(),
               SizedBox(height: R.s(8)),
-              // 3 columns
               Expanded(
                 child: _loading
                     ? const Center(child: CircularProgressIndicator(color: Color(0xFFFF8C42)))
-                    : Padding(
-                        padding: EdgeInsets.only(left: R.s(170), right: R.s(170), bottom: R.s(80)),
-                        child: Row(
-                          children: [
-                            Expanded(flex: 4, child: _buildColumn('📆 本周', _weekEntries, false)),
-                            SizedBox(width: R.s(24)),
-                            Expanded(flex: 5, child: _buildColumn('📅 今日', _dayEntries, true)),
-                            SizedBox(width: R.s(24)),
-                            Expanded(flex: 4, child: _buildColumn('🗓️ 本月', _monthEntries, false)),
-                          ],
-                        ),
-                      ),
+                    : _buildBody(),
               ),
+              _buildMyRankBar(),
             ],
           ),
         ),
@@ -160,119 +214,291 @@ class _RankingScreenState extends State<RankingScreen> {
     );
   }
 
-  Widget _buildColumn(String title, List<Map<String, dynamic>> entries, bool highlight) {
-    // Show top 10
-    final show = entries.take(20).toList();
-    final myIdx = entries.indexWhere((e) => e['isMe'] == true);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: highlight ? Colors.white.withOpacity(0.95) : Colors.white.withOpacity(0.85),
-        borderRadius: BorderRadius.circular(R.s(16)),
-        border: Border.all(
-          color: highlight ? const Color(0xFFFF8C42) : const Color(0xFFE0E0E0),
-          width: highlight ? 2.5 : 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: (highlight ? const Color(0xFFFF8C42) : Colors.black).withOpacity(highlight ? 0.25 : 0.06),
-            blurRadius: highlight ? R.s(16) : R.s(8),
-            offset: Offset(0, R.s(4)),
-          ),
-        ],
-      ),
-      child: Column(
+  Widget _buildTopBar() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: R.s(16), vertical: R.s(6)),
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          // Title
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: R.s(10)),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFFB74D), Color(0xFFFF8C42)],
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(R.s(16)),
-                topRight: Radius.circular(R.s(16)),
-              ),
-            ),
-            child: Text(title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: R.s(15), fontWeight: FontWeight.w900, color: Colors.white),
-            ),
-          ),
-          // List
-          Expanded(
-            child: show.isEmpty
-                ? Center(child: Text('暂无数据', style: TextStyle(fontSize: R.s(12), color: const Color(0xFF999999))))
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: R.s(4)),
-                    itemCount: show.length,
-                    itemBuilder: (_, i) => _buildRow(show[i], i + 1),
-                  ),
-          ),
-          // My rank — always show at bottom
-          if (myIdx >= 0)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: R.s(8), vertical: R.s(6)),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF3E0),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(R.s(16)),
-                  bottomRight: Radius.circular(R.s(16)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('🏆', style: TextStyle(fontSize: R.s(28))),
+              SizedBox(width: R.s(8)),
+              Text('排行榜',
+                style: TextStyle(
+                  fontSize: R.s(24), fontWeight: FontWeight.w900,
+                  color: const Color(0xFFE65100),
+                  shadows: [Shadow(color: Colors.orange.withOpacity(0.3), blurRadius: 8)],
                 ),
-                border: const Border(top: BorderSide(color: Color(0xFFFFE0B2))),
               ),
-              child: Row(
-                children: [
-                  Text('${myIdx + 1}', style: TextStyle(fontSize: R.s(13), fontWeight: FontWeight.bold, color: const Color(0xFFFF8C42))),
-                  SizedBox(width: R.s(4)),
-                  Text('👉 我 👈', style: TextStyle(fontSize: R.s(13), fontWeight: FontWeight.w900, color: const Color(0xFFFF8C42))),
-                  const Spacer(),
-                  Text('⭐ ${entries[myIdx]['stars'] ?? 0}', style: TextStyle(fontSize: R.s(13), fontWeight: FontWeight.bold, color: const Color(0xFFFF8C42))),
-                ],
+            ],
+          ),
+          Positioned(
+            left: 0,
+            child: GestureDetector(
+              onTap: _goHome,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: R.s(14), vertical: R.s(8)),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF8C42),
+                  borderRadius: BorderRadius.circular(R.s(20)),
+                  boxShadow: [BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 3))],
+                ),
+                child: Text('进入学习 $_countdown',
+                  style: TextStyle(color: Colors.white, fontSize: R.s(13), fontWeight: FontWeight.w800)),
               ),
             ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildRow(Map<String, dynamic> entry, int rank) {
+  Widget _buildTabBar() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: R.s(120)),
+      padding: EdgeInsets.all(R.s(3)),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(R.s(25)),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 6)],
+      ),
+      child: Row(
+        children: _tabs.map((tab) {
+          final selected = _period == tab['value'];
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => _switchTab(tab['value']!),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                padding: EdgeInsets.symmetric(vertical: R.s(8)),
+                decoration: BoxDecoration(
+                  color: selected ? const Color(0xFFFF8C42) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(R.s(22)),
+                  boxShadow: selected ? [BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 6)] : null,
+                ),
+                child: Text(
+                  tab['label']!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: R.s(15), fontWeight: FontWeight.w800,
+                    color: selected ? Colors.white : const Color(0xFF666666),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    final entries = _currentEntries;
+    final top3 = entries.take(3).toList();
+    final rest = entries.length > 3 ? entries.sublist(3).take(17).toList() : <Map<String, dynamic>>[];
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: R.s(80)),
+      child: Column(
+        children: [
+          // Podium
+          SizedBox(
+            height: R.s(200),
+            child: _buildPodium(top3),
+          ),
+          SizedBox(height: R.s(8)),
+          // List (4th onwards)
+          Expanded(
+            child: rest.isEmpty
+                ? Center(child: Text('更多同学正在努力中...', style: TextStyle(fontSize: R.s(14), color: const Color(0xFF999999))))
+                : _buildList(rest),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPodium(List<Map<String, dynamic>> top3) {
+    if (top3.isEmpty) {
+      return Center(child: Text('暂无排行数据', style: TextStyle(fontSize: R.s(16), color: const Color(0xFF999999))));
+    }
+
+    // Display order: [silver(1), gold(0), bronze(2)]
+    final podiumData = <_PodiumInfo>[];
+    if (top3.length >= 2) {
+      podiumData.add(_PodiumInfo(top3[1], 2, const Color(0xFFC0C0C0), R.s(90), R.s(50), 1));
+    }
+    podiumData.add(_PodiumInfo(top3[0], 1, const Color(0xFFFFD700), R.s(120), R.s(70), 0));
+    if (top3.length >= 3) {
+      podiumData.add(_PodiumInfo(top3[2], 3, const Color(0xFFCD7F32), R.s(75), R.s(45), 2));
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: podiumData.map((p) {
+        final name = p.entry['name'] as String? ?? '';
+        final stars = p.entry['stars'] as int? ?? 0;
+        final isMe = p.entry['isMe'] == true;
+        final animIdx = p.animIndex;
+
+        return Expanded(
+          child: SlideTransition(
+            position: _podiumSlides[animIdx],
+            child: FadeTransition(
+              opacity: _podiumFades[animIdx],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Crown/medal for #1
+                  if (p.rank == 1)
+                    Text('👑', style: TextStyle(fontSize: R.s(24))),
+                  // Avatar
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: p.color, width: R.s(3)),
+                      boxShadow: [
+                        BoxShadow(color: p.color.withOpacity(0.5), blurRadius: R.s(12), spreadRadius: R.s(2)),
+                        if (isMe) BoxShadow(color: const Color(0xFFFF8C42).withOpacity(0.6), blurRadius: R.s(16)),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: cdnImage(
+                        'assets/pet/costumes/base/egg_month${_eggMonth(name)}.png',
+                        width: p.avatarSize, height: p.avatarSize, fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: R.s(4)),
+                  // Name
+                  Text(
+                    isMe ? '👉我👈' : _maskName(name),
+                    style: TextStyle(
+                      fontSize: R.s(13), fontWeight: FontWeight.w800,
+                      color: isMe ? const Color(0xFFFF8C42) : const Color(0xFF333333),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  // Stars with breathing effect
+                  AnimatedBuilder(
+                    animation: _starBreathAnim,
+                    builder: (_, __) => Opacity(
+                      opacity: p.rank == 1 ? _starBreathAnim.value : 1.0,
+                      child: Text('⭐ $stars',
+                        style: TextStyle(
+                          fontSize: R.s(13), fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFF8C42),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: R.s(4)),
+                  // Podium block
+                  Container(
+                    height: p.podiumHeight,
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: R.s(8)),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          p.color.withOpacity(p.rank == 1 ? 0.7 : 0.4),
+                          p.color.withOpacity(p.rank == 1 ? 0.3 : 0.15),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(R.s(12)),
+                        topRight: Radius.circular(R.s(12)),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: p.color.withOpacity(0.3),
+                          blurRadius: R.s(8),
+                          offset: Offset(0, R.s(-2)),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${p.rank}',
+                        style: TextStyle(
+                          fontSize: R.s(28), fontWeight: FontWeight.w900,
+                          color: p.color.withOpacity(0.8),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildList(List<Map<String, dynamic>> rest) {
+    return AnimatedBuilder(
+      animation: _listCtrl,
+      builder: (_, __) => ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: R.s(40), vertical: R.s(4)),
+        itemCount: rest.length,
+        itemBuilder: (_, i) {
+          final delay = (i / rest.length).clamp(0.0, 1.0);
+          final t = (_listCtrl.value - delay * 0.5).clamp(0.0, 1.0) / 0.5;
+          final slideOffset = Offset(1.0 - t.clamp(0.0, 1.0), 0);
+          final opacity = t.clamp(0.0, 1.0);
+
+          return Transform.translate(
+            offset: Offset(slideOffset.dx * R.s(100), 0),
+            child: Opacity(
+              opacity: opacity,
+              child: _buildListTile(rest[i], i + 4),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildListTile(Map<String, dynamic> entry, int rank) {
     final name = entry['name'] as String? ?? '';
     final stars = entry['stars'] as int? ?? 0;
     final isMe = entry['isMe'] == true;
 
-    final rankWidget = rank <= 3
-        ? Text(['🥇', '🥈', '🥉'][rank - 1], style: TextStyle(fontSize: R.s(18)))
-        : Text('$rank', textAlign: TextAlign.center,
-            style: TextStyle(fontSize: R.s(15), fontWeight: FontWeight.bold, color: const Color(0xFF999999)));
-
-    final bgColor = isMe
-        ? const Color(0xFFFFF3E0)
-        : rank == 1 ? const Color(0xFFFFFDE7).withOpacity(0.6)
-        : rank == 2 ? const Color(0xFFF5F5F5).withOpacity(0.5)
-        : rank == 3 ? const Color(0xFFFBE9E7).withOpacity(0.5)
-        : Colors.transparent;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: R.s(4), vertical: R.s(2)),
-      padding: EdgeInsets.symmetric(horizontal: R.s(4), vertical: R.s(5)),
+    Widget tile = Container(
+      margin: EdgeInsets.only(bottom: R.s(6)),
+      padding: EdgeInsets.symmetric(horizontal: R.s(12), vertical: R.s(8)),
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(R.s(8)),
-        border: isMe ? Border.all(color: const Color(0xFFFF8C42), width: 1.5) : null,
+        color: isMe ? const Color(0xFFFFF3E0) : Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(R.s(12)),
+        border: isMe ? Border.all(color: const Color(0xFFFF8C42), width: 2) : null,
+        boxShadow: isMe
+            ? [
+                BoxShadow(color: const Color(0xFFFF8C42).withOpacity(0.25), blurRadius: R.s(12), spreadRadius: R.s(1), offset: Offset(0, R.s(4))),
+                BoxShadow(color: const Color(0xFFFF8C42).withOpacity(0.1), blurRadius: R.s(20), spreadRadius: R.s(2)),
+              ]
+            : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: R.s(4), offset: Offset(0, R.s(2)))],
       ),
       child: Row(
         children: [
-          SizedBox(width: R.s(22), child: rankWidget),
+          SizedBox(
+            width: R.s(28),
+            child: Text('$rank', textAlign: TextAlign.center,
+              style: TextStyle(fontSize: R.s(15), fontWeight: FontWeight.bold, color: const Color(0xFF999999))),
+          ),
+          SizedBox(width: R.s(6)),
           ClipOval(
             child: cdnImage(
               'assets/pet/costumes/base/egg_month${_eggMonth(name)}.png',
-              width: R.s(20), height: R.s(20), fit: BoxFit.cover,
+              width: R.s(30), height: R.s(30), fit: BoxFit.cover,
             ),
           ),
-          SizedBox(width: R.s(2)),
+          SizedBox(width: R.s(8)),
           Expanded(
             child: Text(
               isMe ? '👉 我 👈' : _maskName(name),
@@ -284,9 +510,77 @@ class _RankingScreenState extends State<RankingScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Text('⭐$stars', style: TextStyle(fontSize: R.s(15), fontWeight: FontWeight.bold, color: const Color(0xFFFF8C42))),
+          Text('⭐', style: TextStyle(fontSize: R.s(15))),
+          SizedBox(width: R.s(3)),
+          Text('$stars', style: TextStyle(fontSize: R.s(15), fontWeight: FontWeight.bold, color: const Color(0xFFFF8C42))),
+        ],
+      ),
+    );
+
+    // "Me" row has floating animation
+    if (isMe) {
+      tile = AnimatedBuilder(
+        animation: _meFloatAnim,
+        builder: (_, __) => Transform.translate(
+          offset: Offset(0, _meFloatAnim.value),
+          child: tile,
+        ),
+      );
+    }
+
+    return tile;
+  }
+
+  Widget _buildMyRankBar() {
+    final entries = _currentEntries;
+    final myIdx = entries.indexWhere((e) => e['isMe'] == true);
+    if (myIdx < 0) return const SizedBox.shrink();
+
+    final myEntry = entries[myIdx];
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: R.s(80), vertical: R.s(6)),
+      padding: EdgeInsets.symmetric(horizontal: R.s(16), vertical: R.s(10)),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)]),
+        borderRadius: BorderRadius.circular(R.s(14)),
+        border: Border.all(color: const Color(0xFFFF8C42), width: 2),
+        boxShadow: [BoxShadow(color: const Color(0xFFFF8C42).withOpacity(0.2), blurRadius: R.s(10), offset: Offset(0, R.s(-2)))],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: R.s(10), vertical: R.s(4)),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFF8C42),
+              borderRadius: BorderRadius.circular(R.s(10)),
+            ),
+            child: Text('我的排名', style: TextStyle(fontSize: R.s(12), fontWeight: FontWeight.bold, color: Colors.white)),
+          ),
+          SizedBox(width: R.s(12)),
+          Text('#${myIdx + 1}', style: TextStyle(fontSize: R.s(20), fontWeight: FontWeight.w900, color: const Color(0xFFFF8C42))),
+          const Spacer(),
+          ClipOval(
+            child: cdnImage(
+              'assets/pet/costumes/base/egg_month${_eggMonth(myEntry['name'] as String? ?? '')}.png',
+              width: R.s(32), height: R.s(32), fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(width: R.s(8)),
+          Text('👉 我 👈', style: TextStyle(fontSize: R.s(14), fontWeight: FontWeight.w900, color: const Color(0xFFFF8C42))),
+          SizedBox(width: R.s(12)),
+          Text('⭐ ${myEntry['stars'] ?? 0}', style: TextStyle(fontSize: R.s(15), fontWeight: FontWeight.bold, color: const Color(0xFFFF8C42))),
         ],
       ),
     );
   }
+}
+
+class _PodiumInfo {
+  final Map<String, dynamic> entry;
+  final int rank;
+  final Color color;
+  final double podiumHeight;
+  final double avatarSize;
+  final int animIndex; // 0=gold, 1=silver, 2=bronze
+  const _PodiumInfo(this.entry, this.rank, this.color, this.podiumHeight, this.avatarSize, this.animIndex);
 }
