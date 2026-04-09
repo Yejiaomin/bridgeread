@@ -90,6 +90,7 @@ flutter:
     - assets/pet/costumes/base/
     - assets/pet/costumes/accessories/
     - assets/phonics/
+    - assets/home/ranking/
     - assets/quiz/
     - assets/shop/
     - assets/shop/items/
