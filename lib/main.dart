@@ -16,6 +16,7 @@ import 'screens/card_gacha_screen.dart';
 import 'screens/study_room_screen.dart';
 import 'screens/weekend_game_screen.dart';
 import 'screens/ranking_screen.dart';
+import 'screens/profile_screen.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
 
@@ -68,6 +69,7 @@ class BridgeReadApp extends StatelessWidget {
         '/weekend-game': (context) => const _OrientationGate(child: WeekendGameScreen()),
         '/studyroom':    (context) => const _OrientationGate(child: StudyRoomScreen()),
         '/ranking':      (context) => const _OrientationGate(child: RankingScreen()),
+        '/profile':      (context) => const _OrientationGate(child: ProfileScreen()),
       },
     );
   }

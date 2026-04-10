@@ -39,6 +39,10 @@ class _HomeScreenState extends State<HomeScreen>
   late final AnimationController _pressCtrl;
   late final Animation<double>   _pressAnim;
 
+  // Book sparkle animation (always on)
+  late final AnimationController _bookSparkleCtrl;
+  late final Animation<double>   _bookSparkleAnim;
+
   // Pulsing glow for the Eggy/study-room unlock zone
   late final AnimationController _eggyGlowCtrl;
   late final Animation<double>   _eggyGlowAnim;
@@ -57,6 +61,13 @@ class _HomeScreenState extends State<HomeScreen>
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.95), weight: 1),
       TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.0), weight: 1),
     ]).animate(_pressCtrl);
+
+    // Book sparkle — slow loop, always running
+    _bookSparkleCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 4000));
+    _bookSparkleAnim = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(_bookSparkleCtrl);
+    _bookSparkleCtrl.repeat();
 
     // Eggy unlock orbit — linear repeat for smooth star rotation
     _eggyGlowCtrl = AnimationController(
@@ -83,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen>
     _player.dispose();
     _glowCtrl.dispose();
     _pressCtrl.dispose();
+    _bookSparkleCtrl.dispose();
     _eggyGlowCtrl.dispose();
     super.dispose();
   }
@@ -101,13 +113,16 @@ class _HomeScreenState extends State<HomeScreen>
     ProgressService.syncDebtFromServer().then((_) async {
       final owed = await ProgressService.getTotalOwed();
       final prefs2 = await SharedPreferences.getInstance();
-      final todayPending = prefs2.getInt('today_owed') ?? 0;
+      final serverToday = prefs2.getInt('today_owed');
+      // Use server value if available, otherwise fall back to local calculation
+      final todayPending = serverToday ?? await ProgressService.getTodayPending();
       if (mounted) setState(() { _totalOwed = owed; _todayPending = todayPending; });
     });
 
-    // Also load cached values immediately
+    // Load cached or local values immediately
     final owed = await ProgressService.getTotalOwed();
-    final pending = prefs.getInt('today_owed') ?? 0;
+    final serverPending = prefs.getInt('today_owed');
+    final pending = serverPending ?? await ProgressService.getTodayPending();
 
     if (mounted) {
       setState(() {
@@ -157,65 +172,98 @@ class _HomeScreenState extends State<HomeScreen>
         builder: (ctx, box) {
           final w = box.maxWidth;
           final h = box.maxHeight;
-          return InteractiveViewer(
-            minScale: 0.5,
-            maxScale: 2.0,
-            child: SizedBox(
+          return SizedBox(
             width: w,
             height: h,
             child: Stack(
             fit: StackFit.expand,
             children: [
-              // ── Background ────────────────────────────────────────────
-              cdnImage('assets/home/home_bg.webp',
+              // ── Layer 1: Background (fill entire screen) ────────────
+              Positioned.fill(
+                child: Image.asset('assets/home/layers/bg.png',
                   fit: BoxFit.cover, width: w, height: h),
-
-              // ── BOOKS tap zone ────────────────────────────────────────
-              // x=0.415, y=0.313, w=0.421, h=0.655
-              Positioned(
-                left:   w * 0.415,
-                top:    h * 0.313,
-                child: _TapZone(
-                  width:    w * 0.421,
-                  height:   h * 0.655,
-                  glowAnim: _glowAnim,
-                  pressAnim: _pressAnim,
-                  onTap: () => _onBooksTap(ctx),
-                ),
               ),
 
-              // ── CALENDAR tap zone ─────────────────────────────────────
-              // x=0.787, y=0.040, w=0.197, h=0.309
-              Positioned(
-                left:  w * 0.787,
-                top:   h * 0.040,
-                child: _TapZone(
-                  width:  w * 0.197,
-                  height: h * 0.309,
-                  onTap: () => Navigator.pushNamed(ctx, '/calendar'),
-                ),
-              ),
 
-              // ── EGGY unlock zone ──────────────────────────────────────
-              // Invisible until all 4 daily modules are done.
-              // Coordinates from highlight: x=0.087, y=0.710, w=0.144, h=0.215
-              if (_studyRoomUnlocked)
-                Positioned(
-                  left:   w * 0.087,
-                  top:    h * 0.710,
-                  width:  w * 0.144,
-                  height: h * 0.215,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(ctx, '/studyroom')
-                        .then((_) => _loadStats()),
-                    child: AnimatedBuilder(
-                      animation: _eggyGlowAnim,
-                      builder: (_, __) => CustomPaint(
-                        painter: _EggyOrbitPainter(_eggyGlowAnim.value),
+              // ── Layer 3: Girl + Book (combined) ──────────────────
+              Positioned.fill(
+                child: Stack(
+                  children: [
+                    // The combined image
+                    Positioned.fill(
+                      child: Image.asset('assets/home/layers/girl_book.png',
+                        fit: BoxFit.cover, width: w, height: h),
+                    ),
+                    // Sparkle effect (wider than book tap zone)
+                    Positioned(
+                      left: w * 0.4,
+                      bottom: 0,
+                      width: w * 1.15,
+                      height: h * 0.75,
+                      child: IgnorePointer(
+                        child: AnimatedBuilder(
+                          animation: _bookSparkleAnim,
+                          builder: (_, __) => CustomPaint(
+                            painter: _BookSparklePainter(_bookSparkleAnim.value),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    // Book tap zone (right half)
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      width: w * 0.55,
+                      height: h * 0.75,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () => _onBooksTap(ctx),
+                      ),
+                    ),
+                    // Girl tap zone (left side, only when study room unlocked)
+                    Positioned(
+                      left: w * 0.03,
+                      bottom: 0,
+                      width: w * 0.45,
+                      height: h * 0.6,
+                      child: Stack(
+                        children: [
+                          // Glow effect when unlocked
+                          if (_studyRoomUnlocked)
+                            Positioned.fill(
+                              child: AnimatedBuilder(
+                                animation: _eggyGlowAnim,
+                                builder: (_, __) => CustomPaint(
+                                  painter: _EggyOrbitPainter(_eggyGlowAnim.value),
+                                ),
+                              ),
+                            ),
+                          // Tap area
+                          Positioned.fill(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: _studyRoomUnlocked
+                                  ? () => Navigator.pushNamed(ctx, '/studyroom').then((_) => _loadStats())
+                                  : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+
+              // ── Layer 5: Calendar (top-right, tappable) ─────────────
+              Positioned(
+                right: w * 0.02,
+                top: h * 0.02,
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(ctx, '/calendar'),
+                  child: Image.asset('assets/home/layers/cal.png',
+                    height: h * 0.25, fit: BoxFit.contain),
+                ),
+              ),
 
               // ── DEV shortcuts ─────────────────────────────────────────
               Positioned(
@@ -247,25 +295,43 @@ class _HomeScreenState extends State<HomeScreen>
                     const SizedBox(height: 6),
                     _DevBtn(label: '📖 讲解', onTap: () =>
                         Navigator.pushNamed(ctx, '/reader').then((_) => _loadStats())),
+                    const SizedBox(height: 6),
+                    _DevBtn(label: '🗑 重置数据', onTap: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      // Preserve login keys
+                      final token = prefs.getString('auth_token');
+                      final childName = prefs.getString('child_name');
+                      final userId = prefs.getInt('user_id');
+                      final bookStartDate = prefs.getString('book_start_date');
+                      await prefs.clear();
+                      if (token != null) await prefs.setString('auth_token', token);
+                      if (childName != null) await prefs.setString('child_name', childName);
+                      if (userId != null) await prefs.setInt('user_id', userId);
+                      if (bookStartDate != null) await prefs.setString('book_start_date', bookStartDate);
+                      if (!mounted) return;
+                      _loadStats();
+                    }),
                   ],
                 ),
               ),
 
-              // ── Streak badge (top-left) ───────────────────────────────
+              // ── "我的英语小家" tap zone (top-left, to profile) ────────
               Positioned(
-                left: 16,
-                top:  MediaQuery.of(ctx).padding.top + 2,
+                left: 0,
+                top: 0,
+                width: w * 0.3,
+                height: h * 0.15,
                 child: GestureDetector(
-                  onTap: () => Navigator.pushNamed(ctx, '/calendar'),
-                  child: _StreakBadge(days: _streakDays),
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => Navigator.pushNamed(ctx, '/profile').then((_) => _loadStats()),
                 ),
               ),
 
-              // ── Today badge (above books, right side) ───────────────
+              // ── Today badge (book top-right corner) ────────────────
               if (_todayPending > 0)
                 Positioned(
                   left: w * 0.84,
-                  top:  h * 0.40,
+                  bottom: h * 0.55,
                   child: GestureDetector(
                     onTap: () => _onBooksTap(ctx),
                     child: Container(
@@ -299,12 +365,12 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
 
-              // ── Makeup debt badge (inside calendar widget) ──────────
+              // ── Makeup debt badge (centered on calendar) ──────────────
               if (_totalOwed > 0)
                 Positioned(
-                  left:  w * 0.80,
-                  top:   h * 0.16,
-                  width: w * 0.20,
+                  right: w * 0.05,
+                  top:   h * 0.03,
+                  height: h * 0.25,
                   child: GestureDetector(
                     onTap: () => Navigator.pushNamed(ctx, '/calendar'),
                     child: Center(
@@ -370,7 +436,6 @@ class _HomeScreenState extends State<HomeScreen>
 
 
             ],
-            ),
             ),
           );
         },
@@ -936,8 +1001,8 @@ class _EggyOrbitPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final cx = size.width  / 2;
     final cy = size.height / 2;
-    final rx = size.width  * 0.52; // horizontal orbit radius
-    final ry = size.height * 0.52; // vertical orbit radius
+    final rx = size.width  * 0.35; // horizontal orbit radius (2/3 of 0.52)
+    final ry = size.height * 0.35; // vertical orbit radius (2/3 of 0.52)
 
     for (int i = 0; i < 10; i++) {
       final phase  = (i / 10.0);           // evenly spaced
@@ -976,4 +1041,61 @@ class _EggyOrbitPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_EggyOrbitPainter old) => old.t != t;
+}
+
+/// Colorful twinkling sparkles around the book to attract kids
+class _BookSparklePainter extends CustomPainter {
+  final double t;
+  _BookSparklePainter(this.t);
+
+  static const _colors = [
+    Color(0xFFFFE600), // yellow
+    Color(0xFFFF9900), // orange
+    Color(0xFFFF4E8C), // pink
+    Color(0xFF44CCFF), // cyan
+    Color(0xFF44FF88), // green
+    Color(0xFFCC44FF), // violet
+    Color(0xFFFFFFFF), // white
+    Color(0xFFFF6644), // red-orange
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int i = 0; i < 35; i++) {
+      // Spread stars densely around the book area
+      final px = size.width  * (0.05 + (((i * 73 + 42) % 100) / 100.0) * 0.9);
+      final baseY = size.height * (0.05 + (((i * 131 + 42) % 100) / 100.0) * 0.85);
+
+      // Each star fades in/out at different phase + slight float up/down
+      final phase = (t + i / 35.0) % 1.0;
+      final alpha = (sin(phase * 2 * pi) * 0.4 + 0.6); // 0.2 ~ 1.0
+      final floatY = sin(phase * 2 * pi) * 5; // float +/- 5px
+      final py = baseY + floatY;
+
+      final color = _colors[i % _colors.length].withValues(alpha: alpha);
+      final radius = 6.0 + (i % 3) * 2.5; // 6–11 px
+
+      // Glow
+      final glowPaint = Paint()
+        ..color = _colors[i % _colors.length].withValues(alpha: alpha * 0.5)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+      canvas.drawCircle(Offset(px, py), radius * 2.0, glowPaint);
+
+      // 4-point star
+      final path = Path();
+      final inner = radius * 0.4;
+      for (int j = 0; j < 8; j++) {
+        final a = (j * pi / 4) - pi / 2;
+        final r = (j.isEven) ? radius : inner;
+        final x = px + cos(a) * r;
+        final y = py + sin(a) * r;
+        if (j == 0) path.moveTo(x, y); else path.lineTo(x, y);
+      }
+      path.close();
+      canvas.drawPath(path, Paint()..color = color);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BookSparklePainter old) => old.t != t;
 }

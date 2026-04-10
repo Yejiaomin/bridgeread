@@ -174,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _inputField(_nameCtrl, '孩子的名字', TextInputType.text, Icons.child_care),
+                _inputField(_nameCtrl, '中文名/英文名', TextInputType.text, Icons.child_care),
                 const SizedBox(height: 12),
               ],
 

@@ -429,7 +429,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                       ScaleTransition(
                         scale: _breathAnim,
                         alignment: Alignment.center,
-                        child: _buildEggyAvatar(R.s(450)),
+                        child: _buildEggyAvatar(R.s(350)),
                       ),
                       const SizedBox(height: 16),
 
