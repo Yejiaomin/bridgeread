@@ -175,20 +175,46 @@
     }
   </script>
   <script>
-    // Redirect Google font requests to our own server (gstatic.com blocked in China)
-    // Flutter CanvasKit fetches fonts like: https://fonts.gstatic.com/s/a/{hash}.ttf
-    // We rewrite these to: /gfonts/a/{hash}.ttf served by nginx reverse proxy cache
-    var _isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-    if (_isProduction) {
+    // Fix font loading for China: gstatic.com is blocked
+    // Strategy: Roboto → local files; NotoSansSC → China CDN mirror → graceful fail
+    (function() {
       var _origFetch = window.fetch;
+      // Map of known Roboto files to local paths
+      var _robotoLocal = {};
+      // Match any Roboto woff2 request and serve locally
       window.fetch = function(url, opts) {
-        if (typeof url === 'string' && url.includes('fonts.gstatic.com/s/')) {
-          url = url.replace('https://fonts.gstatic.com/s/', '/gfonts/');
+        if (typeof url === 'string' && url.includes('fonts.gstatic.com')) {
+          // Roboto: serve from local /fonts/ directory
+          if (url.includes('/roboto/')) {
+            if (url.includes('KFOmCnqEu92Fr1Me4GZLCzYlKw')) {
+              url = 'fonts/Roboto-Regular.woff2';
+            } else if (url.includes('KFOlCnqEu92Fr1MmEU9f')) {
+              url = 'fonts/Roboto-Medium.woff2';
+            } else if (url.includes('KFOlCnqEu92Fr1MmWUlf')) {
+              url = 'fonts/Roboto-Bold.woff2';
+            } else {
+              // Other Roboto variants: try local Regular as fallback
+              url = 'fonts/Roboto-Regular.woff2';
+            }
+          }
+          // NotoSansSC (Chinese): try China-accessible mirror
+          else if (url.includes('notosanssc') || url.includes('notosans')) {
+            url = url.replace('fonts.gstatic.com', 'gstatic.loli.net');
+          }
+          // Other Google fonts: try mirror
+          else {
+            url = url.replace('fonts.gstatic.com', 'gstatic.loli.net');
+          }
+        }
+        // Also intercept Google Fonts API CSS (fonts.googleapis.com)
+        if (typeof url === 'string' && url.includes('fonts.googleapis.com')) {
+          url = url.replace('fonts.googleapis.com', 'fonts.googleapis.cn');
         }
         return _origFetch.call(this, url, opts);
       };
-    }
+    })();
   </script>
+  <script src="whisper.js"></script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
