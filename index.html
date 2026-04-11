@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/bridgeread/">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="BridgeRead - 儿童英语绘本阅读">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="BridgeRead">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>BridgeRead</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="main.dart.js" as="script">
+  <link rel="preload" href="flutter.js" as="script">
+
+  <!-- Loading screen style -->
+  <style>
+    body { margin: 0; background: linear-gradient(135deg, #FFE8D6, #FFCBA4, #FFAD7A); }
+    #loading {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #FFE8D6, #FFCBA4, #FFAD7A);
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+    }
+    /* Decorative circles */
+    #loading::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+    }
+    #loading::after {
+      content: ''; position: absolute; bottom: 60px; left: -30px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: rgba(255,255,255,0.13);
+    }
+    /* Speech bubble */
+    .bubble {
+      background: white; border-radius: 24px;
+      padding: 16px 24px; text-align: center;
+      box-shadow: 0 4px 12px rgba(255,140,66,0.25);
+      position: relative; margin-bottom: 8px;
+      animation: bubbleBounce 2s ease-in-out infinite;
+    }
+    .bubble::after {
+      content: ''; position: absolute; bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid white;
+    }
+    .bubble-text { color: #FF6B35; font-weight: 800; font-size: 20px; line-height: 1.5; }
+    .bubble-text .countdown { font-size: 28px; font-weight: 900; }
+    @keyframes bubbleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    /* Eggy image */
+    .eggy-img {
+      width: 420px; height: 420px; object-fit: contain;
+      animation: eggyBreath 3s ease-in-out infinite;
+    }
+    @keyframes eggyBreath {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    /* Title */
+    .loading-title {
+      font-size: 36px; font-weight: 900; color: #B84A00;
+      letter-spacing: 1.5px; margin-top: 12px;
+    }
+    .loading-subtitle {
+      font-size: 16px; color: #CC6622; font-weight: 600; margin-top: 4px; text-align: center;
+    }
+    /* PWA tip */
+    .pwa-tip {
+      color: #999; font-size: 13px; margin-top: 32px; text-align: center;
+      line-height: 1.6; display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading screen: Eggy + countdown bubble -->
+  <div id="loading">
+    <div class="bubble">
+      <div class="bubble-text">
+        给我<span class="countdown" id="countdown">30</span>秒钟<br>让我醒过来哦~
+      </div>
+    </div>
+    <img class="eggy-img" src="assets/pet/eggy_transparent_bg.webp"
+         onerror="this.style.display='none'"
+         alt="Eggy">
+    <div class="loading-subtitle" id="pwaTip" style="display:none">
+      点击右上角 "添加到主屏幕"<br>下次直接从桌面打开哦
+    </div>
+  </div>
+  <script>
+    // Countdown from 30 to 0
+    var count = 30;
+    var countdownEl = document.getElementById('countdown');
+    var countdownTimer = setInterval(function() {
+      count--;
+      if (count >= 0) countdownEl.textContent = count;
+      if (count <= 0) clearInterval(countdownTimer);
+    }, 1000);
+
+    // Only show PWA tip in browser mode (not installed PWA)
+    if (!window.matchMedia('(display-mode: standalone)').matches &&
+        !window.navigator.standalone) {
+      var tip = document.getElementById('pwaTip');
+      if (tip) tip.style.display = 'block';
+    }
+  </script>
+
+  <script>
+    // Auto-clear old caches on version change
+    (function() {
+      var APP_VERSION = '2026040601';
+      var stored = localStorage.getItem('app_version');
+      if (stored !== APP_VERSION) {
+        localStorage.setItem('app_version', APP_VERSION);
+        if (stored) {
+          // Version changed — clear all caches and service workers
+          if ('caches' in window) {
+            caches.keys().then(function(names) {
+              names.forEach(function(name) { caches.delete(name); });
+            });
+          }
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              regs.forEach(function(r) { r.unregister(); });
+            });
+          }
+          window.location.reload();
+          return;
+        }
+      }
+    })();
+  </script>
+  <script>
+    // Remove loading screen once Flutter renders first frame
+    window.addEventListener('flutter-first-frame', function() {
+      var el = document.getElementById('loading');
+      if (el) el.remove();
+    });
+
+    // Auto-update: when a new service worker is available, activate it immediately
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var reg of registrations) {
+          reg.update();
+          reg.addEventListener('updatefound', function() {
+            var newWorker = reg.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', function() {
+                if (newWorker.state === 'activated') {
+                  window.location.reload();
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  </script>
+  <script>
+    // Fix font loading for China: gstatic.com is blocked
+    // Strategy: Roboto → local files; NotoSansSC → China CDN mirror → graceful fail
+    (function() {
+      var _origFetch = window.fetch;
+      // Map of known Roboto files to local paths
+      var _robotoLocal = {};
+      // Match any Roboto woff2 request and serve locally
+      window.fetch = function(url, opts) {
+        if (typeof url === 'string' && url.includes('fonts.gstatic.com')) {
+          // Roboto: serve from local /fonts/ directory
+          if (url.includes('/roboto/')) {
+            if (url.includes('KFOmCnqEu92Fr1Me4GZLCzYlKw')) {
+              url = 'fonts/Roboto-Regular.woff2';
+            } else if (url.includes('KFOlCnqEu92Fr1MmEU9f')) {
+              url = 'fonts/Roboto-Medium.woff2';
+            } else if (url.includes('KFOlCnqEu92Fr1MmWUlf')) {
+              url = 'fonts/Roboto-Bold.woff2';
+            } else {
+              // Other Roboto variants: try local Regular as fallback
+              url = 'fonts/Roboto-Regular.woff2';
+            }
+          }
+          // NotoSansSC (Chinese): try China-accessible mirror
+          else if (url.includes('notosanssc') || url.includes('notosans')) {
+            url = url.replace('fonts.gstatic.com', 'gstatic.loli.net');
+          }
+          // Other Google fonts: try mirror
+          else {
+            url = url.replace('fonts.gstatic.com', 'gstatic.loli.net');
+          }
+        }
+        // Also intercept Google Fonts API CSS (fonts.googleapis.com)
+        if (typeof url === 'string' && url.includes('fonts.googleapis.com')) {
+          url = url.replace('fonts.googleapis.com', 'fonts.googleapis.cn');
+        }
+        return _origFetch.call(this, url, opts);
+      };
+    })();
+  </script>
+  <script>
+    // Debug: time travel for testing
+    // Usage in browser console:
+    //   timeTravel(1)   → jump to tomorrow
+    //   timeTravel(3)   → jump to 3 days later
+    //   timeTravel(-1)  → go back 1 day
+    //   timeTravel(0)   → reset to real time
+    // Debug: inspect module status data
+    window.debugData = function() {
+      var keys = ['flutter.debt_module_status', 'flutter._current_study_date',
+        'flutter.active_dates', 'flutter.last_completed_date', 'flutter.today_reader_done',
+        'flutter.today_phonics_done', 'flutter.today_quiz_done', 'flutter.today_recording_done',
+        'flutter.today_listen_done', 'flutter.today_recap_done', 'flutter.book_start_date',
+        'debug_day_offset'];
+      keys.forEach(function(k) {
+        var v = localStorage.getItem(k);
+        if (v) console.log(k + ' = ' + v);
+      });
+    };
+
+    window.timeTravel = function(days) {
+      localStorage.setItem('debug_day_offset', String(days || 0));
+      // Reset today's module states for the new "day"
+      localStorage.removeItem('flutter.today_reader_done');
+      localStorage.removeItem('flutter.today_phonics_done');
+      localStorage.removeItem('flutter.today_quiz_done');
+      localStorage.removeItem('flutter.today_recording_done');
+      localStorage.removeItem('flutter.today_listen_done');
+      localStorage.removeItem('flutter.today_recap_done');
+      localStorage.removeItem('flutter.last_completed_date');
+      console.log('[TimeTravel] Set to ' + (days > 0 ? '+' : '') + days + ' days. Module states reset. Reloading...');
+      location.reload();
+    };
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

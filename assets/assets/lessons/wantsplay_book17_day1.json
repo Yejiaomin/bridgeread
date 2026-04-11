@@ -1,0 +1,272 @@
+{
+  "id": "wantsplay_book17_day1",
+  "bookTitle": "Biscuit Wants to Play",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "The kittens want to play with a leaf.",
+  "originalAudio": "books/17Biscuit_Wants_to_Play/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Wants to Play的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "wantsplay_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit看到一个basket——篮子！里面是什么呀？",
+      "narrativeEN": "Woof, woof! What's in the basket, Biscuit?",
+      "keywords": [
+        "basket"
+      ],
+      "audioCN": "wantsplay_p1_cn",
+      "audioEN": "wantsplay_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Meow！是Daisy！Daisy是一只猫咪，她还有two kittens——两只小猫咪宝宝！好可爱呀！",
+      "narrativeEN": "Meow. It's Daisy! Meow. Meow. Daisy has two kittens.",
+      "keywords": [
+        "meow",
+        "daisy"
+      ],
+      "audioCN": "wantsplay_p2_cn",
+      "audioEN": "wantsplay_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 29600
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit想跟小猫咪们play——一起玩！可是小猫咪们想不想跟Biscuit玩呢？",
+      "narrativeEN": "Woof, woof! Biscuit wants to play with the kittens.",
+      "keywords": [
+        "play",
+        "kittens"
+      ],
+      "audioCN": "wantsplay_p3_cn",
+      "audioEN": "wantsplay_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小猫咪们想玩leaf——树叶！Biscuit也想跟他们一起玩。可是小猫咪只顾着追树叶！",
+      "narrativeEN": "Meow. Meow. The kittens want to play with a leaf. Woof, woof! Biscuit wants to play, too.",
+      "keywords": [
+        "meow",
+        "kittens"
+      ],
+      "audioCN": "wantsplay_p4_cn",
+      "audioEN": "wantsplay_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 68500
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit找到了他的ball——球！可是小猫咪们发现了一只cricket——蟋蟀！他们追着蟋蟀跑！",
+      "narrativeEN": "Woof! Biscuit sees his ball. Meow. Meow. The kittens see a cricket.",
+      "keywords": [
+        "sees",
+        "ball"
+      ],
+      "audioCN": "wantsplay_p5_cn",
+      "audioEN": "wantsplay_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit还想play——还想玩！可是小猫咪又发现了一只butterfly——蝴蝶！他们只顾着追蝴蝶！",
+      "narrativeEN": "Woof, woof! Biscuit wants to play, too! Meow. Meow. The kittens see a butterfly.",
+      "keywords": [
+        "play",
+        "meow"
+      ],
+      "audioCN": "wantsplay_p6_cn",
+      "audioEN": "wantsplay_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小猫咪们又run又jump——又跑又跳！他们追着蝴蝶越跑越远了！",
+      "narrativeEN": "Meow. Meow. The kittens run. The kittens jump.",
+      "keywords": [
+        "meow",
+        "kittens"
+      ],
+      "audioCN": "wantsplay_p7_cn",
+      "audioEN": "wantsplay_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "糟糕！小猫咪们stuck in the tree——卡在树上下不来了！Meow meow！他们害怕了！",
+      "narrativeEN": "Meow! Meow! The kittens are stuck in the tree! Woof! Biscuit sees the kittens.",
+      "keywords": [
+        "meow",
+        "kittens"
+      ],
+      "audioCN": "wantsplay_p8_cn",
+      "audioEN": "wantsplay_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit看到了！他要help the kittens——帮助小猫咪们！Biscuit真勇敢！",
+      "narrativeEN": "Woof, woof, woof! Biscuit can help the kittens!",
+      "keywords": [
+        "help",
+        "kittens"
+      ],
+      "audioCN": "wantsplay_p9_cn",
+      "audioEN": "wantsplay_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小猫咪们终于安全了！现在他们想跟Biscuit play——一起玩了！",
+      "narrativeEN": "Woof, woof! Biscuit wants to play with the kittens.",
+      "keywords": [
+        "play",
+        "kittens"
+      ],
+      "audioCN": "wantsplay_p10_cn",
+      "audioEN": "wantsplay_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Meow meow！小猫咪们终于想跟Biscuit玩啦！大家在一起玩好开心！",
+      "narrativeEN": "Meow! Meow! The kittens want to play with Biscuit, too! A",
+      "keywords": [
+        "meow",
+        "kittens"
+      ],
+      "audioCN": "wantsplay_p11_cn",
+      "audioEN": "wantsplay_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_12.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit终于和小猫咪们一起玩了！你还记得leaf和butterfly是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "wantsplay_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "leaf",
+      "phonemes": [
+        "l",
+        "ea",
+        "f"
+      ],
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_05.webp"
+    },
+    {
+      "word": "kit",
+      "phonemes": [
+        "k",
+        "i",
+        "t"
+      ],
+      "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_06.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/17Biscuit_Wants_to_Play/spread_05.webp",
+    "sentences": [
+      {
+        "text": "The kittens want to play with a leaf.",
+        "audio": "audio/wantsplay_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Biscuit wants to play, too.",
+        "audio": "audio/wantsplay_rec_2.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

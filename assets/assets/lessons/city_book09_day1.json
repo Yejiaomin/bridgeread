@@ -1,0 +1,274 @@
+{
+  "id": "city_book09_day1",
+  "bookTitle": "Biscuit Visits the Big City",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "Here we are, Biscuit!",
+  "originalAudio": "books/09Biscuit_Visits_the_Big_City/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Visits the Big City的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "city_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "今天呀，小女孩带着Biscuit来到了一个好大好大的地方！她说Here we are——我们到啦！big city就是大城市。你去过大城市吗？",
+      "narrativeEN": "Here we are, Biscuit. Woof, woof! We're in the big city.",
+      "keywords": [
+        "city"
+      ],
+      "audioCN": "city_p1_cn",
+      "audioEN": "city_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 17500
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "他们要去找好朋友Jack玩！visit就是拜访。可是走在路上，Biscuit听到了什么声音？Coo coo！是鸽子在叫呢！",
+      "narrativeEN": "We're going to visit our friend Jack. Woof, woof! Coo, coo! HN MIO+ M4 GVAO",
+      "keywords": [
+        "going",
+        "visit"
+      ],
+      "audioCN": "city_p2_cn",
+      "audioEN": "city_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 31900
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩拉着Biscuit说Stay with me——跟着我！大城市里很busy，very busy就是很忙碌很热闹。人来人往的，Biscuit可别走丢了！",
+      "narrativeEN": "Stay with me, Biscuit. It's very busy in the big city! Woof, woof!",
+      "keywords": [
+        "stay",
+        "busy"
+      ],
+      "audioCN": "city_p3_cn",
+      "audioEN": "city_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 44500
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哇！你看这些好高好高的buildings！buildings就是大楼。大城市里到处都是高楼大厦，Biscuit从来没见过这么高的房子吧！",
+      "narrativeEN": "There are lots of tall buildings in the big city, Biscuit. Woof, woof! 吾",
+      "keywords": [
+        "lots",
+        "tall"
+      ],
+      "audioCN": "city_p4_cn",
+      "audioEN": "city_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 52500
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "大城市里不光有高楼，还有好多好多people——好多人！Biscuit看到人就想打招呼，funny puppy！你说他是不是很可爱呀？",
+      "narrativeEN": "There are lots of people, too. Woof, woof! Funny puppy! You want to say hello to everyone.",
+      "keywords": [
+        "lots",
+        "people"
+      ],
+      "audioCN": "city_p5_cn",
+      "audioEN": "city_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 61300
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩又说了Stay with me！这里太热闹了，有汽车在按喇叭Beep beep！Biscuit你可千万别跑丢了！",
+      "narrativeEN": "Stay with me, Biscuit. It's very busy here! Woof, woof! Thero Beep! Beep! Horizo Woof! DOY It's only a big bus, Biscuit.",
+      "keywords": [
+        "stay",
+        "busy"
+      ],
+      "audioCN": "city_p6_cn",
+      "audioEN": "city_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 72800
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Woof woof！Biscuit发现了一个fountain——喷泉！大城市里有好多好看的东西。There's so much to see——有好多东西可以看！",
+      "narrativeEN": "هم Woof, woof! You found the fountain, Biscuit. There's so much to see in the big city, isn't there, Biscuit?",
+      "keywords": [
+        "fountain",
+        "much"
+      ],
+      "audioCN": "city_p7_cn",
+      "audioEN": "city_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 87200
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈，Biscuit追着鸽子跑！Coo coo！鸽子们飞来飞去，Biscuit追来追去，好热闹呀！",
+      "narrativeEN": "Woof! Coo, coo! too Woof, woof! doo Coo, coo!",
+      "keywords": [],
+      "audioCN": "city_p8_cn",
+      "audioEN": "city_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哎呀！Biscuit跑掉了！Oh no！Come back——快回来！Biscuit你跑到哪里去了呀？小女孩着急地到处找他！",
+      "narrativeEN": "JACK'S SNACKS Woof, woof! Woof, woof! Oh no, Biscuit! Come back! Biscuit, where are you going?",
+      "keywords": [
+        "jack",
+        "snacks"
+      ],
+      "audioCN": "city_p9_cn",
+      "audioEN": "city_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Woof！找到啦！silly puppy——傻乎乎的小狗！原来Biscuit跑到了Jack的小吃摊这里来了！",
+      "narrativeEN": "JACK'S SNACKS Woof! Silly puppy! Here you are.h",
+      "keywords": [
+        "jack",
+        "snacks"
+      ],
+      "audioCN": "city_p10_cn",
+      "audioEN": "city_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "虽然大城市又大又busy，但是Biscuit还是找到了朋友Jack！friend就是朋友。有好朋友在，到哪里都开心对不对？",
+      "narrativeEN": "JACK'S SNACKS This is a big, busy city, Biscuit. But you found our friend Jack, and some new friends, too! Coo, coo! tooW",
+      "keywords": [
+        "jack",
+        "snacks"
+      ],
+      "audioCN": "city_p11_cn",
+      "audioEN": "city_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_12.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit在大城市里看到了好多新东西呢！你还记得fountain和buildings是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "city_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "big",
+      "phonemes": [
+        "b",
+        "i",
+        "g"
+      ],
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_03.webp"
+    },
+    {
+      "word": "dog",
+      "phonemes": [
+        "d",
+        "o",
+        "g"
+      ],
+      "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_06.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_04.webp",
+    "sentences": [
+      {
+        "text": "Stay with me, Biscuit.",
+        "audio": "audio/city_rec_1.mp3",
+        "side": "right"
+      },
+      {
+        "text": "It's very busy in the big city!",
+        "audio": "audio/city_rec_2.mp3",
+        "side": "left"
+      }
+    ]
+  }
+}

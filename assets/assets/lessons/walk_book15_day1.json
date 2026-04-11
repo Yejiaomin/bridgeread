@@ -1,0 +1,295 @@
+{
+  "id": "walk_book15_day1",
+  "bookTitle": "Biscuit Takes a Walk",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "It's time for a walk to Grandpa's house.",
+  "originalAudio": "books/15Biscuit_Takes_a_Walk/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Takes a Walk的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "walk_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "今天要去散步啦！walk就是散步。Time for a walk——该散步了！Biscuit好开心！",
+      "narrativeEN": "A-L Time for a walk, Biscuit. Woof, woof!",
+      "keywords": [
+        "walk"
+      ],
+      "audioCN": "walk_p1_cn",
+      "audioEN": "walk_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 25900
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "他们要走去Grandpa's house——爷爷家！Let's go——出发吧！",
+      "narrativeEN": "It's time for a walk to Grandpa's house. Jiu Let's go! Woof, woof!",
+      "keywords": [
+        "walk",
+        "grandpa"
+      ],
+      "audioCN": "walk_p2_cn",
+      "audioEN": "walk_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 31000
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "可是Biscuit一直想停下来！他想dig——挖土。不行不行，该走了！",
+      "narrativeEN": "Time for a walk, Biscuit. Woof, woof! Biscuit wants to dig. Time for a walk, Biscuit. Woof, woof! Biscuit wants to roll.",
+      "keywords": [
+        "walk",
+        "roll"
+      ],
+      "audioCN": "walk_p3_cn",
+      "audioEN": "walk_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 31300
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Funny puppy！Biscuit怎么老是走不动呀！快走吧，爷爷家还在前面呢！",
+      "narrativeEN": "1722 Funny puppy! It's time for a walk to Grandpa's house. Let's go! Woof, woof!",
+      "keywords": [
+        "funny",
+        "puppy"
+      ],
+      "audioCN": "walk_p4_cn",
+      "audioEN": "walk_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 56100
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "这次Biscuit又停下来了，他想看squirrels——松鼠！小松鼠好可爱呀，但我们要继续走！",
+      "narrativeEN": "Time for a walk, Biscuit. Woof, woof! Biscuit wants to see the squirrels.",
+      "keywords": [
+        "walk",
+        "squirrels"
+      ],
+      "audioCN": "walk_p5_cn",
+      "audioEN": "walk_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 58200
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "又停了！Biscuit想看birds——小鸟。小鸟在树上唱歌呢。可是我们要去爷爷家呀！",
+      "narrativeEN": "Time for a walk, Biscuit. Woof, woof! Biscuit wants to see the birds.",
+      "keywords": [
+        "walk",
+        "birds"
+      ],
+      "audioCN": "walk_p6_cn",
+      "audioEN": "walk_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 66700
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Silly puppy！每次走一会儿就停下来。It's time for a walk to Grandpa's house——该去爷爷家了！",
+      "narrativeEN": "Silly puppy! It's time for a walk to Grandpa's house. Woof!",
+      "keywords": [
+        "silly",
+        "puppy"
+      ],
+      "audioCN": "walk_p7_cn",
+      "audioEN": "walk_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 85300
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Wait Biscuit, come back！等等，回来！Grandpa's house is this way——爷爷家在这边！Biscuit你走错方向了！",
+      "narrativeEN": "S Wait, Biscuit. Come back. Grandpa's house is this way!",
+      "keywords": [
+        "wait",
+        "back"
+      ],
+      "audioCN": "walk_p8_cn",
+      "audioEN": "walk_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 92800
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit又发现什么了？他看到了什么？Oh Biscuit！你这次又看到什么了呀？",
+      "narrativeEN": "ell ell ele Woof, woof! brin Oh, Biscuit! What do you see now?",
+      "keywords": [
+        "brin"
+      ],
+      "audioCN": "walk_p9_cn",
+      "audioEN": "walk_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "是Grandpa——爷爷！终于到了！Biscuit一看到爷爷就扑过去了！",
+      "narrativeEN": "Woof, woof! W It's Grandpa!",
+      "keywords": [
+        "grandpa"
+      ],
+      "audioCN": "walk_p10_cn",
+      "audioEN": "walk_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "散步去爷爷家很fun——很好玩。但是和爷爷一起散步更好玩！a walk with Grandpa is the best！",
+      "narrativeEN": "Woof, woof! A walk to Grandpa's house is fun, Biscuit. But a walk with Grandpa is the best walk of all.",
+      "keywords": [
+        "walk",
+        "grandpa"
+      ],
+      "audioCN": "walk_p11_cn",
+      "audioEN": "walk_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "大家一起走！A walk for everyone——所有人一起散步！爷爷也来了，多开心呀！",
+      "narrativeEN": "Time for a walk, Biscuit. A walk for everyone. Woof, woof!",
+      "keywords": [
+        "walk",
+        "everyone"
+      ],
+      "audioCN": "walk_p12_cn",
+      "audioEN": "walk_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 128000
+    },
+    {
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit虽然一路上东看西看，但最后还是到了爷爷家！你还记得walk和Grandpa是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "walk_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "fun",
+      "phonemes": [
+        "f",
+        "u",
+        "n"
+      ],
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_03.webp"
+    },
+    {
+      "word": "dig",
+      "phonemes": [
+        "d",
+        "i",
+        "g"
+      ],
+      "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_04.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_03.webp",
+    "sentences": [
+      {
+        "text": "It's time for a walk to Grandpa's house.",
+        "audio": "audio/walk_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Jiu Let's go.",
+        "audio": "audio/walk_rec_2.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}
