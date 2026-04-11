@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'dart:math' show min;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,11 +43,18 @@ const kAllBooks = [
 /// Next series always starts on Monday.
 const kSeriesSizes = [20];
 
-DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
+DateTime chinaTime() {
+  final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+  try {
+    final offset = int.tryParse(html.window.localStorage['debug_day_offset'] ?? '0') ?? 0;
+    if (offset != 0) return now.add(Duration(days: offset));
+  } catch (_) {}
+  return now;
+}
 
 /// The "active" date — set by calendar selection, defaults to real China time.
 /// All screens use this instead of raw _chinaTime() for day-of-week logic.
-DateTime activeDate() => WeekService.overrideDate ?? _chinaTime();
+DateTime activeDate() => WeekService.overrideDate ?? chinaTime();
 
 class WeekService {
   /// Set by calendar to simulate a specific date. null = use real time.

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'week_service.dart' show activeDate;
+import 'week_service.dart' show activeDate, chinaTime;
 
 class ProgressService {
   static const _kTotalStars    = 'total_stars';
@@ -17,7 +17,7 @@ class ProgressService {
   static String _dateStr(DateTime d) =>
       '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
-  static DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
+  static DateTime _chinaTime() => chinaTime();
   static String get _today => _dateStr(_chinaTime());
 
   /// Resets today's module flags if it's a new day.
@@ -32,6 +32,21 @@ class ProgressService {
     }
   }
 
+  /// Set the study date when entering from calendar. Call this before starting modules.
+  static Future<void> setStudyDate(DateTime date) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('_current_study_date', _dateStr(date));
+  }
+
+  /// Get the current study date (set by calendar or defaults to today).
+  static Future<String> _getStudyDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('_current_study_date') ?? _today;
+  }
+
+  /// Public version for study_screen recap.
+  static Future<String> getStudyDateStr() => _getStudyDate();
+
   /// Mark a module complete and award stars. module = 'reader'|'phonics'|'quiz'|'recording'.
   static Future<void> markModuleComplete(String module, int stars) async {
     final prefs = await SharedPreferences.getInstance();
@@ -39,8 +54,19 @@ class ProgressService {
     final wasAlreadyDone = prefs.getBool(key) ?? false;
     await prefs.setBool(key, true);
 
-    // Use activeDate (may be a past date when doing debt makeup)
-    final syncDate = _dateStr(activeDate());
+    // Use saved study date (persisted, survives page transitions)
+    final syncDate = await _getStudyDate();
+
+    // Save to debt_module_status for the active date (calendar-selected or today)
+    final dateKey = syncDate;
+    final raw = prefs.getString('debt_module_status');
+    final all = raw != null ? Map<String, dynamic>.from(jsonDecode(raw)) : <String, dynamic>{};
+    final dayData = all[dateKey] != null
+        ? Map<String, dynamic>.from(all[dateKey] as Map)
+        : <String, dynamic>{};
+    dayData[module] = true;
+    all[dateKey] = dayData;
+    await prefs.setString('debt_module_status', jsonEncode(all));
 
     if (!wasAlreadyDone) {
       final current = prefs.getInt(_kTotalStars) ?? 0;
@@ -48,26 +74,25 @@ class ProgressService {
     }
 
     // Record this date as active (any module completion = active day)
-    final today = _today;
     final activeDates = (prefs.getString(_kActiveDates) ?? '')
         .split(',')
         .where((s) => s.isNotEmpty)
         .toList();
-    if (!activeDates.contains(today)) {
-      activeDates.add(today);
+    if (!activeDates.contains(dateKey)) {
+      activeDates.add(dateKey);
       if (activeDates.length > 30) activeDates.removeAt(0);
       await prefs.setString(_kActiveDates, activeDates.join(','));
     }
 
     // Update streak on first module completion of the day
     final lastDate = prefs.getString(_kLastDate) ?? '';
-    if (lastDate != today) {
+    if (lastDate != dateKey) {
       final yesterday = _dateStr(
           _chinaTime().subtract(const Duration(days: 1)));
       final currentStreak = prefs.getInt(_kStreakDays) ?? 0;
       final newStreak = lastDate == yesterday ? currentStreak + 1 : 1;
       await prefs.setInt(_kStreakDays, newStreak);
-      await prefs.setString(_kLastDate, today);
+      await prefs.setString(_kLastDate, dateKey);
     }
   }
 

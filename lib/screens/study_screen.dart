@@ -138,7 +138,7 @@ class _StudyScreenState extends State<StudyScreen>
 
   Future<void> _loadProgress() async {
     final active = activeDate();
-    final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+    final now = chinaTime();
     final todayDate = DateTime(now.year, now.month, now.day);
     final activeDay = DateTime(active.year, active.month, active.day);
     final isViewingToday = WeekService.overrideDate == null || activeDay == todayDate;
@@ -149,7 +149,7 @@ class _StudyScreenState extends State<StudyScreen>
       // Today: read from local SharedPreferences
       await ProgressService.resetTodayIfNewDay();
       final prefs = await SharedPreferences.getInstance();
-      final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+      final now = chinaTime();
       final todayStr = '${now.year}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')}';
       recapDone = prefs.getString('today_recap_done') == todayStr;
       readerDone = prefs.getBool('today_reader_done') == true;
@@ -460,9 +460,16 @@ class _RecapScreenState extends State<RecapScreen>
 
   Future<void> _markRecapDone() async {
     final prefs = await SharedPreferences.getInstance();
-    final today = DateTime.now().toUtc().add(const Duration(hours: 8));
-    final d = '${today.year}-${today.month.toString().padLeft(2,'0')}-${today.day.toString().padLeft(2,'0')}';
+    final d = await ProgressService.getStudyDateStr();
     await prefs.setString('today_recap_done', d);
+
+    // Save to debt_module_status for calendar history
+    final raw = prefs.getString('debt_module_status');
+    final all = raw != null ? Map<String, dynamic>.from(jsonDecode(raw)) : <String, dynamic>{};
+    final dayData = all[d] != null ? Map<String, dynamic>.from(all[d] as Map) : <String, dynamic>{};
+    dayData['recap'] = true;
+    all[d] = dayData;
+    await prefs.setString('debt_module_status', jsonEncode(all));
   }
 
   // Get previous book from global order (no hardcoded map needed)

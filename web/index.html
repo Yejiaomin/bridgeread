@@ -214,6 +214,40 @@
       };
     })();
   </script>
+  <script>
+    // Debug: time travel for testing
+    // Usage in browser console:
+    //   timeTravel(1)   → jump to tomorrow
+    //   timeTravel(3)   → jump to 3 days later
+    //   timeTravel(-1)  → go back 1 day
+    //   timeTravel(0)   → reset to real time
+    // Debug: inspect module status data
+    window.debugData = function() {
+      var keys = ['flutter.debt_module_status', 'flutter._current_study_date',
+        'flutter.active_dates', 'flutter.last_completed_date', 'flutter.today_reader_done',
+        'flutter.today_phonics_done', 'flutter.today_quiz_done', 'flutter.today_recording_done',
+        'flutter.today_listen_done', 'flutter.today_recap_done', 'flutter.book_start_date',
+        'debug_day_offset'];
+      keys.forEach(function(k) {
+        var v = localStorage.getItem(k);
+        if (v) console.log(k + ' = ' + v);
+      });
+    };
+
+    window.timeTravel = function(days) {
+      localStorage.setItem('debug_day_offset', String(days || 0));
+      // Reset today's module states for the new "day"
+      localStorage.removeItem('flutter.today_reader_done');
+      localStorage.removeItem('flutter.today_phonics_done');
+      localStorage.removeItem('flutter.today_quiz_done');
+      localStorage.removeItem('flutter.today_recording_done');
+      localStorage.removeItem('flutter.today_listen_done');
+      localStorage.removeItem('flutter.today_recap_done');
+      localStorage.removeItem('flutter.last_completed_date');
+      console.log('[TimeTravel] Set to ' + (days > 0 ? '+' : '') + days + ' days. Module states reset. Reloading...');
+      location.reload();
+    };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

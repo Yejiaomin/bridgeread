@@ -220,17 +220,19 @@ class _RecordingScreenState extends State<RecordingScreen>
   int _calculateScore(Duration recDuration) {
     final recMs = recDuration.inMilliseconds;
 
-    // Too short (< 0.5s) — no real attempt
-    if (recMs < 500) return 1;
+    // Too short — no real attempt
+    if (recMs < 300) return 1;
 
     // Check duration ratio if we have reference
     if (_refDuration != null && _refDuration!.inMilliseconds > 0) {
       final ratio = recMs / _refDuration!.inMilliseconds;
-      // Great: 0.5x ~ 2.0x of reference
-      if (ratio >= 0.5 && ratio <= 2.0) return 3;
-      // OK: 0.3x ~ 3.0x
-      if (ratio >= 0.3 && ratio <= 3.0) return 2;
-      // Too short or too long
+      // 3 stars: 0.7x ~ 1.3x (very close to reference)
+      if (ratio >= 0.7 && ratio <= 1.3) return 3;
+      // 2 stars: 0.5x ~ 0.7x or 1.3x ~ 1.5x
+      if ((ratio >= 0.5 && ratio < 0.7) || (ratio > 1.3 && ratio <= 1.5)) return 2;
+      // 1 star: 0.2x ~ 0.5x or 1.5x ~ 2.0x
+      if ((ratio >= 0.2 && ratio < 0.5) || (ratio > 1.5 && ratio <= 2.0)) return 1;
+      // Outside all ranges — still 1 star
       return 1;
     }
 
