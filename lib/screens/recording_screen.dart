@@ -225,34 +225,39 @@ class _RecordingScreenState extends State<RecordingScreen>
   }
 
   Future<int> _callSpeechEval(String audioUrl, String refText) async {
-    final response = await http.get(Uri.parse(audioUrl));
-    if (response.statusCode != 200) return -1;
+    try {
+      final response = await http.get(Uri.parse(audioUrl));
+      if (response.statusCode != 200) return -1;
 
-    final audioBase64 = base64Encode(response.bodyBytes);
+      final audioBase64 = base64Encode(response.bodyBytes);
 
-    const apiBase = 'http://localhost:3000/api';
-    final token = await _getAuthToken();
-    if (token == null) return -1;
+      const apiBase = 'http://localhost:3000/api';
+      final token = await _getAuthToken();
+      if (token == null) return -1;
 
-    final evalResponse = await http.post(
-      Uri.parse('$apiBase/speech-eval'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'audio': audioBase64,
-        'refText': refText,
-      }),
-    );
+      final evalResponse = await http.post(
+        Uri.parse('$apiBase/speech-eval'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'audio': audioBase64,
+          'refText': refText,
+        }),
+      );
 
-    if (evalResponse.statusCode == 200) {
-      final data = jsonDecode(evalResponse.body);
-      final score = data['score'] as int? ?? -1;
-      print('[SpeechEval] Score: $score');
-      return score;
+      if (evalResponse.statusCode == 200) {
+        final data = jsonDecode(evalResponse.body);
+        final score = data['score'] as int? ?? -1;
+        print('[SpeechEval] Score: $score');
+        return score;
+      }
+      return -1;
+    } catch (e) {
+      print('[SpeechEval] Error (falling back to local): $e');
+      return -1;
     }
-    return -1;
   }
 
   Future<String?> _getAuthToken() async {
