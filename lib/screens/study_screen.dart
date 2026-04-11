@@ -138,8 +138,10 @@ class _StudyScreenState extends State<StudyScreen>
 
   Future<void> _loadProgress() async {
     final active = activeDate();
-    // When overrideDate is null, activeDate() returns chinaTime — compare with itself
-    final isViewingToday = WeekService.overrideDate == null;
+    final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+    final todayDate = DateTime(now.year, now.month, now.day);
+    final activeDay = DateTime(active.year, active.month, active.day);
+    final isViewingToday = WeekService.overrideDate == null || activeDay == todayDate;
 
     bool recapDone, readerDone, quizDone, listenDone;
 
@@ -173,7 +175,9 @@ class _StudyScreenState extends State<StudyScreen>
     if (mounted) setState(() {
       _completedCount = count;
       _listenDone = listenDone;
-      _zoneDone = [recapDone, readerDone, quizDone, listenDone];
+      _zoneDone = _weekend
+          ? [quizDone, listenDone]  // weekend: game, listen
+          : [recapDone, readerDone, quizDone, listenDone];
     });
   }
 
@@ -267,8 +271,8 @@ class _StudyScreenState extends State<StudyScreen>
                   // ── Tap zones ─────────────────────────────────────────
                   ...List.generate(_zones.length, (i) {
                     final z = _zones[i];
-                    // Show "1" badge on all incomplete zones
-                    final showBadge = !_weekend && i < _zoneDone.length && !_zoneDone[i];
+                    // Show "1" badge on all incomplete zones (weekday and weekend)
+                    final showBadge = i < _zoneDone.length && !_zoneDone[i];
                     return Positioned(
                       left:   z.x * w,
                       top:    z.y * h,

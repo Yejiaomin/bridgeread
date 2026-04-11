@@ -37,9 +37,10 @@ class _RankingScreenState extends State<RankingScreen>
   String _period = 'week';
   bool _loading = true;
   bool _navigating = false;
-  int _countdown = 30;
+  int _countdown = 15;
   Timer? _countdownTimer;
   Map<String, List<Map<String, dynamic>>> _data = {};
+  bool _listenDone = false;
   final Map<String, int> _eggCache = {};
 
   int _myAvatarIndex = -1;
@@ -112,7 +113,9 @@ class _RankingScreenState extends State<RankingScreen>
     _navigating = true;
     _countdownTimer?.cancel();
     _starGlowCtrl.stop();
-    if (mounted) Navigator.pushReplacementNamed(context, '/home');
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, _listenDone ? '/studyroom' : '/home');
+    }
   }
 
   @override
@@ -135,27 +138,28 @@ class _RankingScreenState extends State<RankingScreen>
     final prefs = await SharedPreferences.getInstance();
     final myStars = prefs.getInt('total_stars') ?? 0;
     final childName = prefs.getString('child_name') ?? '我';
+    _listenDone = prefs.getBool('today_listen_done') ?? false;
 
     final rng = Random();
 
     List<Map<String, dynamic>> _generate(int starVariation) {
-      // Create fake entries
       final entries = <Map<String, dynamic>>[];
-      for (final name in _fakeNames) {
-        final fakeStars = (myStars - 5 + rng.nextInt(21) + starVariation).clamp(0, 99999);
-        entries.add({'name': name, 'stars': fakeStars, 'isMe': false});
-      }
-      // Add "me" entry with real stars
-      entries.add({'name': childName, 'stars': myStars, 'isMe': true});
-      // Sort descending by stars
-      entries.sort((a, b) => (b['stars'] as int).compareTo(a['stars'] as int));
-
-      // Ensure "me" is in position 1, 2, or 3 (randomly)
-      final meIdx = entries.indexWhere((e) => e['isMe'] == true);
-      if (meIdx >= 0) {
-        final me = entries.removeAt(meIdx);
-        final targetPos = rng.nextInt(3); // 0, 1, or 2
-        entries.insert(targetPos, me);
+      if (_listenDone) {
+        // After study: fake stars lower than me, so I'm #1
+        for (final name in _fakeNames) {
+          final fakeStars = (myStars - 2 - rng.nextInt(15) + starVariation).clamp(1, 99999);
+          entries.add({'name': name, 'stars': fakeStars, 'isMe': false});
+        }
+        entries.add({'name': childName, 'stars': myStars, 'isMe': true});
+        entries.sort((a, b) => (b['stars'] as int).compareTo(a['stars'] as int));
+      } else {
+        // Before study: fake stars much higher, me at 8th+ place
+        for (final name in _fakeNames) {
+          final fakeStars = (myStars + 10 + rng.nextInt(30) + starVariation).clamp(1, 99999);
+          entries.add({'name': name, 'stars': fakeStars, 'isMe': false});
+        }
+        entries.add({'name': childName, 'stars': myStars, 'isMe': true});
+        entries.sort((a, b) => (b['stars'] as int).compareTo(a['stars'] as int));
       }
       return entries;
     }
@@ -371,7 +375,7 @@ class _RankingScreenState extends State<RankingScreen>
                 fontSize: R.s(16),
                 fontWeight: isMe ? FontWeight.w900 : FontWeight.w600,
                 color: isMe
-                    ? const Color(0xFFFF8C42)
+                    ? Colors.red
                     : const Color(0xFF333333),
               ),
               overflow: TextOverflow.ellipsis,
@@ -509,7 +513,7 @@ class _RankingScreenState extends State<RankingScreen>
                       ],
                     ),
                     child: Text(
-                      '进入学习 $_countdown',
+                      '${_listenDone ? "进入书房" : "进入学习"} $_countdown',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: R.s(13),

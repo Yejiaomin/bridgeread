@@ -142,7 +142,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
     }
 
     if (mounted) {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/ranking', (r) => false);
     }
   }
 

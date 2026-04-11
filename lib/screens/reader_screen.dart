@@ -608,7 +608,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                       icon: const Icon(Icons.arrow_back_ios_rounded,
                           color: Colors.white70, size: 22),
                       padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
                     ),
                   ),
                   // Right-side buttons: score + CC + 🔁

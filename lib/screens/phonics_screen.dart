@@ -791,7 +791,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
     if (isLastWord) {
       if (widget.weekendMode) {
-        if (mounted) Navigator.pop(context);
+        if (mounted) { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } }
         return;
       }
       Navigator.pushReplacement(
@@ -874,7 +874,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
             child: IconButton(
               icon: const Icon(Icons.arrow_back_ios_rounded,
                   color: _kOrange, size: 26),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
             ),
           ),
 
