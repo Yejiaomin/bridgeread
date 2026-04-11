@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'api_service.dart';
 import 'week_service.dart' show activeDate;
 
 class ProgressService {
@@ -46,16 +45,6 @@ class ProgressService {
     if (!wasAlreadyDone) {
       final current = prefs.getInt(_kTotalStars) ?? 0;
       await prefs.setInt(_kTotalStars, current + stars);
-
-      // Sync to server (fire-and-forget, offline-safe)
-      ApiService().syncProgress(
-        date: syncDate,
-        module: module,
-        done: true,
-        stars: stars,
-      ).then((result) {
-        print('[SYNC] $module ($syncDate): $result');
-      });
     }
 
     // Record this date as active (any module completion = active day)
@@ -109,38 +98,9 @@ class ProgressService {
     };
   }
 
-  /// Fetch debt data from server and cache locally.
+  /// Fetch debt data — no-op in local mode, uses cached SharedPreferences data.
   static Future<void> syncDebtFromServer() async {
-    final result = await ApiService().getProgress();
-    if (result == null) return;
-    final prefs = await SharedPreferences.getInstance();
-
-    final totalOwed = result['totalOwed'] ?? 0;
-    final todayOwed = result['todayOwed'] ?? 0;
-    final streak = result['streak'] ?? 0;
-    await prefs.setInt(_kTotalOwed, totalOwed);
-    await prefs.setInt('today_owed', todayOwed);
-    await prefs.setInt(_kStreakDays, streak);
-
-    // debtByDate: [{date: "2026-04-01", debt: 3}, ...]
-    final debtList = result['debtByDate'] as List? ?? [];
-    final debtMap = <String, int>{};
-    for (final item in debtList) {
-      debtMap[item['date'] as String] = item['debt'] as int;
-    }
-    await prefs.setString(_kDebtByDate, jsonEncode(debtMap));
-
-    // Also cache per-date module status from progress array
-    final progress = result['progress'] as List? ?? [];
-    final moduleStatus = <String, Map<String, bool>>{}; // date -> {module: done}
-    for (final p in progress) {
-      final date = p['date'] as String;
-      final module = p['module'] as String;
-      final done = p['done'] == 1;
-      moduleStatus.putIfAbsent(date, () => {});
-      moduleStatus[date]![module] = done;
-    }
-    await prefs.setString('debt_module_status', jsonEncode(moduleStatus));
+    // No backend available; local data in SharedPreferences is the source of truth.
   }
 
   /// Get total owed count (cached).

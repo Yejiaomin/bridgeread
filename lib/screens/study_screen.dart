@@ -4,7 +4,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show DefaultAssetBundle;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/api_service.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../services/week_service.dart';
@@ -460,9 +459,6 @@ class _RecapScreenState extends State<RecapScreen>
     final today = DateTime.now().toUtc().add(const Duration(hours: 8));
     final d = '${today.year}-${today.month.toString().padLeft(2,'0')}-${today.day.toString().padLeft(2,'0')}';
     await prefs.setString('today_recap_done', d);
-    // Sync to server using activeDate (for debt makeup)
-    final syncDate = '${activeDate().year}-${activeDate().month.toString().padLeft(2,'0')}-${activeDate().day.toString().padLeft(2,'0')}';
-    ApiService().syncProgress(date: syncDate, module: 'recap', done: true, stars: 0);
   }
 
   // Get previous book from global order (no hardcoded map needed)

@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/api_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
 
@@ -128,32 +127,45 @@ class _RankingScreenState extends State<RankingScreen>
     return '${name.characters.first}${'*' * (name.characters.length - 1).clamp(1, 5)}';
   }
 
-  List<Map<String, dynamic>> _normalize(Map<String, dynamic>? data) {
-    if (data == null) return [];
-    final list = (data['rankings'] as List?)
-            ?.map((e) => Map<String, dynamic>.from(e))
-            .toList() ??
-        [];
-    for (final e in list) {
-      e['name'] = e['childName'] ?? e['name'] ?? '';
-      e['isMe'] = e['isCurrentUser'] ?? e['isMe'] ?? false;
-    }
-    return list;
-  }
+  static const _fakeNames = ['小明', '甜甜', '鹏鹏', '帅帅', '小花', '大宝', '乐乐', '豆豆', '果果', '欢欢'];
 
   Future<void> _fetchAll() async {
     setState(() => _loading = true);
-    final results = await Future.wait([
-      ApiService().getRanking(period: 'day'),
-      ApiService().getRanking(period: 'week'),
-      ApiService().getRanking(period: 'month'),
-    ]);
+
+    final prefs = await SharedPreferences.getInstance();
+    final myStars = prefs.getInt('total_stars') ?? 0;
+    final childName = prefs.getString('child_name') ?? '我';
+
+    final rng = Random();
+
+    List<Map<String, dynamic>> _generate(int starVariation) {
+      // Create fake entries
+      final entries = <Map<String, dynamic>>[];
+      for (final name in _fakeNames) {
+        final fakeStars = (myStars - 5 + rng.nextInt(21) + starVariation).clamp(0, 99999);
+        entries.add({'name': name, 'stars': fakeStars, 'isMe': false});
+      }
+      // Add "me" entry with real stars
+      entries.add({'name': childName, 'stars': myStars, 'isMe': true});
+      // Sort descending by stars
+      entries.sort((a, b) => (b['stars'] as int).compareTo(a['stars'] as int));
+
+      // Ensure "me" is in position 1, 2, or 3 (randomly)
+      final meIdx = entries.indexWhere((e) => e['isMe'] == true);
+      if (meIdx >= 0) {
+        final me = entries.removeAt(meIdx);
+        final targetPos = rng.nextInt(3); // 0, 1, or 2
+        entries.insert(targetPos, me);
+      }
+      return entries;
+    }
+
     if (mounted) {
       setState(() {
         _data = {
-          'day': _normalize(results[0]),
-          'week': _normalize(results[1]),
-          'month': _normalize(results[2]),
+          'day': _generate(0),
+          'week': _generate(2),
+          'month': _generate(5),
         };
         _loading = false;
       });

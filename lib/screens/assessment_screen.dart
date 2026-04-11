@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/api_service.dart';
 import '../utils/cdn_asset.dart';
 
 const _kOrange = Color(0xFFFF8C42);
@@ -140,14 +139,10 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
       final now = DateTime.now();
       final date = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       await prefs.setString('book_start_date', date);
-      // Sync to server
-      ApiService().setupProgress(bookStartDate: date, startSeriesIndex: level);
-    } else {
-      ApiService().setupProgress(startSeriesIndex: level);
     }
 
     if (mounted) {
-      Navigator.pushNamedAndRemoveUntil(context, '/ranking', (r) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
     }
   }
 

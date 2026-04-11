@@ -1,13 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _kOrange = Color(0xFFFF8C42);
 const _kCream = Color(0xFFFFF8F0);
-
-// TODO: Change to production URL when deployed
-const _kApiBase = 'http://localhost:3000/api';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,97 +13,71 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLogin = true; // true = login, false = register
   bool _isLoading = false;
-  bool _codeSent = false;
   String? _error;
 
   final _phoneCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
-  final _codeCtrl = TextEditingController();
   final _nameCtrl = TextEditingController();
 
-  Future<void> _sendCode() async {
+  Future<void> _register() async {
     final phone = _phoneCtrl.text.trim();
+    final password = _passwordCtrl.text.trim();
+    final childName = _nameCtrl.text.trim();
+
     if (phone.length != 11) {
       setState(() => _error = '请输入11位手机号');
       return;
     }
-    setState(() { _isLoading = true; _error = null; });
-    try {
-      final res = await http.post(
-        Uri.parse('$_kApiBase/auth/send-code'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'phone': phone}),
-      );
-      final data = jsonDecode(res.body);
-      if (res.statusCode == 200) {
-        setState(() => _codeSent = true);
-      } else {
-        setState(() => _error = data['error'] ?? '发送失败');
-      }
-    } catch (e) {
-      setState(() => _error = '网络错误，请检查连接');
+    if (password.length != 8) {
+      setState(() => _error = '请输入8位数字密码');
+      return;
     }
-    setState(() => _isLoading = false);
-  }
+    if (childName.isEmpty) {
+      setState(() => _error = '请输入孩子的名字');
+      return;
+    }
 
-  Future<void> _register() async {
     setState(() { _isLoading = true; _error = null; });
-    try {
-      final res = await http.post(
-        Uri.parse('$_kApiBase/auth/register'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'phone': _phoneCtrl.text.trim(),
-          'code': _codeCtrl.text.trim(),
-          'password': _passwordCtrl.text.trim(),
-          'childName': _nameCtrl.text.trim(),
-        }),
-      );
-      final data = jsonDecode(res.body);
-      if (res.statusCode == 200 && data['success'] == true) {
-        await _saveToken(data['token'], data['user']);
-        // New user → go to assessment first
-        if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/assessment', (r) => false);
-      } else {
-        setState(() => _error = data['error'] ?? '注册失败');
-      }
-    } catch (e) {
-      setState(() => _error = '网络错误，请检查连接');
-    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phone', phone);
+    await prefs.setString('password_hash', password);
+    await prefs.setString('child_name', childName);
+    await prefs.setString('auth_token', 'local_$phone');
+
+    // Set book_start_date to today
+    final now = DateTime.now();
+    final date = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    await prefs.setString('book_start_date', date);
+
     setState(() => _isLoading = false);
+    if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/assessment', (r) => false);
   }
 
   Future<void> _login() async {
-    setState(() { _isLoading = true; _error = null; });
-    try {
-      final res = await http.post(
-        Uri.parse('$_kApiBase/auth/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'phone': _phoneCtrl.text.trim(),
-          'password': _passwordCtrl.text.trim(),
-        }),
-      );
-      final data = jsonDecode(res.body);
-      if (res.statusCode == 200 && data['success'] == true) {
-        await _saveToken(data['token'], data['user']);
-        if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/ranking', (r) => false);
-      } else {
-        setState(() => _error = data['error'] ?? '登录失败');
-      }
-    } catch (e) {
-      setState(() => _error = '网络错误，请检查连接');
-    }
-    setState(() => _isLoading = false);
-  }
+    final phone = _phoneCtrl.text.trim();
+    final password = _passwordCtrl.text.trim();
 
-  Future<void> _saveToken(String token, Map<String, dynamic> user) async {
+    if (phone.length != 11) {
+      setState(() => _error = '请输入11位手机号');
+      return;
+    }
+
+    setState(() { _isLoading = true; _error = null; });
+
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('auth_token', token);
-    await prefs.setString('child_name', user['childName'] ?? '');
-    await prefs.setInt('user_id', user['id'] ?? 0);
-    if (user['bookStartDate'] != null) {
-      await prefs.setString('book_start_date', user['bookStartDate']);
+    final savedPhone = prefs.getString('phone') ?? '';
+    final savedPassword = prefs.getString('password_hash') ?? '';
+
+    if (phone == savedPhone && password == savedPassword) {
+      await prefs.setString('auth_token', 'local_$phone');
+      setState(() => _isLoading = false);
+      if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
+    } else {
+      setState(() {
+        _isLoading = false;
+        _error = '手机号或密码错误';
+      });
     }
   }
 
@@ -116,7 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _phoneCtrl.dispose();
     _passwordCtrl.dispose();
-    _codeCtrl.dispose();
     _nameCtrl.dispose();
     super.dispose();
   }
@@ -153,27 +121,8 @@ class _LoginScreenState extends State<LoginScreen> {
               _inputField(_phoneCtrl, '手机号', TextInputType.phone, Icons.phone),
               const SizedBox(height: 12),
 
-              // Register: code + name
+              // Register: child name
               if (!_isLogin) ...[
-                Row(
-                  children: [
-                    Expanded(child: _inputField(_codeCtrl, '验证码（测试用123456）', TextInputType.number, Icons.sms)),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: _isLoading || _codeSent ? null : _sendCode,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _kOrange,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: Text(_codeSent ? '已发送' : '发送', style: const TextStyle(fontSize: 14)),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
                 _inputField(_nameCtrl, '中文名/英文名', TextInputType.text, Icons.child_care),
                 const SizedBox(height: 12),
               ],
