@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:js' as js;
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -37,12 +38,24 @@ class _RecordingScreenState extends State<RecordingScreen>
   bool _isRecording = false;
   bool _isPlayingBack = false;
   final Map<int, String?> _recordings = {};
+  final Map<int, int> _scores = {}; // 0-100 score per sentence
+  DateTime? _recordStart;
+  Duration? _refDuration; // reference audio duration
+  double _avgEnergy = 0; // average waveform energy during recording
+  int _energySamples = 0;
+  int _silentFrames = 0; // frames with very low energy
 
   late final AnimationController _pulseCtrl;
   late final Animation<double> _pulseAnim;
   late final AnimationController _waveCtrl;
   final List<double> _barHeights = List.generate(20, (_) => 0.15);
   final Random _rng = Random();
+
+  // Real mic volume from record package
+  double _realVolume = 0; // 0.0 ~ 1.0
+  Timer? _ampTimer;
+  bool _scoring = false; // true while waiting for Whisper score
+  bool _whisperReady = false;
 
   RecordingSentence? get _current =>
       _recPage != null && _currentIdx < _recPage!.sentences.length
@@ -55,6 +68,18 @@ class _RecordingScreenState extends State<RecordingScreen>
   void initState() {
     super.initState();
     _loadData();
+    // Pre-load Whisper model in background + check status
+    if (kIsWeb) {
+      try { js.context.callMethod('preloadWhisper', []); } catch (_) {}
+      Timer.periodic(const Duration(seconds: 2), (t) {
+        if (!mounted) { t.cancel(); return; }
+        try {
+          final ready = js.context.callMethod('isWhisperReady', []) as bool;
+          if (ready && !_whisperReady) setState(() => _whisperReady = true);
+          if (ready) t.cancel();
+        } catch (_) {}
+      });
+    }
     _pulseCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
       ..repeat(reverse: true);
     _pulseAnim = Tween<double>(begin: 0.93, end: 1.07)
@@ -64,7 +89,15 @@ class _RecordingScreenState extends State<RecordingScreen>
         if (!mounted) return;
         setState(() {
           for (int i = 0; i < _barHeights.length; i++) {
-            _barHeights[i] = _barHeights[i] * 0.55 + (0.15 + _rng.nextDouble() * 0.85) * 0.45;
+            // Use real volume + small random variation for visual
+            final target = _realVolume * 0.85 + _rng.nextDouble() * 0.15;
+            _barHeights[i] = _barHeights[i] * 0.4 + target.clamp(0.05, 1.0) * 0.6;
+          }
+          // Track energy for scoring
+          if (_isRecording) {
+            _avgEnergy = (_avgEnergy * _energySamples + _realVolume) / (_energySamples + 1);
+            _energySamples++;
+            if (_realVolume < 0.05) _silentFrames++;
           }
         });
       });
@@ -73,14 +106,20 @@ class _RecordingScreenState extends State<RecordingScreen>
       setState(() {
         _isPlaying = false;
         _isPlayingBack = false;
-        // After hearing, show record button
-        if (_phase == _SentencePhase.hear) _phase = _SentencePhase.record;
+        // After hearing, capture ref duration and show record button
+        if (_phase == _SentencePhase.hear) {
+          if (_playStart != null) {
+            _refDuration = DateTime.now().difference(_playStart!);
+          }
+          _phase = _SentencePhase.record;
+        }
       });
     });
   }
 
   @override
   void dispose() {
+    _stopAmpPolling();
     _pulseCtrl.dispose();
     _waveCtrl.dispose();
     _player.dispose();
@@ -97,10 +136,37 @@ class _RecordingScreenState extends State<RecordingScreen>
     }
   }
 
+  DateTime? _playStart;
+
   void _playSentence() async {
     if (_current == null) return;
+    _playStart = DateTime.now();
     setState(() => _isPlaying = true);
     await _player.play(cdnAudioSource(_current!.audio));
+  }
+
+  bool _ampWorking = false;
+
+  void _startAmpPolling() {
+    _ampWorking = false;
+    _ampTimer = Timer.periodic(const Duration(milliseconds: 100), (_) async {
+      if (!_isRecording) return;
+      try {
+        final amp = await _recorder.getAmplitude();
+        final db = amp.current;
+        // Check if amplitude API actually works (not -infinity or -160)
+        if (db > -160 && db.isFinite) {
+          _ampWorking = true;
+          _realVolume = ((db + 50) / 50).clamp(0.0, 1.0);
+        }
+      } catch (_) {}
+    });
+  }
+
+  void _stopAmpPolling() {
+    _ampTimer?.cancel();
+    _ampTimer = null;
+    _realVolume = 0;
   }
 
   Future<void> _startRecording() async {
@@ -112,23 +178,158 @@ class _RecordingScreenState extends State<RecordingScreen>
         recPath = '${dir.path}/rec_${_currentIdx}_${DateTime.now().millisecondsSinceEpoch}.m4a';
       }
       await _recorder.start(
-        const RecordConfig(encoder: AudioEncoder.aacLc, bitRate: 128000, sampleRate: 44100),
+        RecordConfig(
+          encoder: kIsWeb ? AudioEncoder.wav : AudioEncoder.aacLc,
+          bitRate: 128000,
+          sampleRate: 16000,
+        ),
         path: recPath,
       );
       _waveCtrl.repeat();
+      _startAmpPolling();
+      _recordStart = DateTime.now();
+      _avgEnergy = 0;
+      _energySamples = 0;
+      _silentFrames = 0;
       setState(() => _isRecording = true);
     } catch (_) {}
   }
 
   Future<void> _stopRecording() async {
     _waveCtrl.stop();
+    _stopAmpPolling();
+    final recDuration = _recordStart != null
+        ? DateTime.now().difference(_recordStart!)
+        : Duration.zero;
     final result = await _recorder.stop();
+
     setState(() {
       _isRecording = false;
       _recordings[_currentIdx] = result;
       _phase = _SentencePhase.done;
+      _scoring = true;
     });
     for (int i = 0; i < _barHeights.length; i++) _barHeights[i] = 0.15;
+
+    // Try Whisper AI scoring, fall back to local
+    final score = await _getScore(result, recDuration);
+    if (mounted) setState(() {
+      _scores[_currentIdx] = score;
+      _scoring = false;
+    });
+  }
+
+  Future<int> _getScore(String? audioUrl, Duration recDuration) async {
+    // Try Whisper (browser-based AI)
+    if (kIsWeb && audioUrl != null && _current != null) {
+      try {
+        // Wait up to 30s for Whisper to load if it's still loading
+        final isLoading = js.context.callMethod('isWhisperLoading', []) as bool;
+        if (isLoading) {
+          for (int i = 0; i < 150; i++) { // 150 * 200ms = 30s
+            await Future.delayed(const Duration(milliseconds: 200));
+            if (js.context.callMethod('isWhisperReady', []) as bool) break;
+          }
+        }
+
+        // Call transcribeAndScore (returns a Promise)
+        final resultJs = js.context.callMethod(
+          'transcribeAndScore',
+          [audioUrl, _current!.text],
+        );
+        final result = await _awaitJsPromise(resultJs);
+        final score = (result['score'] as num?)?.toInt() ?? -1;
+        if (score >= 0) return score;
+      } catch (e) {
+        print('[Whisper] Error: $e');
+      }
+    }
+    // Fallback: local duration-based scoring
+    return _calculateScore(recDuration);
+  }
+
+  Future<void> _awaitJsPromise2(dynamic jsPromise) async {
+    final completer = Completer<void>();
+    final promise = jsPromise as js.JsObject;
+    promise.callMethod('then', [
+      js.allowInterop((_) => completer.complete()),
+    ]);
+    promise.callMethod('catch', [
+      js.allowInterop((_) => completer.complete()),
+    ]);
+    return completer.future;
+  }
+
+  Future<Map<String, dynamic>> _awaitJsPromise(dynamic jsPromise) async {
+    final completer = Completer<Map<String, dynamic>>();
+    final promise = jsPromise as js.JsObject;
+    promise.callMethod('then', [
+      js.allowInterop((result) {
+        final map = <String, dynamic>{};
+        final jsObj = result as js.JsObject;
+        map['text'] = jsObj['text'];
+        map['score'] = jsObj['score'];
+        completer.complete(map);
+      }),
+    ]);
+    promise.callMethod('catch', [
+      js.allowInterop((error) {
+        completer.complete({'text': '', 'score': -1});
+      }),
+    ]);
+    return completer.future;
+  }
+
+  int _calculateScore(Duration recDuration) {
+    // If amplitude API works, use real volume scoring
+    if (_ampWorking) {
+      // 1. Duration score (40 points)
+      double durationScore = 40;
+      if (_refDuration != null && _refDuration!.inMilliseconds > 0) {
+        final ratio = recDuration.inMilliseconds / _refDuration!.inMilliseconds;
+        if (ratio < 0.3) { durationScore = 5; }
+        else if (ratio < 0.7) { durationScore = 15 + (ratio - 0.3) / 0.4 * 25; }
+        else if (ratio <= 1.5) { durationScore = 40; }
+        else if (ratio <= 2.5) { durationScore = 40 - (ratio - 1.5) / 1.0 * 20; }
+        else { durationScore = 10; }
+      }
+
+      // 2. Energy score (30 points)
+      double energyScore;
+      if (_avgEnergy < 0.02) { energyScore = 0; }
+      else if (_avgEnergy < 0.05) { energyScore = 10; }
+      else if (_avgEnergy < 0.15) { energyScore = 25; }
+      else { energyScore = 30; }
+
+      // 3. Consistency score (30 points)
+      double consistencyScore = 30;
+      if (_energySamples > 0) {
+        final silentRatio = _silentFrames / _energySamples;
+        if (silentRatio > 0.8) { consistencyScore = 0; }
+        else if (silentRatio > 0.6) { consistencyScore = 10; }
+        else if (silentRatio > 0.3) { consistencyScore = 20; }
+      }
+
+      return (durationScore + energyScore + consistencyScore).round().clamp(0, 100);
+    }
+
+    // Fallback: amplitude API not available, score based on duration only
+    final recMs = recDuration.inMilliseconds;
+    if (_refDuration != null && _refDuration!.inMilliseconds > 0) {
+      final refMs = _refDuration!.inMilliseconds;
+      final ratio = recMs / refMs;
+      // Good range: 0.7x ~ 1.8x → 70-95 points
+      if (ratio < 0.2) return 15;
+      if (ratio < 0.5) return 40 + ((ratio - 0.2) / 0.3 * 30).round();
+      if (ratio <= 1.8) return 70 + ((1.0 - (ratio - 1.0).abs()) * 25).round().clamp(0, 25);
+      if (ratio <= 3.0) return 50;
+      return 20;
+    }
+    // No reference: just check they recorded something reasonable
+    if (recMs < 500) return 10;
+    if (recMs < 1500) return 50;
+    if (recMs < 5000) return 75;
+    return 60;
   }
 
   void _playBack() async {
@@ -213,6 +414,66 @@ class _RecordingScreenState extends State<RecordingScreen>
               ),
             ),
           ),
+
+          // ── Whisper status ──
+          if (kIsWeb)
+            Positioned(
+              top: 0, right: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8, top: 8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _whisperReady ? Colors.green.shade50 : Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _whisperReady ? Icons.check_circle : Icons.downloading,
+                          size: 14,
+                          color: _whisperReady ? Colors.green : Colors.orange,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _whisperReady ? 'AI Ready' : 'AI Loading...',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: _whisperReady ? Colors.green : Colors.orange,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          // ── Scoring indicator ──
+          if (_scoring)
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8)],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(width: 18, height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: _kOrange)),
+                    const SizedBox(width: 10),
+                    Text('Scoring...', style: TextStyle(
+                      color: _kOrange, fontWeight: FontWeight.w700, fontSize: 14)),
+                  ],
+                ),
+              ),
+            ),
 
           // ── Center controls ──
           Center(
@@ -344,12 +605,41 @@ class _RecordingScreenState extends State<RecordingScreen>
 
                   // ── Done phase ──
                   if (_phase == _SentencePhase.done) ...[
-                    _pillButton(
-                      icon: _isPlayingBack ? Icons.pause : Icons.play_arrow,
-                      label: 'Play back',
-                      onTap: _isPlayingBack ? null : _playBack,
-                      color: Colors.grey.shade100,
-                      textColor: Colors.grey.shade700,
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        _pillButton(
+                          icon: _isPlayingBack ? Icons.pause : Icons.play_arrow,
+                          label: 'Play back',
+                          onTap: _isPlayingBack ? null : _playBack,
+                          color: Colors.grey.shade100,
+                          textColor: Colors.grey.shade700,
+                        ),
+                        if (!_scoring && _scores.containsKey(_currentIdx))
+                          Positioned(
+                            right: -10,
+                            top: -10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: (_scores[_currentIdx] ?? 0) >= 75
+                                    ? const Color(0xFFFF8C42)
+                                    : (_scores[_currentIdx] ?? 0) >= 50
+                                        ? Colors.amber
+                                        : Colors.redAccent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                '${_scores[_currentIdx] ?? 0}',
+                                style: TextStyle(
+                                  fontSize: R.s(14),
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     _pillButton(
@@ -386,6 +676,7 @@ class _RecordingScreenState extends State<RecordingScreen>
       ),
     );
   }
+
 
   Widget _pillButton({
     required IconData icon,
