@@ -544,20 +544,13 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         _echoShowButtons = false;
       });
 
-      // Staggered stars
-      final stars = pts == 10 ? 3 : pts == 5 ? 1 : 0;
-      for (int i = 0; i < 3; i++) {
-        _echoStarCtrls[i].reset();
-        if (i < stars) {
-          Future.delayed(Duration(milliseconds: 200 + i * 220), () {
-            if (mounted) _echoStarCtrls[i].forward();
-          });
-        }
-      }
-      // Show buttons immediately
-      Future.delayed(const Duration(milliseconds: 300), () {
+      // Auto-play the recording back, show buttons after playback finishes
+      if (_recordingPath != null) {
+        await Future.delayed(const Duration(milliseconds: 300));
+        if (mounted) await _playEchoRecording();
+      } else {
         if (mounted) setState(() => _echoShowButtons = true);
-      });
+      }
     } else {
       // ── START ──
       try {
@@ -589,16 +582,29 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     }
   }
 
+  StreamSubscription? _echoPlaybackSub;
+
   Future<void> _playEchoRecording() async {
     if (_recordingPath == null || _echoPlayingBack) return;
     setState(() => _echoPlayingBack = true);
+    _echoPlaybackSub?.cancel();
     await _player.stop();
+    final completer = Completer<void>();
     final source = kIsWeb
         ? UrlSource(_recordingPath!)
         : DeviceFileSource(_recordingPath!);
+    _echoPlaybackSub = _player.onPlayerComplete.listen((_) {
+      _echoPlaybackSub?.cancel();
+      if (!completer.isCompleted) completer.complete();
+    });
     await _player.play(source);
-    _player.onPlayerComplete.listen((_) {
-      if (mounted) setState(() => _echoPlayingBack = false);
+    // Wait for playback to actually finish
+    await completer.future.timeout(const Duration(seconds: 10), onTimeout: () {});
+    // Keep ear icon visible briefly after sound ends
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (mounted) setState(() {
+      _echoPlayingBack = false;
+      _echoShowButtons = true;
     });
   }
 
@@ -1333,7 +1339,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                   ),
                 ),
 
-                // ── Scored state: Play back + Re-record + Let's spell it ─
+                // ── Scored state: Re-record + Let's spell it ─
                 AnimatedOpacity(
                   opacity: isScored ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 300),
@@ -1342,61 +1348,43 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: _echoPlayingBack ? null : _playEchoRecording,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: _echoPlayingBack ? _kYellow : _kYellow.withValues(alpha: 0.25),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: _kYellow, width: 2),
-                                ),
-                                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                                  Icon(
-                                    _echoPlayingBack ? Icons.volume_up_rounded : Icons.replay_rounded,
-                                    color: const Color(0xFF555500), size: 22,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    _echoPlayingBack ? 'Playing...' : 'Play back',
-                                    style: const TextStyle(fontSize: 16,
-                                        fontWeight: FontWeight.bold, color: Color(0xFF555500)),
-                                  ),
-                                ]),
-                              ),
+                        if (!_echoShowButtons)
+                          Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.hearing, size: R.s(48), color: const Color(0xFFFF8C42)),
+                                SizedBox(height: R.s(6)),
+                                Text('Listening...', style: TextStyle(
+                                  fontSize: R.s(16), fontWeight: FontWeight.w700,
+                                  color: const Color(0xFFFF8C42))),
+                              ],
                             ),
-                            const SizedBox(width: 12),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _echoPhase = _EchoPhase.idle;
-                                  _echoScorePoints = 0;
-                                  _echoShowButtons = false;
-                                });
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.red.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.red.withValues(alpha: 0.3), width: 2),
-                                ),
-                                child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                                  Icon(Icons.mic_rounded, color: Colors.red, size: 22),
-                                  SizedBox(width: 8),
-                                  Text('Re-record',
-                                    style: TextStyle(fontSize: 16,
-                                        fontWeight: FontWeight.bold, color: Colors.red),
-                                  ),
-                                ]),
+                        if (_echoShowButtons) ...[
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _echoPhase = _EchoPhase.idle;
+                                _echoScorePoints = 0;
+                                _echoShowButtons = false;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(color: Colors.grey.shade300),
                               ),
+                              child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                                Icon(Icons.mic, color: Color(0xFF666666), size: 22),
+                                SizedBox(width: 8),
+                                Text('Re-record', style: TextStyle(fontSize: 18,
+                                    fontWeight: FontWeight.bold, color: Color(0xFF666666))),
+                              ]),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 72),
+                          ),
+                        ],
+                        const SizedBox(height: 24),
                         AnimatedOpacity(
                           opacity: _echoShowButtons ? 1.0 : 0.0,
                           duration: const Duration(milliseconds: 300),
@@ -1492,53 +1480,45 @@ class _PhonicsScreenState extends State<PhonicsScreen>
           ),
           const SizedBox(height: 32),
 
-          // ── Scored: stars + message + play back ──────────────────────────
-          if (isScored) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (i) {
-                final lit = i < starCount;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: ScaleTransition(
-                    scale: _echoStarAnims[i],
-                    child: Text(lit ? '⭐' : '☆',
-                        style: TextStyle(fontSize: 62,
-                            color: lit ? null : Colors.grey.shade300)),
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _echoScorePoints == 10 ? 'Amazing! 🎉'
-                  : _echoScorePoints == 5 ? 'Good try! Keep going!'
-                  : 'Try speaking! 💪',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,
-                  color: _echoScorePoints == 10 ? _kOrange : Colors.blueGrey),
-            ),
-            const SizedBox(height: 24),
-            if (_recordingPath != null)
-              GestureDetector(
-                onTap: _playEchoRecording,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 28, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: _kYellow.withValues(alpha: 0.20),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: _kYellow, width: 2.5),
-                  ),
-                  child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.replay_rounded,
-                        color: Color(0xFF664400), size: 24),
-                    SizedBox(width: 10),
-                    Text('Play back', style: TextStyle(fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF664400))),
-                  ]),
+          // ── Scored: re-record + let's spell it ──────────────────────────
+          if (isScored && _echoShowButtons) ...[
+            // Re-record button
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _echoPhase = _EchoPhase.idle;
+                  _echoScorePoints = 0;
+                  _recordingPath = null;
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.grey.shade300),
                 ),
+                child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                  Icon(Icons.mic, color: Color(0xFF666666), size: 22),
+                  SizedBox(width: 8),
+                  Text('Re-record', style: TextStyle(fontSize: 18,
+                      fontWeight: FontWeight.bold, color: Color(0xFF666666))),
+                ]),
               ),
+            ),
+            const SizedBox(height: 28),
+          ] else if (isScored) ...[
+            // While auto-playing back, show a small indicator
+            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.hearing, size: R.s(48), color: const Color(0xFFFF8C42)),
+                                SizedBox(height: R.s(6)),
+                                Text('Listening...', style: TextStyle(
+                                  fontSize: R.s(16), fontWeight: FontWeight.w700,
+                                  color: const Color(0xFFFF8C42))),
+                              ],
+                            ),
             const SizedBox(height: 28),
           ] else ...[
             // ── Waveform while recording ───────────────────────────────────

@@ -45,6 +45,18 @@ class _ListenScreenState extends State<ListenScreen>
     with TickerProviderStateMixin {
   final _player = AudioPlayer();
 
+  static const _eggyImages = [
+    'assets/pet/cards/1egg.webp',
+    'assets/pet/cards/2hatching.webp',
+    'assets/pet/cards/4Handstand.webp',
+    'assets/pet/cards/5Lying face down.webp',
+    'assets/pet/cards/6Lying down.webp',
+    'assets/pet/cards/7Single-leg stance.webp',
+    'assets/pet/cards/8study.webp',
+    'assets/pet/cards/9wearing hat.webp',
+    'assets/pet/cards/10bicycle.webp',
+  ];
+
   // Playlist
   List<_Track> _tracks = _kDefaultTracks;
 
@@ -101,6 +113,7 @@ class _ListenScreenState extends State<ListenScreen>
       }),
     ]);
 
+    _loadPrefs();
     _loadListenTime();
     _loadEggy();
     _startTimers();
@@ -324,6 +337,140 @@ class _ListenScreenState extends State<ListenScreen>
     }
   }
 
+  List<Widget> _buildBookListColumns() {
+    final total = _getAvailableBookCount();
+    final hasRight = total > 10;
+    final leftCount = hasRight ? 10 : total;
+    final rightCount = hasRight ? total - 10 : 0;
+
+    Widget buildColumn(int startIdx, int count, {bool isLeft = true}) {
+      return Positioned(
+        left: isLeft ? R.s(8) : null,
+        right: isLeft ? null : R.s(8),
+        top: R.s(40),
+        bottom: R.s(40),
+        width: R.s(160),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (isLeft)
+              Text('📚 选择听力', style: TextStyle(
+                fontSize: R.s(13), fontWeight: FontWeight.w800,
+                color: const Color(0xFFFF8C42))),
+            if (isLeft) SizedBox(height: R.s(6)),
+            Expanded(
+              child: ListView.builder(
+                itemCount: count,
+                itemBuilder: (_, i) {
+                  final idx = startIdx + i;
+                  if (idx >= kAllBooks.length) return const SizedBox();
+                  final book = kAllBooks[idx];
+                  final isPlaying = _tracks.isNotEmpty &&
+                      _trackIdx < _tracks.length &&
+                      _tracks[_trackIdx].lessonId == book.lessonId;
+                  return GestureDetector(
+                    onTap: () => _playBookFromList(book),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: R.s(4)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: R.s(8), vertical: R.s(6)),
+                      decoration: BoxDecoration(
+                        color: isPlaying
+                            ? const Color(0xFFFF8C42).withValues(alpha: 0.2)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(R.s(8)),
+                      ),
+                      child: Row(
+                        children: [
+                          Text('${idx + 1}', style: TextStyle(
+                            fontSize: R.s(11), fontWeight: FontWeight.w800,
+                            color: const Color(0xFFFF8C42))),
+                          SizedBox(width: R.s(6)),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(book.title, style: TextStyle(
+                                  fontSize: R.s(12), fontWeight: FontWeight.w700,
+                                  color: isPlaying ? const Color(0xFFFF8C42) : const Color(0xFF333333)),
+                                  overflow: TextOverflow.ellipsis),
+                                Text(book.titleCN, style: TextStyle(
+                                  fontSize: R.s(11), fontWeight: FontWeight.w500,
+                                  color: isPlaying ? const Color(0xFFFF8C42) : Colors.grey)),
+                              ],
+                            ),
+                          ),
+                          if (isPlaying)
+                            Icon(Icons.volume_up_rounded,
+                              size: R.s(14), color: const Color(0xFFFF8C42)),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final columns = <Widget>[buildColumn(0, leftCount, isLeft: true)];
+    if (hasRight) {
+      columns.add(buildColumn(10, rightCount, isLeft: false));
+    }
+    return columns;
+  }
+
+  int _getAvailableBookCount() {
+    // Books from day 1 to active date (today or calendar-selected date)
+    final startStr = _prefs?.getString('book_start_date');
+    if (startStr == null) return 1;
+    final startDate = WeekService.parseDate(startStr);
+    if (startDate == null) return 1;
+    final current = activeDate();
+    // Count weekdays from start to current date
+    int count = 0;
+    var d = startDate;
+    while (!d.isAfter(current) && count < kAllBooks.length) {
+      if (d.weekday >= 1 && d.weekday <= 5) count++;
+      d = d.add(const Duration(days: 1));
+    }
+    return count.clamp(1, kAllBooks.length);
+  }
+
+  SharedPreferences? _prefs;
+
+  Future<void> _loadPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  void _playBookFromList(BookInfo book) async {
+    // Switch to this book's audio
+    setState(() {
+      _allTracksCompleted = false;
+      _tracks = [_Track(book.title, book.originalAudio,
+          showBook: true, lessonId: book.lessonId)];
+      _trackIdx = 0;
+    });
+    // Load page timings
+    if (!_allPageTimings.containsKey(book.lessonId)) {
+      try {
+        final jsonString = await DefaultAssetBundle.of(context)
+            .loadString('assets/lessons/${book.lessonId}.json');
+        final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
+        final timings = <_PageTiming>[];
+        for (final p in jsonMap['pages'] as List) {
+          final ms = p['pageStartMs'] as int?;
+          if (ms != null) timings.add(_PageTiming(p['imageAsset'] as String, ms));
+        }
+        _allPageTimings[book.lessonId] = timings;
+      } catch (_) {}
+    }
+    _pageTimings = _allPageTimings[book.lessonId] ?? [];
+    _playTrack(0);
+  }
+
   Future<void> _onListenComplete() async {
     await _player.stop();
     _setPlaying(false);
@@ -506,7 +653,7 @@ class _ListenScreenState extends State<ListenScreen>
                   child: cdnImage(
                     _pageTimings[_currentPageIdx].imageAsset,
                     key: ValueKey(_currentPageIdx),
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
                   ),
@@ -514,13 +661,13 @@ class _ListenScreenState extends State<ListenScreen>
               ),
             ),
           ] else ...[
-            // Eggy mode: full-screen eggy from study room
+            // Eggy mode: warm gradient + cycling eggy images
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0xFF0D1B2A), Color(0xFF1B2A4A)],
+                  colors: [Color(0xFFFFE8D6), Color(0xFFFFCBA4), Color(0xFFFFAD7A)],
                 ),
               ),
             ),
@@ -528,46 +675,38 @@ class _ListenScreenState extends State<ListenScreen>
               child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    cdnImage('assets/pet/cards/bicycle.webp',
-                      fit: BoxFit.contain,
+                    cdnImage(_eggyImages[_trackIdx % _eggyImages.length],
+                      fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,
-                      errorBuilder: (_, __, ___) => cdnImage('assets/pet/costumes/base/egg_month$_eggyMonth.png',
-                        fit: BoxFit.contain,
-                      ),
+                      errorBuilder: (_, __, ___) => cdnImage('assets/pet/eggy_transparent_bg.webp',
+                        fit: BoxFit.contain),
                     ),
-                    if (_equippedAccessory != null)
-                      cdnImage('assets/pet/costumes/accessories/$_equippedAccessory.png',
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                        errorBuilder: (_, __, ___) => const SizedBox(),
-                      ),
                   ],
               ),
             ),
             Container(color: Colors.black.withValues(alpha: 0.55)),
           ],
 
-          // ── "All done" overlay — shown after first complete cycle ──────────
-          if (_allTracksCompleted)
+          // ── "All done" overlay ──────────────────────────────────────────────
+          if (_allTracksCompleted) ...[
+            // Center: return button (semi-transparent)
             Positioned.fill(
               child: GestureDetector(
                 onTap: _onListenComplete,
                 child: Container(
-                  color: Colors.black.withValues(alpha: 0.4),
+                  color: Colors.black.withValues(alpha: 0.05),
                   child: Center(
                     child: Container(
-                      width: R.s(300),
-                      height: R.s(300),
+                      width: R.s(260),
+                      height: R.s(260),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFFFFF5EB).withValues(alpha: 0.95),
+                        color: const Color(0xFFFFF5EB).withValues(alpha: 0.6),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFFF8C42).withValues(alpha: 0.2),
-                            blurRadius: 40,
-                            spreadRadius: 5,
+                            color: const Color(0xFFFF8C42).withValues(alpha: 0.15),
+                            blurRadius: 30, spreadRadius: 3,
                           ),
                         ],
                       ),
@@ -575,13 +714,11 @@ class _ListenScreenState extends State<ListenScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text('全部完成啦！',
-                            style: TextStyle(color: Color(0xFFFF8C42), fontSize: 20, fontWeight: FontWeight.w900),
-                          ),
+                            style: TextStyle(color: Color(0xFFFF8C42), fontSize: 18, fontWeight: FontWeight.w900)),
                           cdnImage('assets/pet/eggy_transparent_bg.webp',
-                            width: R.s(170), height: R.s(170), fit: BoxFit.contain),
+                            width: R.s(140), height: R.s(140), fit: BoxFit.contain),
                           const Text('点击返回',
-                            style: TextStyle(color: Color(0xFFFFAA66), fontSize: 14, fontWeight: FontWeight.w600),
-                          ),
+                            style: TextStyle(color: Color(0xFFFFAA66), fontSize: 13, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ),
@@ -589,6 +726,9 @@ class _ListenScreenState extends State<ListenScreen>
                 ),
               ),
             ),
+            // Book list columns (left, or left+right if >10)
+            ..._buildBookListColumns(),
+          ],
 
           // ── Top bar + waveform + controls ────────────────────────────────────
           SafeArea(

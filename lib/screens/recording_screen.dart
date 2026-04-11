@@ -167,17 +167,7 @@ class _RecordingScreenState extends State<RecordingScreen>
   }
 
   Future<int> _getScore(String? audioUrl, Duration recDuration) async {
-    if (_current == null || audioUrl == null) return _calculateScore(recDuration);
-
-    // ── Try: Speech Evaluation API (iFlytek) ──
-    try {
-      final score = await _callSpeechEval(audioUrl, _current!.text);
-      if (score >= 0) return score;
-    } catch (e) {
-      print('[SpeechEval] Error: $e');
-    }
-
-    // ── Fallback: Local duration-based scoring ──
+    // Local star scoring (instant, no API needed)
     return _calculateScore(recDuration);
   }
 
