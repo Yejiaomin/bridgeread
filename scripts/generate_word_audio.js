@@ -17,8 +17,14 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'assets', 'audio', 'phonics_sounds
 
 // All words that need audio
 const words = [
-  'bed', 'dog', 'fun', 'hug', 'light', 'met', 'nap', 'pet',
-  'play', 'small', 'snack', 'story', 'yellow',
+  'ball', 'bat', 'bath', 'bed', 'big', 'bird', 'bone', 'boot', 'bus',
+  'city', 'class', 'did', 'dig', 'dog', 'duck',
+  'feed', 'fetch', 'found', 'fun', 'get', 'got',
+  'hid', 'hold', 'hug', 'kiss', 'kit',
+  'leaf', 'learn', 'light', 'many', 'met', 'mud',
+  'nap', 'new', 'pet', 'pig', 'pigs', 'play', 'pond', 'prize', 'pup',
+  'roll', 'rub', 'run', 'sam', 'small', 'snack',
+  'stay', 'stop', 'story', 'there', 'vite', 'walk', 'were', 'wet', 'yellow', 'you',
 ];
 
 async function generateWord(word) {
@@ -30,9 +36,9 @@ async function generateWord(word) {
       method: 'POST',
       headers: { 'xi-api-key': elevenLabsKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        text: word,
+        text: word + ',',
         model_id: 'eleven_multilingual_v2',
-        voice_settings: { stability: 0.6, similarity_boost: 0.75, style: 0.2, use_speaker_boost: false, speed: 0.9 },
+        voice_settings: { stability: 0.85, similarity_boost: 0.75, style: 0.1, use_speaker_boost: false, speed: 0.9 },
       }),
     }
   );
