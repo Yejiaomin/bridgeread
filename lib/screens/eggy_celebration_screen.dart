@@ -71,6 +71,7 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
 
   String         _praiseWord      = '';
   bool           _showNextBtn     = false;
+  bool           _navigating      = false;
   List<Offset>   _starStartFracs  = [];
 
   @override
@@ -298,6 +299,8 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                               child: ElevatedButton(
                                 onPressed: _showNextBtn
                                     ? () async {
+                                        if (_navigating) return;
+                                        _navigating = true;
                                         await ProgressService
                                             .markModuleComplete(
                                                 widget.moduleKey,

@@ -346,6 +346,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   /// Play audio and wait for it to finish before returning.
   Future<void> _playAndWait(String assetPath) async {
+    if (!mounted) return;
     try { await _player.stop(); } catch (_) {}
     final completer = Completer<void>();
     late StreamSubscription<void> sub;
@@ -353,8 +354,13 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       if (!completer.isCompleted) completer.complete();
       sub.cancel();
     });
-    await _player.play(cdnAudioFromAssetPath(assetPath));
-    await completer.future;
+    try {
+      await _player.play(cdnAudioFromAssetPath(assetPath));
+      await completer.future.timeout(const Duration(seconds: 15), onTimeout: () {});
+    } catch (_) {
+      if (!completer.isCompleted) completer.complete();
+    }
+    sub.cancel();
   }
 
 
