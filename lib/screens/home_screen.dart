@@ -265,55 +265,38 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
 
-              // ── DEV shortcuts ─────────────────────────────────────────
-              Positioned(
-                right: 16,
-                bottom: 16,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _DevBtn(label: '🛠 书房', onTap: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      final current = prefs.getInt('total_stars') ?? 0;
-                      await prefs.setInt('total_stars', current + 100);
-                      if (!mounted) return;
-                      Navigator.pushNamed(ctx, '/studyroom').then((_) => _loadStats());
-                    }),
-                    const SizedBox(height: 6),
-                    _DevBtn(label: '🔤 拼读', onTap: () =>
-                        Navigator.pushNamed(ctx, '/phonics').then((_) => _loadStats())),
-                    const SizedBox(height: 6),
-                    _DevBtn(label: '🎙 录音', onTap: () =>
-                        Navigator.pushNamed(ctx, '/recording').then((_) => _loadStats())),
-                    const SizedBox(height: 6),
-                    _DevBtn(label: '🧩 消消乐', onTap: () =>
-                        Navigator.pushNamed(ctx, '/quiz').then((_) => _loadStats())),
-                    const SizedBox(height: 6),
-                    _DevBtn(label: '🎧 听力', onTap: () =>
-                        Navigator.pushNamed(ctx, '/listen').then((_) => _loadStats())),
-                    const SizedBox(height: 6),
-                    _DevBtn(label: '📖 讲解', onTap: () =>
-                        Navigator.pushNamed(ctx, '/reader').then((_) => _loadStats())),
-                    const SizedBox(height: 6),
-                    _DevBtn(label: '🗑 重置数据', onTap: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      // Preserve login keys
-                      final token = prefs.getString('auth_token');
-                      final childName = prefs.getString('child_name');
-                      final userId = prefs.getInt('user_id');
-                      final bookStartDate = prefs.getString('book_start_date');
-                      await prefs.clear();
-                      if (token != null) await prefs.setString('auth_token', token);
-                      if (childName != null) await prefs.setString('child_name', childName);
-                      if (userId != null) await prefs.setInt('user_id', userId);
-                      if (bookStartDate != null) await prefs.setString('book_start_date', bookStartDate);
-                      if (!mounted) return;
-                      _loadStats();
-                    }),
-                  ],
+              // ── Shortcuts (only visible after today's study is complete) ──
+              if (_studyRoomUnlocked)
+                Positioned(
+                  right: 16,
+                  bottom: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _DevBtn(label: '📖 讲解', onTap: () =>
+                          Navigator.pushNamed(ctx, '/reader').then((_) => _loadStats())),
+                      const SizedBox(height: 6),
+                      _DevBtn(label: '🧩 消消乐', onTap: () =>
+                          Navigator.pushNamed(ctx, '/quiz').then((_) => _loadStats())),
+                      const SizedBox(height: 6),
+                      _DevBtn(label: '🔤 拼读', onTap: () =>
+                          Navigator.pushNamed(ctx, '/phonics').then((_) => _loadStats())),
+                      const SizedBox(height: 6),
+                      _DevBtn(label: '🎙 录音', onTap: () =>
+                          Navigator.pushNamed(ctx, '/recording').then((_) => _loadStats())),
+                      const SizedBox(height: 6),
+                      _DevBtn(label: '🎧 听力', onTap: () =>
+                          Navigator.pushNamed(ctx, '/listen').then((_) => _loadStats())),
+                      const SizedBox(height: 6),
+                      _DevBtn(label: '🏆 排行榜', onTap: () =>
+                          Navigator.pushNamed(ctx, '/ranking').then((_) => _loadStats())),
+                      const SizedBox(height: 6),
+                      _DevBtn(label: '🛠 书房', onTap: () =>
+                          Navigator.pushNamed(ctx, '/studyroom').then((_) => _loadStats())),
+                    ],
+                  ),
                 ),
-              ),
 
               // ── "我的英语小家" tap zone (top-left, to profile) ────────
               Positioned(
@@ -614,9 +597,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   if (_startDate != null && !date.isBefore(_startDate!)) {
                     bookIdx = WeekService.bookIndexForDate(date, _startDate!);
                   }
-                  final book = bookIdx != null && bookIdx < kAllBooks.length ? kAllBooks[bookIdx] : null;
+                  // Only show book for today and past dates (not future)
+                  final book = (bookIdx != null && bookIdx < kAllBooks.length && (isPast || isToday))
+                      ? kAllBooks[bookIdx] : null;
                   final unlocked = _testMode || (isPast && book != null);
-                  final isActiveWeekend = isWeekend && _startDate != null && !date.isBefore(_startDate!);
+                  final isActiveWeekend = isWeekend && _startDate != null && !date.isBefore(_startDate!) && (isPast || isToday);
 
                   // Debt count for this date
                   final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';

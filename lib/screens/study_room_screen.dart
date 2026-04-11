@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math' show sin, pi, cos, Random;
 import 'package:audioplayers/audioplayers.dart';
@@ -146,10 +147,18 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
       ..repeat();
 
     _loadData();
+
+    // 5-minute auto-return timer
+    _roomTimer = Timer(const Duration(minutes: 5), () {
+      if (mounted) Navigator.pushReplacementNamed(context, '/home');
+    });
   }
+
+  Timer? _roomTimer;
 
   @override
   void dispose() {
+    _roomTimer?.cancel();
     _breathCtrl.dispose();
     _boxCtrl.dispose();
     _jarShakeCtrl.dispose();
@@ -164,9 +173,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
   Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // TODO: before release — remove this line
-    await prefs.setInt('total_stars', 1000); // testing: always reset to 1000
-    final int stars = 1000;
+    final int stars = prefs.getInt('total_stars') ?? 0;
 
     final placedJson = prefs.getString('placed_items') ?? '{}';
     final raw   = Map<String, dynamic>.from(jsonDecode(placedJson) as Map);
@@ -177,11 +184,10 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
 
     final equippedAccessory = prefs.getString('equipped_accessory');
 
-    // Daily gacha check (date check disabled for testing)
+    // Daily gacha check: 1 per day
     final today    = DateTime.now().toIso8601String().substring(0, 10);
-    // final lastDate = prefs.getString('last_gacha_date') ?? '';
-    // final gachaAvail = lastDate != today && stars >= 50;
-    final gachaAvail = stars >= 50; // TODO: restore daily limit before release
+    final lastDate = prefs.getString('last_gacha_date') ?? '';
+    final gachaAvail = lastDate != today && stars >= 50;
 
     // Eggy month: switch every 30 days from first launch
     if (!prefs.containsKey('app_start_date')) {
@@ -485,7 +491,13 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back_ios_rounded,
                         color: Colors.white, size: 24),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushReplacementNamed(context, '/home');
+                      }
+                    },
                   ),
                 ),
               ),

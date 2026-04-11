@@ -263,7 +263,7 @@ class _RecordingScreenState extends State<RecordingScreen>
     await ProgressService.markModuleComplete('recording', 10);
     if (!mounted) return;
     if (widget.weekendMode) {
-      Navigator.pop(context);
+      if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); };
     } else {
       Navigator.pushReplacement(context, MaterialPageRoute(
         builder: (_) => EggyCelebrationScreen(
@@ -303,7 +303,7 @@ class _RecordingScreenState extends State<RecordingScreen>
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back_ios_rounded, color: _kOrange),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
                     ),
                     const Expanded(child: Text('Say it out loud!',
                         textAlign: TextAlign.center,

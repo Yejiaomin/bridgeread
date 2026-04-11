@@ -96,7 +96,7 @@ class _AuthGateState extends State<_AuthGate> {
     if (token != null && token.isNotEmpty) {
       final assessmentDone = prefs.getBool('assessment_done') ?? false;
       if (assessmentDone) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/ranking');
       } else {
         Navigator.pushReplacementNamed(context, '/assessment');
       }

@@ -134,9 +134,19 @@ class ProgressService {
   static Future<int> getTodayPending() async {
     await resetTodayIfNewDay();
     final prefs = await SharedPreferences.getInstance();
+    final now = _chinaTime();
     final todayStr = _today;
+
+    if (now.weekday == 6 || now.weekday == 7) {
+      // Weekend: 2 modules (game + listen)
+      int pending = 0;
+      if (!(prefs.getBool(_kQuizDone) ?? false)) pending++;
+      if (!(prefs.getBool('today_listen_done') ?? false)) pending++;
+      return pending;
+    }
+
+    // Weekday: 4 modules (recap, reader, quiz, listen)
     int pending = 0;
-    // recap is stored as a date string, not bool
     if (prefs.getString('today_recap_done') != todayStr) pending++;
     if (!(prefs.getBool(_kReaderDone) ?? false)) pending++;
     if (!(prefs.getBool(_kQuizDone) ?? false)) pending++;

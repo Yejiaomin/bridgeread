@@ -153,7 +153,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   final _rng    = Random();
   final _player = AudioPlayer();
 
-  late final List<_Round> _rounds; // shuffled at init
+  List<_Round> _rounds = []; // shuffled at init
 
   int  _round         = 0;
   int  _score         = 0;
@@ -500,7 +500,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
       // Weekend mode: skip celebration, just pop back
       if (widget.weekendMode) {
-        if (mounted) Navigator.pop(context);
+        if (mounted) { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } }
         return;
       }
 
@@ -852,7 +852,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 color: Colors.white70, size: 22),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
           ),
           const SizedBox(width: 8),
           // Progress dots

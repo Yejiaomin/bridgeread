@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final dateStr = _formatDate(startDate);
     await prefs.setString('book_start_date', dateStr);
 
-    // Mark past weekdays as completed (active_dates)
+    // Mark past weekdays as fully completed
     if (_booksCompleted > 0) {
       final activeDates = <String>[];
       var d = startDate;
@@ -66,6 +67,19 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       await prefs.setString('active_dates', activeDates.join(','));
       await prefs.setInt('streak_days', _booksCompleted);
+      // Set total stars for completed books (5 modules × 10 stars each)
+      await prefs.setInt('total_stars', _booksCompleted * 50);
+      // Mark all past days as fully completed (all modules done)
+      final moduleStatus = <String, dynamic>{};
+      for (final date in activeDates) {
+        moduleStatus[date] = {
+          'recap': true, 'reader': true, 'quiz': true,
+          'recording': true, 'listen': true,
+        };
+      }
+      await prefs.setString('debt_module_status', jsonEncode(moduleStatus));
+      await prefs.remove('debt_by_date');
+      await prefs.setInt('total_owed', 0);
     }
 
     setState(() => _isLoading = false);

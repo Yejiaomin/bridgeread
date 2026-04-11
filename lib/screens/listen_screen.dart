@@ -479,7 +479,7 @@ class _ListenScreenState extends State<ListenScreen>
       await ProgressService.markModuleComplete('listen', 10);
     }
     if (mounted) {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/ranking', (route) => false);
     }
   }
 
@@ -763,7 +763,11 @@ class _ListenScreenState extends State<ListenScreen>
             onPressed: () {
               _saveListenTime();
               _player.stop();
-              Navigator.pop(context);
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pushReplacementNamed(context, '/study');
+              }
             },
           ),
           const Expanded(
