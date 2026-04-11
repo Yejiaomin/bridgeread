@@ -294,6 +294,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   // ── Round loading ──────────────────────────────────────────────────────────
 
   void _loadRound() {
+    if (_rounds.isEmpty) return;
     final r       = _rounds[_round];
     final bubbles = <_Bubble>[];
 
@@ -556,8 +557,14 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      _done ? _buildCelebration() : _buildGame();
+  Widget build(BuildContext context) {
+    if (_rounds.isEmpty) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Color(0xFFFF8C42))),
+      );
+    }
+    return _done ? _buildCelebration() : _buildGame();
+  }
 
   Widget _buildGame() {
     final r = _rounds[_round];

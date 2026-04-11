@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' show pi, cos, sin, min;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -109,20 +110,9 @@ class _HomeScreenState extends State<HomeScreen>
     // Same condition as study_screen end background: today_listen_done == true
     final allDone = prefs.getBool('today_listen_done') ?? false;
 
-    // Fetch debt data from server (fire-and-forget for speed, then update UI)
-    ProgressService.syncDebtFromServer().then((_) async {
-      final owed = await ProgressService.getTotalOwed();
-      final prefs2 = await SharedPreferences.getInstance();
-      final serverToday = prefs2.getInt('today_owed');
-      // Use server value if available, otherwise fall back to local calculation
-      final todayPending = serverToday ?? await ProgressService.getTodayPending();
-      if (mounted) setState(() { _totalOwed = owed; _todayPending = todayPending; });
-    });
-
-    // Load cached or local values immediately
-    final owed = await ProgressService.getTotalOwed();
-    final serverPending = prefs.getInt('today_owed');
-    final pending = serverPending ?? await ProgressService.getTodayPending();
+    // Calculate total owed from debt_module_status
+    final owed = await _calcTotalOwed(prefs);
+    final pending = await ProgressService.getTodayPending();
 
     if (mounted) {
       setState(() {
@@ -142,6 +132,40 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  Future<int> _calcTotalOwed(SharedPreferences prefs) async {
+    final startStr = prefs.getString('book_start_date');
+    if (startStr == null) return 0;
+    final startDate = WeekService.parseDate(startStr);
+    if (startDate == null) return 0;
+
+    final rawStatus = prefs.getString('debt_module_status');
+    final moduleStatus = rawStatus != null
+        ? Map<String, dynamic>.from(jsonDecode(rawStatus))
+        : <String, dynamic>{};
+
+    final now = chinaTime();
+    final today = DateTime(now.year, now.month, now.day);
+    int total = 0;
+    var d = startDate;
+
+    while (!d.isAfter(today)) {
+      final dateKey = '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+      final status = moduleStatus[dateKey] as Map<String, dynamic>? ?? {};
+
+      if (d.weekday >= 1 && d.weekday <= 5) {
+        // Weekday: check 4 modules
+        const modules = ['recap', 'reader', 'quiz', 'listen'];
+        total += modules.where((m) => status[m] != true).length;
+      } else {
+        // Weekend: check 2 modules
+        const modules = ['quiz', 'listen'];
+        total += modules.where((m) => status[m] != true).length;
+      }
+      d = d.add(const Duration(days: 1));
+    }
+    return total;
+  }
+
   Future<void> _onBooksTap(BuildContext ctx) async {
     _pressCtrl.forward(from: 0);
     _glowCtrl.forward(from: 0).then((_) => _glowCtrl.reverse());
@@ -149,13 +173,14 @@ class _HomeScreenState extends State<HomeScreen>
     await Future.delayed(const Duration(milliseconds: 180));
     // Reset overrideDate so study page shows today's content
     WeekService.overrideDate = null;
+    await ProgressService.setStudyDate(chinaTime());
     // Set today's lesson based on book_start_date
     final prefs = await SharedPreferences.getInstance();
     final startStr = prefs.getString('book_start_date');
     if (startStr != null) {
       final startDate = WeekService.parseDate(startStr);
       if (startDate != null) {
-        final today = DateTime.now().toUtc().add(const Duration(hours: 8));
+        final today = chinaTime();
         final bookIdx = WeekService.bookIndexForDate(today, startDate);
         if (bookIdx != null && bookIdx < kAllBooks.length) {
           await LessonService().setCurrentLesson(kAllBooks[bookIdx].lessonId);
@@ -463,7 +488,7 @@ class _DevBtn extends StatelessWidget {
 
 // Book data is now in week_service.dart → kAllBooks
 
-DateTime _chinaTime() => DateTime.now().toUtc().add(const Duration(hours: 8));
+// Uses chinaTime() from week_service.dart (supports timeTravel debug)
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -476,11 +501,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   late DateTime _viewMonth; // which month is displayed
   bool _testMode = true;
   Map<String, int> _debtByDate = {};
+  Map<String, Map<String, dynamic>> _moduleStatus = {};
 
   @override
   void initState() {
     super.initState();
-    final now = _chinaTime();
+    final now = chinaTime();
     _viewMonth = DateTime(now.year, now.month);
     _load();
   }
@@ -489,19 +515,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final prefs = await SharedPreferences.getInstance();
     var start = prefs.getString('book_start_date');
     if (start == null) {
-      final now = _chinaTime();
+      final now = chinaTime();
       start = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       await prefs.setString('book_start_date', start);
     }
 
-    // Sync latest debt from server, then load cached
+    // Load module status for calendar display
     await ProgressService.syncDebtFromServer();
     final debt = await ProgressService.getDebtByDate();
+    final prefs2 = await SharedPreferences.getInstance();
+    final rawStatus = prefs2.getString('debt_module_status');
+    Map<String, Map<String, dynamic>> moduleStatus = {};
+    if (rawStatus != null) {
+      final decoded = jsonDecode(rawStatus) as Map<String, dynamic>;
+      moduleStatus = decoded.map((k, v) => MapEntry(k, Map<String, dynamic>.from(v as Map)));
+    }
 
     if (mounted) {
       setState(() {
         _startDate = WeekService.parseDate(start);
         _debtByDate = debt;
+        _moduleStatus = moduleStatus;
       });
     }
   }
@@ -521,7 +555,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     const orange = Color(0xFFFF8C42);
-    final now = _chinaTime();
+    final now = chinaTime();
     final today = DateTime(now.year, now.month, now.day);
 
     // Month header text
@@ -603,14 +637,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   final unlocked = _testMode || (isPast && book != null);
                   final isActiveWeekend = isWeekend && _startDate != null && !date.isBefore(_startDate!) && (isPast || isToday);
 
-                  // Debt count for this date
+                  // Pending module count for this date
                   final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-                  final debt = _debtByDate[dateKey] ?? 0;
+                  int debt = 0;
+                  final isInRange = (isPast || isToday) && _startDate != null && !date.isBefore(_startDate!);
+                  if (isInRange && !isWeekend && book != null) {
+                    // Weekday: 4 tracked modules
+                    final status = _moduleStatus[dateKey] ?? {};
+                    const modules = ['recap', 'reader', 'quiz', 'listen'];
+                    debt = modules.where((m) => status[m] != true).length;
+                  } else if (isInRange && isWeekend) {
+                    // Weekend: 2 tracked modules
+                    final status = _moduleStatus[dateKey] ?? {};
+                    const modules = ['quiz', 'listen'];
+                    debt = modules.where((m) => status[m] != true).length;
+                  }
 
                   return GestureDetector(
                     onTap: (unlocked && book != null) || isActiveWeekend || debt > 0 ? () async {
                       // Set this date as the active date for all screens
                       WeekService.overrideDate = date;
+                      await ProgressService.setStudyDate(date);
                       if (book != null) {
                         await LessonService().setCurrentLesson(book.lessonId);
                       }
@@ -703,9 +750,36 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     ],
                                   )
                                 else if (isActiveWeekend)
-                                  SizedBox(
-                                    height: imgH,
-                                    child: cdnImage('assets/pet/eggy_transparent_bg.webp', fit: BoxFit.contain),
+                                  Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      SizedBox(
+                                        height: imgH,
+                                        child: cdnImage('assets/pet/eggy_transparent_bg.webp', fit: BoxFit.contain),
+                                      ),
+                                      if (debt > 0)
+                                        Positioned(
+                                          right: -10,
+                                          top: -8,
+                                          child: Container(
+                                            height: 20,
+                                            width: 30,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFFF6B35),
+                                              borderRadius: BorderRadius.circular(10),
+                                              boxShadow: const [
+                                                BoxShadow(color: Color(0x66FF6B35), blurRadius: 4, offset: Offset(0, 1)),
+                                              ],
+                                            ),
+                                            child: Center(child: Text('$debt',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w900,
+                                              ))),
+                                          ),
+                                        ),
+                                    ],
                                   )
                                 else
                                   SizedBox(height: imgH),

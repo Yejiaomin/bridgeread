@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/week_service.dart' show chinaTime;
 
 const _kOrange = Color(0xFFFF8C42);
 const _kCream = Color(0xFFFFF8F0);
@@ -48,42 +49,45 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString('auth_token', 'local_$phone');
 
     // Calculate book_start_date by going back _booksCompleted weekdays
-    final now = DateTime.now();
-    final startDate = _goBackWeekdays(now, _booksCompleted);
+    final now = chinaTime();
+    final today = DateTime(now.year, now.month, now.day); // midnight china time
+    final startDate = _goBackWeekdays(today, _booksCompleted);
     final dateStr = _formatDate(startDate);
     await prefs.setString('book_start_date', dateStr);
 
-    // Mark past weekdays as fully completed
+    // Mark all days from start_date to yesterday as fully completed
     if (_booksCompleted > 0) {
       final activeDates = <String>[];
-      var d = startDate;
-      int count = 0;
-      while (count < _booksCompleted && d.isBefore(now)) {
+      final moduleStatus = <String, dynamic>{};
+      var d = DateTime(startDate.year, startDate.month, startDate.day); // ensure midnight
+
+      while (d.isBefore(today)) {
+        final dateStr = _formatDate(d);
         if (d.weekday >= 1 && d.weekday <= 5) {
-          activeDates.add(_formatDate(d));
-          count++;
+          // Weekday: mark all modules done
+          activeDates.add(dateStr);
+          moduleStatus[dateStr] = {
+            'recap': true, 'reader': true, 'quiz': true, 'listen': true,
+          };
+        } else {
+          // Weekend: mark weekend modules done
+          moduleStatus[dateStr] = {'quiz': true, 'listen': true};
         }
         d = d.add(const Duration(days: 1));
       }
+
       await prefs.setString('active_dates', activeDates.join(','));
       await prefs.setInt('streak_days', _booksCompleted);
-      // Set total stars for completed books (5 modules × 10 stars each)
       await prefs.setInt('total_stars', _booksCompleted * 50);
-      // Mark all past days as fully completed (all modules done)
-      final moduleStatus = <String, dynamic>{};
-      for (final date in activeDates) {
-        moduleStatus[date] = {
-          'recap': true, 'reader': true, 'quiz': true,
-          'recording': true, 'listen': true,
-        };
-      }
       await prefs.setString('debt_module_status', jsonEncode(moduleStatus));
       await prefs.remove('debt_by_date');
       await prefs.setInt('total_owed', 0);
     }
 
+    await prefs.setBool('assessment_done', true);
+    await prefs.setInt('start_series_index', 0);
     setState(() => _isLoading = false);
-    if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/assessment', (r) => false);
+    if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/ranking', (r) => false);
   }
 
   Future<void> _login() async {
