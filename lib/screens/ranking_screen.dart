@@ -227,6 +227,9 @@ class _RankingScreenState extends State<RankingScreen>
     final circleCx = podiumWidth * info['cx']!;
     final circleCy = podiumHeight * info['cy']!;
     final stars = entry['stars'] as int? ?? 0;
+    final name = entry['name'] as String? ?? '';
+    final isMe = entry['isMe'] == true;
+    final displayName = isMe ? '我' : _maskName(name);
 
     final imageName = rank == 1
         ? 'first.png'
@@ -258,28 +261,31 @@ class _RankingScreenState extends State<RankingScreen>
             height: circleDiam * 0.9,
             child: ClipOval(child: _buildAvatar(entry, circleDiam * 0.9)),
           ),
-          // Score text below the circle
+          // Name + score on the podium cylinder
           Positioned(
-            left: 0,
+            left: podiumWidth * 0.06,
             right: 0,
-            top: circleCy + circleDiam * 0.5,
-            child: AnimatedBuilder(
-              animation: _starGlow,
-              builder: (_, __) => Opacity(
-                opacity: rank == 1 ? _starGlow.value : 1.0,
-                child: Text(
-                  '$stars',
-                  textAlign: TextAlign.center,
+            bottom: podiumHeight * 0.05,
+            child: Text.rich(
+              TextSpan(children: [
+                TextSpan(
+                  text: displayName,
                   style: TextStyle(
-                    fontSize: podiumHeight * 0.08,
+                    fontSize: podiumHeight * 0.085,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    shadows: const [
-                      Shadow(color: Colors.black26, blurRadius: 2),
-                    ],
+                    color: Colors.black87,
                   ),
                 ),
-              ),
+                TextSpan(
+                  text: ' $stars⭐',
+                  style: TextStyle(
+                    fontSize: podiumHeight * 0.065,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black54,
+                  ),
+                ),
+              ]),
+              textAlign: TextAlign.center,
             ),
           ),
         ],
@@ -465,7 +471,7 @@ class _RankingScreenState extends State<RankingScreen>
                   _todayDone
                       ? 'assets/home/ranking/eggy_after_study.png'
                       : 'assets/home/ranking/eggy_before_study.png',
-                  height: h * 0.12,
+                  height: h * 0.27,
                   fit: BoxFit.contain,
                   errorBuilder: (_, __, ___) => const SizedBox(),
                 ),
@@ -552,8 +558,8 @@ class _RankingScreenState extends State<RankingScreen>
 
               // Layer 6: List area
               Positioned(
-                left: 0,
-                right: 0,
+                left: w * 0.1,
+                right: w * 0.1,
                 top: h * 0.60,
                 bottom: 0,
                 child: _loading
