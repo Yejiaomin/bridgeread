@@ -1,11 +1,13 @@
 import 'dart:async';
-import 'dart:js' as js;
+import 'dart:convert';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../models/lesson.dart';
@@ -54,8 +56,7 @@ class _RecordingScreenState extends State<RecordingScreen>
   // Real mic volume from record package
   double _realVolume = 0; // 0.0 ~ 1.0
   Timer? _ampTimer;
-  bool _scoring = false; // true while waiting for Whisper score
-  bool _whisperReady = false;
+  bool _scoring = false;
 
   RecordingSentence? get _current =>
       _recPage != null && _currentIdx < _recPage!.sentences.length
@@ -68,18 +69,6 @@ class _RecordingScreenState extends State<RecordingScreen>
   void initState() {
     super.initState();
     _loadData();
-    // Pre-load Whisper model in background + check status
-    if (kIsWeb) {
-      try { js.context.callMethod('preloadWhisper', []); } catch (_) {}
-      Timer.periodic(const Duration(seconds: 2), (t) {
-        if (!mounted) { t.cancel(); return; }
-        try {
-          final ready = js.context.callMethod('isWhisperReady', []) as bool;
-          if (ready && !_whisperReady) setState(() => _whisperReady = true);
-          if (ready) t.cancel();
-        } catch (_) {}
-      });
-    }
     _pulseCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
       ..repeat(reverse: true);
     _pulseAnim = Tween<double>(begin: 0.93, end: 1.07)
@@ -182,6 +171,7 @@ class _RecordingScreenState extends State<RecordingScreen>
           encoder: kIsWeb ? AudioEncoder.wav : AudioEncoder.aacLc,
           bitRate: 128000,
           sampleRate: 16000,
+          numChannels: 1,
         ),
         path: recPath,
       );
@@ -220,64 +210,58 @@ class _RecordingScreenState extends State<RecordingScreen>
   }
 
   Future<int> _getScore(String? audioUrl, Duration recDuration) async {
-    // Try Whisper (browser-based AI)
-    if (kIsWeb && audioUrl != null && _current != null) {
-      try {
-        // Wait up to 30s for Whisper to load if it's still loading
-        final isLoading = js.context.callMethod('isWhisperLoading', []) as bool;
-        if (isLoading) {
-          for (int i = 0; i < 150; i++) { // 150 * 200ms = 30s
-            await Future.delayed(const Duration(milliseconds: 200));
-            if (js.context.callMethod('isWhisperReady', []) as bool) break;
-          }
-        }
+    if (_current == null || audioUrl == null) return _calculateScore(recDuration);
 
-        // Call transcribeAndScore (returns a Promise)
-        final resultJs = js.context.callMethod(
-          'transcribeAndScore',
-          [audioUrl, _current!.text],
-        );
-        final result = await _awaitJsPromise(resultJs);
-        final score = (result['score'] as num?)?.toInt() ?? -1;
-        if (score >= 0) return score;
-      } catch (e) {
-        print('[Whisper] Error: $e');
-      }
+    // ── Try: Speech Evaluation API (iFlytek) ──
+    try {
+      final score = await _callSpeechEval(audioUrl, _current!.text);
+      if (score >= 0) return score;
+    } catch (e) {
+      print('[SpeechEval] Error: $e');
     }
-    // Fallback: local duration-based scoring
+
+    // ── Fallback: Local duration-based scoring ──
     return _calculateScore(recDuration);
   }
 
-  Future<void> _awaitJsPromise2(dynamic jsPromise) async {
-    final completer = Completer<void>();
-    final promise = jsPromise as js.JsObject;
-    promise.callMethod('then', [
-      js.allowInterop((_) => completer.complete()),
-    ]);
-    promise.callMethod('catch', [
-      js.allowInterop((_) => completer.complete()),
-    ]);
-    return completer.future;
+  Future<int> _callSpeechEval(String audioUrl, String refText) async {
+    final response = await http.get(Uri.parse(audioUrl));
+    if (response.statusCode != 200) return -1;
+
+    final audioBase64 = base64Encode(response.bodyBytes);
+
+    const apiBase = 'http://localhost:3000/api';
+    final token = await _getAuthToken();
+    if (token == null) return -1;
+
+    final evalResponse = await http.post(
+      Uri.parse('$apiBase/speech-eval'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'audio': audioBase64,
+        'refText': refText,
+      }),
+    );
+
+    if (evalResponse.statusCode == 200) {
+      final data = jsonDecode(evalResponse.body);
+      final score = data['score'] as int? ?? -1;
+      print('[SpeechEval] Score: $score');
+      return score;
+    }
+    return -1;
   }
 
-  Future<Map<String, dynamic>> _awaitJsPromise(dynamic jsPromise) async {
-    final completer = Completer<Map<String, dynamic>>();
-    final promise = jsPromise as js.JsObject;
-    promise.callMethod('then', [
-      js.allowInterop((result) {
-        final map = <String, dynamic>{};
-        final jsObj = result as js.JsObject;
-        map['text'] = jsObj['text'];
-        map['score'] = jsObj['score'];
-        completer.complete(map);
-      }),
-    ]);
-    promise.callMethod('catch', [
-      js.allowInterop((error) {
-        completer.complete({'text': '', 'score': -1});
-      }),
-    ]);
-    return completer.future;
+  Future<String?> _getAuthToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString('auth_token');
+    } catch (_) {
+      return null;
+    }
   }
 
   int _calculateScore(Duration recDuration) {
@@ -414,43 +398,6 @@ class _RecordingScreenState extends State<RecordingScreen>
               ),
             ),
           ),
-
-          // ── Whisper status ──
-          if (kIsWeb)
-            Positioned(
-              top: 0, right: 0,
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8, top: 8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _whisperReady ? Colors.green.shade50 : Colors.orange.shade50,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _whisperReady ? Icons.check_circle : Icons.downloading,
-                          size: 14,
-                          color: _whisperReady ? Colors.green : Colors.orange,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          _whisperReady ? 'AI Ready' : 'AI Loading...',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: _whisperReady ? Colors.green : Colors.orange,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
 
           // ── Scoring indicator ──
           if (_scoring)
