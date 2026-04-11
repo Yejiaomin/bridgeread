@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -7,13 +8,14 @@ const authRoutes = require('./routes/auth');
 const progressRoutes = require('./routes/progress');
 const recordingsRoutes = require('./routes/recordings');
 const rankingRoutes = require('./routes/ranking');
+const speechEvalRoutes = require('./routes/speech-eval');
 const authMiddleware = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Request logger
 app.use((req, _res, next) => {
@@ -31,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/progress', authMiddleware, progressRoutes);
 app.use('/api/recordings', authMiddleware, recordingsRoutes);
 app.use('/api/ranking', authMiddleware, rankingRoutes);
+app.use('/api/speech-eval', authMiddleware, speechEvalRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {
