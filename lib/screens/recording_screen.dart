@@ -40,12 +40,9 @@ class _RecordingScreenState extends State<RecordingScreen>
   bool _isRecording = false;
   bool _isPlayingBack = false;
   final Map<int, String?> _recordings = {};
-  final Map<int, int> _scores = {}; // 0-100 score per sentence
+  final Map<int, int> _scores = {}; // 1-3 stars per sentence
   DateTime? _recordStart;
   Duration? _refDuration; // reference audio duration
-  double _avgEnergy = 0; // average waveform energy during recording
-  int _energySamples = 0;
-  int _silentFrames = 0; // frames with very low energy
 
   late final AnimationController _pulseCtrl;
   late final Animation<double> _pulseAnim;
@@ -53,9 +50,6 @@ class _RecordingScreenState extends State<RecordingScreen>
   final List<double> _barHeights = List.generate(20, (_) => 0.15);
   final Random _rng = Random();
 
-  // Real mic volume from record package
-  double _realVolume = 0; // 0.0 ~ 1.0
-  Timer? _ampTimer;
   bool _scoring = false;
 
   RecordingSentence? get _current =>
@@ -78,15 +72,7 @@ class _RecordingScreenState extends State<RecordingScreen>
         if (!mounted) return;
         setState(() {
           for (int i = 0; i < _barHeights.length; i++) {
-            // Use real volume + small random variation for visual
-            final target = _realVolume * 0.85 + _rng.nextDouble() * 0.15;
-            _barHeights[i] = _barHeights[i] * 0.4 + target.clamp(0.05, 1.0) * 0.6;
-          }
-          // Track energy for scoring
-          if (_isRecording) {
-            _avgEnergy = (_avgEnergy * _energySamples + _realVolume) / (_energySamples + 1);
-            _energySamples++;
-            if (_realVolume < 0.05) _silentFrames++;
+            _barHeights[i] = _barHeights[i] * 0.55 + (0.15 + _rng.nextDouble() * 0.85) * 0.45;
           }
         });
       });
@@ -108,7 +94,6 @@ class _RecordingScreenState extends State<RecordingScreen>
 
   @override
   void dispose() {
-    _stopAmpPolling();
     _pulseCtrl.dispose();
     _waveCtrl.dispose();
     _player.dispose();
@@ -134,29 +119,6 @@ class _RecordingScreenState extends State<RecordingScreen>
     await _player.play(cdnAudioSource(_current!.audio));
   }
 
-  bool _ampWorking = false;
-
-  void _startAmpPolling() {
-    _ampWorking = false;
-    _ampTimer = Timer.periodic(const Duration(milliseconds: 100), (_) async {
-      if (!_isRecording) return;
-      try {
-        final amp = await _recorder.getAmplitude();
-        final db = amp.current;
-        // Check if amplitude API actually works (not -infinity or -160)
-        if (db > -160 && db.isFinite) {
-          _ampWorking = true;
-          _realVolume = ((db + 50) / 50).clamp(0.0, 1.0);
-        }
-      } catch (_) {}
-    });
-  }
-
-  void _stopAmpPolling() {
-    _ampTimer?.cancel();
-    _ampTimer = null;
-    _realVolume = 0;
-  }
 
   Future<void> _startRecording() async {
     try {
@@ -176,18 +138,13 @@ class _RecordingScreenState extends State<RecordingScreen>
         path: recPath,
       );
       _waveCtrl.repeat();
-      _startAmpPolling();
       _recordStart = DateTime.now();
-      _avgEnergy = 0;
-      _energySamples = 0;
-      _silentFrames = 0;
       setState(() => _isRecording = true);
     } catch (_) {}
   }
 
   Future<void> _stopRecording() async {
     _waveCtrl.stop();
-    _stopAmpPolling();
     final recDuration = _recordStart != null
         ? DateTime.now().difference(_recordStart!)
         : Duration.zero;
@@ -269,56 +226,27 @@ class _RecordingScreenState extends State<RecordingScreen>
     }
   }
 
+  // Returns 1-3 stars based on: has sound + duration match
   int _calculateScore(Duration recDuration) {
-    // If amplitude API works, use real volume scoring
-    if (_ampWorking) {
-      // 1. Duration score (40 points)
-      double durationScore = 40;
-      if (_refDuration != null && _refDuration!.inMilliseconds > 0) {
-        final ratio = recDuration.inMilliseconds / _refDuration!.inMilliseconds;
-        if (ratio < 0.3) { durationScore = 5; }
-        else if (ratio < 0.7) { durationScore = 15 + (ratio - 0.3) / 0.4 * 25; }
-        else if (ratio <= 1.5) { durationScore = 40; }
-        else if (ratio <= 2.5) { durationScore = 40 - (ratio - 1.5) / 1.0 * 20; }
-        else { durationScore = 10; }
-      }
-
-      // 2. Energy score (30 points)
-      double energyScore;
-      if (_avgEnergy < 0.02) { energyScore = 0; }
-      else if (_avgEnergy < 0.05) { energyScore = 10; }
-      else if (_avgEnergy < 0.15) { energyScore = 25; }
-      else { energyScore = 30; }
-
-      // 3. Consistency score (30 points)
-      double consistencyScore = 30;
-      if (_energySamples > 0) {
-        final silentRatio = _silentFrames / _energySamples;
-        if (silentRatio > 0.8) { consistencyScore = 0; }
-        else if (silentRatio > 0.6) { consistencyScore = 10; }
-        else if (silentRatio > 0.3) { consistencyScore = 20; }
-      }
-
-      return (durationScore + energyScore + consistencyScore).round().clamp(0, 100);
-    }
-
-    // Fallback: amplitude API not available, score based on duration only
     final recMs = recDuration.inMilliseconds;
+
+    // Too short (< 0.5s) — no real attempt
+    if (recMs < 500) return 1;
+
+    // Check duration ratio if we have reference
     if (_refDuration != null && _refDuration!.inMilliseconds > 0) {
-      final refMs = _refDuration!.inMilliseconds;
-      final ratio = recMs / refMs;
-      // Good range: 0.7x ~ 1.8x → 70-95 points
-      if (ratio < 0.2) return 15;
-      if (ratio < 0.5) return 40 + ((ratio - 0.2) / 0.3 * 30).round();
-      if (ratio <= 1.8) return 70 + ((1.0 - (ratio - 1.0).abs()) * 25).round().clamp(0, 25);
-      if (ratio <= 3.0) return 50;
-      return 20;
+      final ratio = recMs / _refDuration!.inMilliseconds;
+      // Great: 0.5x ~ 2.0x of reference
+      if (ratio >= 0.5 && ratio <= 2.0) return 3;
+      // OK: 0.3x ~ 3.0x
+      if (ratio >= 0.3 && ratio <= 3.0) return 2;
+      // Too short or too long
+      return 1;
     }
-    // No reference: just check they recorded something reasonable
-    if (recMs < 500) return 10;
-    if (recMs < 1500) return 50;
-    if (recMs < 5000) return 75;
-    return 60;
+
+    // No reference: recorded something = 2 stars, > 1.5s = 3 stars
+    if (recMs >= 1500) return 3;
+    return 2;
   }
 
   void _playBack() async {
@@ -569,26 +497,19 @@ class _RecordingScreenState extends State<RecordingScreen>
                         ),
                         if (!_scoring && _scores.containsKey(_currentIdx))
                           Positioned(
-                            right: -10,
-                            top: -10,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: (_scores[_currentIdx] ?? 0) >= 75
-                                    ? const Color(0xFFFF8C42)
-                                    : (_scores[_currentIdx] ?? 0) >= 50
-                                        ? Colors.amber
-                                        : Colors.redAccent,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                '${_scores[_currentIdx] ?? 0}',
-                                style: TextStyle(
-                                  fontSize: R.s(14),
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
-                              ),
+                            right: -12,
+                            top: -12,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(3, (i) => Icon(
+                                i < (_scores[_currentIdx] ?? 0)
+                                    ? Icons.star_rounded
+                                    : Icons.star_border_rounded,
+                                color: i < (_scores[_currentIdx] ?? 0)
+                                    ? Colors.amber
+                                    : Colors.grey.shade300,
+                                size: R.s(20),
+                              )),
                             ),
                           ),
                       ],
