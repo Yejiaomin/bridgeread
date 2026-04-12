@@ -36,7 +36,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 24580
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_02.webp",
@@ -55,7 +56,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 29900
+      "pageStartMs": 27300
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_03.webp",
@@ -74,7 +75,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 61700
+      "pageStartMs": 37400
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_04.webp",
@@ -92,7 +93,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 46980
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_05.webp",
@@ -111,7 +113,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 64300
+      "pageStartMs": 58660
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_06.webp",
@@ -130,7 +132,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 64720
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_07.webp",
@@ -148,7 +151,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 77700
+      "pageStartMs": 79020
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_08.webp",
@@ -167,7 +170,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 88240
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_09.webp",
@@ -185,7 +189,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 100960
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_10.webp",
@@ -220,7 +225,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 90200
+      "pageStartMs": 122640
     },
     {
       "imageAsset": "assets/books/04Biscuit_Finds_a_Friend/spread_11.webp",

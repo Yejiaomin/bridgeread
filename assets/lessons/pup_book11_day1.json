@@ -36,7 +36,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 17000
+      "pageStartMs": 25640
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_03.webp",
@@ -55,7 +55,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 32400
+      "pageStartMs": 31840
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_04.webp",
@@ -74,7 +74,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 42900
+      "pageStartMs": 42300
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_05.webp",
@@ -92,7 +92,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 46320
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_06.webp",
@@ -111,7 +112,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 51500
+      "pageStartMs": 70620
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_07.webp",
@@ -148,7 +149,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 93780
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_09.webp",
@@ -182,7 +184,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 116400
+      "pageStartMs": 115960
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_11.webp",
@@ -201,7 +203,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 118700
+      "pageStartMs": 121860
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_12.webp",
@@ -220,7 +222,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 128300
+      "pageStartMs": 128200
     },
     {
       "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_13.webp",

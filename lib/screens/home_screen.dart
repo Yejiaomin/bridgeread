@@ -10,6 +10,7 @@ import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
 import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
+import '../services/analytics_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HomeScreen — background image + transparent tap zones
@@ -101,6 +102,9 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _loadStats() async {
+    // Reset module flags if it's a new day (must happen before reading any flags)
+    await ProgressService.resetTodayIfNewDay();
+
     final prefs = await SharedPreferences.getInstance();
     // Seed demo data on first run (streak_days == 0 means fresh install)
     if ((prefs.getInt('streak_days') ?? 0) == 0) {
@@ -506,6 +510,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService.logEvent('calendar_view');
     final now = chinaTime();
     _viewMonth = DateTime(now.year, now.month);
     _load();
@@ -515,7 +520,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final prefs = await SharedPreferences.getInstance();
     var start = prefs.getString('book_start_date');
     if (start == null) {
-      final now = chinaTime();
+      var now = chinaTime();
+      // If first launch is on weekend, roll back to Monday
+      while (now.weekday > 5) {
+        now = now.subtract(const Duration(days: 1));
+      }
+      // Roll back to Monday of that week
+      while (now.weekday > 1) {
+        now = now.subtract(const Duration(days: 1));
+      }
       start = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       await prefs.setString('book_start_date', start);
     }

@@ -36,7 +36,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 12800
+      "pageStartMs": 19520
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_02.webp",
@@ -55,7 +55,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 25900
+      "pageStartMs": 25720
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_03.webp",
@@ -74,7 +74,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 33500
+      "pageStartMs": 37240
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_04.webp",
@@ -93,7 +93,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 37300
+      "pageStartMs": 49900
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_05.webp",
@@ -112,7 +112,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 59400
+      "pageStartMs": 65800
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_06.webp",
@@ -131,7 +131,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 73400
+      "pageStartMs": 72780
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_07.webp",
@@ -150,7 +150,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 79000
+      "pageStartMs": 78540
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_08.webp",
@@ -169,7 +169,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 85600
+      "pageStartMs": 86020
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_09.webp",
@@ -188,7 +188,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 99000
+      "pageStartMs": 98900
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_10.webp",
@@ -223,7 +223,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 107200
+      "pageStartMs": 106960
     },
     {
       "imageAsset": "assets/books/05Biscuits_New_Trick/spread_11.webp",

@@ -36,7 +36,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 17500
+      "pageStartMs": 26660
     },
     {
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_03.webp",
@@ -55,7 +55,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 31900
+      "pageStartMs": 35500
     },
     {
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_04.webp",
@@ -74,7 +74,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 44500
+      "pageStartMs": 72660
     },
     {
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_05.webp",
@@ -150,7 +150,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 87200
+      "pageStartMs": 89480
     },
     {
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_09.webp",
@@ -183,7 +183,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 113800
     },
     {
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_11.webp",
@@ -201,7 +202,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 117340
     },
     {
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_12.webp",
@@ -219,7 +221,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 120380
     },
     {
       "imageAsset": "assets/books/09Biscuit_Visits_the_Big_City/spread_12.webp",

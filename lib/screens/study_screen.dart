@@ -10,6 +10,7 @@ import '../services/week_service.dart';
 import '../main.dart' show routeObserver;
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
+import '../services/analytics_service.dart';
 
 class _RecapPage {
   final String imageAsset;
@@ -111,6 +112,7 @@ class _StudyScreenState extends State<StudyScreen>
   @override
   void initState() {
     super.initState();
+    AnalyticsService.logEvent('book_start');
     _loadProgress();
     final zoneCount = _zones.length;
     _ctrls = List.generate(
@@ -190,12 +192,12 @@ class _StudyScreenState extends State<StudyScreen>
     return 'assets/home/study_bg_mid.webp';
   }
 
-  // Zone i is active only when completedCount > 0, except RECAP (i==0) which is always active
+  // Zone 0 (RECAP) is always active; zones 1-3 unlock after RECAP is done
   // Weekend: all zones always active
   bool _zoneEnabled(int i) {
     if (_weekend) return true;
     if (i == 0) return true;
-    return _completedCount > 0;
+    return _zoneDone[0]; // RECAP done → all others unlocked
   }
 
   @override
@@ -209,6 +211,12 @@ class _StudyScreenState extends State<StudyScreen>
 
   Future<void> _onZoneTap(int i) async {
     if (!_zoneEnabled(i)) return;
+
+    // Analytics: track zone start
+    final labels = _weekend ? _kWeekendZoneLabels : _kZoneLabels;
+    if (i < labels.length) {
+      AnalyticsService.logEvent('${labels[i].toLowerCase()}_start');
+    }
 
     // Press-down animation
     if (i < _pressCtrls.length) _pressCtrls[i].forward(from: 0);
@@ -462,6 +470,7 @@ class _RecapScreenState extends State<RecapScreen>
     final prefs = await SharedPreferences.getInstance();
     final d = await ProgressService.getStudyDateStr();
     await prefs.setString('today_recap_done', d);
+    AnalyticsService.logEvent('recap_done');
 
     // Save to debt_module_status for calendar history
     final raw = prefs.getString('debt_module_status');
@@ -760,12 +769,10 @@ class _RecapScreenState extends State<RecapScreen>
                               enabledThumbRadius: 8),
                           overlayShape: const RoundSliderOverlayShape(
                               overlayRadius: 16),
-                          activeTrackColor: const Color(0xFFFF8C42),
-                          inactiveTrackColor:
-                              Colors.white.withValues(alpha: 0.2),
-                          thumbColor: Colors.white,
-                          overlayColor:
-                              Colors.white.withValues(alpha: 0.15),
+                          activeTrackColor: const Color(0x59FF8C42),
+                          inactiveTrackColor: const Color(0x1AFF8C42),
+                          thumbColor: const Color(0x66FF8C42),
+                          overlayColor: const Color(0x1AFF8C42),
                         ),
                         child: Slider(
                           value: progress,

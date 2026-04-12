@@ -134,9 +134,12 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
     await prefs.setInt('start_series_index', level);
     await prefs.setBool('assessment_done', true);
 
-    // Set book_start_date to today if not set
+    // Set book_start_date to Monday of this week if not set
     if (prefs.getString('book_start_date') == null) {
-      final now = DateTime.now();
+      var now = DateTime.now();
+      while (now.weekday > 1) {
+        now = now.subtract(const Duration(days: 1));
+      }
       final date = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       await prefs.setString('book_start_date', date);
     }

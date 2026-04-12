@@ -36,7 +36,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 25900
+      "pageStartMs": 25760
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_03.webp",
@@ -55,7 +55,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 31000
+      "pageStartMs": 30640
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_04.webp",
@@ -74,7 +74,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 31300
+      "pageStartMs": 38580
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_05.webp",
@@ -93,7 +93,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 56100
+      "pageStartMs": 55720
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_06.webp",
@@ -112,7 +112,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 58200
+      "pageStartMs": 66320
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_07.webp",
@@ -131,7 +131,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 66700
+      "pageStartMs": 75580
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_08.webp",
@@ -150,7 +150,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 85300
+      "pageStartMs": 84680
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_09.webp",
@@ -169,7 +169,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 92800
+      "pageStartMs": 92520
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_10.webp",
@@ -186,7 +186,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 106040
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_11.webp",
@@ -203,7 +204,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 110900
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_12.webp",
@@ -221,7 +223,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 116940
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_13.webp",
@@ -240,7 +243,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 128000
+      "pageStartMs": 127940
     },
     {
       "imageAsset": "assets/books/15Biscuit_Takes_a_Walk/spread_13.webp",

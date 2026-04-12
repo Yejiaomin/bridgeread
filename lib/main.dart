@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'services/week_service.dart' show initDebugOffset;
+import 'services/analytics_service.dart';
 import 'utils/cdn_asset.dart';
 import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
@@ -20,8 +23,19 @@ import 'screens/profile_screen.dart';
 
 final routeObserver = RouteObserver<ModalRoute<void>>();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Read debug time offset from SharedPreferences (set by timeTravel JS)
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final offset = prefs.getInt('debug_day_offset') ?? 0;
+    initDebugOffset(offset);
+  } catch (_) {}
+  // Initialize Umeng analytics (Android only)
+  if (!kIsWeb) {
+    await AnalyticsService.init();
+    AnalyticsService.logEvent('app_open');
+  }
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,

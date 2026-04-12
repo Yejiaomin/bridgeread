@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 17500
+      "pageStartMs": 26100
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_03.webp",
@@ -56,7 +56,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 32300
+      "pageStartMs": 31640
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_04.webp",
@@ -74,7 +74,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 52440
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_05.webp",
@@ -91,7 +92,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 60720
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_06.webp",
@@ -109,7 +111,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 69220
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_07.webp",
@@ -141,7 +144,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 81800
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_09.webp",
@@ -175,7 +179,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 45900
+      "pageStartMs": 97800
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_11.webp",
@@ -193,7 +197,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 114040
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_12.webp",
@@ -211,7 +216,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 122520
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_13.webp",
@@ -230,7 +236,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 46600
+      "pageStartMs": 131800
     },
     {
       "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_13.webp",

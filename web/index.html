@@ -236,7 +236,7 @@
 
     window.timeTravel = function(days) {
       localStorage.setItem('debug_day_offset', String(days || 0));
-      // Reset today's module states for the new "day"
+      localStorage.setItem('flutter.debug_day_offset', String(days || 0));
       localStorage.removeItem('flutter.today_reader_done');
       localStorage.removeItem('flutter.today_phonics_done');
       localStorage.removeItem('flutter.today_quiz_done');
@@ -244,7 +244,7 @@
       localStorage.removeItem('flutter.today_listen_done');
       localStorage.removeItem('flutter.today_recap_done');
       localStorage.removeItem('flutter.last_completed_date');
-      console.log('[TimeTravel] Set to ' + (days > 0 ? '+' : '') + days + ' days. Module states reset. Reloading...');
+      console.log('[TimeTravel] Set to ' + (days > 0 ? '+' : '') + days + ' days. Reloading...');
       location.reload();
     };
   </script>

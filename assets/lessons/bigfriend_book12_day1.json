@@ -36,7 +36,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 6000
+      "pageStartMs": 18940
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_03.webp",
@@ -55,7 +55,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 20000
+      "pageStartMs": 34020
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_04.webp",
@@ -74,7 +74,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 32900
+      "pageStartMs": 39440
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_05.webp",
@@ -91,7 +91,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 44580
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_06.webp",
@@ -127,7 +128,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 63620
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_08.webp",
@@ -146,7 +148,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 67800
+      "pageStartMs": 67880
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_09.webp",
@@ -182,7 +184,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 92600
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_11.webp",
@@ -216,7 +219,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 69700
+      "pageStartMs": 106800
     },
     {
       "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_12.webp",

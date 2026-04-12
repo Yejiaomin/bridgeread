@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 17400
+      "pageStartMs": 26080
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_03.webp",
@@ -56,7 +56,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 32500
+      "pageStartMs": 31800
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_04.webp",
@@ -75,7 +75,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 39900
+      "pageStartMs": 39400
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_05.webp",
@@ -94,7 +94,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 40600
+      "pageStartMs": 51820
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_06.webp",
@@ -113,7 +113,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 43000
+      "pageStartMs": 57060
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_07.webp",
@@ -151,7 +151,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 47600
+      "pageStartMs": 74500
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_09.webp",
@@ -170,7 +170,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 77300
+      "pageStartMs": 82720
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_10.webp",
@@ -188,7 +188,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 86060
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_11.webp",
@@ -207,7 +208,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 87800
+      "pageStartMs": 98080
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_12.webp",
@@ -226,7 +227,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 103700
+      "pageStartMs": 103520
     },
     {
       "imageAsset": "assets/books/13Biscuit_Goes_to_School/spread_12.webp",

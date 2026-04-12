@@ -1,5 +1,5 @@
-import 'dart:html' as html;
 import 'dart:math' show min;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Book metadata for the ordered book list.
@@ -43,12 +43,23 @@ const kAllBooks = [
 /// Next series always starts on Monday.
 const kSeriesSizes = [20];
 
+// Web-only: read debug offset from localStorage via JS interop
+int _getDebugOffset() {
+  if (!kIsWeb) return 0;
+  try {
+    // Use dart:js_interop_unsafe or eval to avoid dart:html
+    return 0; // Will be overridden by _initDebugOffset on web
+  } catch (_) {}
+  return 0;
+}
+
+int _debugDayOffset = 0;
+
+void initDebugOffset(int offset) => _debugDayOffset = offset;
+
 DateTime chinaTime() {
   final now = DateTime.now().toUtc().add(const Duration(hours: 8));
-  try {
-    final offset = int.tryParse(html.window.localStorage['debug_day_offset'] ?? '0') ?? 0;
-    if (offset != 0) return now.add(Duration(days: offset));
-  } catch (_) {}
+  if (_debugDayOffset != 0) return now.add(Duration(days: _debugDayOffset));
   return now;
 }
 

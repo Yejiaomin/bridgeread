@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 26000
+      "pageStartMs": 25680
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_03.webp",
@@ -56,7 +56,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 38200
+      "pageStartMs": 33280
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_04.webp",
@@ -76,7 +76,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 38700
+      "pageStartMs": 39200
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_05.webp",
@@ -95,7 +95,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 62800
+      "pageStartMs": 51700
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_06.webp",
@@ -114,7 +114,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 78300
+      "pageStartMs": 66140
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_07.webp",
@@ -133,7 +133,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 90600
+      "pageStartMs": 72700
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_08.webp",
@@ -151,7 +151,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 102400
+      "pageStartMs": 85480
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_09.webp",
@@ -170,7 +170,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 103800
+      "pageStartMs": 97200
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_10.webp",
@@ -224,7 +224,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 120500
+      "pageStartMs": 120340
     },
     {
       "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_13.webp",

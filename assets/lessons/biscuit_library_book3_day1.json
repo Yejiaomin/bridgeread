@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 25200
+      "pageStartMs": 24820
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_03.webp",
@@ -55,7 +55,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 33100
+      "pageStartMs": 32820
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_04.webp",
@@ -76,7 +76,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 42500
+      "pageStartMs": 41880
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_05.webp",
@@ -98,7 +98,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 53700
+      "pageStartMs": 58600
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_06.webp",
@@ -118,7 +118,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 74000
+      "pageStartMs": 73380
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_07.webp",
@@ -139,7 +139,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 84000
+      "pageStartMs": 87120
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_08.webp",
@@ -158,7 +158,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 103200
+      "pageStartMs": 102460
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_10.webp",
@@ -177,7 +177,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 125100
+      "pageStartMs": 124740
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_11.webp",
@@ -196,7 +196,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 134400
+      "pageStartMs": 133720
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_12.webp",
@@ -215,7 +215,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 143100
+      "pageStartMs": 142780
     },
     {
       "imageAsset": "assets/books/03Biscuit_Loves_the_Library/spread_13.webp",
@@ -233,7 +233,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 150300
+      "pageStartMs": 149840
     }
   ],
   "phonicsWords": [

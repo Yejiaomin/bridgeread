@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 16900
+      "pageStartMs": 26210
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_03.webp",
@@ -56,7 +56,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 32800
+      "pageStartMs": 32440
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_04.webp",
@@ -75,7 +75,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 46600
+      "pageStartMs": 46560
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_05.webp",
@@ -94,7 +94,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 47400
+      "pageStartMs": 61280
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_06.webp",
@@ -113,7 +113,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 57300
+      "pageStartMs": 71460
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_07.webp",
@@ -131,7 +131,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 61100
+      "pageStartMs": 83880
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_08.webp",
@@ -149,7 +149,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 73200
+      "pageStartMs": 91040
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_09.webp",
@@ -168,7 +168,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 95600
+      "pageStartMs": 98620
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_10.webp",
@@ -187,7 +187,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 100100
+      "pageStartMs": 110100
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_11.webp",
@@ -204,7 +204,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 121920
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_12.webp",
@@ -223,7 +224,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 127500
+      "pageStartMs": 127540
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_13.webp",
@@ -241,7 +242,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 134800
     },
     {
       "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_13.webp",

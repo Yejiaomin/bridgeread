@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/week_service.dart' show chinaTime;
+import '../services/analytics_service.dart';
 
 const _kOrange = Color(0xFFFF8C42);
 const _kCream = Color(0xFFFFF8F0);
@@ -86,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await prefs.setBool('assessment_done', true);
     await prefs.setInt('start_series_index', 0);
+    AnalyticsService.logEvent('register', {'phone': phone, 'child_name': childName});
     setState(() => _isLoading = false);
     if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/ranking', (r) => false);
   }
@@ -107,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (phone == savedPhone && password == savedPassword) {
       await prefs.setString('auth_token', 'local_$phone');
+      AnalyticsService.logEvent('login', {'phone': phone});
       setState(() => _isLoading = false);
       if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
     } else {

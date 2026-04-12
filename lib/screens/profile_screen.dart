@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/responsive_utils.dart';
-
-// Web file picker
-import 'dart:html' as html;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ProfileScreen — child profile / personal center (landscape two-column)
@@ -140,21 +138,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _pickCustomAvatar() async {
-    final input = html.FileUploadInputElement()..accept = 'image/*';
-    input.click();
-    await input.onChange.first;
-    if (input.files == null || input.files!.isEmpty) return;
-    final file = input.files!.first;
-    final reader = html.FileReader();
-    reader.readAsArrayBuffer(file);
-    await reader.onLoad.first;
-    final bytes = Uint8List.fromList(reader.result as List<int>);
-    setState(() {
-      _customAvatar = bytes;
-      _avatarIndex = -1;
-    });
-    await _prefs?.setString('profile_custom_avatar', base64Encode(bytes));
-    await _prefs?.setInt('profile_avatar', -1);
+    // Photo upload not available yet — use preset avatars
+    // TODO: add image_picker package for cross-platform photo upload
   }
 
   Future<void> _saveName(String value) async {
@@ -238,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
     if (confirmed == true) {
-      await _prefs?.clear();
+      await _prefs?.remove('auth_token');
       if (mounted) {
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
       }

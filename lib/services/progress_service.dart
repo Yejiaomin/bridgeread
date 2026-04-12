@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'week_service.dart' show activeDate, chinaTime;
+import 'analytics_service.dart';
 
 class ProgressService {
   static const _kTotalStars    = 'total_stars';
@@ -29,6 +30,7 @@ class ProgressService {
       await prefs.setBool(_kPhonicsDone, false);
       await prefs.setBool(_kQuizDone, false);
       await prefs.setBool(_kRecordingDone, false);
+      await prefs.setBool('today_listen_done', false);
     }
   }
 
@@ -53,6 +55,18 @@ class ProgressService {
     final key = 'today_${module}_done';
     final wasAlreadyDone = prefs.getBool(key) ?? false;
     await prefs.setBool(key, true);
+
+    // Analytics: track module completion
+    if (!wasAlreadyDone) {
+      const moduleToEvent = {
+        'reader': 'story_done',
+        'quiz': 'game_done',
+        'listen': 'listen_done',
+        'recording': 'recording_done',
+      };
+      final event = moduleToEvent[module] ?? '${module}_done';
+      AnalyticsService.logEvent(event);
+    }
 
     // Use saved study date (persisted, survives page transitions)
     final syncDate = await _getStudyDate();

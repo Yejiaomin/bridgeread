@@ -38,7 +38,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 11600
+      "pageStartMs": 11340
     },
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_02.webp",
@@ -57,7 +57,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 27300
+      "pageStartMs": 27040
     },
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_03.webp",
@@ -76,7 +76,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 42700
+      "pageStartMs": 42300
     },
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_04.webp",
@@ -95,7 +95,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 61700
+      "pageStartMs": 61160
     },
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_05.webp",
@@ -114,7 +114,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 75500
+      "pageStartMs": 74900
     },
     {
       "imageAsset": "assets/books/19Biscuit_where_is_love/spread_05.webp",

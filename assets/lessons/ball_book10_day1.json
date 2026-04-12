@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 27600
+      "pageStartMs": 27200
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_03.webp",
@@ -56,7 +56,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 87000
+      "pageStartMs": 40900
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_04.webp",
@@ -75,7 +75,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 88300
+      "pageStartMs": 54120
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_05.webp",
@@ -92,7 +92,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 70720
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_06.webp",
@@ -111,7 +112,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 120300
+      "pageStartMs": 76820
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_07.webp",
@@ -130,7 +131,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 135900
+      "pageStartMs": 90980
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_08.webp",
@@ -148,7 +149,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 151100
+      "pageStartMs": 101920
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_09.webp",
@@ -167,7 +168,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 170900
+      "pageStartMs": 119640
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_10.webp",
@@ -185,7 +186,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 124720
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_11.webp",
@@ -203,7 +205,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 144560
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_12.webp",
@@ -221,7 +224,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 148520
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_13.webp",
@@ -236,7 +240,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 153330
     },
     {
       "imageAsset": "assets/books/10Biscuit_Plays_Ball/spread_13.webp",

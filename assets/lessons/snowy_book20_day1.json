@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 5300
+      "pageStartMs": 4820
     },
     {
       "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_02.webp",
@@ -75,7 +75,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 25600
+      "pageStartMs": 28500
     },
     {
       "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_04.webp",
@@ -94,7 +94,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 39100
+      "pageStartMs": 56280
     },
     {
       "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_05.webp",
@@ -113,7 +113,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 67300
+      "pageStartMs": 68160
     },
     {
       "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_06.webp",
@@ -132,7 +132,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 85400
+      "pageStartMs": 86020
     },
     {
       "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_06.webp",

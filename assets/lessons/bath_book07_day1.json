@@ -37,7 +37,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 19600
+      "pageStartMs": 19300
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_03.webp",
@@ -56,7 +56,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 27500
+      "pageStartMs": 27240
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_04.webp",
@@ -75,7 +75,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 35000
+      "pageStartMs": 43280
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_05.webp",
@@ -94,7 +94,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 59400
+      "pageStartMs": 66400
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_06.webp",
@@ -131,7 +131,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 70500
+      "pageStartMs": 70820
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_08.webp",
@@ -150,7 +150,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 77700
+      "pageStartMs": 82080
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_09.webp",
@@ -168,7 +168,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 96420
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_10.webp",
@@ -187,7 +188,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 105800
+      "pageStartMs": 105540
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_11.webp",
@@ -222,7 +223,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 116200
+      "pageStartMs": 115400
     },
     {
       "imageAsset": "assets/books/07Bathtime_for_Biscuit/spread_12.webp",

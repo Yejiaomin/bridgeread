@@ -33,7 +33,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 28540
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_03.webp",
@@ -52,7 +53,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 34200
+      "pageStartMs": 33360
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_04.webp",
@@ -71,7 +72,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 44700
+      "pageStartMs": 45420
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_05.webp",
@@ -89,7 +90,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 64100
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_06.webp",
@@ -107,7 +109,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 78120
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_07.webp",
@@ -125,7 +128,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 93280
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_08.webp",
@@ -143,7 +147,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 109960
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_09.webp",
@@ -161,7 +166,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 116320
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_10.webp",
@@ -179,7 +185,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 124120
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_11.webp",
@@ -197,7 +204,8 @@
         "x": 0.75,
         "y": 0.7,
         "action": "excited"
-      }
+      },
+      "pageStartMs": 132240
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_12.webp",
@@ -216,7 +224,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 137300
+      "pageStartMs": 136880
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_13.webp",
@@ -235,7 +243,7 @@
         "y": 0.7,
         "action": "excited"
       },
-      "pageStartMs": 141500
+      "pageStartMs": 150960
     },
     {
       "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_13.webp",
