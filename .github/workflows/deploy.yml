@@ -21,8 +21,7 @@ jobs:
       - run: flutter pub get
 
       # Build for China server (no base-href, HTML renderer, no canvaskit WASM)
-      - run: flutter build web --web-renderer html
-
+      - run: flutter build web 
       # Pre-compress large files for nginx gzip_static
       - name: Pre-compress assets
         run: |
@@ -45,8 +44,7 @@ jobs:
           git push --force https://oauth2:${GITEE_TOKEN}@gitee.com/Yejiaomin_e351/bridge-read.git HEAD:deploy
 
       # Build for GitHub Pages (with base-href)
-      - run: flutter build web --base-href "/bridgeread/" --web-renderer html
-
+      - run: flutter build web --base-href "/bridgeread/" 
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
