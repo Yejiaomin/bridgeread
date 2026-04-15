@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages & HK Server
 
 on:
   push:
-    branches: [main, backend, apk-local]
+    branches: [main, backend, apk-local, production]
 
 permissions:
   contents: write
