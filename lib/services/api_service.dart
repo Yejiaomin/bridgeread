@@ -10,8 +10,7 @@ class ApiService {
   factory ApiService() => _instance;
   ApiService._();
 
-  // TODO: Change to production URL when deployed
-  static const _baseUrl = 'http://localhost:3000/api';
+  static const _baseUrl = '/api';
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -24,6 +23,79 @@ class ApiService {
       'Content-Type': 'application/json',
       if (token != null) 'Authorization': 'Bearer $token',
     };
+  }
+
+  /// Register a new user. Returns token + user data on success.
+  Future<Map<String, dynamic>?> register({
+    required String phone,
+    required String code,
+    required String password,
+    required String childName,
+  }) async {
+    try {
+      final res = await http.post(
+        Uri.parse('$_baseUrl/auth/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'phone': phone,
+          'code': code,
+          'password': password,
+          'childName': childName,
+        }),
+      ).timeout(const Duration(seconds: 10));
+      debugPrint('[API] register ${res.statusCode}: ${res.body}');
+      final data = jsonDecode(res.body);
+      if (res.statusCode == 200 && data['token'] != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', data['token']);
+        await prefs.setString('child_name', data['user']['childName'] ?? childName);
+        return data;
+      }
+      return data; // contains error message
+    } catch (e) {
+      debugPrint('[API] register error: $e');
+      return {'error': '网络连接失败，请检查网络'};
+    }
+  }
+
+  /// Login with phone + password. Returns token + user data on success.
+  Future<Map<String, dynamic>?> login({
+    required String phone,
+    required String password,
+  }) async {
+    try {
+      final res = await http.post(
+        Uri.parse('$_baseUrl/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'phone': phone, 'password': password}),
+      ).timeout(const Duration(seconds: 10));
+      debugPrint('[API] login ${res.statusCode}: ${res.body}');
+      final data = jsonDecode(res.body);
+      if (res.statusCode == 200 && data['token'] != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', data['token']);
+        await prefs.setString('child_name', data['user']['childName'] ?? '');
+        return data;
+      }
+      return data; // contains error message
+    } catch (e) {
+      debugPrint('[API] login error: $e');
+      return {'error': '网络连接失败，请检查网络'};
+    }
+  }
+
+  /// Send SMS verification code.
+  Future<Map<String, dynamic>?> sendCode(String phone) async {
+    try {
+      final res = await http.post(
+        Uri.parse('$_baseUrl/auth/send-code'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'phone': phone}),
+      ).timeout(const Duration(seconds: 10));
+      return jsonDecode(res.body);
+    } catch (e) {
+      return {'error': '网络连接失败，请检查网络'};
+    }
   }
 
   /// Sync a single module completion to server.

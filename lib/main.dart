@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'services/week_service.dart' show initDebugOffset;
 import 'services/analytics_service.dart';
+import 'services/progress_service.dart';
+import 'services/api_service.dart';
 import 'utils/cdn_asset.dart';
 import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
@@ -110,14 +112,25 @@ class _AuthGateState extends State<_AuthGate> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
     if (!mounted) return;
-    if (token != null && token.isNotEmpty) {
-      final assessmentDone = prefs.getBool('assessment_done') ?? false;
-      if (assessmentDone) {
+
+    if (token != null && token.isNotEmpty && !token.startsWith('local_')) {
+      // Validate JWT by fetching progress from server
+      final data = await ApiService().getProgress();
+      if (!mounted) return;
+      if (data != null && data['success'] == true) {
+        // Token valid — sync server data to local cache
+        await ProgressService.syncFromServer();
         Navigator.pushReplacementNamed(context, '/ranking');
       } else {
-        Navigator.pushReplacementNamed(context, '/assessment');
+        // Token expired or invalid — clear and go to login
+        await prefs.remove('auth_token');
+        Navigator.pushReplacementNamed(context, '/login');
       }
     } else {
+      // No token or old local token — go to login
+      if (token != null && token.startsWith('local_')) {
+        await prefs.remove('auth_token');
+      }
       Navigator.pushReplacementNamed(context, '/login');
     }
   }

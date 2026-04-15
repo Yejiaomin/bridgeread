@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart';
 import '../services/week_service.dart' show chinaTime;
 import '../services/analytics_service.dart';
 
@@ -21,15 +21,51 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _nameCtrl = TextEditingController();
-  int _booksCompleted = 0; // how many books already learned
+  final _codeCtrl = TextEditingController();
+  int _booksCompleted = 0;
+  bool _codeSent = false;
+  int _cooldown = 0;
+
+  final _api = ApiService();
+
+  Future<void> _sendCode() async {
+    final phone = _phoneCtrl.text.trim();
+    if (phone.length != 11) {
+      setState(() => _error = '请输入11位手机号');
+      return;
+    }
+    setState(() { _isLoading = true; _error = null; });
+    final res = await _api.sendCode(phone);
+    setState(() => _isLoading = false);
+    if (res?['success'] == true) {
+      setState(() { _codeSent = true; _cooldown = 60; });
+      _startCooldown();
+    } else {
+      setState(() => _error = res?['error'] ?? '发送失败');
+    }
+  }
+
+  void _startCooldown() {
+    Future.doWhile(() async {
+      await Future.delayed(const Duration(seconds: 1));
+      if (!mounted) return false;
+      setState(() => _cooldown--);
+      return _cooldown > 0;
+    });
+  }
 
   Future<void> _register() async {
     final phone = _phoneCtrl.text.trim();
     final password = _passwordCtrl.text.trim();
     final childName = _nameCtrl.text.trim();
+    final code = _codeCtrl.text.trim();
 
     if (phone.length != 11) {
       setState(() => _error = '请输入11位手机号');
+      return;
+    }
+    if (code.isEmpty) {
+      setState(() => _error = '请输入验证码');
       return;
     }
     if (password.length != 8) {
@@ -43,69 +79,48 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() { _isLoading = true; _error = null; });
 
+    final res = await _api.register(
+      phone: phone,
+      code: code,
+      password: password,
+      childName: childName,
+    );
+
+    if (res == null || res['error'] != null) {
+      setState(() { _isLoading = false; _error = res?['error'] ?? '注册失败'; });
+      return;
+    }
+
+    // Registration succeeded, token already saved by ApiService
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('phone', phone);
-    await prefs.setString('password_hash', password);
-    await prefs.setString('child_name', childName);
-    await prefs.setString('auth_token', 'local_$phone');
 
-    // Save to local accounts list so user can log back in
-    await _saveAccount(prefs, phone, password, childName);
-
-    // Calculate book_start_date by going back _booksCompleted weekdays
+    // Set up book start date based on books completed
     final now = chinaTime();
-    final today = DateTime(now.year, now.month, now.day); // midnight china time
+    final today = DateTime(now.year, now.month, now.day);
     final startDate = _goBackWeekdays(today, _booksCompleted);
     final dateStr = _formatDate(startDate);
     await prefs.setString('book_start_date', dateStr);
 
-    // Mark all days from start_date to yesterday as fully completed
-    if (_booksCompleted > 0) {
-      final activeDates = <String>[];
-      final moduleStatus = <String, dynamic>{};
-      var d = DateTime(startDate.year, startDate.month, startDate.day); // ensure midnight
+    // Tell server about book start date
+    await _api.setupProgress(
+      bookStartDate: dateStr,
+      startSeriesIndex: 0,
+    );
 
+    // If user has completed books, batch sync past progress to server
+    if (_booksCompleted > 0) {
+      final items = <Map<String, dynamic>>[];
+      var d = DateTime(startDate.year, startDate.month, startDate.day);
       while (d.isBefore(today)) {
-        final dateStr = _formatDate(d);
+        final ds = _formatDate(d);
         if (d.weekday >= 1 && d.weekday <= 5) {
-          // Weekday: mark all modules done
-          activeDates.add(dateStr);
-          moduleStatus[dateStr] = {
-            'recap': true, 'reader': true, 'quiz': true, 'listen': true,
-          };
-        } else {
-          // Weekend: mark weekend modules done
-          moduleStatus[dateStr] = {'quiz': true, 'listen': true};
+          for (final mod in ['recap', 'reader', 'quiz', 'listen']) {
+            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 12});
+          }
         }
         d = d.add(const Duration(days: 1));
       }
-
-      await prefs.setString('active_dates', activeDates.join(','));
-      await prefs.setInt('streak_days', _booksCompleted);
-      await prefs.setInt('total_stars', _booksCompleted * 50);
-      await prefs.setString('debt_module_status', jsonEncode(moduleStatus));
-      await prefs.remove('debt_by_date');
-      await prefs.setInt('total_owed', 0);
-    }
-
-    // Clear daily module state from any previous account on this device
-    await prefs.setBool('today_reader_done', false);
-    await prefs.setBool('today_quiz_done', false);
-    await prefs.setBool('today_listen_done', false);
-    await prefs.setBool('today_phonics_done', false);
-    await prefs.setBool('today_recording_done', false);
-    await prefs.remove('today_recap_done');
-    await prefs.remove('last_completed_date');
-    await prefs.remove('studyroom_visited_date');
-
-    // Ensure seedTestData doesn't overwrite registration data
-    if (_booksCompleted == 0) {
-      await prefs.setInt('streak_days', 1);
-      await prefs.setInt('total_stars', 0);
-      await prefs.setString('active_dates', '');
-      await prefs.setString('debt_module_status', '{}');
-      await prefs.remove('debt_by_date');
-      await prefs.setInt('total_owed', 0);
+      if (items.isNotEmpty) await _api.syncBatch(items);
     }
 
     await prefs.setBool('assessment_done', true);
@@ -126,34 +141,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() { _isLoading = true; _error = null; });
 
-    final prefs = await SharedPreferences.getInstance();
+    final res = await _api.login(phone: phone, password: password);
 
-    // Check against local accounts list first, then fallback to single-user keys
-    final account = _findAccount(prefs, phone, password);
-    if (account != null) {
-      await prefs.setString('phone', phone);
-      await prefs.setString('password_hash', password);
-      await prefs.setString('child_name', account['childName'] ?? '');
-      await prefs.setString('auth_token', 'local_$phone');
-      AnalyticsService.logEvent('login', {'phone': phone});
-      setState(() => _isLoading = false);
-      if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
-    } else {
-      // Fallback: check single-user keys (backwards compatibility)
-      final savedPhone = prefs.getString('phone') ?? '';
-      final savedPassword = prefs.getString('password_hash') ?? '';
-      if (phone == savedPhone && password == savedPassword) {
-        await prefs.setString('auth_token', 'local_$phone');
-        AnalyticsService.logEvent('login', {'phone': phone});
-        setState(() => _isLoading = false);
-        if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
-      } else {
-        setState(() {
-          _isLoading = false;
-          _error = '手机号或密码错误';
-        });
-      }
+    if (res == null || res['error'] != null) {
+      setState(() { _isLoading = false; _error = res?['error'] ?? '登录失败'; });
+      return;
     }
+
+    // Login succeeded, token already saved by ApiService
+    final prefs = await SharedPreferences.getInstance();
+    final user = res['user'] as Map<String, dynamic>;
+
+    // Cache user data locally
+    await prefs.setString('child_name', user['childName'] ?? '');
+    if (user['bookStartDate'] != null) {
+      await prefs.setString('book_start_date', user['bookStartDate']);
+    }
+    if (user['startSeriesIndex'] != null) {
+      await prefs.setInt('start_series_index', user['startSeriesIndex']);
+    }
+    await prefs.setInt('total_stars', user['totalStars'] ?? 0);
+    await prefs.setBool('assessment_done', true);
+
+    AnalyticsService.logEvent('login', {'phone': phone});
+    setState(() => _isLoading = false);
+    if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
   }
 
   @override
@@ -161,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _phoneCtrl.dispose();
     _passwordCtrl.dispose();
     _nameCtrl.dispose();
+    _codeCtrl.dispose();
     super.dispose();
   }
 
@@ -196,9 +209,32 @@ class _LoginScreenState extends State<LoginScreen> {
               _inputField(_phoneCtrl, '手机号', TextInputType.phone, Icons.phone),
               const SizedBox(height: 12),
 
-              // Register: child name + books completed
+              // Register fields
               if (!_isLogin) ...[
                 _inputField(_nameCtrl, '中文名/英文名', TextInputType.text, Icons.child_care),
+                const SizedBox(height: 12),
+                // SMS code
+                Row(
+                  children: [
+                    Expanded(
+                      child: _inputField(_codeCtrl, '验证码', TextInputType.number, Icons.sms),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: _cooldown > 0 || _isLoading ? null : _sendCode,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _kOrange,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: Text(_cooldown > 0 ? '${_cooldown}s' : '发送验证码',
+                            style: const TextStyle(fontSize: 14)),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 12),
                 // How many books already learned
                 Container(
@@ -281,30 +317,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  /// Save account to local accounts list: {"phone": {"password": "...", "childName": "..."}}
-  static Future<void> _saveAccount(SharedPreferences prefs, String phone, String password, String childName) async {
-    final raw = prefs.getString('local_accounts');
-    final accounts = raw != null ? Map<String, dynamic>.from(jsonDecode(raw)) : <String, dynamic>{};
-    accounts[phone] = {'password': password, 'childName': childName};
-    await prefs.setString('local_accounts', jsonEncode(accounts));
-  }
-
-  /// Find account by phone+password in local accounts list
-  static Map<String, dynamic>? _findAccount(SharedPreferences prefs, String phone, String password) {
-    final raw = prefs.getString('local_accounts');
-    if (raw == null) return null;
-    final accounts = Map<String, dynamic>.from(jsonDecode(raw));
-    final account = accounts[phone];
-    if (account == null) return null;
-    final stored = Map<String, dynamic>.from(account as Map);
-    if (stored['password'] == password) return stored;
-    return null;
-  }
-
   String _formatDate(DateTime d) =>
       '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
-  /// Go back [count] weekdays from [from]
   DateTime _goBackWeekdays(DateTime from, int count) {
     if (count <= 0) return from;
     var d = from;
