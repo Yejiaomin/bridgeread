@@ -7,6 +7,7 @@ import 'package:flutter/services.dart' show DefaultAssetBundle;
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
+import '../services/api_service.dart';
 import '../services/lesson_service.dart';
 import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
@@ -266,6 +267,7 @@ class _ListenScreenState extends State<ListenScreen>
     final today = DateTime.now().toIso8601String().substring(0, 10);
     if (!prefs.containsKey('app_start_date')) {
       await prefs.setString('app_start_date', today);
+      ApiService().setupProgress(appStartDate: today);
     }
     final startStr  = prefs.getString('app_start_date') ?? today;
     final startDate = DateTime.tryParse(startStr) ?? DateTime.now();
@@ -289,8 +291,17 @@ class _ListenScreenState extends State<ListenScreen>
 
   Future<void> _saveListenTime() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('listen_date', _dateStr(DateTime.now()));
+    final today = _dateStr(DateTime.now());
+    await prefs.setString('listen_date', today);
     await prefs.setInt('listen_seconds', _listenSeconds);
+    // Sync to server (fire-and-forget)
+    ApiService().syncProgress(
+      date: today,
+      module: 'listen',
+      done: _allTracksCompleted,
+      stars: 0,
+      listenSeconds: _listenSeconds,
+    );
   }
 
   String _dateStr(DateTime d) =>

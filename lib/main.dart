@@ -113,7 +113,7 @@ class _AuthGateState extends State<_AuthGate> {
     final token = prefs.getString('auth_token');
     if (!mounted) return;
 
-    if (token != null && token.isNotEmpty && !token.startsWith('local_')) {
+    if (token != null && token.isNotEmpty) {
       // Validate JWT by fetching progress from server
       final data = await ApiService().getProgress();
       if (!mounted) return;
@@ -127,10 +127,6 @@ class _AuthGateState extends State<_AuthGate> {
         Navigator.pushReplacementNamed(context, '/login');
       }
     } else {
-      // No token or old local token — go to login
-      if (token != null && token.startsWith('local_')) {
-        await prefs.remove('auth_token');
-      }
       Navigator.pushReplacementNamed(context, '/login');
     }
   }

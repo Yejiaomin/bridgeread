@@ -228,6 +228,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     // Eggy month: switch every 30 days from first launch
     if (!prefs.containsKey('app_start_date')) {
       await prefs.setString('app_start_date', today);
+      ApiService().setupProgress(appStartDate: today);
     }
     final startStr  = prefs.getString('app_start_date') ?? today;
     final startDate = DateTime.tryParse(startStr) ?? DateTime.now();
@@ -275,6 +276,10 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
         }
         await prefs.setString('gacha_date', serverGachaDate);
         await prefs.setInt('gacha_count', serverGachaCount);
+        final serverEggy = sr['todayEggy'] as String? ?? '';
+        if (serverEggy.isNotEmpty) {
+          await prefs.setString('today_eggy', serverEggy);
+        }
       }
     }
   }

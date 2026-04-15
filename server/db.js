@@ -83,6 +83,9 @@ async function getDb() {
     ['profile_hobbies', 'TEXT'],
     ['profile_goal', 'TEXT'],
     ['profile_custom_avatar', 'TEXT'],
+    ['listen_date', 'TEXT'],
+    ['listen_seconds', 'INTEGER DEFAULT 0'],
+    ['app_start_date', 'TEXT'],
   ];
   for (const [col, def] of profileCols) {
     try { db.run(`ALTER TABLE users ADD COLUMN ${col} ${def}`); } catch (_) {}
@@ -96,9 +99,12 @@ async function getDb() {
       equipped_accessory TEXT DEFAULT '',
       gacha_date TEXT,
       gacha_count INTEGER DEFAULT 0,
+      today_eggy TEXT DEFAULT '',
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
   `);
+  // Add today_eggy column for existing DBs
+  try { db.run("ALTER TABLE study_room ADD COLUMN today_eggy TEXT DEFAULT ''"); } catch (_) {}
 
   db.run(`
     CREATE TABLE IF NOT EXISTS weekly_groups (

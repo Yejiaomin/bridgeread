@@ -24,6 +24,7 @@ router.get('/', (req, res) => {
       equippedAccessory: row.equipped_accessory ?? '',
       gachaDate: row.gacha_date ?? '',
       gachaCount: row.gacha_count ?? 0,
+      todayEggy: row.today_eggy ?? '',
     },
   });
 });
@@ -39,6 +40,7 @@ router.put('/', (req, res) => {
   if (equippedAccessory !== undefined) { sets.push('equipped_accessory = ?'); params.push(equippedAccessory); }
   if (gachaDate !== undefined) { sets.push('gacha_date = ?'); params.push(gachaDate); }
   if (gachaCount !== undefined) { sets.push('gacha_count = ?'); params.push(gachaCount); }
+  if (req.body.todayEggy !== undefined) { sets.push('today_eggy = ?'); params.push(req.body.todayEggy); }
 
   if (sets.length === 0) return res.status(400).json({ error: '没有要更新的字段' });
 

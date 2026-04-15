@@ -3,7 +3,8 @@ const { query, queryOne, run, runNoSave, saveDb, debugUser } = require('../db');
 
 const router = express.Router();
 
-const MODULES = ['recap', 'reader', 'quiz', 'listen'];
+const MODULES = ['recap', 'reader', 'quiz', 'listen', 'phonics', 'recording'];
+const REQUIRED_MODULES = ['recap', 'reader', 'quiz', 'listen']; // count toward debt
 
 // ── China time (UTC+8) for consistent date calculations ───────────────────
 function chinaToday() {
@@ -40,7 +41,7 @@ function backfillDebt(userId) {
     if (dow === 0 || dow === 6) continue; // skip weekends
 
     const dateStr = fmtDate(d);
-    for (const mod of MODULES) {
+    for (const mod of REQUIRED_MODULES) {
       // Insert done=0 only if no record exists yet
       runNoSave(`INSERT OR IGNORE INTO daily_progress (user_id, date, module, done, stars)
            VALUES (?, ?, ?, 0, 0)`, [userId, dateStr, mod]);
@@ -59,7 +60,7 @@ router.get('/', (req, res) => {
   backfillDebt(userId);
 
   const user = queryOne(
-    'SELECT total_stars, book_start_date, start_series_index, lock_status, unlock_count, last_active_date FROM users WHERE id = ?',
+    'SELECT total_stars, book_start_date, start_series_index, lock_status, unlock_count, last_active_date, listen_date, listen_seconds, app_start_date FROM users WHERE id = ?',
     [userId]
   );
 
@@ -116,9 +117,15 @@ router.get('/', (req, res) => {
 // ── Sync one module ─────────────────────────────────────────────────────────
 router.post('/', (req, res) => {
   const userId = req.userId;
-  const { date, module, done, stars, lessonId } = req.body;
+  const { date, module, done, stars, lessonId, listenSeconds } = req.body;
 
   if (!date || !module) return res.status(400).json({ error: 'date and module required' });
+
+  // Save listening time if provided
+  if (listenSeconds != null) {
+    run('UPDATE users SET listen_date = ?, listen_seconds = ? WHERE id = ?',
+      [date, listenSeconds, userId]);
+  }
 
   // Check if already completed (to avoid double-counting stars)
   const existing = queryOne(
@@ -183,10 +190,11 @@ router.post('/batch', (req, res) => {
 
 // ── Setup (book start date, series index) ───────────────────────────────────
 router.post('/setup', (req, res) => {
-  const { bookStartDate, startSeriesIndex } = req.body;
+  const { bookStartDate, startSeriesIndex, appStartDate } = req.body;
   const sets = [], params = [];
   if (bookStartDate) { sets.push('book_start_date = ?'); params.push(bookStartDate); }
   if (startSeriesIndex !== undefined) { sets.push('start_series_index = ?'); params.push(startSeriesIndex); }
+  if (appStartDate) { sets.push('app_start_date = ?'); params.push(appStartDate); }
   if (sets.length) { params.push(req.userId); run(`UPDATE users SET ${sets.join(', ')} WHERE id = ?`, params); }
   res.json({ success: true });
 });

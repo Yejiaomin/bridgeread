@@ -41,6 +41,15 @@ class ProgressService {
       if (user['start_series_index'] != null) {
         await prefs.setInt('start_series_index', user['start_series_index']);
       }
+      // Restore listen time from server
+      if (user['listen_date'] != null) {
+        await prefs.setString('listen_date', user['listen_date']);
+        await prefs.setInt('listen_seconds', user['listen_seconds'] ?? 0);
+      }
+      // Restore app_start_date from server
+      if (user['app_start_date'] != null) {
+        await prefs.setString('app_start_date', user['app_start_date']);
+      }
     }
 
     // Update streak from server
@@ -82,7 +91,9 @@ class ProgressService {
         if (date == todayStr && done) {
           switch (module) {
             case 'reader': await prefs.setBool(_kReaderDone, true);
+            case 'phonics': await prefs.setBool(_kPhonicsDone, true);
             case 'quiz': await prefs.setBool(_kQuizDone, true);
+            case 'recording': await prefs.setBool(_kRecordingDone, true);
             case 'listen': await prefs.setBool('today_listen_done', true);
             case 'recap': await prefs.setString('today_recap_done', todayStr);
           }

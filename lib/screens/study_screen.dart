@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show DefaultAssetBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/progress_service.dart';
+import '../services/api_service.dart';
 import '../services/lesson_service.dart';
 import '../services/week_service.dart';
 import '../main.dart' show routeObserver;
@@ -485,6 +486,16 @@ class _RecapScreenState extends State<RecapScreen>
     dayData['recap'] = true;
     all[d] = dayData;
     await prefs.setString('debt_module_status', jsonEncode(all));
+
+    // Sync to server
+    final lessonId = prefs.getString('current_lesson_id');
+    ApiService().syncProgress(
+      date: d,
+      module: 'recap',
+      done: true,
+      stars: 10,
+      lessonId: lessonId,
+    );
   }
 
   // Get previous book from global order (no hardcoded map needed)

@@ -106,18 +106,21 @@ class ApiService {
     required bool done,
     int stars = 0,
     String? lessonId,
+    int? listenSeconds,
   }) async {
     try {
+      final body = {
+        'date': date,
+        'module': module,
+        'done': done,
+        'stars': stars,
+        'lessonId': lessonId,
+      };
+      if (listenSeconds != null) body['listenSeconds'] = listenSeconds;
       final res = await http.post(
         Uri.parse('$_baseUrl/progress'),
         headers: await _authHeaders(),
-        body: jsonEncode({
-          'date': date,
-          'module': module,
-          'done': done,
-          'stars': stars,
-          'lessonId': lessonId,
-        }),
+        body: jsonEncode(body),
       ).timeout(const Duration(seconds: 5));
       debugPrint('[API] syncProgress ${res.statusCode}: ${res.body}');
       if (res.statusCode == 200) return jsonDecode(res.body);
@@ -154,7 +157,7 @@ class ApiService {
   }
 
   /// Set book start date and series index.
-  Future<bool> setupProgress({String? bookStartDate, int? startSeriesIndex}) async {
+  Future<bool> setupProgress({String? bookStartDate, int? startSeriesIndex, String? appStartDate}) async {
     try {
       final res = await http.post(
         Uri.parse('$_baseUrl/progress/setup'),
@@ -162,6 +165,7 @@ class ApiService {
         body: jsonEncode({
           if (bookStartDate != null) 'bookStartDate': bookStartDate,
           if (startSeriesIndex != null) 'startSeriesIndex': startSeriesIndex,
+          if (appStartDate != null) 'appStartDate': appStartDate,
         }),
       ).timeout(const Duration(seconds: 5));
       return res.statusCode == 200;

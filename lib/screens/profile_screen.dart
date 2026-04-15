@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/responsive_utils.dart';
 import '../services/api_service.dart';
@@ -177,8 +178,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _pickCustomAvatar() async {
-    // Photo upload not available yet — use preset avatars
-    // TODO: add image_picker package for cross-platform photo upload
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 256,
+      maxHeight: 256,
+      imageQuality: 80,
+    );
+    if (picked == null) return;
+    final bytes = await picked.readAsBytes();
+    final b64 = base64Encode(bytes);
+    setState(() {
+      _customAvatar = bytes;
+      _avatarIndex = -1;
+    });
+    await _prefs?.setString('profile_custom_avatar', b64);
+    await _prefs?.setInt('profile_avatar', -1);
+    _syncToServer({'avatar': -1, 'customAvatar': b64});
   }
 
   Future<void> _saveName(String value) async {

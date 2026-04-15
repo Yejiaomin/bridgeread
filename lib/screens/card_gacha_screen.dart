@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
 
@@ -120,6 +121,7 @@ class _CardGachaScreenState extends State<CardGachaScreen>
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('today_eggy', _revealedImg);
+    ApiService().updateStudyRoom({'todayEggy': _revealedImg});
 
     if (!mounted) return;
 

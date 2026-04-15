@@ -9,6 +9,7 @@ import '../models/book_page.dart';
 import '../services/audio_service.dart';
 import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
+import '../services/api_service.dart';
 import '../widgets/highlighter_overlay.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
@@ -129,6 +130,7 @@ class _ReaderScreenState extends State<ReaderScreen>
     final today = DateTime.now().toIso8601String().substring(0, 10);
     if (!prefs.containsKey('app_start_date')) {
       await prefs.setString('app_start_date', today);
+      ApiService().setupProgress(appStartDate: today);
     }
     final startDate = DateTime.tryParse(prefs.getString('app_start_date') ?? today) ?? DateTime.now();
     final eggyMonth = (DateTime.now().difference(startDate).inDays ~/ 30) % 6 + 1;
