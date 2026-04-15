@@ -16,19 +16,11 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
       - run: flutter pub get
 
-      # Build for GitHub Pages (with base-href, local canvaskit)
-      - run: flutter build web --base-href "/bridgeread/" --no-web-resources-cdn
-
-      - uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
-          force_orphan: true
-
-      # Build for China server (no base-href, local canvaskit)
+      # Build for China server first (no base-href)
       - run: flutter build web --no-web-resources-cdn
 
       # Pre-compress large files for nginx gzip_static
@@ -67,3 +59,12 @@ jobs:
             sudo cp -r web-deploy/* /var/www/bridgeread/
             rm -rf web-deploy
             echo "Frontend deployed successfully"
+
+      # Build for GitHub Pages (with base-href)
+      - run: flutter build web --base-href "/bridgeread/" --no-web-resources-cdn
+
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
+          force_orphan: true
