@@ -182,6 +182,58 @@ class ApiService {
     return null;
   }
 
+  /// Get user profile from server.
+  Future<Map<String, dynamic>?> getProfile() async {
+    try {
+      final res = await http.get(
+        Uri.parse('$_baseUrl/profile'),
+        headers: await _authHeaders(),
+      ).timeout(const Duration(seconds: 5));
+      if (res.statusCode == 200) return jsonDecode(res.body);
+    } catch (_) {}
+    return null;
+  }
+
+  /// Update user profile on server.
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
+    try {
+      final res = await http.put(
+        Uri.parse('$_baseUrl/profile'),
+        headers: await _authHeaders(),
+        body: jsonEncode(data),
+      ).timeout(const Duration(seconds: 5));
+      return res.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Get study room data from server.
+  Future<Map<String, dynamic>?> getStudyRoom() async {
+    try {
+      final res = await http.get(
+        Uri.parse('$_baseUrl/studyroom'),
+        headers: await _authHeaders(),
+      ).timeout(const Duration(seconds: 5));
+      if (res.statusCode == 200) return jsonDecode(res.body);
+    } catch (_) {}
+    return null;
+  }
+
+  /// Update study room data on server.
+  Future<bool> updateStudyRoom(Map<String, dynamic> data) async {
+    try {
+      final res = await http.put(
+        Uri.parse('$_baseUrl/studyroom'),
+        headers: await _authHeaders(),
+        body: jsonEncode(data),
+      ).timeout(const Duration(seconds: 5));
+      return res.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Upload recording file.
   Future<bool> uploadRecording({
     required String filePath,

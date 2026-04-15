@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/responsive_utils.dart';
+import '../services/api_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ProfileScreen — child profile / personal center (landscape two-column)
@@ -111,6 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
+    // Load from local cache first
     setState(() {
       _prefs = prefs;
       _avatarIndex = prefs.getInt('profile_avatar') ?? 0;
@@ -130,11 +132,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _avatarIndex = -1;
       }
     });
+
+    // Then sync from server
+    final data = await ApiService().getProfile();
+    if (data != null && data['success'] == true && mounted) {
+      final p = data['profile'] as Map<String, dynamic>;
+      setState(() {
+        _childName = p['childName'] ?? _childName;
+        _nameCtrl.text = _childName;
+        _avatarIndex = p['avatar'] ?? _avatarIndex;
+        _birthday = p['birthday'] ?? _birthday;
+        _gender = p['gender'] ?? _gender;
+        _totalStars = p['totalStars'] ?? _totalStars;
+        final hobbies = p['hobbies'] as String? ?? '';
+        _selectedHobbies = hobbies.isEmpty ? _selectedHobbies : hobbies.split(',').toSet();
+        _goal = p['goal'] ?? _goal;
+        final customAv = p['customAvatar'] as String? ?? '';
+        if (customAv.isNotEmpty) {
+          _customAvatar = base64Decode(customAv);
+          _avatarIndex = -1;
+        }
+      });
+      // Update local cache
+      await prefs.setInt('profile_avatar', _avatarIndex);
+      await prefs.setString('child_name', _childName);
+      await prefs.setString('profile_birthday', _birthday);
+      await prefs.setString('profile_gender', _gender);
+      await prefs.setString('profile_hobbies', _selectedHobbies.join(','));
+      await prefs.setString('profile_goal', _goal);
+      await prefs.setInt('total_stars', _totalStars);
+    }
+  }
+
+  void _syncToServer(Map<String, dynamic> data) {
+    ApiService().updateProfile(data).then((ok) {
+      debugPrint('[Profile] sync ${ok ? 'ok' : 'failed'}: $data');
+    });
   }
 
   Future<void> _saveAvatar(int index) async {
     setState(() => _avatarIndex = index);
     await _prefs?.setInt('profile_avatar', index);
+    _syncToServer({'avatar': index});
   }
 
   Future<void> _pickCustomAvatar() async {
@@ -145,16 +184,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _saveName(String value) async {
     setState(() => _childName = value);
     await _prefs?.setString('child_name', value);
+    _syncToServer({'childName': value});
   }
 
   Future<void> _saveGender(String value) async {
     setState(() => _gender = value);
     await _prefs?.setString('profile_gender', value);
+    _syncToServer({'gender': value});
   }
 
   Future<void> _saveBirthday(String value) async {
     setState(() => _birthday = value);
     await _prefs?.setString('profile_birthday', value);
+    _syncToServer({'birthday': value});
   }
 
   Future<void> _toggleHobby(String hobby) async {
@@ -165,12 +207,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _selectedHobbies.add(hobby);
       }
     });
-    await _prefs?.setString('profile_hobbies', _selectedHobbies.join(','));
+    final hobbiesStr = _selectedHobbies.join(',');
+    await _prefs?.setString('profile_hobbies', hobbiesStr);
+    _syncToServer({'hobbies': hobbiesStr});
   }
 
   Future<void> _saveGoal(String value) async {
     setState(() => _goal = value);
     await _prefs?.setString('profile_goal', value);
+    _syncToServer({'goal': value});
   }
 
   Future<void> _pickBirthday() async {

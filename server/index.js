@@ -9,6 +9,8 @@ const progressRoutes = require('./routes/progress');
 const recordingsRoutes = require('./routes/recordings');
 const rankingRoutes = require('./routes/ranking');
 const speechEvalRoutes = require('./routes/speech-eval');
+const profileRoutes = require('./routes/profile');
+const studyroomRoutes = require('./routes/studyroom');
 const authMiddleware = require('./middleware/auth');
 
 const app = express();
@@ -34,6 +36,8 @@ app.use('/api/progress', authMiddleware, progressRoutes);
 app.use('/api/recordings', authMiddleware, recordingsRoutes);
 app.use('/api/ranking', authMiddleware, rankingRoutes);
 app.use('/api/speech-eval', authMiddleware, speechEvalRoutes);
+app.use('/api/profile', authMiddleware, profileRoutes);
+app.use('/api/studyroom', authMiddleware, studyroomRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' show sin, pi, cos, Random;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
+import '../services/api_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Item pools & helpers
@@ -242,19 +244,59 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
         _eggyMonth       = eggyMonth;
       });
     }
+
+    // Sync from server
+    final data = await ApiService().getStudyRoom();
+    if (data != null && data['success'] == true && mounted) {
+      final sr = data['studyRoom'] as Map<String, dynamic>;
+      final serverPlaced = sr['placedItems'] as String? ?? '{}';
+      final serverBox = sr['treasureBoxItems'] as String? ?? '[]';
+      final serverAccessory = sr['equippedAccessory'] as String? ?? '';
+      final serverGachaDate = sr['gachaDate'] as String? ?? '';
+      final serverGachaCount = sr['gachaCount'] as int? ?? 0;
+
+      final serverPlacedMap = Map<String, dynamic>.from(jsonDecode(serverPlaced) as Map);
+      final serverBoxList = List<String>.from(jsonDecode(serverBox) as List);
+
+      // Only apply server data if it has content (avoid overwriting with empty defaults)
+      if (serverPlacedMap.isNotEmpty || serverBoxList.isNotEmpty) {
+        setState(() {
+          _placed = serverPlacedMap.map((k, v) => MapEntry(int.parse(k), v as String));
+          _treasureBoxItems = serverBoxList;
+          if (serverAccessory.isNotEmpty) _equippedAccessory = serverAccessory;
+          final sGachaCount = (serverGachaDate == today) ? serverGachaCount : 0;
+          _gachaAvailable = sGachaCount < 2 && _totalStars >= 30;
+        });
+        // Update local cache
+        await prefs.setString('placed_items', serverPlaced);
+        await prefs.setString('treasure_box_items', serverBox);
+        if (serverAccessory.isNotEmpty) {
+          await prefs.setString('equipped_accessory', serverAccessory);
+        }
+        await prefs.setString('gacha_date', serverGachaDate);
+        await prefs.setInt('gacha_count', serverGachaCount);
+      }
+    }
   }
 
   Future<void> _saveData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('total_stars', _totalStars);
-    final m = _placed.map((k, v) => MapEntry(k.toString(), v));
-    await prefs.setString('placed_items', jsonEncode(m));
-    await prefs.setString('treasure_box_items', jsonEncode(_treasureBoxItems));
+    final placedStr = jsonEncode(_placed.map((k, v) => MapEntry(k.toString(), v)));
+    final boxStr = jsonEncode(_treasureBoxItems);
+    await prefs.setString('placed_items', placedStr);
+    await prefs.setString('treasure_box_items', boxStr);
     if (_equippedAccessory != null) {
       await prefs.setString('equipped_accessory', _equippedAccessory!);
     } else {
       await prefs.remove('equipped_accessory');
     }
+    // Sync to server (fire-and-forget)
+    ApiService().updateStudyRoom({
+      'placedItems': placedStr,
+      'treasureBoxItems': boxStr,
+      'equippedAccessory': _equippedAccessory ?? '',
+    }).then((ok) => debugPrint('[StudyRoom] sync ${ok ? 'ok' : 'failed'}'));
   }
 
   // ── Gacha ──────────────────────────────────────────────────────────────────
@@ -272,8 +314,10 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final curDate = prefs.getString('gacha_date') ?? '';
     final curCount = (curDate == today) ? (prefs.getInt('gacha_count') ?? 0) : 0;
+    final newCount = curCount + 1;
     await prefs.setString('gacha_date', today);
-    await prefs.setInt('gacha_count', curCount + 1);
+    await prefs.setInt('gacha_count', newCount);
+    ApiService().updateStudyRoom({'gachaDate': today, 'gachaCount': newCount});
 
     // Only decoration items (shelf items), no accessories (wearable)
     final pool = _decorationPool;

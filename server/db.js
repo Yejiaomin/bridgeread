@@ -75,6 +75,31 @@ async function getDb() {
     )
   `);
 
+  // Add profile columns to users (safe to re-run, uses try/catch)
+  const profileCols = [
+    ['profile_avatar', 'INTEGER DEFAULT 0'],
+    ['profile_birthday', 'TEXT'],
+    ['profile_gender', 'TEXT'],
+    ['profile_hobbies', 'TEXT'],
+    ['profile_goal', 'TEXT'],
+    ['profile_custom_avatar', 'TEXT'],
+  ];
+  for (const [col, def] of profileCols) {
+    try { db.run(`ALTER TABLE users ADD COLUMN ${col} ${def}`); } catch (_) {}
+  }
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS study_room (
+      user_id INTEGER PRIMARY KEY,
+      placed_items TEXT DEFAULT '{}',
+      treasure_box_items TEXT DEFAULT '[]',
+      equipped_accessory TEXT DEFAULT '',
+      gacha_date TEXT,
+      gacha_count INTEGER DEFAULT 0,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `);
+
   db.run(`
     CREATE TABLE IF NOT EXISTS weekly_groups (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
