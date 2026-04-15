@@ -21,51 +21,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _nameCtrl = TextEditingController();
-  final _codeCtrl = TextEditingController();
   int _booksCompleted = 0;
-  bool _codeSent = false;
-  int _cooldown = 0;
 
   final _api = ApiService();
-
-  Future<void> _sendCode() async {
-    final phone = _phoneCtrl.text.trim();
-    if (phone.length != 11) {
-      setState(() => _error = '请输入11位手机号');
-      return;
-    }
-    setState(() { _isLoading = true; _error = null; });
-    final res = await _api.sendCode(phone);
-    setState(() => _isLoading = false);
-    if (res?['success'] == true) {
-      setState(() { _codeSent = true; _cooldown = 60; });
-      _startCooldown();
-    } else {
-      setState(() => _error = res?['error'] ?? '发送失败');
-    }
-  }
-
-  void _startCooldown() {
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 1));
-      if (!mounted) return false;
-      setState(() => _cooldown--);
-      return _cooldown > 0;
-    });
-  }
 
   Future<void> _register() async {
     final phone = _phoneCtrl.text.trim();
     final password = _passwordCtrl.text.trim();
     final childName = _nameCtrl.text.trim();
-    final code = _codeCtrl.text.trim();
 
     if (phone.length != 11) {
       setState(() => _error = '请输入11位手机号');
-      return;
-    }
-    if (code.isEmpty) {
-      setState(() => _error = '请输入验证码');
       return;
     }
     if (password.length != 8) {
@@ -81,7 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final res = await _api.register(
       phone: phone,
-      code: code,
       password: password,
       childName: childName,
     );
@@ -173,7 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _phoneCtrl.dispose();
     _passwordCtrl.dispose();
     _nameCtrl.dispose();
-    _codeCtrl.dispose();
     super.dispose();
   }
 
@@ -212,29 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
               // Register fields
               if (!_isLogin) ...[
                 _inputField(_nameCtrl, '中文名/英文名', TextInputType.text, Icons.child_care),
-                const SizedBox(height: 12),
-                // SMS code
-                Row(
-                  children: [
-                    Expanded(
-                      child: _inputField(_codeCtrl, '验证码', TextInputType.number, Icons.sms),
-                    ),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: _cooldown > 0 || _isLoading ? null : _sendCode,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _kOrange,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: Text(_cooldown > 0 ? '${_cooldown}s' : '发送验证码',
-                            style: const TextStyle(fontSize: 14)),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 12),
                 // How many books already learned
                 Container(

@@ -28,7 +28,6 @@ class ApiService {
   /// Register a new user. Returns token + user data on success.
   Future<Map<String, dynamic>?> register({
     required String phone,
-    required String code,
     required String password,
     required String childName,
   }) async {
@@ -38,7 +37,6 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'phone': phone,
-          'code': code,
           'password': password,
           'childName': childName,
         }),

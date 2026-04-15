@@ -51,15 +51,13 @@ function verifyCode(phone, code) {
 
 // ── Register ────────────────────────────────────────────────────────────────
 router.post('/register', (req, res) => {
-  const { phone, code, password, childName } = req.body;
+  const { phone, password, childName } = req.body;
 
-  if (!phone || !code || !password || !childName) {
+  if (!phone || !password || !childName) {
     return res.status(400).json({ error: '请填写所有字段' });
   }
   if (!/^1\d{10}$/.test(phone)) return res.status(400).json({ error: '请输入正确的手机号' });
   if (!/^\d{8}$/.test(password)) return res.status(400).json({ error: '密码必须是 8 位数字' });
-
-  if (!verifyCode(phone, code)) return res.status(400).json({ error: '验证码错误或已过期' });
 
   const existing = queryOne('SELECT id FROM users WHERE phone = ?', [phone]);
   if (existing) return res.status(400).json({ error: '该手机号已注册' });
