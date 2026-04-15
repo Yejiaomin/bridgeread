@@ -20,18 +20,18 @@ jobs:
 
       - run: flutter pub get
 
-      # Build for China server first (no base-href)
-      - run: flutter build web --no-web-resources-cdn
+      # Build for China server (no base-href, HTML renderer, no canvaskit WASM)
+      - run: flutter build web --web-renderer html
 
       # Pre-compress large files for nginx gzip_static
       - name: Pre-compress assets
         run: |
           cd build/web
-          find . -type f \( -name "*.js" -o -name "*.json" -o -name "*.wasm" -o -name "*.css" -o -name "*.html" -o -name "*.map" \) | while read f; do
+          find . -type f \( -name "*.js" -o -name "*.json" -o -name "*.css" -o -name "*.html" -o -name "*.map" \) | while read f; do
             gzip -9 -k "$f"
           done
 
-      # Push build output to Gitee deploy branch (China server pulls from here)
+      # Push build output to Gitee deploy branch (China server auto-pulls via cron)
       - name: Push to Gitee deploy branch
         env:
           GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
@@ -44,24 +44,8 @@ jobs:
           git commit -m "Deploy $(date -u +%Y%m%d-%H%M%S)"
           git push --force https://oauth2:${GITEE_TOKEN}@gitee.com/Yejiaomin_e351/bridge-read.git HEAD:deploy
 
-      # SSH to China server and pull latest build
-      - name: Deploy to China server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: 120.79.16.89
-          username: admin
-          key: ${{ secrets.CN_SSH_KEY }}
-          script: |
-            cd /tmp
-            rm -rf web-deploy
-            git clone -b deploy --depth 1 https://gitee.com/Yejiaomin_e351/bridge-read.git web-deploy
-            sudo rm -rf /var/www/bridgeread/*
-            sudo cp -r web-deploy/* /var/www/bridgeread/
-            rm -rf web-deploy
-            echo "Frontend deployed successfully"
-
       # Build for GitHub Pages (with base-href)
-      - run: flutter build web --base-href "/bridgeread/" --no-web-resources-cdn
+      - run: flutter build web --base-href "/bridgeread/" --web-renderer html
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
