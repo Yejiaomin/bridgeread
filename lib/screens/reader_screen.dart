@@ -219,7 +219,7 @@ class _ReaderScreenState extends State<ReaderScreen>
 
     if (hasEN) {
       // Full sequence: CN then EN
-      await _audioService.playSequence(
+      final ok = await _audioService.playSequence(
         page.audioCN!,
         page.audioEN!,
         onENStart: () {
@@ -238,10 +238,25 @@ class _ReaderScreenState extends State<ReaderScreen>
         },
         onComplete: onDone,
       );
+      // If playback failed, stop and wait — don't auto-advance
+      if (!ok && mounted) {
+        setState(() {
+          _isAudioPlaying = false;
+          _waitingToAdvance = true;
+        });
+      }
     } else {
       // CN-only page (e.g. intro): play once and finish
-      await _audioService.playAsset(page.audioCN!);
-      onDone();
+      final ok = await _audioService.playAsset(page.audioCN!);
+      if (ok) {
+        onDone();
+      } else if (mounted) {
+        // Audio failed — stay on page, let user tap replay or next
+        setState(() {
+          _isAudioPlaying = false;
+          _waitingToAdvance = true;
+        });
+      }
     }
   }
 
