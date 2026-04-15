@@ -51,3 +51,19 @@ jobs:
           git add -A
           git commit -m "Deploy $(date -u +%Y%m%d-%H%M%S)"
           git push --force https://oauth2:${GITEE_TOKEN}@gitee.com/Yejiaomin_e351/bridge-read.git HEAD:deploy
+
+      # SSH to China server and pull latest build
+      - name: Deploy to China server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 120.79.16.89
+          username: admin
+          key: ${{ secrets.CN_SSH_KEY }}
+          script: |
+            cd /tmp
+            rm -rf web-deploy
+            git clone -b deploy --depth 1 https://gitee.com/Yejiaomin_e351/bridge-read.git web-deploy
+            sudo rm -rf /var/www/bridgeread/*
+            sudo cp -r web-deploy/* /var/www/bridgeread/
+            rm -rf web-deploy
+            echo "Frontend deployed successfully"
