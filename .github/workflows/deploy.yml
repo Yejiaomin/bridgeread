@@ -1,8 +1,8 @@
-name: Deploy to GitHub Pages & HK Server
+name: Build & Deploy
 
 on:
   push:
-    branches: [main, backend, apk-local, production]
+    branches: [production]
 
 permissions:
   contents: write
@@ -28,7 +28,7 @@ jobs:
           publish_dir: build/web
           force_orphan: true
 
-      # Build for HK server (no base-href, local canvaskit — gstatic.com blocked in China)
+      # Build for China server (no base-href, local canvaskit)
       - run: flutter build web --no-web-resources-cdn
 
       # Pre-compress large files for nginx gzip_static
@@ -39,23 +39,15 @@ jobs:
             gzip -9 -k "$f"
           done
 
-      # Deploy to HK server — single tar with everything
-      - name: Deploy to HK Server
+      # Push build output to Gitee deploy branch (China server pulls from here)
+      - name: Push to Gitee deploy branch
         env:
-          SSH_KEY: ${{ secrets.HK_SSH_KEY }}
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/hk_key
-          chmod 600 ~/.ssh/hk_key
-          ssh-keyscan -H 47.243.220.248 >> ~/.ssh/known_hosts 2>/dev/null
-
-          # Flutter build already includes all assets in build/web/assets/
-          # No need for separate CDN asset deployment
-          tar czf /tmp/web.tar.gz -C build/web .
-          scp -i ~/.ssh/hk_key /tmp/web.tar.gz root@47.243.220.248:/tmp/
-          ssh -i ~/.ssh/hk_key root@47.243.220.248 'cd /var/www/bridgeread && rm -rf * && tar xzf /tmp/web.tar.gz && rm /tmp/web.tar.gz'
-
-          # Sync nginx config (convert CRLF to LF) and reload
-          sed 's/\r$//' deploy/nginx-bridgeread.conf > /tmp/nginx-bridgeread.conf
-          scp -i ~/.ssh/hk_key /tmp/nginx-bridgeread.conf root@47.243.220.248:/etc/nginx/sites-enabled/bridgeread
-          ssh -i ~/.ssh/hk_key root@47.243.220.248 'nginx -t && systemctl reload nginx'
+          cd build/web
+          git init
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "Deploy $(date -u +%Y%m%d-%H%M%S)"
+          git push --force https://oauth2:${GITEE_TOKEN}@gitee.com/Yejiaomin_e351/bridge-read.git HEAD:deploy
