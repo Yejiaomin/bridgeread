@@ -36,7 +36,8 @@ const _kDefaultTracks = [
 // ── Screen ────────────────────────────────────────────────────────────────────
 
 class ListenScreen extends StatefulWidget {
-  const ListenScreen({super.key});
+  final bool bedtimeMode;
+  const ListenScreen({super.key, this.bedtimeMode = false});
   @override
   State<ListenScreen> createState() => _ListenScreenState();
 }
@@ -44,6 +45,7 @@ class ListenScreen extends StatefulWidget {
 class _ListenScreenState extends State<ListenScreen>
     with TickerProviderStateMixin {
   final _player = AudioPlayer();
+  final _sfxPlayer = AudioPlayer();
 
   static const _eggyImages = [
     'assets/pet/cards/1egg.webp',
@@ -69,6 +71,10 @@ class _ListenScreenState extends State<ListenScreen>
   // Listening time counter (seconds today)
   int _listenSeconds = 0;
   Timer? _petTimer;
+
+  // Bedtime mode: auto-close after 20 minutes
+  Timer? _bedtimeTimer;
+  int _bedtimeRemaining = 20 * 60; // seconds
 
   // Eggy display (matches study room)
   int _eggyMonth = 1;
@@ -120,6 +126,23 @@ class _ListenScreenState extends State<ListenScreen>
 
     // Keep screen on during listening
     WakelockPlus.enable();
+
+    // Bedtime mode: start 20-minute countdown
+    if (widget.bedtimeMode) {
+      _bedtimeTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (!mounted) return;
+        setState(() => _bedtimeRemaining--);
+        if (_bedtimeRemaining <= 0) {
+          _bedtimeTimer?.cancel();
+          _player.stop();
+          WakelockPlus.disable();
+          // Exit app or go back to home
+          if (mounted) {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          }
+        }
+      });
+    }
 
     // Wait for data to load before starting playback
     _loadListenData().then((_) {
@@ -228,8 +251,10 @@ class _ListenScreenState extends State<ListenScreen>
     WakelockPlus.disable();
     for (final s in _subs) s.cancel();
     _player.dispose();
+    _sfxPlayer.dispose();
     for (final c in _waveCtrl) c.dispose();
     _petTimer?.cancel();
+    _bedtimeTimer?.cancel();
     super.dispose();
   }
 
@@ -295,6 +320,15 @@ class _ListenScreenState extends State<ListenScreen>
       _currentPageIdx = 0;
     });
     await _player.stop();
+
+    // Play page-flip sound when switching between different books
+    if (idx > 0) {
+      try {
+        await _sfxPlayer.play(cdnAudioSource('audio/sfx/book-open.wav'));
+        await Future.delayed(const Duration(milliseconds: 600));
+      } catch (_) {}
+    }
+
     await _player.play(cdnAudioSource(track.path));
     _setPlaying(true);
   }
@@ -326,7 +360,7 @@ class _ListenScreenState extends State<ListenScreen>
       // All tracks played once — mark done, show completion, start loop
       if (!_allTracksCompleted) {
         _allTracksCompleted = true;
-        ProgressService.markModuleComplete('listen', 10);
+        ProgressService.markModuleComplete('listen', 20);
         _saveListenTime();
       }
       setState(() {});
@@ -476,7 +510,7 @@ class _ListenScreenState extends State<ListenScreen>
     _setPlaying(false);
     await _saveListenTime();
     if (!_allTracksCompleted) {
-      await ProgressService.markModuleComplete('listen', 10);
+      await ProgressService.markModuleComplete('listen', 20);
     }
     if (mounted) {
       Navigator.pushNamedAndRemoveUntil(context, '/ranking', (route) => false);
@@ -751,8 +785,9 @@ class _ListenScreenState extends State<ListenScreen>
   }
 
   Widget _buildTopBar(BuildContext context) {
-    final m = (_listenSeconds ~/ 60).toString().padLeft(2, '0');
-    final s = (_listenSeconds % 60).toString().padLeft(2, '0');
+    final displaySeconds = widget.bedtimeMode ? _bedtimeRemaining : _listenSeconds;
+    final m = (displaySeconds ~/ 60).toString().padLeft(2, '0');
+    final s = (displaySeconds % 60).toString().padLeft(2, '0');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Row(
@@ -770,10 +805,10 @@ class _ListenScreenState extends State<ListenScreen>
               }
             },
           ),
-          const Expanded(
-            child: Text('磨耳朵  👂',
+          Expanded(
+            child: Text(widget.bedtimeMode ? '🌙 睡前陪伴' : '磨耳朵  👂',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w800)),
@@ -818,7 +853,7 @@ class _ListenScreenState extends State<ListenScreen>
             onTap: () async {
               await _saveListenTime();
               _player.stop();
-              await ProgressService.markModuleComplete('listen', 10);
+              await ProgressService.markModuleComplete('listen', 20);
               if (mounted) {
                 Navigator.pushNamedAndRemoveUntil(
                     context, '/home', (route) => false);

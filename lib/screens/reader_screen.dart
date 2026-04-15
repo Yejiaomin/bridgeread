@@ -267,7 +267,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                 nextRoute:    '/quiz',
                 nextLabel:    '开始闯关  🎯 →',
                 moduleKey:    'reader',
-                modulePoints: 10,
+                modulePoints: 20,
               ),
             ),
           );
@@ -380,7 +380,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                         color: Colors.white.withValues(alpha: 0.10)))),
 
                   // Main content: bubble + Eggy + title
-                  Center(
+                  Positioned.fill(
                    child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -426,28 +426,30 @@ class _ReaderScreenState extends State<ReaderScreen>
                       const SizedBox(height: 4),
 
                       // Eggy with breathing
-                      ScaleTransition(
-                        scale: _breathAnim,
-                        alignment: Alignment.center,
-                        child: _buildEggyAvatar(R.s(350)),
+                      Flexible(
+                        child: ScaleTransition(
+                          scale: _breathAnim,
+                          alignment: Alignment.center,
+                          child: _buildEggyAvatar(R.s(280)),
+                        ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
 
                       // Book title
                       Text(
                         'Biscuit',
                         style: TextStyle(
-                          fontSize: R.s(42),
+                          fontSize: R.s(36),
                           fontWeight: FontWeight.w900,
                           color: Color(0xFFB84A00),
                           letterSpacing: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                       const Text(
                         'Let\'s read together! ✨',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           color: Color(0xFFCC6622),
                           fontWeight: FontWeight.w600,
                         ),

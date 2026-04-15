@@ -597,9 +597,14 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       _echoPlaybackSub?.cancel();
       if (!completer.isCompleted) completer.complete();
     });
-    await _player.play(source);
+    try {
+      await _player.play(source);
+    } catch (_) {
+      // Web may fail to play back recording
+      if (!completer.isCompleted) completer.complete();
+    }
     // Wait for playback to actually finish
-    await completer.future.timeout(const Duration(seconds: 10), onTimeout: () {});
+    await completer.future.timeout(const Duration(seconds: 5), onTimeout: () {});
     // Keep ear icon visible briefly after sound ends
     await Future.delayed(const Duration(milliseconds: 300));
     if (mounted) setState(() {
@@ -860,53 +865,29 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // ── BACKGROUND: white base + full-screen book image ─────────────
+          // ── BACKGROUND ─────────────────────────────────────────────────
           Container(color: Colors.white),
-          cdnImage(word.bookImage,
-            fit: BoxFit.cover,
-            alignment: Alignment.centerLeft,
-          ),
 
           // ── Back button ──────────────────────────────────────────────────
           Positioned(
             left: 8,
             top: MediaQuery.of(context).padding.top + 4,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_rounded,
-                  color: _kOrange, size: 26),
-              onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.25),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_rounded,
+                    color: _kOrange, size: 22),
+                onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
+              ),
             ),
           ),
 
-          // ── RIGHT HALF: semi-transparent game panel ──────────────────────
-          Positioned(
-            top: 0,
-            bottom: 0,
-            right: 0,
-            width: MediaQuery.of(context).size.width / 2,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.92),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(32),
-                  bottomLeft: Radius.circular(32),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.12),
-                    blurRadius: 24,
-                    offset: const Offset(-4, 0),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(32),
-                  bottomLeft: Radius.circular(32),
-                ),
-                child: _buildGameArea(word),
-              ),
-            ),
+          // ── CENTER: full-width game panel ───────────────────────────────
+          Positioned.fill(
+            child: _buildGameArea(word),
           ),
 
           // ── SCORE CHIP — on top of the right panel ───────────────────────
@@ -1117,6 +1098,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
           // Word display with speaker
           GestureDetector(
             onTap: () => _playAudio(word.wordAudioPath),
@@ -1147,7 +1129,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
             child: const Text('点击每个字母听发音',
                 style: TextStyle(fontSize: 14, color: Color(0xFFAAAAAA))),
           ),
-          const SizedBox(height: 36),
+          const SizedBox(height: 16),
 
           // Letter tiles — always rendered with fixed size slots
           Row(
@@ -1204,7 +1186,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
                 child: ScaleTransition(
                   scale: _tileScaleAnims[i],
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       AnimatedOpacity(
                         opacity: tapped ? 1.0 : 0.0,
@@ -1683,7 +1665,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     final isSad = _slotSad[slotIndex];
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: DragTarget<int>(
         onWillAcceptWithDetails: (details) => !isFilled,
         onAcceptWithDetails: (details) =>
@@ -1779,7 +1761,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
           child: Container(
             width: R.s(96),
             height: R.s(96),
-            margin: const EdgeInsets.symmetric(horizontal: 8),
+            margin: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
               color: letter.tileColor,
               borderRadius: BorderRadius.circular(20),

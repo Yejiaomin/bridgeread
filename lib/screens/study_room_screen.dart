@@ -18,6 +18,15 @@ const _decorationPool = [
   'alarm', 'car', 'dinosaur', 'fly', 'frame', 'globe',
   'robot', 'rocket', 'shark', 'soccer', 'teddyw', 'telescope',
   'Ultraman', 'dragon', 'gun', 'monkey', 'nezha', 'pig', 'rainbow_', 'trophy', 'vase',
+  // New items
+  'airplane_1', 'bear_1',
+  'bunny_1', 'bunny_2', 'bunny_3', 'bunny_4', 'bunny_5',
+  'bunny_6', 'bunny_7', 'bunny_8', 'bunny_9', 'bunny_10',
+  'bus_1', 'cat_1', 'cat_2', 'cow_1', 'dinosaur_2', 'doll_1',
+  'elephant_1', 'fox_1', 'goldfish_1', 'lego_1', 'lion_1',
+  'penguin_1', 'plant_1',
+  'princess_1', 'princess_2', 'princess_3', 'princess_4', 'princess_5', 'princess_6',
+  'rubik_1', 'ship_1', 'truck_1', 'turtle_1',
 ];
 
 bool _isAccessory(String id) => _accessoryPool.contains(id);
@@ -54,6 +63,30 @@ const _itemNames = <String, String>{
   'rainbow_': 'Rainbow',
   'trophy': 'Trophy',
   'vase': 'Vase',
+  // New items
+  'airplane_1': 'Airplane',
+  'bear_1': 'Bear',
+  'bunny_1': 'Bunny', 'bunny_2': 'Bunny', 'bunny_3': 'Bunny', 'bunny_4': 'Bunny',
+  'bunny_5': 'Bunny', 'bunny_6': 'Bunny', 'bunny_7': 'Bunny', 'bunny_8': 'Bunny',
+  'bunny_9': 'Bunny', 'bunny_10': 'Bunny',
+  'bus_1': 'Bus',
+  'cat_1': 'Kitty', 'cat_2': 'Kitty',
+  'cow_1': 'Cow',
+  'dinosaur_2': 'Dinosaur',
+  'doll_1': 'Doll',
+  'elephant_1': 'Elephant',
+  'fox_1': 'Fox',
+  'goldfish_1': 'Goldfish',
+  'lego_1': 'Lego',
+  'lion_1': 'Lion',
+  'penguin_1': 'Penguin',
+  'plant_1': 'Plant',
+  'princess_1': 'Princess', 'princess_2': 'Princess', 'princess_3': 'Princess',
+  'princess_4': 'Princess', 'princess_5': 'Princess', 'princess_6': 'Princess',
+  'rubik_1': "Rubik's Cube",
+  'ship_1': 'Ship',
+  'truck_1': 'Truck',
+  'turtle_1': 'Turtle',
 };
 
 String _itemName(String id) => _itemNames[id] ?? id;
@@ -184,10 +217,11 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
 
     final equippedAccessory = prefs.getString('equipped_accessory');
 
-    // Daily gacha check: 1 per day
-    final today    = DateTime.now().toIso8601String().substring(0, 10);
-    final lastDate = prefs.getString('last_gacha_date') ?? '';
-    final gachaAvail = lastDate != today && stars >= 50;
+    // Daily gacha check: 2 per day
+    final today      = DateTime.now().toIso8601String().substring(0, 10);
+    final gachaDate  = prefs.getString('gacha_date') ?? '';
+    final gachaCount = (gachaDate == today) ? (prefs.getInt('gacha_count') ?? 0) : 0;
+    final gachaAvail = gachaCount < 2 && stars >= 30;
 
     // Eggy month: switch every 30 days from first launch
     if (!prefs.containsKey('app_start_date')) {
@@ -226,17 +260,20 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
   // ── Gacha ──────────────────────────────────────────────────────────────────
 
   Future<void> _onJarTap() async {
-    if (!_gachaAvailable || _totalStars < 50) return;
+    if (!_gachaAvailable || _totalStars < 30) return;
 
     setState(() {
       _gachaAvailable = false;
-      _totalStars -= 50; // deduct cost
+      _totalStars -= 30; // deduct cost
     });
     _saveData();
 
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now().toIso8601String().substring(0, 10);
-    await prefs.setString('last_gacha_date', today);
+    final curDate = prefs.getString('gacha_date') ?? '';
+    final curCount = (curDate == today) ? (prefs.getInt('gacha_count') ?? 0) : 0;
+    await prefs.setString('gacha_date', today);
+    await prefs.setInt('gacha_count', curCount + 1);
 
     // Only decoration items (shelf items), no accessories (wearable)
     final pool = _decorationPool;
@@ -257,10 +294,12 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     setState(() {
       _droppedItem    = dropped;
       _showDropResult = true;
-      _gachaAvailable = true; // re-enable jar (testing mode)
+      _gachaAvailable = (curCount + 1) < 2 && (_totalStars >= 30);
     });
     await _player.stop();
-    await _player.play(cdnAudioSource('audio/items/$dropped.mp3'));
+    // Use base name for audio: e.g. bunny_3 → bunny, princess_2 → princess
+    final audioId = dropped.replaceAll(RegExp(r'_\d+$'), '');
+    await _player.play(cdnAudioSource('audio/items/$audioId.mp3'));
   }
 
   void _flyGachaItem(String itemId) {
@@ -719,7 +758,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      _gachaAvailable ? '-50⭐  Gacha!' : 'Used today',
+                      _gachaAvailable ? '-30⭐  Gacha!' : 'Used today',
                       style: TextStyle(
                         color: _gachaAvailable
                             ? const Color(0xFFFFD700)

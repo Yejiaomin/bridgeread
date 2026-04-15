@@ -269,10 +269,16 @@ class _StudyScreenState extends State<StudyScreen>
                   Positioned(
                     left: 8,
                     top: MediaQuery.of(ctx).padding.top + 4,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_rounded,
-                          color: Colors.white, size: 26),
-                      onPressed: () => Navigator.pop(ctx),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.25),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back_ios_rounded,
+                            color: Colors.white, size: 22),
+                        onPressed: () => Navigator.pop(ctx),
+                      ),
                     ),
                   ),
 
@@ -680,13 +686,19 @@ class _RecapScreenState extends State<RecapScreen>
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_rounded,
-                            color: Colors.white70, size: 22),
-                        onPressed: () {
-                          _player.stop();
-                          Navigator.pop(context);
-                        },
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.25),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_rounded,
+                              color: Colors.white, size: 20),
+                          onPressed: () {
+                            _player.stop();
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
                       const Expanded(
                         child: Text(

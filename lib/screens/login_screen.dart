@@ -49,6 +49,9 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setString('child_name', childName);
     await prefs.setString('auth_token', 'local_$phone');
 
+    // Save to local accounts list so user can log back in
+    await _saveAccount(prefs, phone, password, childName);
+
     // Calculate book_start_date by going back _booksCompleted weekdays
     final now = chinaTime();
     final today = DateTime(now.year, now.month, now.day); // midnight china time
@@ -85,6 +88,26 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setInt('total_owed', 0);
     }
 
+    // Clear daily module state from any previous account on this device
+    await prefs.setBool('today_reader_done', false);
+    await prefs.setBool('today_quiz_done', false);
+    await prefs.setBool('today_listen_done', false);
+    await prefs.setBool('today_phonics_done', false);
+    await prefs.setBool('today_recording_done', false);
+    await prefs.remove('today_recap_done');
+    await prefs.remove('last_completed_date');
+    await prefs.remove('studyroom_visited_date');
+
+    // Ensure seedTestData doesn't overwrite registration data
+    if (_booksCompleted == 0) {
+      await prefs.setInt('streak_days', 1);
+      await prefs.setInt('total_stars', 0);
+      await prefs.setString('active_dates', '');
+      await prefs.setString('debt_module_status', '{}');
+      await prefs.remove('debt_by_date');
+      await prefs.setInt('total_owed', 0);
+    }
+
     await prefs.setBool('assessment_done', true);
     await prefs.setInt('start_series_index', 0);
     AnalyticsService.logEvent('register', {'phone': phone, 'child_name': childName});
@@ -104,19 +127,32 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() { _isLoading = true; _error = null; });
 
     final prefs = await SharedPreferences.getInstance();
-    final savedPhone = prefs.getString('phone') ?? '';
-    final savedPassword = prefs.getString('password_hash') ?? '';
 
-    if (phone == savedPhone && password == savedPassword) {
+    // Check against local accounts list first, then fallback to single-user keys
+    final account = _findAccount(prefs, phone, password);
+    if (account != null) {
+      await prefs.setString('phone', phone);
+      await prefs.setString('password_hash', password);
+      await prefs.setString('child_name', account['childName'] ?? '');
       await prefs.setString('auth_token', 'local_$phone');
       AnalyticsService.logEvent('login', {'phone': phone});
       setState(() => _isLoading = false);
       if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
     } else {
-      setState(() {
-        _isLoading = false;
-        _error = '手机号或密码错误';
-      });
+      // Fallback: check single-user keys (backwards compatibility)
+      final savedPhone = prefs.getString('phone') ?? '';
+      final savedPassword = prefs.getString('password_hash') ?? '';
+      if (phone == savedPhone && password == savedPassword) {
+        await prefs.setString('auth_token', 'local_$phone');
+        AnalyticsService.logEvent('login', {'phone': phone});
+        setState(() => _isLoading = false);
+        if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
+      } else {
+        setState(() {
+          _isLoading = false;
+          _error = '手机号或密码错误';
+        });
+      }
     }
   }
 
@@ -243,6 +279,26 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  /// Save account to local accounts list: {"phone": {"password": "...", "childName": "..."}}
+  static Future<void> _saveAccount(SharedPreferences prefs, String phone, String password, String childName) async {
+    final raw = prefs.getString('local_accounts');
+    final accounts = raw != null ? Map<String, dynamic>.from(jsonDecode(raw)) : <String, dynamic>{};
+    accounts[phone] = {'password': password, 'childName': childName};
+    await prefs.setString('local_accounts', jsonEncode(accounts));
+  }
+
+  /// Find account by phone+password in local accounts list
+  static Map<String, dynamic>? _findAccount(SharedPreferences prefs, String phone, String password) {
+    final raw = prefs.getString('local_accounts');
+    if (raw == null) return null;
+    final accounts = Map<String, dynamic>.from(jsonDecode(raw));
+    final account = accounts[phone];
+    if (account == null) return null;
+    final stored = Map<String, dynamic>.from(account as Map);
+    if (stored['password'] == password) return stored;
+    return null;
   }
 
   String _formatDate(DateTime d) =>

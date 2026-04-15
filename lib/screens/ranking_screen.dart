@@ -33,7 +33,7 @@ class RankingScreen extends StatefulWidget {
 }
 
 class _RankingScreenState extends State<RankingScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   String _period = 'week';
   bool _loading = true;
   bool _navigating = false;
@@ -48,6 +48,20 @@ class _RankingScreenState extends State<RankingScreen>
 
   late final AnimationController _starGlowCtrl;
   late final Animation<double> _starGlow;
+
+  // Rank-up climb animation
+  bool _showRankUp = false;
+  bool _rankUpCelebrate = false;
+  List<Map<String, dynamic>> _rankUpEntries = [];
+  Map<int, int> _rankUpPositions = {}; // entryIndex -> visual slot
+  int _rankUpUserIdx = 0;
+  int _rankUpNewRank = 0;
+  Timer? _rankUpStepTimer;
+  AnimationController? _rankUpFadeCtrl;
+
+
+  // Persistent star orbit on user's row (top 3)
+  AnimationController? _persistGlowCtrl;
 
   static const _circleInfo = {
     1: {'cx': 0.504, 'cy': 0.415, 'diam': 0.46},
@@ -114,7 +128,7 @@ class _RankingScreenState extends State<RankingScreen>
     _countdownTimer?.cancel();
     _starGlowCtrl.stop();
     if (mounted) {
-      Navigator.pushReplacementNamed(context, _listenDone ? '/studyroom' : '/home');
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 
@@ -122,6 +136,9 @@ class _RankingScreenState extends State<RankingScreen>
   void dispose() {
     _countdownTimer?.cancel();
     _starGlowCtrl.dispose();
+    _rankUpStepTimer?.cancel();
+    _rankUpFadeCtrl?.dispose();
+    _persistGlowCtrl?.dispose();
     super.dispose();
   }
 
@@ -164,15 +181,36 @@ class _RankingScreenState extends State<RankingScreen>
       return entries;
     }
 
+    final generated = {
+      'day': _generate(0),
+      'week': _generate(2),
+      'month': _generate(5),
+    };
+
+    // Check rank improvement for default period
+    final currentEntries = generated[_period] ?? [];
+    final myIdx = currentEntries.indexWhere((e) => e['isMe'] == true);
+    final currentRank = myIdx >= 0 ? myIdx + 1 : 99;
+    final prevRank = prefs.getInt('last_rank_$_period') ?? 0;
+
+    // Save current rank
+    await prefs.setInt('last_rank_$_period', currentRank);
+
     if (mounted) {
       setState(() {
-        _data = {
-          'day': _generate(0),
-          'week': _generate(2),
-          'month': _generate(5),
-        };
+        _data = generated;
         _loading = false;
       });
+
+      // Start star orbit if user is in top 3
+      if (currentRank <= 3) {
+        _startPersistentGlow();
+      }
+
+      // Trigger rank-up animation if improved (and had a previous rank)
+      if (prevRank > 0 && currentRank < prevRank) {
+        _triggerRankUpAnimation(prevRank, currentRank);
+      }
     }
   }
 
@@ -269,6 +307,17 @@ class _RankingScreenState extends State<RankingScreen>
               errorBuilder: (_, __, ___) => const SizedBox(),
             ),
           ),
+          // Persistent colorful star orbit behind avatar
+          if (isMe && _persistGlowCtrl != null)
+            Positioned(
+              left: circleCx - circleDiam * 0.75,
+              top: circleCy - circleDiam * 0.75,
+              width: circleDiam * 1.5,
+              height: circleDiam * 1.5,
+              child: CustomPaint(
+                painter: _StarOrbitPainter(_persistGlowCtrl!.value),
+              ),
+            ),
           // Avatar clipped oval
           Positioned(
             left: circleCx - circleDiam * 0.45,
@@ -282,27 +331,59 @@ class _RankingScreenState extends State<RankingScreen>
             left: podiumWidth * 0.06,
             right: 0,
             bottom: podiumHeight * 0.05,
-            child: Text.rich(
-              TextSpan(children: [
-                TextSpan(
-                  text: displayName,
-                  style: TextStyle(
-                    fontSize: podiumHeight * 0.085,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black87,
+            child: isMe
+                ? Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Brush stroke behind name
+                      CustomPaint(
+                        size: Size(podiumWidth * 0.35, podiumHeight * 0.12),
+                        painter: const _BrushStrokePainter(),
+                      ),
+                      Text.rich(
+                        TextSpan(children: [
+                          TextSpan(
+                            text: displayName,
+                            style: TextStyle(
+                              fontSize: podiumHeight * 0.085,
+                              fontWeight: FontWeight.w900,
+                              color: const Color(0xFF2266AA),
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' $stars⭐',
+                            style: TextStyle(
+                              fontSize: podiumHeight * 0.065,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ]),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  )
+                : Text.rich(
+                    TextSpan(children: [
+                      TextSpan(
+                        text: displayName,
+                        style: TextStyle(
+                          fontSize: podiumHeight * 0.085,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' $stars⭐',
+                        style: TextStyle(
+                          fontSize: podiumHeight * 0.065,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ]),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                TextSpan(
-                  text: ' $stars⭐',
-                  style: TextStyle(
-                    fontSize: podiumHeight * 0.065,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black54,
-                  ),
-                ),
-              ]),
-              textAlign: TextAlign.center,
-            ),
           ),
         ],
       ),
@@ -328,7 +409,23 @@ class _RankingScreenState extends State<RankingScreen>
     final stars = entry['stars'] as int? ?? 0;
     final isMe = entry['isMe'] == true;
 
-    return Container(
+    final hasOrbit = isMe && _persistGlowCtrl != null;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Star orbit behind the tile
+        if (hasOrbit)
+          Positioned(
+            left: -R.s(12),
+            right: -R.s(12),
+            top: -R.s(10),
+            bottom: -R.s(5),
+            child: CustomPaint(
+              painter: _StarOrbitPainter(_persistGlowCtrl!.value),
+            ),
+          ),
+        Container(
       margin: EdgeInsets.only(bottom: R.s(5)),
       padding: EdgeInsets.symmetric(horizontal: R.s(14), vertical: R.s(9)),
       decoration: BoxDecoration(
@@ -369,17 +466,36 @@ class _RankingScreenState extends State<RankingScreen>
           ClipOval(child: _buildAvatar(entry, R.s(32))),
           SizedBox(width: R.s(10)),
           Expanded(
-            child: Text(
-              isMe ? '我' : _maskName(name),
-              style: TextStyle(
-                fontSize: R.s(16),
-                fontWeight: isMe ? FontWeight.w900 : FontWeight.w600,
-                color: isMe
-                    ? Colors.red
-                    : const Color(0xFF333333),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
+            child: isMe
+                ? Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      CustomPaint(
+                        size: Size(R.s(26), R.s(26)),
+                        painter: const _BrushStrokePainter(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: R.s(10)),
+                        child: Text(
+                          '我',
+                          style: TextStyle(
+                            fontSize: R.s(16),
+                            fontWeight: FontWeight.w900,
+                            color: const Color(0xFF2266AA),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Text(
+                    _maskName(name),
+                    style: TextStyle(
+                      fontSize: R.s(16),
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF333333),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
           ),
           Text('⭐', style: TextStyle(fontSize: R.s(20))),
           SizedBox(width: R.s(4)),
@@ -389,6 +505,273 @@ class _RankingScreenState extends State<RankingScreen>
                   fontWeight: FontWeight.w900,
                   color: const Color(0xFFFF8C42))),
         ],
+      ),
+    ),
+      ],
+    );
+  }
+
+  void _triggerRankUpAnimation(int fromRank, int toRank) {
+    final entries = List<Map<String, dynamic>>.from(_data[_period] ?? []);
+    // Only show entries from rank 1 to fromRank
+    final visible = entries.take(fromRank).toList();
+
+    // User is currently at toRank-1 in the sorted list.
+    // Move user to fromRank-1 (bottom) for animation start.
+    final userEntry = visible.removeAt(toRank - 1);
+    visible.insert(fromRank - 1, userEntry);
+
+    _rankUpEntries = visible;
+    _rankUpUserIdx = fromRank - 1;
+    _rankUpNewRank = toRank;
+    _rankUpCelebrate = false;
+    _rankUpPositions = {for (int i = 0; i < visible.length; i++) i: i};
+
+    setState(() => _showRankUp = true);
+
+    // Pause 600ms then start climbing, one swap every 800ms
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (!mounted) return;
+      _rankUpStepTimer = Timer.periodic(const Duration(milliseconds: 800), (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+
+        final userPos = _rankUpPositions[_rankUpUserIdx]!;
+        if (userPos <= _rankUpNewRank - 1) {
+          // Reached final position — celebrate with halo
+          timer.cancel();
+          setState(() => _rankUpCelebrate = true);
+          // Hold celebration for 2.5s then fade out
+          _rankUpFadeCtrl?.dispose();
+          _rankUpFadeCtrl = AnimationController(
+            vsync: this,
+            duration: const Duration(milliseconds: 800),
+          );
+          _rankUpFadeCtrl!.addListener(() {
+            if (mounted) setState(() {});
+          });
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            if (!mounted) return;
+            _rankUpFadeCtrl!.forward().then((_) {
+              if (mounted) {
+                setState(() => _showRankUp = false);
+              }
+            });
+          });
+          return;
+        }
+
+        // Find the entry currently at userPos - 1
+        final aboveIdx = _rankUpPositions.entries
+            .firstWhere((e) => e.value == userPos - 1)
+            .key;
+
+        // Swap positions
+        setState(() {
+          _rankUpPositions[_rankUpUserIdx] = userPos - 1;
+          _rankUpPositions[aboveIdx] = userPos;
+        });
+      });
+    });
+  }
+
+  void _startPersistentGlow() {
+    if (_persistGlowCtrl != null) return; // already running
+    _persistGlowCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 6000), // slow orbit
+    )..repeat();
+    _persistGlowCtrl!.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  Widget _buildRankUpOverlay(double w, double h) {
+    final tileH = R.s(52);
+    final gap = R.s(6);
+    final totalEntries = _rankUpEntries.length;
+    final listHeight = totalEntries * tileH + (totalEntries - 1) * gap;
+    final fadeOut = _rankUpFadeCtrl?.value ?? 0.0;
+    final opacity = (1.0 - fadeOut).clamp(0.0, 1.0);
+
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: Opacity(
+          opacity: opacity,
+          child: Container(
+            color: Colors.black.withOpacity(0.55),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Title
+                Text(
+                  _rankUpCelebrate ? '🎉 排名提升！🎉' : '⬆️ 排名提升中...',
+                  style: TextStyle(
+                    fontSize: R.s(20),
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    shadows: [Shadow(color: Colors.black54, blurRadius: 8)],
+                  ),
+                ),
+                SizedBox(height: R.s(16)),
+                // Animated leaderboard
+                Container(
+                  width: w * 0.7,
+                  height: listHeight.clamp(0.0, h * 0.55),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(R.s(16)),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: R.s(10), vertical: R.s(8)),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      ...List.generate(totalEntries, (i) {
+                      final slot = _rankUpPositions[i] ?? i;
+                      final isMe = i == _rankUpUserIdx;
+                      final entry = _rankUpEntries[i];
+                      final name = entry['name'] as String? ?? '';
+                      final stars = entry['stars'] as int? ?? 0;
+                      final displayName =
+                          isMe ? '我' : _maskName(name);
+                      final displayRank = slot + 1;
+
+                      return AnimatedPositioned(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOutCubic,
+                        left: 0,
+                        right: 0,
+                        top: slot * (tileH + gap),
+                        height: tileH,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 400),
+                          decoration: BoxDecoration(
+                            color: isMe
+                                ? (_rankUpCelebrate
+                                    ? const Color(0xFFFFD700)
+                                        .withOpacity(0.95)
+                                    : const Color(0xFFFF8C42)
+                                        .withOpacity(0.9))
+                                : Colors.white.withOpacity(0.85),
+                            borderRadius: BorderRadius.circular(R.s(12)),
+                            border: isMe
+                                ? Border.all(
+                                    color: _rankUpCelebrate
+                                        ? const Color(0xFFFFD700)
+                                        : const Color(0xFFFF8C42),
+                                    width: 2.5)
+                                : null,
+                            boxShadow: isMe
+                                ? [
+                                    BoxShadow(
+                                      color: (_rankUpCelebrate
+                                              ? const Color(0xFFFFD700)
+                                              : const Color(0xFFFF8C42))
+                                          .withOpacity(0.5),
+                                      blurRadius: R.s(12),
+                                      spreadRadius: R.s(2),
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: R.s(10)),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: R.s(28),
+                                child: Text(
+                                  '$displayRank',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: R.s(15),
+                                    fontWeight: FontWeight.bold,
+                                    color: isMe
+                                        ? Colors.white
+                                        : const Color(0xFF999999),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: R.s(6)),
+                              ClipOval(
+                                  child: _buildAvatar(entry, R.s(30))),
+                              SizedBox(width: R.s(8)),
+                              Expanded(
+                                child: isMe
+                                    ? Stack(
+                                        alignment: Alignment.centerLeft,
+                                        children: [
+                                          CustomPaint(
+                                            size: Size(R.s(23), R.s(22)),
+                                            painter:
+                                                const _BrushStrokePainter(),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: R.s(8)),
+                                            child: Text(
+                                              '我',
+                                              style: TextStyle(
+                                                fontSize: R.s(14),
+                                                fontWeight: FontWeight.w900,
+                                                color: const Color(0xFF2266AA),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        displayName,
+                                        style: TextStyle(
+                                          fontSize: R.s(14),
+                                          fontWeight: FontWeight.w600,
+                                          color: const Color(0xFF333333),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                              ),
+                              Text('⭐',
+                                  style: TextStyle(fontSize: R.s(16))),
+                              SizedBox(width: R.s(3)),
+                              Text(
+                                '$stars',
+                                style: TextStyle(
+                                  fontSize: R.s(14),
+                                  fontWeight: FontWeight.w900,
+                                  color: isMe
+                                      ? Colors.white
+                                      : const Color(0xFFFF8C42),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                    ],
+                  ),
+                ),
+                if (_rankUpCelebrate) ...[
+                  SizedBox(height: R.s(14)),
+                  Text(
+                    '⭐ 太棒了！继续加油！⭐',
+                    style: TextStyle(
+                      fontSize: R.s(20),
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFFFFD700),
+                      shadows: [
+                        Shadow(color: Colors.black54, blurRadius: 8),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -513,7 +896,7 @@ class _RankingScreenState extends State<RankingScreen>
                       ],
                     ),
                     child: Text(
-                      '${_listenDone ? "进入书房" : "进入学习"} $_countdown',
+                      '回到主页 $_countdown',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: R.s(13),
@@ -598,10 +981,117 @@ class _RankingScreenState extends State<RankingScreen>
                         ],
                       ),
               ),
+
+              // Layer 7: Rank-up animation overlay
+              if (_showRankUp) _buildRankUpOverlay(w, h),
             ],
           );
         },
       ),
     );
   }
+}
+
+class _StarOrbitPainter extends CustomPainter {
+  final double t; // 0.0 → 1.0, repeating
+  _StarOrbitPainter(this.t);
+
+  static const _starColors = [
+    Color(0xFFFF4E8C), // pink
+    Color(0xFFFF9900), // orange
+    Color(0xFFFFE600), // yellow
+    Color(0xFF44FF88), // green
+    Color(0xFF44CCFF), // cyan
+    Color(0xFFCC44FF), // violet
+    Color(0xFFFF6644), // red-orange
+    Color(0xFFFFFFFF), // white
+    Color(0xFF00FFD4), // teal
+    Color(0xFFFF44CC), // magenta
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final rx = size.width * 0.40;
+    final ry = size.height * 0.40;
+
+    for (int i = 0; i < 10; i++) {
+      final phase = (i / 10.0);
+      final speed = 0.7 + (i % 3) * 0.2;
+      final angle = (t * speed + phase) * 2 * pi;
+      final px = cx + cos(angle) * rx;
+      final py = cy + sin(angle) * ry;
+      final color = _starColors[i];
+      final radius = 3.5 + (i % 3) * 1.2;
+
+      // Glow
+      final glowPaint = Paint()
+        ..color = color.withOpacity(0.45)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
+      canvas.drawCircle(Offset(px, py), radius * 2.0, glowPaint);
+
+      // 4-point star
+      final path = Path();
+      final inner = radius * 0.42;
+      for (int j = 0; j < 8; j++) {
+        final a = (j * pi / 4) - pi / 2;
+        final rad = (j.isEven) ? radius : inner;
+        final x = px + cos(a) * rad;
+        final y = py + sin(a) * rad;
+        if (j == 0) path.moveTo(x, y); else path.lineTo(x, y);
+      }
+      path.close();
+      canvas.drawPath(path, Paint()..color = color);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_StarOrbitPainter old) => old.t != t;
+}
+
+/// Hand-drawn brush stroke highlight behind "我"
+class _BrushStrokePainter extends CustomPainter {
+  const _BrushStrokePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    final paint = Paint()
+      ..color = const Color(0x559DD4F0) // gentle light sky blue, very transparent
+      ..style = PaintingStyle.fill;
+
+    // Irregular brush stroke shape — wider, organic edges
+    final path = Path()
+      ..moveTo(w * 0.02, h * 0.35)
+      ..cubicTo(w * 0.08, h * 0.05, w * 0.25, h * 0.10, w * 0.45, h * 0.08)
+      ..cubicTo(w * 0.65, h * 0.04, w * 0.82, h * 0.12, w * 0.96, h * 0.22)
+      ..cubicTo(w * 1.02, h * 0.35, w * 1.01, h * 0.55, w * 0.97, h * 0.68)
+      ..cubicTo(w * 0.88, h * 0.92, w * 0.70, h * 0.96, w * 0.50, h * 0.95)
+      ..cubicTo(w * 0.30, h * 0.98, w * 0.12, h * 0.88, w * 0.04, h * 0.72)
+      ..cubicTo(-w * 0.01, h * 0.55, -w * 0.01, h * 0.45, w * 0.02, h * 0.35)
+      ..close();
+
+    canvas.drawPath(path, paint);
+
+    // Second layer — slightly offset for texture
+    final paint2 = Paint()
+      ..color = const Color(0x159DD4F0)
+      ..style = PaintingStyle.fill;
+
+    final path2 = Path()
+      ..moveTo(w * 0.06, h * 0.30)
+      ..cubicTo(w * 0.15, h * 0.15, w * 0.35, h * 0.18, w * 0.55, h * 0.14)
+      ..cubicTo(w * 0.75, h * 0.10, w * 0.90, h * 0.25, w * 0.94, h * 0.40)
+      ..cubicTo(w * 0.98, h * 0.60, w * 0.85, h * 0.85, w * 0.60, h * 0.88)
+      ..cubicTo(w * 0.35, h * 0.92, w * 0.10, h * 0.75, w * 0.06, h * 0.30)
+      ..close();
+
+    canvas.drawPath(path2, paint2);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

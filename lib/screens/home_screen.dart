@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   // Study room unlock state — true only when all 4 daily modules done
   bool _studyRoomUnlocked = false;
+  bool _studyRoomVisitedToday = false;
 
   // Glow animation for the books zone
   late final AnimationController _glowCtrl;
@@ -114,6 +115,12 @@ class _HomeScreenState extends State<HomeScreen>
     // Same condition as study_screen end background: today_listen_done == true
     final allDone = prefs.getBool('today_listen_done') ?? false;
 
+    // Check if studyroom was visited today
+    final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final visitedDate = prefs.getString('studyroom_visited_date') ?? '';
+    final visitedToday = visitedDate == todayStr;
+
     // Calculate total owed from debt_module_status
     final owed = await _calcTotalOwed(prefs);
     final pending = await ProgressService.getTodayPending();
@@ -123,11 +130,12 @@ class _HomeScreenState extends State<HomeScreen>
         _streakDays         = prefs.getInt('streak_days') ?? 0;
         _totalStars         = prefs.getInt('total_stars') ?? 0;
         _studyRoomUnlocked  = allDone;
+        _studyRoomVisitedToday = visitedToday;
         _totalOwed          = owed;
         _todayPending       = pending;
       });
-      // Start or stop the pulse based on unlock state
-      if (allDone) {
+      // Start or stop the orbit — show only when unlocked AND not yet visited today
+      if (allDone && !visitedToday) {
         _eggyGlowCtrl.repeat();
       } else {
         _eggyGlowCtrl.stop();
@@ -152,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen>
     int total = 0;
     var d = startDate;
 
-    while (!d.isAfter(today)) {
+    while (d.isBefore(today)) {
       final dateKey = '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
       final status = moduleStatus[dateKey] as Map<String, dynamic>? ?? {};
 
@@ -223,7 +231,8 @@ class _HomeScreenState extends State<HomeScreen>
                       child: Image.asset('assets/home/layers/girl_book.png',
                         fit: BoxFit.cover, width: w, height: h),
                     ),
-                    // Sparkle effect (wider than book tap zone)
+                    // Sparkle effect (only when study not yet done)
+                    if (!_studyRoomUnlocked)
                     Positioned(
                       left: w * 0.4,
                       bottom: 0,
@@ -257,8 +266,8 @@ class _HomeScreenState extends State<HomeScreen>
                       height: h * 0.6,
                       child: Stack(
                         children: [
-                          // Glow effect when unlocked
-                          if (_studyRoomUnlocked)
+                          // Glow effect when unlocked and not yet visited today
+                          if (_studyRoomUnlocked && !_studyRoomVisitedToday)
                             Positioned.fill(
                               child: AnimatedBuilder(
                                 animation: _eggyGlowAnim,
@@ -272,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: _studyRoomUnlocked
-                                  ? () => Navigator.pushNamed(ctx, '/studyroom').then((_) => _loadStats())
+                                  ? () => _enterStudyRoom(ctx)
                                   : null,
                             ),
                           ),
@@ -321,8 +330,7 @@ class _HomeScreenState extends State<HomeScreen>
                       _DevBtn(label: '🏆 排行榜', onTap: () =>
                           Navigator.pushNamed(ctx, '/ranking').then((_) => _loadStats())),
                       const SizedBox(height: 6),
-                      _DevBtn(label: '🛠 书房', onTap: () =>
-                          Navigator.pushNamed(ctx, '/studyroom').then((_) => _loadStats())),
+                      _DevBtn(label: '🛠 书房', onTap: () => _enterStudyRoom(ctx)),
                     ],
                   ),
                 ),
@@ -378,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
 
               // ── Makeup debt badge (centered on calendar) ──────────────
-              if (_totalOwed > 0)
+              if (_totalOwed + _todayPending > 0)
                 Positioned(
                   right: w * 0.05,
                   top:   h * 0.03,
@@ -406,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 ),
                               ],
                             ),
-                            child: Text('待补卡($_totalOwed)',
+                            child: Text('待打卡(${_totalOwed + _todayPending})',
                               style: const TextStyle(
                                 color: Color(0xFF795548),
                                 fontWeight: FontWeight.w900,
@@ -447,12 +455,53 @@ class _HomeScreenState extends State<HomeScreen>
 
 
 
+              // ── Night widget (only after 20:30 China time) ──────────
+              if (_isBedtime())
+                Positioned(
+                  left: w * 0.12,
+                  bottom: h * 0.52,
+                  child: AnimatedBuilder(
+                    animation: _bookSparkleAnim,
+                    builder: (_, __) {
+                      // Gentle float: 4px up and down
+                      final float = sin(_bookSparkleAnim.value * 2 * pi) * 4;
+                      return Transform.translate(
+                        offset: Offset(0, float),
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushNamed(ctx, '/night-candle'),
+                          child: Image.asset(
+                            'assets/home/layers/night.png',
+                            height: h * 0.216,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
             ],
             ),
           );
         },
       ),
     );
+  }
+
+  Future<void> _enterStudyRoom(BuildContext ctx) async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    await prefs.setString('studyroom_visited_date', todayStr);
+    if (!mounted) return;
+    await Navigator.pushNamed(ctx, '/studyroom');
+    _loadStats();
+  }
+
+  /// Check if it's after 20:30 China time (UTC+8)
+  bool _isBedtime() {
+    final now = DateTime.now().toUtc().add(const Duration(hours: 8));
+    return (now.hour == 20 && now.minute >= 30) || now.hour >= 21;
   }
 }
 
