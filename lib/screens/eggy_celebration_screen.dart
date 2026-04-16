@@ -211,8 +211,8 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                                   opacity: starOp,
                                   child: Transform.scale(
                                     scale: 0.5 + t * 0.8,
-                                    child: const Text('⭐',
-                                        style: TextStyle(fontSize: 28)),
+                                    child: Text('⭐',
+                                        style: TextStyle(fontSize: R.s(28))),
                                   ),
                                 ),
                               ),
@@ -321,8 +321,8 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(32)),
-                                  textStyle: const TextStyle(
-                                      fontSize: 18,
+                                  textStyle: TextStyle(
+                                      fontSize: R.s(18),
                                       fontWeight: FontWeight.bold),
                                 ),
                                 child: Text(widget.nextLabel),

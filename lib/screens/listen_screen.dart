@@ -771,8 +771,8 @@ class _ListenScreenState extends State<ListenScreen>
                 ),
               ),
             ),
-            // Book list columns (left, or left+right if >10)
-            ..._buildBookListColumns(),
+            // Book list columns (left, or left+right if >10) — hide on mobile
+            if (!R.isMobile) ..._buildBookListColumns(),
           ],
 
           // ── Top bar + waveform + controls ────────────────────────────────────

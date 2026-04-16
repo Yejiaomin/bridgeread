@@ -280,6 +280,7 @@ class _RecordingScreenState extends State<RecordingScreen>
 
   @override
   Widget build(BuildContext context) {
+    R.init(context);
     if (_recPage == null || _current == null) {
       return const Scaffold(
         backgroundColor: Color(0xFFFFF8F0),

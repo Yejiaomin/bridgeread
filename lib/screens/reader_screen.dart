@@ -353,6 +353,19 @@ class _ReaderScreenState extends State<ReaderScreen>
        Set<int> triggeredIndices = const {}}) {
     // Cover page: book on left, Eggy + warm gradient on right
     if (pageIndex == 0) {
+      // On mobile: show only the book cover, full width
+      if (R.isMobile) {
+        return Container(
+          color: const Color(0xFFFFF8F0),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: cdnImage(imageAsset, fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => const SizedBox()),
+            ),
+          ),
+        );
+      }
       return Row(
         children: [
           // ── Left: book cover ──────────────────────────────────────────────

@@ -850,18 +850,18 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: R.s(20), vertical: R.s(12)),
       child: Row(
         children: [
           // Back button
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded,
-                color: Colors.white70, size: 22),
+            icon: Icon(Icons.arrow_back_ios_rounded,
+                color: Colors.white70, size: R.s(22)),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
             onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: R.s(8)),
           // Progress dots
           Row(
             children: List.generate(6, (i) {
@@ -870,8 +870,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
               else if (i == _round) c = Colors.white;
               else                  c = Colors.white.withValues(alpha: 0.28);
               return Container(
-                margin: const EdgeInsets.only(right: 7),
-                width: 11, height: 11,
+                margin: EdgeInsets.only(right: R.s(7)),
+                width: R.s(11), height: R.s(11),
                 decoration:
                     BoxDecoration(shape: BoxShape.circle, color: c),
               );
@@ -881,20 +881,20 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           // Score chip
           Container(
             padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                EdgeInsets.symmetric(horizontal: R.s(14), vertical: R.s(6)),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(R.s(20)),
             ),
             child: Row(
               children: [
-                const Text('⭐', style: TextStyle(fontSize: 16)),
-                const SizedBox(width: 5),
+                Text('⭐', style: TextStyle(fontSize: R.s(16))),
+                SizedBox(width: R.s(5)),
                 Text('$_totalStars',
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18)),
+                        fontSize: R.s(18))),
               ],
             ),
           ),

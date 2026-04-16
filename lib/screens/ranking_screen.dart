@@ -822,45 +822,43 @@ class _RankingScreenState extends State<RankingScreen>
               ),
 
               // Layer 2: Podiums (2nd first, then 3rd, then 1st on top)
-              if (!_loading && top3.length >= 2)
-                Positioned(
-                  left: w * 0.5 -
-                      h * 0.38 * (374 / 383) / 2 -
-                      h * 0.28 * (257 / 271) +
-                      w * 0.06,
-                  bottom: h * 0.45,
-                  child: _buildPodiumWidget(
-                    entry: top3[1],
-                    rank: 2,
-                    podiumHeight: h * 0.28,
-                    aspect: 257 / 271,
-                  ),
-                ),
-              if (!_loading && top3.length >= 3)
-                Positioned(
-                  right: w * 0.5 -
-                      h * 0.38 * (374 / 383) / 2 -
-                      h * 0.26 * (188 / 201) +
-                      w * 0.03,
-                  bottom: h * 0.46,
-                  child: _buildPodiumWidget(
-                    entry: top3[2],
-                    rank: 3,
-                    podiumHeight: h * 0.26,
-                    aspect: 188 / 201,
-                  ),
-                ),
-              if (!_loading && top3.isNotEmpty)
-                Positioned(
-                  left: w * 0.5 - h * 0.38 * (374 / 383) / 2 + w * 0.01,
-                  bottom: h * 0.44,
-                  child: _buildPodiumWidget(
-                    entry: top3[0],
-                    rank: 1,
-                    podiumHeight: h * 0.38,
-                    aspect: 374 / 383,
-                  ),
-                ),
+              if (!_loading && top3.length >= 2) ...[
+                // Use smaller podiums on mobile
+                () {
+                  final ps = R.isMobile ? 0.7 : 1.0; // podium scale
+                  final h1 = h * 0.38 * ps;
+                  final h2 = h * 0.28 * ps;
+                  final h3 = h * 0.26 * ps;
+                  return Positioned(
+                    left: w * 0.5 - h1 * (374 / 383) / 2 - h2 * (257 / 271) + w * 0.06,
+                    bottom: R.isMobile ? h * 0.48 : h * 0.45,
+                    child: _buildPodiumWidget(entry: top3[1], rank: 2, podiumHeight: h2, aspect: 257 / 271),
+                  );
+                }(),
+              ],
+              if (!_loading && top3.length >= 3) ...[
+                () {
+                  final ps = R.isMobile ? 0.7 : 1.0;
+                  final h1 = h * 0.38 * ps;
+                  final h3 = h * 0.26 * ps;
+                  return Positioned(
+                    right: w * 0.5 - h1 * (374 / 383) / 2 - h3 * (188 / 201) + w * 0.03,
+                    bottom: R.isMobile ? h * 0.49 : h * 0.46,
+                    child: _buildPodiumWidget(entry: top3[2], rank: 3, podiumHeight: h3, aspect: 188 / 201),
+                  );
+                }(),
+              ],
+              if (!_loading && top3.isNotEmpty) ...[
+                () {
+                  final ps = R.isMobile ? 0.7 : 1.0;
+                  final h1 = h * 0.38 * ps;
+                  return Positioned(
+                    left: w * 0.5 - h1 * (374 / 383) / 2 + w * 0.01,
+                    bottom: R.isMobile ? h * 0.47 : h * 0.44,
+                    child: _buildPodiumWidget(entry: top3[0], rank: 1, podiumHeight: h1, aspect: 374 / 383),
+                  );
+                }(),
+              ],
 
               // Layer 3: Eggy mascot bottom-right
               Positioned(
@@ -908,8 +906,8 @@ class _RankingScreenState extends State<RankingScreen>
 
               // Layer 5: Tab bar
               Positioned(
-                left: w * 0.25,
-                right: w * 0.25,
+                left: R.isMobile ? w * 0.05 : w * 0.25,
+                right: R.isMobile ? w * 0.05 : w * 0.25,
                 top: h * 0.14,
                 child: Container(
                   padding: EdgeInsets.all(R.s(3)),
@@ -957,8 +955,8 @@ class _RankingScreenState extends State<RankingScreen>
 
               // Layer 6: List area
               Positioned(
-                left: w * 0.1,
-                right: w * 0.1,
+                left: R.isMobile ? w * 0.02 : w * 0.1,
+                right: R.isMobile ? w * 0.02 : w * 0.1,
                 top: h * 0.60,
                 bottom: 0,
                 child: _loading
@@ -969,7 +967,7 @@ class _RankingScreenState extends State<RankingScreen>
                         children: [
                           // Divider line
                           Container(
-                            margin: EdgeInsets.symmetric(horizontal: R.s(100)),
+                            margin: EdgeInsets.symmetric(horizontal: R.isMobile ? R.s(20) : R.s(100)),
                             height: 1,
                             color: const Color(0xFFE0C9A6).withOpacity(0.5),
                           ),
