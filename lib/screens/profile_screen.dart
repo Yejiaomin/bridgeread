@@ -284,7 +284,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
     if (confirmed == true) {
-      await _prefs?.remove('auth_token');
+      // Clear all user data from local cache
+      final prefs = _prefs;
+      if (prefs != null) {
+        final keys = prefs.getKeys().toList();
+        for (final key in keys) {
+          // Keep only device-level keys
+          if (key == 'app_version' || key == 'debug_day_offset') continue;
+          await prefs.remove(key);
+        }
+      }
       if (mounted) {
         Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
       }
