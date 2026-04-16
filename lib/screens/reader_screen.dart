@@ -185,14 +185,10 @@ class _ReaderScreenState extends State<ReaderScreen>
       return;
     }
 
-    // Run video preparation and 1s delay in parallel.
-    final videoFuture = videoAsset != null
-        ? _prepareVideo(videoAsset)
-        : Future<VideoPlayerController?>.value(null);
-    final delayFuture = Future<void>.delayed(const Duration(seconds: 1));
-
-    final newCtrl = await videoFuture;
-    await delayFuture;
+    // Prepare video if needed, then dispose old controller
+    final newCtrl = videoAsset != null
+        ? await _prepareVideo(videoAsset)
+        : null;
     await oldCtrl?.dispose();
 
     if (!mounted) {
