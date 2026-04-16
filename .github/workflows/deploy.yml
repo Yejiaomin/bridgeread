@@ -30,19 +30,21 @@ jobs:
             gzip -9 -k "$f"
           done
 
-      # Sync production branch to Gitee (only tracked source files, no history)
-      - name: Push production to Gitee
+      # Sync backend code to Gitee (only server/ and deploy/ — small and fast)
+      - name: Push backend to Gitee
         env:
           GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
         run: |
           tmpdir=$(mktemp -d)
-          git archive HEAD | tar -x -C "$tmpdir"
+          cp -r server "$tmpdir/server"
+          cp -r deploy "$tmpdir/deploy" 2>/dev/null || true
+          cp package*.json "$tmpdir/" 2>/dev/null || true
           cd "$tmpdir"
           git init
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add -A
-          git commit -m "Production $(date -u +%Y%m%d-%H%M%S)"
+          git commit -m "Backend $(date -u +%Y%m%d-%H%M%S)"
           git push --force https://oauth2:${GITEE_TOKEN}@gitee.com/Yejiaomin_e351/bridge-read.git HEAD:production
 
       # Push build output to Gitee deploy branch (China server auto-pulls via cron)
