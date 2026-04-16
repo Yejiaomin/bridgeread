@@ -30,6 +30,13 @@ jobs:
             gzip -9 -k "$f"
           done
 
+      # Sync production branch to Gitee (server pulls backend from here)
+      - name: Push production to Gitee
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          git push --force https://oauth2:${GITEE_TOKEN}@gitee.com/Yejiaomin_e351/bridge-read.git HEAD:production
+
       # Push build output to Gitee deploy branch (China server auto-pulls via cron)
       - name: Push to Gitee deploy branch
         env:
