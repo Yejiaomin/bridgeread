@@ -106,14 +106,28 @@
     </div>
   </div>
   <script>
-    // Countdown from 30 to 0
+    // Countdown from 30 to 0, then show retry hint
     var count = 30;
     var countdownEl = document.getElementById('countdown');
+    var bubbleText = document.querySelector('.bubble-text');
     var countdownTimer = setInterval(function() {
       count--;
-      if (count >= 0) countdownEl.textContent = count;
-      if (count <= 0) clearInterval(countdownTimer);
+      if (count > 0) {
+        countdownEl.textContent = count;
+      } else {
+        clearInterval(countdownTimer);
+        // Countdown finished but app not loaded — show loading hint
+        bubbleText.innerHTML = '快好了，再等一下~<br><span style="font-size:14px;font-weight:600;color:#999">如果一直打不开，请刷新页面试试</span>';
+      }
     }, 1000);
+
+    // Fallback: if Flutter still not loaded after 60s, show reload button
+    setTimeout(function() {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        bubbleText.innerHTML = '加载太慢了...<br><button onclick="location.reload()" style="margin-top:12px;padding:10px 28px;font-size:16px;font-weight:700;color:white;background:#FF8C42;border:none;border-radius:20px;cursor:pointer">点击刷新</button>';
+      }
+    }, 60000);
 
     // Only show PWA tip in browser mode (not installed PWA)
     if (!window.matchMedia('(display-mode: standalone)').matches &&
@@ -126,7 +140,7 @@
   <script>
     // Auto-clear old caches on version change
     (function() {
-      var APP_VERSION = '2026040601';
+      var APP_VERSION = '2026041501';
       var stored = localStorage.getItem('app_version');
       if (stored !== APP_VERSION) {
         localStorage.setItem('app_version', APP_VERSION);
