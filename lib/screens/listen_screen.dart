@@ -11,6 +11,7 @@ import '../services/api_service.dart';
 import '../services/lesson_service.dart';
 import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/media_session.dart';
 import '../utils/responsive_utils.dart';
 
 // ── Playlist ──────────────────────────────────────────────────────────────────
@@ -250,6 +251,7 @@ class _ListenScreenState extends State<ListenScreen>
   @override
   void dispose() {
     WakelockPlus.disable();
+    clearMediaSession();
     for (final s in _subs) s.cancel();
     _player.dispose();
     _sfxPlayer.dispose();
@@ -342,6 +344,17 @@ class _ListenScreenState extends State<ListenScreen>
 
     await _player.play(cdnAudioSource(track.path));
     _setPlaying(true);
+
+    // Media Session API: enable lock screen controls & background audio
+    setMediaSession(
+      title: '${track.label} - ${track.lessonId ?? ""}',
+      onPlay: () => _togglePlay(),
+      onPause: () => _togglePlay(),
+      onNextTrack: () => _nextTrack(),
+      onPreviousTrack: () {
+        if (mounted) _playTrack((_trackIdx - 1 + _tracks.length) % _tracks.length);
+      },
+    );
   }
 
   void _setPlaying(bool v) {
