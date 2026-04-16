@@ -79,7 +79,13 @@ class _LoginScreenState extends State<LoginScreen> {
       while (d.isBefore(today)) {
         final ds = _formatDate(d);
         if (d.weekday >= 1 && d.weekday <= 5) {
+          // Weekday: all 4 modules
           for (final mod in ['recap', 'reader', 'quiz', 'listen']) {
+            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 12});
+          }
+        } else {
+          // Weekend: quiz + listen (review modules)
+          for (final mod in ['quiz', 'listen']) {
             items.add({'date': ds, 'module': mod, 'done': true, 'stars': 12});
           }
         }

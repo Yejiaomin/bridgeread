@@ -217,8 +217,9 @@ class _HomeScreenState extends State<HomeScreen>
             children: [
               // ── Layer 1: Background (fill entire screen) ────────────
               Positioned.fill(
-                child: Image.asset('assets/home/layers/bg.png',
-                  fit: BoxFit.cover, width: w, height: h),
+                child: cdnImage('assets/home/layers/bg.png',
+                  fit: BoxFit.cover, width: w, height: h,
+                  errorBuilder: (_, __, ___) => Container(color: const Color(0xFFFFF4E6))),
               ),
 
 
@@ -228,8 +229,9 @@ class _HomeScreenState extends State<HomeScreen>
                   children: [
                     // The combined image
                     Positioned.fill(
-                      child: Image.asset('assets/home/layers/girl_book.png',
-                        fit: BoxFit.cover, width: w, height: h),
+                      child: cdnImage('assets/home/layers/girl_book.png',
+                        fit: BoxFit.cover, width: w, height: h,
+                        errorBuilder: (_, __, ___) => const SizedBox()),
                     ),
                     // Sparkle effect (only when study not yet done)
                     if (!_studyRoomUnlocked)
@@ -298,8 +300,9 @@ class _HomeScreenState extends State<HomeScreen>
                 top: h * 0.02,
                 child: GestureDetector(
                   onTap: () => Navigator.pushNamed(ctx, '/calendar'),
-                  child: Image.asset('assets/home/layers/cal.png',
-                    height: h * 0.25, fit: BoxFit.contain),
+                  child: cdnImage('assets/home/layers/cal.png',
+                    height: h * 0.25, fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => const SizedBox()),
                 ),
               ),
 
