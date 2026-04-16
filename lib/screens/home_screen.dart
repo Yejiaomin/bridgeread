@@ -10,6 +10,7 @@ import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
 import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
+import '../utils/responsive_utils.dart';
 import '../services/analytics_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -204,11 +205,13 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    R.init(context);
     return Scaffold(
       body: LayoutBuilder(
         builder: (ctx, box) {
           final w = box.maxWidth;
           final h = box.maxHeight;
+          final mobile = R.isMobile;
           return SizedBox(
             width: w,
             height: h,
@@ -309,8 +312,8 @@ class _HomeScreenState extends State<HomeScreen>
               // ── Shortcuts (only visible after today's study is complete) ──
               if (_studyRoomUnlocked)
                 Positioned(
-                  right: 16,
-                  bottom: 16,
+                  right: mobile ? 8 : 16,
+                  bottom: mobile ? 8 : 16,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
@@ -358,7 +361,7 @@ class _HomeScreenState extends State<HomeScreen>
                   child: GestureDetector(
                     onTap: () => _onBooksTap(ctx),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: R.s(14), vertical: R.s(8)),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFF8F00).withValues(alpha: 0.7),
                         borderRadius: BorderRadius.circular(20),
@@ -373,13 +376,13 @@ class _HomeScreenState extends State<HomeScreen>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text('🎯', style: TextStyle(fontSize: 16)),
-                          const SizedBox(width: 5),
+                          Text('🎯', style: TextStyle(fontSize: R.s(16))),
+                          SizedBox(width: R.s(5)),
                           Text('今日 $_todayPending',
-                            style: const TextStyle(
-                              color: Color(0xFF795548),
+                            style: TextStyle(
+                              color: const Color(0xFF795548),
                               fontWeight: FontWeight.w900,
-                              fontSize: 15,
+                              fontSize: R.s(15),
                             ),
                           ),
                         ],
@@ -418,10 +421,10 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                             ),
                             child: Text('待打卡(${_totalOwed + _todayPending})',
-                              style: const TextStyle(
-                                color: Color(0xFF795548),
+                              style: TextStyle(
+                                color: const Color(0xFF795548),
                                 fontWeight: FontWeight.w900,
-                                fontSize: 16,
+                                fontSize: R.s(16),
                               ),
                             ),
                           ),
@@ -522,7 +525,7 @@ class _DevBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: R.s(12), vertical: R.s(6)),
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.55),
           borderRadius: BorderRadius.circular(20),
@@ -530,8 +533,8 @@ class _DevBtn extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
+          style: TextStyle(
+              color: Colors.white, fontSize: R.s(13), fontWeight: FontWeight.w700),
         ),
       ),
     );

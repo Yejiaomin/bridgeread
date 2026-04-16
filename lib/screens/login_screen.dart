@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../services/week_service.dart' show chinaTime;
 import '../services/analytics_service.dart';
+import '../utils/responsive_utils.dart';
 
 const _kOrange = Color(0xFFFF8C42);
 const _kCream = Color(0xFFFFF8F0);
@@ -149,19 +150,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    R.init(context);
+    final w = MediaQuery.of(context).size.width;
+    final formWidth = R.isMobile ? w - 48 : w / 3;
+    final logoSize = R.isMobile ? 120.0 : 180.0;
+    final titleSize = R.isMobile ? 22.0 : 28.0;
+
     return Scaffold(
       backgroundColor: _kCream,
       body: Center(
         child: SizedBox(
-          width: MediaQuery.of(context).size.width / 3,
+          width: formWidth,
           child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Logo
-              Image.asset('assets/pet/eggy_transparent_bg.webp', width: 180, height: 180),
+              Image.asset('assets/pet/eggy_transparent_bg.webp', width: logoSize, height: logoSize),
               const SizedBox(height: 12),
-              const Text('BridgeRead', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: _kOrange)),
+              Text('BridgeRead', style: TextStyle(fontSize: titleSize, fontWeight: FontWeight.w900, color: _kOrange)),
               const SizedBox(height: 32),
 
               // Toggle login/register

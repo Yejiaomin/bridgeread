@@ -344,14 +344,14 @@ class _StudyScreenState extends State<StudyScreen>
                                   // Red debt badge
                                   if (showBadge)
                                     Positioned(
-                                      right: i == 2 ? -22 : 2,
-                                      top: -4,
+                                      right: R.s(i == 2 ? -22 : 2),
+                                      top: R.s(-4),
                                       child: Container(
-                                        height: 22,
-                                        width: 32,
+                                        height: R.s(22),
+                                        width: R.s(32),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFFF6B35),
-                                          borderRadius: BorderRadius.circular(11),
+                                          borderRadius: BorderRadius.circular(R.s(11)),
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Color(0x66FF6B35),
@@ -360,11 +360,11 @@ class _StudyScreenState extends State<StudyScreen>
                                             ),
                                           ],
                                         ),
-                                        child: const Center(
+                                        child: Center(
                                           child: Text('1',
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 13,
+                                              fontSize: R.s(13),
                                               fontWeight: FontWeight.w900,
                                             ),
                                           ),

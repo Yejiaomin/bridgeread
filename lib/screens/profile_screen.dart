@@ -309,17 +309,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: _prefs == null
                 ? const Center(
                     child: CircularProgressIndicator(color: _kPrimary))
-                : Row(
-                    children: [
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                      SizedBox(
-                        width: R.s(360),
-                        child: _buildLeftColumn(),
+                : R.isMobile
+                    ? SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [
+                            _buildLeftColumn(),
+                            const SizedBox(height: 16),
+                            _buildRightColumn(),
+                          ],
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                          SizedBox(
+                            width: R.s(360),
+                            child: _buildLeftColumn(),
+                          ),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                          Expanded(child: _buildRightColumn()),
+                        ],
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                      Expanded(child: _buildRightColumn()),
-                    ],
-                  ),
           ),
         ],
       ),
