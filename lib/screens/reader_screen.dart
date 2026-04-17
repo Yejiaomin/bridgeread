@@ -112,6 +112,7 @@ class _ReaderScreenState extends State<ReaderScreen>
     _celebCtrl.dispose();
     _autoAdvanceTimer?.cancel();
     _positionSub?.cancel();
+    _completeSub?.cancel();
     _cancelled = true;
     _player.dispose();
     _videoController?.dispose();
@@ -154,21 +155,22 @@ class _ReaderScreenState extends State<ReaderScreen>
     await _startPageAudio();
   }
 
-  /// Wait for the player to finish the current track.
-  Future<void> _waitComplete() async {
-    final completer = Completer<void>();
-    late StreamSubscription<void> sub;
-    sub = _player.onPlayerComplete.listen((_) {
-      if (!completer.isCompleted) completer.complete();
-      sub.cancel();
-    });
-    await completer.future;
-  }
+  StreamSubscription<void>? _completeSub;
 
   /// Play a single audio asset and wait for completion.
+  /// Calling play() again automatically replaces the current track
+  /// (keeps iOS audio context alive — no stop() needed).
   Future<void> _playAndWait(String name) async {
+    // Cancel any previous completion listener
+    _completeSub?.cancel();
+    final completer = Completer<void>();
+    _completeSub = _player.onPlayerComplete.listen((_) {
+      if (!completer.isCompleted) completer.complete();
+    });
     await _player.play(AssetSource('audio/$name.mp3'));
-    await _waitComplete();
+    await completer.future;
+    _completeSub?.cancel();
+    _completeSub = null;
   }
 
   Future<void> _startPageAudio() async {
@@ -328,7 +330,7 @@ class _ReaderScreenState extends State<ReaderScreen>
   void _prevPage() {
     if (_lesson == null || _currentPage == 0) return;
     _cancelled = true;
-    _player.stop();
+    // Don't stop() — let play() replace directly to keep iOS audio context alive
     setState(() => _currentPage--);
     _startPageAudio();
   }
@@ -337,7 +339,6 @@ class _ReaderScreenState extends State<ReaderScreen>
     if (_lesson == null) return;
     if (_currentPage < _lesson!.pages.length - 1) {
       _cancelled = true;
-      _player.stop();
       setState(() => _currentPage++);
       _startPageAudio();
     }
