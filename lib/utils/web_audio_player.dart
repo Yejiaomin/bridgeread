@@ -38,7 +38,6 @@ class WebAudioPlayer {
   /// On web, Flutter assets are served at /assets/assets/...
   void play(String assetPath) {
     // Flutter web serves assets at: /assets/{assetPath}
-    // AssetSource('audio/file.mp3') → URL: /assets/assets/audio/file.mp3
     final url = 'assets/assets/$assetPath';
     _jsPlay(url.toJS);
   }
@@ -46,13 +45,24 @@ class WebAudioPlayer {
   void pause() => _jsPause();
   void resume() => _jsResume();
   void stop() => _jsStop();
+  void seek(Duration position) => _jsSeek(position.inMilliseconds.toJS);
 
   bool get isPlaying => _jsIsPlaying().toDart;
+  int get durationMs => _jsGetDuration().toDartInt;
+  int get positionMs => _jsGetPosition().toDartInt;
 
   void dispose() {
     _jsStop();
     _onCompleteCtrl?.close();
     _onPositionCtrl?.close();
+  }
+}
+
+/// Separate SFX player (second HTML5 Audio element)
+class WebSfxPlayer {
+  void play(String assetPath) {
+    final url = 'assets/assets/$assetPath';
+    _jsSfxPlay(url.toJS);
   }
 }
 
@@ -74,5 +84,17 @@ external void _jsOnEnd(JSFunction callback);
 @JS('window._brAudio.onPosition')
 external void _jsOnPosition(JSFunction callback);
 
+@JS('window._brAudio.seek')
+external void _jsSeek(JSNumber ms);
+
 @JS('window._brAudio.isPlaying')
 external JSBoolean _jsIsPlaying();
+
+@JS('window._brAudio.getDuration')
+external JSNumber _jsGetDuration();
+
+@JS('window._brAudio.getPosition')
+external JSNumber _jsGetPosition();
+
+@JS('window._brSfx.play')
+external void _jsSfxPlay(JSString url);

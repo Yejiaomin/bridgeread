@@ -52,8 +52,23 @@
     },
     onEnd: function(cb) { onEndCallback = cb; },
     onPosition: function(cb) { onPositionCallback = cb; },
+    seek: function(ms) {
+      audio.currentTime = ms / 1000;
+    },
     isPlaying: function() { return !audio.paused; },
     getDuration: function() { return Math.floor((audio.duration || 0) * 1000); },
     getPosition: function() { return Math.floor((audio.currentTime || 0) * 1000); }
+  };
+
+  // Second audio element for SFX (independent from main player)
+  var sfx = new Audio();
+  sfx.preload = 'auto';
+  window._brSfx = {
+    play: function(url) {
+      sfx.src = url;
+      sfx.load();
+      var p = sfx.play();
+      if (p && p.catch) p.catch(function() {});
+    }
   };
 })();

@@ -13,6 +13,7 @@ import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/media_session.dart';
 import '../utils/responsive_utils.dart';
+import '../utils/web_audio_player.dart';
 
 // ── Playlist ──────────────────────────────────────────────────────────────────
 
@@ -46,8 +47,12 @@ class ListenScreen extends StatefulWidget {
 
 class _ListenScreenState extends State<ListenScreen>
     with TickerProviderStateMixin {
-  final _player = AudioPlayer();
-  final _sfxPlayer = AudioPlayer();
+  // Web: persistent HTML5 Audio for iOS autoplay compat
+  // Mobile: standard audioplayers
+  final WebAudioPlayer? _webPlayer = kIsWeb ? WebAudioPlayer() : null;
+  final AudioPlayer? _nativePlayer = kIsWeb ? null : AudioPlayer();
+  final WebSfxPlayer? _webSfx = kIsWeb ? WebSfxPlayer() : null;
+  final AudioPlayer? _nativeSfx = kIsWeb ? null : AudioPlayer();
 
   static const _eggyImages = [
     'assets/pet/cards/1egg.webp',
@@ -108,18 +113,35 @@ class _ListenScreenState extends State<ListenScreen>
         Tween<double>(begin: 6, end: 48).animate(
             CurvedAnimation(parent: c, curve: Curves.easeInOut))).toList();
 
-    _subs.addAll([
-      _player.onPlayerComplete.handleError((_) {}).listen((_) => _nextTrack()),
-      _player.onPositionChanged.handleError((_) {}).listen((p) {
-        if (mounted) {
-          setState(() => _position = p);
-          _updatePageForPosition(p);
-        }
-      }),
-      _player.onDurationChanged.handleError((_) {}).listen((d) {
-        if (mounted) setState(() => _duration = d);
-      }),
-    ]);
+    if (_webPlayer != null) {
+      _subs.addAll([
+        _webPlayer!.onComplete.listen((_) => _nextTrack()),
+        _webPlayer!.onPositionChanged.listen((p) {
+          if (mounted) {
+            setState(() {
+              _position = p;
+              // Also update duration from JS (no separate onDurationChanged on web)
+              final durMs = _webPlayer!.durationMs;
+              if (durMs > 0) _duration = Duration(milliseconds: durMs);
+            });
+            _updatePageForPosition(p);
+          }
+        }),
+      ]);
+    } else {
+      _subs.addAll([
+        _nativePlayer!.onPlayerComplete.handleError((_) {}).listen((_) => _nextTrack()),
+        _nativePlayer!.onPositionChanged.handleError((_) {}).listen((p) {
+          if (mounted) {
+            setState(() => _position = p);
+            _updatePageForPosition(p);
+          }
+        }),
+        _nativePlayer!.onDurationChanged.handleError((_) {}).listen((d) {
+          if (mounted) setState(() => _duration = d);
+        }),
+      ]);
+    }
 
     _loadPrefs();
     _loadListenTime();
@@ -136,7 +158,7 @@ class _ListenScreenState extends State<ListenScreen>
         setState(() => _bedtimeRemaining--);
         if (_bedtimeRemaining <= 0) {
           _bedtimeTimer?.cancel();
-          _player.stop();
+          if (_webPlayer != null) { _webPlayer!.stop(); } else { _nativePlayer?.stop(); }
           WakelockPlus.disable();
           // Exit app or go back to home
           if (mounted) {
@@ -253,8 +275,9 @@ class _ListenScreenState extends State<ListenScreen>
     WakelockPlus.disable();
     clearMediaSession();
     for (final s in _subs) s.cancel();
-    _player.dispose();
-    _sfxPlayer.dispose();
+    _webPlayer?.dispose();
+    _nativePlayer?.dispose();
+    _nativeSfx?.dispose();
     for (final c in _waveCtrl) c.dispose();
     _petTimer?.cancel();
     _bedtimeTimer?.cancel();
@@ -332,17 +355,24 @@ class _ListenScreenState extends State<ListenScreen>
       _pageTimings = timings;
       _currentPageIdx = 0;
     });
-    await _player.stop();
-
     // Play page-flip sound when switching between different books
     if (idx > 0) {
       try {
-        await _sfxPlayer.play(cdnAudioSource('audio/sfx/book-open.wav'));
+        if (_webSfx != null) {
+          _webSfx!.play('audio/sfx/book-open.wav');
+        } else {
+          await _nativeSfx!.play(cdnAudioSource('audio/sfx/book-open.wav'));
+        }
         await Future.delayed(const Duration(milliseconds: 600));
       } catch (_) {}
     }
 
-    await _player.play(cdnAudioSource(track.path));
+    if (_webPlayer != null) {
+      // Strip 'audio/' prefix not needed — track.path already has it
+      _webPlayer!.play(track.path);
+    } else {
+      await _nativePlayer!.play(cdnAudioSource(track.path));
+    }
     _setPlaying(true);
 
     // Media Session API: enable lock screen controls & background audio
@@ -368,10 +398,12 @@ class _ListenScreenState extends State<ListenScreen>
 
   Future<void> _togglePlay() async {
     if (_playing) {
-      await _player.pause();
+      _webPlayer?.pause();
+      await _nativePlayer?.pause();
       _setPlaying(false);
     } else {
-      await _player.resume();
+      _webPlayer?.resume();
+      await _nativePlayer?.resume();
       _setPlaying(true);
     }
   }
@@ -530,7 +562,7 @@ class _ListenScreenState extends State<ListenScreen>
   }
 
   Future<void> _onListenComplete() async {
-    await _player.stop();
+    if (_webPlayer != null) { _webPlayer!.stop(); } else { await _nativePlayer?.stop(); }
     _setPlaying(false);
     await _saveListenTime();
     if (!_allTracksCompleted) {
@@ -821,7 +853,7 @@ class _ListenScreenState extends State<ListenScreen>
                 color: Colors.white70, size: 22),
             onPressed: () {
               _saveListenTime();
-              _player.stop();
+              if (_webPlayer != null) { _webPlayer!.stop(); } else { _nativePlayer?.stop(); }
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
               } else {
@@ -876,7 +908,7 @@ class _ListenScreenState extends State<ListenScreen>
           GestureDetector(
             onTap: () async {
               await _saveListenTime();
-              _player.stop();
+              if (_webPlayer != null) { _webPlayer!.stop(); } else { _nativePlayer?.stop(); }
               await ProgressService.markModuleComplete('listen', 20);
               if (mounted) {
                 Navigator.pushNamedAndRemoveUntil(
@@ -932,8 +964,12 @@ class _ListenScreenState extends State<ListenScreen>
               value: progress,
               onChanged: (v) {
                 if (_duration.inMilliseconds > 0) {
-                  _player.seek(Duration(
-                      milliseconds: (v * _duration.inMilliseconds).toInt()));
+                  final pos = Duration(milliseconds: (v * _duration.inMilliseconds).toInt());
+                  if (_webPlayer != null) {
+                    _webPlayer!.seek(pos);
+                  } else {
+                    _nativePlayer!.seek(pos);
+                  }
                 }
               },
             ),
