@@ -11,6 +11,7 @@ import '../services/progress_service.dart';
 import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
+import '../utils/audio_preloader.dart';
 import '../services/analytics_service.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -80,6 +81,8 @@ class _HomeScreenState extends State<HomeScreen>
         .animate(_eggyGlowCtrl); // linear, no curve
 
     _loadStats();
+    // Preload today's story audio in background
+    AudioPreloader.preloadStoryAudio();
   }
 
   @override

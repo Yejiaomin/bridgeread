@@ -8,6 +8,7 @@ import '../services/lesson_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/safe_audio_player.dart';
+import '../utils/audio_preloader.dart';
 
 // ---------------------------------------------------------------------------
 // Data
@@ -204,6 +205,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _loadTotalStars();
+    // Preload phonics audio while user plays quiz
+    AudioPreloader.preloadPhonicsAudio();
 
     _floatCtrl = AnimationController(
         vsync: this, duration: const Duration(seconds: 7))
