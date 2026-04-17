@@ -476,28 +476,31 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     final word = _words[_wordIndex];
     final letters = word.letters;
 
-    // 1. Play full word first
-    await _playAndWait(word.wordAudioPath);
+    // 1. Play full word — don't wait for completion, just a short delay
+    _playAudio(word.wordAudioPath);
+    await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted || id != _revealId) return;
-    await Future.delayed(const Duration(milliseconds: 200));
 
     // 2. Reveal each letter tile with its phoneme audio (b → e → d)
     for (int i = 0; i < letters.length; i++) {
       if (!mounted || id != _revealId) return;
       _tileControllers[i].forward();
       setState(() => _tilesShown = i + 1);
-      await _playAndWait(letters[i].audioPath);
+      // Play phoneme — use short fixed delay instead of waiting for network
+      _playAudio(letters[i].audioPath);
+      await Future.delayed(const Duration(milliseconds: 600));
       if (!mounted || id != _revealId) return;
       setState(() => _tilesLit = i + 1);
       if (i < letters.length - 1) {
-        await Future.delayed(const Duration(milliseconds: 200));
+        await Future.delayed(const Duration(milliseconds: 150));
       }
     }
 
-    // 3. Play full word again after all letters (pause to let last phoneme finish)
+    // 3. Play full word again after all letters
     if (!mounted) return;
-    await Future.delayed(const Duration(milliseconds: 600));
-    await _playAndWait(word.wordAudioPath);
+    await Future.delayed(const Duration(milliseconds: 400));
+    _playAudio(word.wordAudioPath);
+    await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
 
     // 4. Start interactive phase — shake first target tile
