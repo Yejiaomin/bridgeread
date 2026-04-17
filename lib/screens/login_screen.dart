@@ -74,21 +74,19 @@ class _LoginScreenState extends State<LoginScreen> {
       startSeriesIndex: 0,
     );
 
-    // If user has completed books, batch sync past progress to server
+    // If user has completed books, batch sync past progress (done=true, 0 stars)
     if (_booksCompleted > 0) {
       final items = <Map<String, dynamic>>[];
       var d = DateTime(startDate.year, startDate.month, startDate.day);
       while (d.isBefore(today)) {
         final ds = _formatDate(d);
         if (d.weekday >= 1 && d.weekday <= 5) {
-          // Weekday: all 4 modules
           for (final mod in ['recap', 'reader', 'quiz', 'listen']) {
-            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 12});
+            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 0});
           }
         } else {
-          // Weekend: quiz + listen (review modules)
           for (final mod in ['quiz', 'listen']) {
-            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 12});
+            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 0});
           }
         }
         d = d.add(const Duration(days: 1));
