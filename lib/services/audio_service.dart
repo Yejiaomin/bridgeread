@@ -13,7 +13,6 @@ class AudioService {
 
   bool get isPlaying => _isPlaying;
 
-  /// Stream of playback position updates for the current track.
   Stream<Duration> get onPositionChanged =>
       _player.onPositionChanged.handleError((_) {});
 
@@ -48,7 +47,6 @@ class AudioService {
     _cancelled = false;
     _isPlaying = true;
 
-    // Play CN track
     bool cnOk = false;
     try {
       await _player.play(_source(cn));
@@ -62,13 +60,11 @@ class AudioService {
 
     if (_cancelled) { _isPlaying = false; return false; }
 
-    // 0.5s gap between CN and EN
     await Future.delayed(const Duration(milliseconds: 500));
     if (_cancelled) { _isPlaying = false; return false; }
 
     onENStart?.call();
 
-    // Play EN track
     bool enOk = false;
     try {
       await _player.play(_source(en));
@@ -98,15 +94,20 @@ class AudioService {
     _cancelled = true;
     _isPlaying = false;
     try { await _player.stop(); } catch (_) {}
+    // Let the stopped event flush through before next play()
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 
   void dispose() {
     _player.dispose();
   }
 
+  /// Wait for the current track to finish playing.
+  /// First waits for 'playing' state (to skip stale 'stopped' events),
+  /// then waits for 'completed' or 'stopped'.
   Future<void> _waitForTrackEnd() async {
     final completer = Completer<void>();
-    late StreamSubscription<PlayerState> sub;
+    bool sawPlaying = false;
 
     final timer = Timer(const Duration(seconds: 120), () {
       if (!completer.isCompleted) {
@@ -115,12 +116,26 @@ class AudioService {
       }
     });
 
+    late StreamSubscription<PlayerState> sub;
     sub = _player.onPlayerStateChanged.listen((state) {
-      if ((state == PlayerState.completed || state == PlayerState.stopped) &&
-          !completer.isCompleted) {
+      if (completer.isCompleted) return;
+
+      if (state == PlayerState.playing) {
+        sawPlaying = true;
+      }
+
+      // Only complete after we've seen 'playing' first
+      // This prevents stale 'stopped' events from the previous stop() call
+      if (sawPlaying &&
+          (state == PlayerState.completed || state == PlayerState.stopped)) {
         completer.complete();
       }
     });
+
+    // Also check current state — player might already be playing
+    if (_player.state == PlayerState.playing) {
+      sawPlaying = true;
+    }
 
     await completer.future;
     timer.cancel();
