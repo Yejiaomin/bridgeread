@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'eggy_celebration_screen.dart';
 import '../models/lesson.dart';
 import '../models/book_page.dart';
-import '../services/audio_service.dart';
 import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
 import '../services/api_service.dart';
@@ -25,7 +25,8 @@ class ReaderScreen extends StatefulWidget {
 class _ReaderScreenState extends State<ReaderScreen>
     with TickerProviderStateMixin {
   final LessonService _lessonService = LessonService();
-  final AudioService _audioService = AudioService();
+  final AudioPlayer _player = AudioPlayer();
+  bool _cancelled = false;
 
   Lesson? _lesson;
   int _currentPage = 0;
@@ -111,7 +112,8 @@ class _ReaderScreenState extends State<ReaderScreen>
     _celebCtrl.dispose();
     _autoAdvanceTimer?.cancel();
     _positionSub?.cancel();
-    _audioService.stop();
+    _cancelled = true;
+    _player.dispose();
     _videoController?.dispose();
     super.dispose();
   }
@@ -152,10 +154,27 @@ class _ReaderScreenState extends State<ReaderScreen>
     await _startPageAudio();
   }
 
+  /// Wait for the player to finish the current track.
+  Future<void> _waitComplete() async {
+    final completer = Completer<void>();
+    late StreamSubscription<void> sub;
+    sub = _player.onPlayerComplete.listen((_) {
+      if (!completer.isCompleted) completer.complete();
+      sub.cancel();
+    });
+    await completer.future;
+  }
+
+  /// Play a single audio asset and wait for completion.
+  Future<void> _playAndWait(String name) async {
+    await _player.play(AssetSource('audio/$name.mp3'));
+    await _waitComplete();
+  }
+
   Future<void> _startPageAudio() async {
     if (_lesson == null) return;
     _autoAdvanceTimer?.cancel();
-    await _audioService.stop();
+    _cancelled = false;
 
     // Capture and clear old controller before async work
     final oldCtrl = _videoController;
@@ -179,7 +198,6 @@ class _ReaderScreenState extends State<ReaderScreen>
     if (!hasAudio) {
       setState(() => _isAudioPlaying = false);
       await oldCtrl?.dispose();
-      // No audio — auto-advance after a short pause
       setState(() => _waitingToAdvance = true);
       _scheduleAdvance();
       return;
@@ -191,19 +209,19 @@ class _ReaderScreenState extends State<ReaderScreen>
         : null;
     await oldCtrl?.dispose();
 
-    if (!mounted) {
+    if (!mounted || _cancelled) {
       newCtrl?.dispose();
       return;
     }
 
-    // Start video and audio simultaneously
+    // Start video
     if (newCtrl != null) {
       setState(() => _videoController = newCtrl);
       newCtrl.play();
     }
 
     void onDone() {
-      if (!mounted) return;
+      if (!mounted || _cancelled) return;
       _positionSub?.cancel();
       _positionSub = null;
       setState(() {
@@ -213,41 +231,42 @@ class _ReaderScreenState extends State<ReaderScreen>
       if (!_isPaused) _scheduleAdvance();
     }
 
-    if (hasEN) {
-      // Full sequence: CN then EN
-      final ok = await _audioService.playSequence(
-        page.audioCN!,
-        page.audioEN!,
-        onENStart: () {
-          if (!mounted) return;
-          final highlights = _lesson!.pages[_currentPage].highlights;
-          _positionSub?.cancel();
-          _positionSub = _audioService.onPositionChanged.listen((pos) {
-            final ms = pos.inMilliseconds;
-            for (int i = 0; i < highlights.length; i++) {
-              if (ms >= highlights[i].positionMs &&
-                  !_triggeredHighlights.contains(i)) {
-                if (mounted) setState(() => _triggeredHighlights.add(i));
-              }
+    try {
+      if (hasEN) {
+        // Play CN
+        await _playAndWait(page.audioCN!);
+        if (_cancelled || !mounted) return;
+
+        // 0.5s gap
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (_cancelled || !mounted) return;
+
+        // Start highlight tracking for EN
+        final highlights = _lesson!.pages[_currentPage].highlights;
+        _positionSub?.cancel();
+        _positionSub = _player.onPositionChanged.listen((pos) {
+          final ms = pos.inMilliseconds;
+          for (int i = 0; i < highlights.length; i++) {
+            if (ms >= highlights[i].positionMs &&
+                !_triggeredHighlights.contains(i)) {
+              if (mounted) setState(() => _triggeredHighlights.add(i));
             }
-          });
-        },
-        onComplete: onDone,
-      );
-      // If playback failed, stop and wait — don't auto-advance
-      if (!ok && mounted) {
-        setState(() {
-          _isAudioPlaying = false;
-          _waitingToAdvance = true;
+          }
         });
-      }
-    } else {
-      // CN-only page (e.g. intro): play once and finish
-      final ok = await _audioService.playAsset(page.audioCN!);
-      if (ok) {
+
+        // Play EN
+        await _playAndWait(page.audioEN!);
+        if (_cancelled || !mounted) return;
         onDone();
-      } else if (mounted) {
-        // Audio failed — stay on page, let user tap replay or next
+      } else {
+        // CN-only page
+        await _playAndWait(page.audioCN!);
+        if (_cancelled || !mounted) return;
+        onDone();
+      }
+    } catch (e) {
+      debugPrint('[Reader] audio error: $e');
+      if (mounted) {
         setState(() {
           _isAudioPlaying = false;
           _waitingToAdvance = true;
@@ -291,25 +310,25 @@ class _ReaderScreenState extends State<ReaderScreen>
 
   void _togglePause() {
     if (_isPaused) {
-      // Resume
       setState(() => _isPaused = false);
       if (_waitingToAdvance) {
         _scheduleAdvance();
       } else {
-        _audioService.resume();
+        _player.resume();
         _videoController?.play();
       }
     } else {
-      // Pause
       setState(() => _isPaused = true);
       _autoAdvanceTimer?.cancel();
-      _audioService.pause();
+      _player.pause();
       _videoController?.pause();
     }
   }
 
   void _prevPage() {
     if (_lesson == null || _currentPage == 0) return;
+    _cancelled = true;
+    _player.stop();
     setState(() => _currentPage--);
     _startPageAudio();
   }
@@ -317,6 +336,8 @@ class _ReaderScreenState extends State<ReaderScreen>
   void _nextPage() {
     if (_lesson == null) return;
     if (_currentPage < _lesson!.pages.length - 1) {
+      _cancelled = true;
+      _player.stop();
       setState(() => _currentPage++);
       _startPageAudio();
     }
