@@ -10,8 +10,59 @@ external JSPromise<JSAny> _rawFetch(JSString url);
 /// On web, triggers fetch() requests that the SW intercepts and caches.
 /// On mobile, this is a no-op (assets are bundled).
 class AudioPreloader {
+  static bool _preloadingAll = false;
   static bool _preloadingStory = false;
   static bool _preloadingPhonics = false;
+
+  /// Preload ALL task audio for today (call during recap).
+  /// Story CN/EN + quiz word audio + phonics phoneme audio + SFX.
+  static Future<void> preloadAllAudio() async {
+    if (!kIsWeb || _preloadingAll) return;
+    _preloadingAll = true;
+    try {
+      final service = LessonService();
+      final lessonId = await service.restoreCurrentLessonId();
+      final lesson = await service.loadLesson(lessonId);
+      final urls = <String>[];
+
+      // Story audio (CN + EN narration)
+      for (final page in lesson.pages) {
+        if (page.audioCN != null) urls.add('assets/assets/audio/${page.audioCN}.mp3');
+        if (page.audioEN != null) urls.add('assets/assets/audio/${page.audioEN}.mp3');
+      }
+
+      // Quiz word audio (same words used in bubble game)
+      for (final pw in lesson.phonicsWords) {
+        urls.add('assets/assets/audio/phonics_sounds/word_${pw.word}.mp3');
+      }
+
+      // Phonics phoneme audio (individual letter sounds)
+      for (final pw in lesson.phonicsWords) {
+        for (final p in pw.phonemes) {
+          urls.add('assets/assets/audio/phonics_sounds/$p.mp3');
+        }
+      }
+
+      // Feedback/SFX audio
+      for (final f in [
+        'phonemes/you_got_it', 'phonemes/one_more_time',
+        'phonemes/amazing', 'phonemes/bingo',
+        'sfx/book-open', 'pop',
+      ]) {
+        urls.add('assets/assets/audio/$f.mp3');
+      }
+      urls.add('assets/assets/audio/sfx/book-open.wav');
+      urls.add('assets/assets/audio/pop.wav');
+
+      // Deduplicate
+      final unique = urls.toSet().toList();
+      await _prefetchUrls(unique, 'All');
+      _preloadingStory = true;
+      _preloadingPhonics = true;
+    } catch (e) {
+      debugPrint('[Preloader] all error: $e');
+    }
+  }
 
   /// Preload audio for today's story (call from home screen).
   static Future<void> preloadStoryAudio() async {

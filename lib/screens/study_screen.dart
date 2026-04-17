@@ -11,6 +11,7 @@ import '../services/week_service.dart';
 import '../main.dart' show routeObserver;
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
+import '../utils/audio_preloader.dart';
 import '../services/analytics_service.dart';
 
 class _RecapPage {
@@ -448,6 +449,8 @@ class _RecapScreenState extends State<RecapScreen>
     ]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _play());
+    // Preload all task audio while user listens to recap
+    AudioPreloader.preloadAllAudio();
   }
 
   void _updatePageForPosition(Duration pos) {
