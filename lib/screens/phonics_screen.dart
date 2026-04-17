@@ -203,7 +203,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   @override
   void initState() {
     super.initState();
-    _loadPhonicsData();
+    _loadAndStart();
     ProgressService.getTodayProgress().then((p) {
       if (mounted) setState(() => _totalStars = (p['total_stars'] as int?) ?? 0);
     });
@@ -294,10 +294,11 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         Tween<double>(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(parent: c, curve: Curves.elasticOut))).toList();
 
-    _enterTiles();
+    _loadAndStart();
   }
 
-  Future<void> _loadPhonicsData() async {
+  Future<void> _loadAndStart() async {
+    // Load lesson data first
     final service = LessonService();
     final lessonId = await service.restoreCurrentLessonId();
     final lesson = await service.loadLesson(lessonId);
@@ -306,6 +307,9 @@ class _PhonicsScreenState extends State<PhonicsScreen>
         _words = _buildWordsFromLesson(lesson.phonicsWords);
       });
     }
+    if (!mounted) return;
+    // Now start the tile reveal (data is ready)
+    _enterTiles();
   }
 
   @override
@@ -467,7 +471,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   /// Reveals each tile one-by-one: bounce in → play audio → light up → next.
   Future<void> _revealTilesSequentially(int id) async {
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future.delayed(const Duration(milliseconds: 200));
     if (!mounted || id != _revealId) return;
     final word = _words[_wordIndex];
     final letters = word.letters;
@@ -475,7 +479,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     // 1. Play full word first
     await _playAndWait(word.wordAudioPath);
     if (!mounted || id != _revealId) return;
-    await Future.delayed(const Duration(milliseconds: 350));
+    await Future.delayed(const Duration(milliseconds: 200));
 
     // 2. Reveal each letter tile with its phoneme audio (b → e → d)
     for (int i = 0; i < letters.length; i++) {
