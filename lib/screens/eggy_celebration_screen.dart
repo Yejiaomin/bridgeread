@@ -277,12 +277,28 @@ class _EggyCelebrationScreenState extends State<EggyCelebrationScreen>
 
                           const SizedBox(height: 24),
 
-                          // Eggy — scaled for screen size
-                          Transform.scale(
-                            scale: eggyScale,
-                            child: cdnImage('assets/pet/eggy_transparent_bg.webp',
-                              height: R.s(400),
-                              fit: BoxFit.contain,
+                          // Eggy — scaled for screen size, tap to go next
+                          GestureDetector(
+                            onTap: () async {
+                              if (_navigating) return;
+                              _navigating = true;
+                              await ProgressService
+                                  .markModuleComplete(
+                                      widget.moduleKey,
+                                      widget.modulePoints);
+                              if (widget.onComplete != null) {
+                                widget.onComplete!();
+                              } else if (mounted) {
+                                Navigator.pushReplacementNamed(
+                                    context, widget.nextRoute);
+                              }
+                            },
+                            child: Transform.scale(
+                              scale: eggyScale,
+                              child: cdnImage('assets/pet/eggy_transparent_bg.webp',
+                                height: R.s(400),
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
 

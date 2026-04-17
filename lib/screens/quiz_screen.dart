@@ -1088,12 +1088,22 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
                           const SizedBox(height: 24),
 
-                          // Eggy image with bounce + jiggle
-                          Transform.scale(
-                            scale: eggyScale,
-                            child: cdnImage('assets/pet/eggy_transparent_bg.webp',
-                              height: R.s(400),
-                              fit: BoxFit.contain,
+                          // Eggy image with bounce + jiggle — tap to go next
+                          GestureDetector(
+                            onTap: () async {
+                              await ProgressService
+                                  .markModuleComplete('quiz', 20);
+                              if (mounted) {
+                                Navigator.pushReplacementNamed(
+                                    context, '/phonics');
+                              }
+                            },
+                            child: Transform.scale(
+                              scale: eggyScale,
+                              child: cdnImage('assets/pet/eggy_transparent_bg.webp',
+                                height: R.s(400),
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
 
