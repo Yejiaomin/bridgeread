@@ -21,7 +21,9 @@ jobs:
       - run: flutter pub get
 
       # Build for China server (no base-href, HTML renderer, no canvaskit WASM)
-      - run: flutter build web 
+      - run: flutter build web
+      # Replace Flutter's self-destructing SW with our caching SW
+      - run: cp build/web/cache-sw.js build/web/flutter_service_worker.js
       # Pre-compress large files for nginx gzip_static
       - name: Pre-compress assets
         run: |
