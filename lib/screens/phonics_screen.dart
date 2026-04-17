@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import '../utils/safe_audio_player.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import '../services/progress_service.dart';
@@ -104,7 +105,7 @@ class PhonicsScreen extends StatefulWidget {
 
 class _PhonicsScreenState extends State<PhonicsScreen>
     with TickerProviderStateMixin {
-  final AudioPlayer _player = AudioPlayer();
+  final SafeAudioPlayer _player = SafeAudioPlayer();
   final Random _rng = Random();
 
   // Intro step: word-speaker feedback
@@ -340,14 +341,12 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   // ---------------------------------------------------------------------------
 
   Future<void> _playAudio(String assetPath) async {
-    try { await _player.stop(); } catch (_) {}
-    await _player.play(cdnAudioFromAssetPath(assetPath));
+    await _player.playAssetPath(assetPath);
   }
 
   /// Play audio and wait for it to finish before returning.
   Future<void> _playAndWait(String assetPath) async {
     if (!mounted) return;
-    try { await _player.stop(); } catch (_) {}
     final completer = Completer<void>();
     late StreamSubscription<void> sub;
     sub = _player.onPlayerComplete.listen((_) {
@@ -355,7 +354,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       sub.cancel();
     });
     try {
-      await _player.play(cdnAudioFromAssetPath(assetPath));
+      await _player.playAssetPath(assetPath);
       await completer.future.timeout(const Duration(seconds: 15), onTimeout: () {});
     } catch (_) {
       if (!completer.isCompleted) completer.complete();
@@ -590,16 +589,20 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     _echoPlaybackSub?.cancel();
     await _player.stop();
     final completer = Completer<void>();
+    // Recording playback: use a separate native player (not asset-based)
+    final echoPlayer = AudioPlayer();
     final source = kIsWeb
         ? UrlSource(_recordingPath!)
         : DeviceFileSource(_recordingPath!);
-    _echoPlaybackSub = _player.onPlayerComplete.listen((_) {
+    _echoPlaybackSub = echoPlayer.onPlayerComplete.listen((_) {
       _echoPlaybackSub?.cancel();
+      echoPlayer.dispose();
       if (!completer.isCompleted) completer.complete();
     });
     try {
-      await _player.play(source);
+      await echoPlayer.play(source);
     } catch (_) {
+      echoPlayer.dispose();
       // Web may fail to play back recording
       if (!completer.isCompleted) completer.complete();
     }

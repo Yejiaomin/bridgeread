@@ -7,6 +7,7 @@ import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
+import '../utils/safe_audio_player.dart';
 
 // ---------------------------------------------------------------------------
 // Data
@@ -151,7 +152,7 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   final _rng    = Random();
-  final _player = AudioPlayer();
+  final _player = SafeAudioPlayer();
 
   List<_Round> _rounds = []; // shuffled at init
 
@@ -183,7 +184,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   // Background star field (150 stars, generated once)
   late final List<_StarData> _stars;
 
-  final _popPlayer = AudioPlayer(); // dedicated player for pop SFX
+  final _popPlayer = SafeAudioPlayer(); // dedicated player for pop SFX
 
   late final AnimationController _floatCtrl;
   late final AnimationController _popCtrl;
@@ -446,7 +447,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     });
     // Play pop SFX simultaneously with the positive voice (fails silently if file missing)
     _popPlayer.stop().then((_) =>
-        _popPlayer.play(cdnAudioSource('audio/pop.wav'))
+        _popPlayer.playAudio('audio/pop.wav')
             .catchError((_) {}));
     _play(_randomPositive());
     _popCtrl.forward(from: 0).then((_) {
@@ -539,8 +540,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   }
 
   Future<void> _play(String path) async {
-    await _player.stop();
-    await _player.play(cdnAudioFromAssetPath(path));
+    await _player.playAssetPath(path);
   }
 
   // ── Build ──────────────────────────────────────────────────────────────────
