@@ -306,8 +306,11 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
 
   // ── Gacha ──────────────────────────────────────────────────────────────────
 
+  bool _gachaInProgress = false;
+
   Future<void> _onJarTap() async {
-    if (!_gachaAvailable || _totalStars < 30) return;
+    if (_gachaInProgress || !_gachaAvailable || _totalStars < 30) return;
+    _gachaInProgress = true;
 
     setState(() {
       _totalStars -= 30;
@@ -354,6 +357,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
       _showDropResult = true;
       _gachaAvailable = _totalStars >= 30;
     });
+    _gachaInProgress = false; // allow next draw
     await _player.stop();
     // Use base name for audio: e.g. bunny_3 → bunny, princess_2 → princess
     final audioId = dropped.replaceAll(RegExp(r'_\d+$'), '');

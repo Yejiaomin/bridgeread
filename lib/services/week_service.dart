@@ -137,7 +137,8 @@ class WeekService {
     final prefs = await SharedPreferences.getInstance();
     final startStr = prefs.getString('book_start_date');
     if (startStr == null) return 0;
-    final start = parseDate(startStr)!;
+    final start = parseDate(startStr);
+    if (start == null) return 0;
     final now = activeDate();
     if (now.weekday > 5) return null; // weekend
     final wdCount = _weekdaysBetween(start, now);
@@ -158,7 +159,8 @@ class WeekService {
     final prefs = await SharedPreferences.getInstance();
     final startStr = prefs.getString('book_start_date');
     if (startStr == null) return false;
-    final start = parseDate(startStr)!;
+    final start = parseDate(startStr);
+    if (start == null) return false;
     final now = activeDate();
     final wdCount = _weekdaysBetween(start, now);
     // Check if the last book has been assigned already
@@ -183,7 +185,8 @@ class WeekService {
     final prefs = await SharedPreferences.getInstance();
     final startStr = prefs.getString('book_start_date');
     if (startStr == null) return kAllBooks.take(5).toList();
-    final start = parseDate(startStr)!;
+    final start = parseDate(startStr);
+    if (start == null) return kAllBooks.take(5).toList();
     final now = activeDate();
 
     // This week's Monday and Friday
@@ -221,10 +224,15 @@ class WeekService {
     return books.map((b) => b.lessonId).toList();
   }
 
-  /// Parse start date from prefs string.
+  /// Parse start date from prefs string. Returns null on invalid input.
   static DateTime? parseDate(String? s) {
     if (s == null) return null;
-    final parts = s.split('-');
-    return DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    try {
+      final parts = s.split('-');
+      if (parts.length < 3) return null;
+      return DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    } catch (_) {
+      return null;
+    }
   }
 }

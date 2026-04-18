@@ -207,9 +207,13 @@ class ProgressService {
     ).then((res) {
       if (res != null) {
         debugPrint('[Progress] synced $module to server');
-        // Update local cache with server totals
+        // Update local cache with server totals (only if server is ahead)
         if (res['totalStars'] != null) {
-          prefs.setInt(_kTotalStars, res['totalStars']);
+          final serverStars = res['totalStars'] as int;
+          final localStars = prefs.getInt(_kTotalStars) ?? 0;
+          if (serverStars >= localStars) {
+            prefs.setInt(_kTotalStars, serverStars);
+          }
         }
       }
     });
