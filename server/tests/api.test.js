@@ -602,35 +602,37 @@ describe('Module migration', () => {
     run("UPDATE users SET book_start_date = '2026-03-30' WHERE id = 1");
   });
 
-  test('old module records (phonics, recording) are cleaned up on GET progress', async () => {
-    // Simulate old data with deprecated module names
-    run("INSERT INTO daily_progress (user_id, date, module, done, stars) VALUES (1, '2026-03-30', 'phonics', 0, 0)");
-    run("INSERT INTO daily_progress (user_id, date, module, done, stars) VALUES (1, '2026-03-30', 'recording', 0, 0)");
+  test('phonics and recording are valid modules (not cleaned up)', async () => {
+    // phonics and recording are now in MODULES list — they should persist
+    run("INSERT OR IGNORE INTO daily_progress (user_id, date, module, done, stars) VALUES (1, '2026-03-30', 'phonics', 1, 10)");
+    run("INSERT OR IGNORE INTO daily_progress (user_id, date, module, done, stars) VALUES (1, '2026-03-30', 'recording', 1, 10)");
 
     const res = await request(app)
       .get('/api/progress')
       .set('Authorization', `Bearer ${token}`);
 
-    // Should NOT have phonics/recording in progress
     const modules = res.body.progress.map(p => p.module);
-    expect(modules).not.toContain('phonics');
-    expect(modules).not.toContain('recording');
+    expect(modules).toContain('phonics');
+    expect(modules).toContain('recording');
 
-    // Each date should have exactly 4 debt (recap, reader, quiz, listen)
+    // Debt only counts REQUIRED_MODULES (recap, reader, quiz, listen)
+    // phonics/recording don't add to debt
     for (const entry of res.body.debtByDate) {
       expect(entry.debt).toBeLessThanOrEqual(4);
     }
   });
 
-  test('each day has exactly 4 modules after backfill', async () => {
+  test('each weekday has at least 4 required modules after backfill', async () => {
     const res = await request(app)
       .get('/api/progress')
       .set('Authorization', `Bearer ${token}`);
 
-    // Group progress by date and count modules
+    // Group progress by date and count required modules
     const byDate = {};
     for (const p of res.body.progress) {
-      byDate[p.date] = (byDate[p.date] || 0) + 1;
+      if (['recap', 'reader', 'quiz', 'listen'].includes(p.module)) {
+        byDate[p.date] = (byDate[p.date] || 0) + 1;
+      }
     }
     for (const [date, count] of Object.entries(byDate)) {
       expect(count).toBe(4);
