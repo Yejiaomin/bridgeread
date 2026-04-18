@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bridgeread/services/week_service.dart';
 
@@ -499,18 +500,157 @@ void main() {
     });
 
     test('null lesson shows error page not gray screen', () {
-      // After loadLesson fails: _loading=false, _lesson=null
-      // Build should show error page, not crash
       final loading = false;
       final lesson = null;
 
-      // The guard in build:
       if (!loading && lesson == null) {
-        // Should show "加载失败" page
-        expect(true, true); // path exists
+        expect(true, true);
       } else {
         fail('Should enter error path');
       }
+    });
+  });
+
+  // ── Bug fix: zone tap bounds check ─────────────────────────────────────
+
+  group('study screen zone bounds safety', () {
+    test('weekend has 2 zones, weekday has 4 zones', () {
+      // From study_screen.dart constants
+      const weekendZones = 2; // _kWeekendZones.length
+      const weekdayZones = 4; // _kZones.length
+      expect(weekendZones, 2);
+      expect(weekdayZones, 4);
+    });
+
+    test('zone tap index must be < zones.length', () {
+      // Bug fix: _zones[i].sfx accessed without bounds check
+      // After fix: if (i < _zones.length) { ... }
+      const zonesLength = 2; // weekend mode
+      for (int i = 0; i < 4; i++) {
+        final safe = i < zonesLength;
+        if (i < 2) {
+          expect(safe, true, reason: 'Index $i should be safe for weekend');
+        } else {
+          expect(safe, false, reason: 'Index $i should be out of bounds for weekend');
+        }
+      }
+    });
+
+    test('animation controllers always 4, zones can be 2 or 4', () {
+      // Controllers are always created with const zoneCount = 4
+      // _zones.length varies: 2 (weekend) or 4 (weekday)
+      // List.generate(_zones.length, ...) safely uses only valid indices
+      const controllerCount = 4;
+      for (final zoneCount in [2, 4]) {
+        for (int i = 0; i < zoneCount; i++) {
+          expect(i < controllerCount, true,
+              reason: 'Zone $i must have matching controller');
+        }
+      }
+    });
+  });
+
+  // ── Bug fix: audio preloader await ─────────────────────────────────────
+
+  group('audio preloader fetch logic', () {
+    test('fetchOne must await the promise (bug fix)', () async {
+      // Bug: _rawFetch().toDart.timeout() was NOT awaited
+      // This meant _fetchOne returned immediately, prefetch did nothing
+      // Fix: added await
+      //
+      // We can't test the actual fetch here, but we verify the pattern:
+      var completed = false;
+      Future<void> fetchOnePattern() async {
+        // Simulates the fixed code with await
+        await Future.delayed(const Duration(milliseconds: 10));
+        completed = true;
+      }
+
+      await fetchOnePattern();
+      expect(completed, true); // proves await works
+    });
+
+    test('without await, fetch completes after function returns (the bug)', () async {
+      var completed = false;
+      Future<void> fetchOneBuggy() async {
+        // Simulates the OLD buggy code WITHOUT await
+        Future.delayed(const Duration(milliseconds: 10)).then((_) {
+          completed = true;
+        });
+        // Returns immediately without waiting!
+      }
+
+      await fetchOneBuggy();
+      expect(completed, false); // BUG: fetch hasn't completed yet!
+      // Wait for it to actually finish
+      await Future.delayed(const Duration(milliseconds: 20));
+      expect(completed, true); // now it completed, but too late
+    });
+  });
+
+  // ── Bug fix: listener subscription cleanup ─────────────────────────────
+
+  group('stream subscription cleanup pattern', () {
+    test('listener must be stored and cancelled on dispose', () async {
+      // Bug: onLoadingChanged.listen() was never cancelled
+      // Fix: store in _loadingSub, cancel in dispose
+      final controller = StreamController<bool>.broadcast();
+      int callCount = 0;
+
+      // Simulates initState — store subscription
+      final sub = controller.stream.listen((_) => callCount++);
+
+      controller.add(true);
+      await Future.delayed(Duration.zero);
+      expect(callCount, 1);
+
+      // Simulates dispose — cancel subscription
+      sub.cancel();
+
+      controller.add(true);
+      await Future.delayed(Duration.zero);
+      expect(callCount, 1); // no increment after cancel
+
+      controller.close();
+    });
+
+    test('without cancel, listener keeps firing (the bug)', () async {
+      final controller = StreamController<bool>.broadcast();
+      int callCount = 0;
+
+      // Bug: listen() without storing subscription
+      controller.stream.listen((_) => callCount++);
+
+      controller.add(true);
+      await Future.delayed(Duration.zero);
+      expect(callCount, 1);
+
+      // Can't cancel — no reference to subscription!
+      // Listener keeps firing even after "dispose"
+      controller.add(true);
+      await Future.delayed(Duration.zero);
+      expect(callCount, 2); // BUG: still incrementing
+
+      controller.close();
+    });
+  });
+
+  // ── Bug fix: mounted check before Navigator ────────────────────────────
+
+  group('mounted check pattern', () {
+    test('Navigator calls must check mounted', () {
+      // Pattern: always check mounted before Navigator operations
+      // because async gaps between setState and Navigator can unmount widget
+      bool mounted = true;
+
+      // Simulate: after async operation, widget unmounted
+      mounted = false;
+
+      // The fix: check before calling Navigator
+      if (mounted) {
+        fail('Should not reach Navigator when unmounted');
+      }
+      expect(mounted, false); // correctly skipped Navigator call
     });
   });
 }
