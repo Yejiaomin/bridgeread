@@ -45,6 +45,18 @@
   document.addEventListener('touchend', unlock, { once: false, passive: true });
   document.addEventListener('click', unlock, { once: false, passive: true });
 
+  // Auto-resume AudioContext if iOS suspends it
+  setInterval(function() {
+    if (ctx && ctx.state === 'interrupted') {
+      console.warn('[WebAudio] Context interrupted, resuming...');
+      ctx.resume();
+    }
+    if (ctx && ctx.state === 'suspended' && mainSource) {
+      console.warn('[WebAudio] Context suspended during playback, resuming...');
+      ctx.resume();
+    }
+  }, 500);
+
   // ── Buffer loading & caching ───────────────────────────────────────────
 
   function loadBuffer(url) {
@@ -107,12 +119,32 @@
     mainSource.connect(ctx.destination);
 
     mainSource.onended = function() {
-      // Only fire onEnd if we didn't manually stop
-      if (mainSource) {
+      if (!mainSource) return; // manually stopped
+
+      // Check if audio actually finished or was interrupted
+      var elapsed = ctx.currentTime - mainStartTime + mainOffset;
+      var duration = buffer.duration;
+      var pctPlayed = elapsed / duration;
+
+      if (pctPlayed < 0.85 && duration > 1) {
+        // Audio ended prematurely (< 85% played) — likely iOS context interruption
+        console.warn('[WebAudio] Premature end at ' + (pctPlayed * 100).toFixed(0) + '%, resuming from ' + elapsed.toFixed(1) + 's');
+        // Try to resume from where we left off
         mainSource = null;
-        stopPositionTracking();
-        if (onEndCb) onEndCb();
+        if (ctx.state !== 'running') {
+          ctx.resume().then(function() {
+            playBuffer(buffer, elapsed);
+          });
+        } else {
+          playBuffer(buffer, elapsed);
+        }
+        return;
       }
+
+      // Normal completion
+      mainSource = null;
+      stopPositionTracking();
+      if (onEndCb) onEndCb();
     };
 
     mainOffset = offset || 0;
