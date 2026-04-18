@@ -187,27 +187,45 @@
   </script>
 
   <script>
-    // Auto-clear old caches on version change
+    // Auto-update: check version.json on every visit
+    // If server version differs from local, reload to get new code
+    // Audio/image assets stay cached (they never change)
     (function() {
-      var APP_VERSION = '2026041701';
-      var stored = localStorage.getItem('app_version');
-      if (stored !== APP_VERSION) {
-        localStorage.setItem('app_version', APP_VERSION);
-        if (stored) {
-          // Version changed — clear all caches and service workers
-          if ('caches' in window) {
-            caches.keys().then(function(names) {
-              names.forEach(function(name) { caches.delete(name); });
-            });
+      // Check version via Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', function(e) {
+          if (e.data && e.data.type === 'VERSION') {
+            var serverVer = e.data.version;
+            var localVer = localStorage.getItem('app_version');
+            if (localVer && localVer !== serverVer) {
+              console.log('[Update] New version:', serverVer, '(was:', localVer, ')');
+              localStorage.setItem('app_version', serverVer);
+              window.location.reload();
+              return;
+            }
+            localStorage.setItem('app_version', serverVer);
           }
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(regs) {
-              regs.forEach(function(r) { r.unregister(); });
-            });
+        });
+        // Ask SW to check version after a short delay (let page render first)
+        setTimeout(function() {
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage('CHECK_VERSION');
           }
-          window.location.reload();
-          return;
-        }
+        }, 3000);
+      }
+
+      // Fallback: direct version check for browsers without SW
+      if (!('serviceWorker' in navigator)) {
+        fetch('/version.json?t=' + Date.now()).then(function(r) { return r.json(); })
+          .then(function(data) {
+            var localVer = localStorage.getItem('app_version');
+            if (localVer && localVer !== data.version) {
+              localStorage.setItem('app_version', data.version);
+              window.location.reload();
+            } else {
+              localStorage.setItem('app_version', data.version);
+            }
+          }).catch(function() {});
       }
     })();
   </script>

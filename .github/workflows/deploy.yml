@@ -24,6 +24,8 @@ jobs:
       - run: flutter build web
       # Replace Flutter's self-destructing SW with our caching SW
       - run: cp build/web/cache-sw.js build/web/flutter_service_worker.js
+      # Generate version.json with build timestamp for auto-update
+      - run: echo "{\"version\":\"$(date -u +%Y%m%d%H%M%S)\"}" > build/web/version.json
       # Pre-compress large files for nginx gzip_static
       - name: Pre-compress assets
         run: |
