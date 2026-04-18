@@ -689,3 +689,88 @@ describe('Health check', () => {
     expect(res.body.status).toBe('ok');
   });
 });
+
+// ── Spend Stars ─────────────────────────────────────────────────────────────
+
+describe('Spend Stars', () => {
+  let token;
+
+  beforeAll(async () => {
+    run("DELETE FROM users");
+    run("DELETE FROM daily_progress");
+    const reg = await request(app).post('/api/auth/register')
+      .send({ phone: '13900000077', password: '12345678', childName: 'SpendTest' });
+    token = reg.body.token;
+    // Give user 100 stars
+    run("UPDATE users SET total_stars = 100 WHERE phone = '13900000077'");
+  });
+
+  test('spend 30 stars successfully', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ amount: 30 });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.totalStars).toBe(70);
+  });
+
+  test('spend again — 70 → 40', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ amount: 30 });
+    expect(res.status).toBe(200);
+    expect(res.body.totalStars).toBe(40);
+  });
+
+  test('spend more than available — rejected', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ amount: 50 }); // only 40 left
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('not enough stars');
+  });
+
+  test('spend 0 — rejected', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ amount: 0 });
+    expect(res.status).toBe(400);
+  });
+
+  test('spend negative — rejected', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ amount: -10 });
+    expect(res.status).toBe(400);
+  });
+
+  test('spend without auth — 401', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .send({ amount: 10 });
+    expect(res.status).toBe(401);
+  });
+
+  test('spend all remaining stars', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ amount: 40 }); // exactly 40 left
+    expect(res.status).toBe(200);
+    expect(res.body.totalStars).toBe(0);
+  });
+
+  test('spend when 0 stars — rejected', async () => {
+    const res = await request(app)
+      .post('/api/progress/spend-stars')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ amount: 1 });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('not enough stars');
+  });
+});

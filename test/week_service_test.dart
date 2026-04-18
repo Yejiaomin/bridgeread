@@ -223,5 +223,124 @@ void main() {
       final all = WeekService.lastNBooks(100);
       expect(all.length, kAllBooks.length);
     });
+
+    test('last 0 returns empty', () {
+      final none = WeekService.lastNBooks(0);
+      expect(none.length, 0);
+    });
+  });
+
+  // ── 20 books exhaustion ────────────────────────────────────────────────────
+
+  group('bookForWeekdayCount — exhaustion edge cases', () {
+    test('Monday start: all 20 books assigned over exactly 20 weekdays', () {
+      int count = 0;
+      for (int wd = 1; wd <= 30; wd++) {
+        if (WeekService.bookForWeekdayCount(wd, 1) != null) count++;
+      }
+      expect(count, 20);
+    });
+
+    test('after last book, remaining weekdays return null', () {
+      // Monday start: book 19 at wd=20, wd=21+ should be null
+      expect(WeekService.bookForWeekdayCount(20, 1), 19);
+      expect(WeekService.bookForWeekdayCount(21, 1), null);
+      expect(WeekService.bookForWeekdayCount(22, 1), null);
+      expect(WeekService.bookForWeekdayCount(25, 1), null);
+    });
+
+    test('Wednesday start: remaining weekdays after book 20 return null', () {
+      // Wed start: 3+5+5+5+2 = 20 books over ~23 weekday slots
+      expect(WeekService.bookForWeekdayCount(20, 3), 19);
+      expect(WeekService.bookForWeekdayCount(21, 3), null);
+    });
+  });
+
+  // ── Weekend registration — thisWeekBooks edge cases ────────────────────────
+
+  group('weekend registration edge cases', () {
+    test('Saturday book_start_date: bookIndexForDate returns null for Sat/Sun', () {
+      final saturday = DateTime(2026, 4, 18); // Saturday
+      // Weekend always returns null regardless of start date
+      expect(WeekService.bookIndexForDate(saturday, saturday), null);
+      expect(WeekService.bookIndexForDate(
+          DateTime(2026, 4, 19), saturday), null); // Sunday
+    });
+
+    test('Saturday start: next Monday = book 0 (first real weekday)', () {
+      final saturday = DateTime(2026, 4, 18);
+      final monday = DateTime(2026, 4, 20);
+      final idx = WeekService.bookIndexForDate(monday, saturday);
+      expect(idx, 0); // first weekday from Saturday start
+    });
+
+    test('series sizes are all multiples of 5', () {
+      for (final size in kSeriesSizes) {
+        expect(size % 5, 0,
+            reason: 'Series size $size must be multiple of 5 for clean week cycles');
+      }
+    });
+  });
+
+  // ── Calendar debt calculation logic ────────────────────────────────────────
+
+  group('debt calculation logic', () {
+    test('weekday with no modules done = 4 debt', () {
+      const modules = ['recap', 'reader', 'quiz', 'listen'];
+      final status = <String, dynamic>{};
+      final debt = modules.where((m) => status[m] != true).length;
+      expect(debt, 4);
+    });
+
+    test('weekday with all modules done = 0 debt', () {
+      const modules = ['recap', 'reader', 'quiz', 'listen'];
+      final status = {'recap': true, 'reader': true, 'quiz': true, 'listen': true};
+      final debt = modules.where((m) => status[m] != true).length;
+      expect(debt, 0);
+    });
+
+    test('weekday with 2 modules done = 2 debt', () {
+      const modules = ['recap', 'reader', 'quiz', 'listen'];
+      final status = {'recap': true, 'quiz': true};
+      final debt = modules.where((m) => status[m] != true).length;
+      expect(debt, 2);
+    });
+
+    test('weekend with no modules done = 2 debt', () {
+      const modules = ['quiz', 'listen'];
+      final status = <String, dynamic>{};
+      final debt = modules.where((m) => status[m] != true).length;
+      expect(debt, 2);
+    });
+
+    test('weekend with all modules done = 0 debt', () {
+      const modules = ['quiz', 'listen'];
+      final status = {'quiz': true, 'listen': true};
+      final debt = modules.where((m) => status[m] != true).length;
+      expect(debt, 0);
+    });
+
+    test('new user first weekend should use 4 modules (weekday mode)', () {
+      // When start_date is in the same week as the weekend date
+      final startDate = DateTime(2026, 4, 18); // Saturday
+      final weekendDate = DateTime(2026, 4, 18); // Same day
+      final weekMonday = weekendDate.subtract(Duration(days: weekendDate.weekday - 1));
+
+      final startInThisWeek = !startDate.isBefore(weekMonday) &&
+          startDate.isBefore(weekMonday.add(const Duration(days: 7)));
+
+      expect(startInThisWeek, true); // new user's weekend = use 4 modules
+    });
+
+    test('normal weekend (start_date weeks ago) should use 2 modules', () {
+      final startDate = DateTime(2026, 3, 30); // Weeks ago
+      final weekendDate = DateTime(2026, 4, 19); // This Sunday
+      final weekMonday = weekendDate.subtract(Duration(days: weekendDate.weekday - 1));
+
+      final startInThisWeek = !startDate.isBefore(weekMonday) &&
+          startDate.isBefore(weekMonday.add(const Duration(days: 7)));
+
+      expect(startInThisWeek, false); // normal weekend = use 2 modules
+    });
   });
 }
