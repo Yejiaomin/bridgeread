@@ -164,6 +164,9 @@ class _HomeScreenState extends State<HomeScreen>
     int total = 0;
     var d = startDate;
 
+    // Check if start_date is in the same week (new user first weekend = weekday mode)
+    final startMonday = startDate.subtract(Duration(days: startDate.weekday - 1));
+
     while (d.isBefore(today)) {
       final dateKey = '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
       final status = moduleStatus[dateKey] as Map<String, dynamic>? ?? {};
@@ -173,9 +176,19 @@ class _HomeScreenState extends State<HomeScreen>
         const modules = ['recap', 'reader', 'quiz', 'listen'];
         total += modules.where((m) => status[m] != true).length;
       } else {
-        // Weekend: check 2 modules
-        const modules = ['quiz', 'listen'];
-        total += modules.where((m) => status[m] != true).length;
+        // Weekend: check if new user's first week
+        final weekMonday = d.subtract(Duration(days: d.weekday - 1));
+        final startInThisWeek = !startDate.isBefore(weekMonday) &&
+            startDate.isBefore(weekMonday.add(const Duration(days: 7)));
+        if (startInThisWeek) {
+          // New user's first weekend: 4 modules (weekday mode)
+          const modules = ['recap', 'reader', 'quiz', 'listen'];
+          total += modules.where((m) => status[m] != true).length;
+        } else {
+          // Normal weekend: 2 modules
+          const modules = ['quiz', 'listen'];
+          total += modules.where((m) => status[m] != true).length;
+        }
       }
       d = d.add(const Duration(days: 1));
     }
