@@ -197,27 +197,35 @@ class _ListenScreenState extends State<ListenScreen>
     final now = activeDate();
     final isCalendarWeekend = now.weekday == 6 || now.weekday == 7;
 
-    // Check if this is truly a review weekend (has books to review)
-    // New user on weekend → treat as weekday (play today's book)
-    final weekBooks = isCalendarWeekend ? await WeekService.thisWeekBooks() : <BookInfo>[];
-    final isReviewWeekend = isCalendarWeekend && weekBooks.isNotEmpty;
+    // Check if today is registration day (treat as weekday even on weekend)
+    final prefs2 = await SharedPreferences.getInstance();
+    final startStr2 = prefs2.getString('book_start_date');
+    final startDate2 = startStr2 != null ? WeekService.parseDate(startStr2) : null;
+    final isRegistrationDay = isCalendarWeekend && startDate2 != null &&
+        now.year == startDate2.year && now.month == startDate2.month && now.day == startDate2.day;
+
+    // Determine weekend type
+    final isReviewWeekend = isCalendarWeekend && !isRegistrationDay;
 
     if (isReviewWeekend) {
-      // Normal weekend: play all books studied this week
-      for (int i = 0; i < weekBooks.length; i++) {
-        final book = weekBooks[i];
-        final cover = await getCover(book.lessonId);
-        playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
-            book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
-      }
-    } else if (isCalendarWeekend && weekBooks.isEmpty && await WeekService.allBooksCompleted()) {
-      // All 20 books done: play last 5 books for review
-      final last5 = WeekService.lastNBooks(5);
-      for (int i = 0; i < last5.length; i++) {
-        final book = last5[i];
-        final cover = await getCover(book.lessonId);
-        playlist.add(_Track('${book.title} (${i + 1}/${last5.length})',
-            book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
+      final weekBooks = await WeekService.thisWeekBooks();
+      if (weekBooks.isNotEmpty) {
+        // Normal weekend: play all books studied this week
+        for (int i = 0; i < weekBooks.length; i++) {
+          final book = weekBooks[i];
+          final cover = await getCover(book.lessonId);
+          playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
+              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
+        }
+      } else if (await WeekService.allBooksCompleted()) {
+        // All 20 books done: play last 5
+        final last5 = WeekService.lastNBooks(5);
+        for (int i = 0; i < last5.length; i++) {
+          final book = last5[i];
+          final cover = await getCover(book.lessonId);
+          playlist.add(_Track('${book.title} (${i + 1}/${last5.length})',
+              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
+        }
       }
     } else {
       // Weekday: today → yesterday → today, then loop

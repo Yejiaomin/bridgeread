@@ -164,31 +164,21 @@ class _HomeScreenState extends State<HomeScreen>
     int total = 0;
     var d = startDate;
 
-    // Check if start_date is in the same week (new user first weekend = weekday mode)
-    final startMonday = startDate.subtract(Duration(days: startDate.weekday - 1));
-
     while (d.isBefore(today)) {
       final dateKey = '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
       final status = moduleStatus[dateKey] as Map<String, dynamic>? ?? {};
+      final dDate = DateTime(d.year, d.month, d.day);
+      final sDate = DateTime(startDate.year, startDate.month, startDate.day);
+      final isRegistrationDay = dDate == sDate;
 
-      if (d.weekday >= 1 && d.weekday <= 5) {
-        // Weekday: check 4 modules
+      if (d.weekday >= 1 && d.weekday <= 5 || isRegistrationDay) {
+        // Weekday or registration day: 4 modules
         const modules = ['recap', 'reader', 'quiz', 'listen'];
         total += modules.where((m) => status[m] != true).length;
       } else {
-        // Weekend: check if new user's first week
-        final weekMonday = d.subtract(Duration(days: d.weekday - 1));
-        final startInThisWeek = !startDate.isBefore(weekMonday) &&
-            startDate.isBefore(weekMonday.add(const Duration(days: 7)));
-        if (startInThisWeek) {
-          // New user's first weekend: 4 modules (weekday mode)
-          const modules = ['recap', 'reader', 'quiz', 'listen'];
-          total += modules.where((m) => status[m] != true).length;
-        } else {
-          // Normal weekend: 2 modules
-          const modules = ['quiz', 'listen'];
-          total += modules.where((m) => status[m] != true).length;
-        }
+        // Normal weekend: 2 modules
+        const modules = ['quiz', 'listen'];
+        total += modules.where((m) => status[m] != true).length;
       }
       d = d.add(const Duration(days: 1));
     }
@@ -732,18 +722,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     debt = modules.where((m) => status[m] != true).length;
                   } else if (isInRange && isWeekend) {
                     final status = _moduleStatus[dateKey] ?? {};
-                    // Check if this weekend is in the same week as start_date
-                    // (new user registered this week, weekend = weekday mode)
-                    final weekMonday = date.subtract(Duration(days: date.weekday - 1));
-                    final startInThisWeek = _startDate != null &&
-                        !_startDate!.isBefore(weekMonday) &&
-                        _startDate!.isBefore(weekMonday.add(const Duration(days: 7)));
-                    if (startInThisWeek) {
-                      // New user's first weekend: 4 modules (weekday mode)
+                    // Registration day on weekend = 4 modules
+                    final isRegistrationDay = _startDate != null &&
+                        date.year == _startDate!.year &&
+                        date.month == _startDate!.month &&
+                        date.day == _startDate!.day;
+                    if (isRegistrationDay) {
                       const modules = ['recap', 'reader', 'quiz', 'listen'];
                       debt = modules.where((m) => status[m] != true).length;
                     } else {
-                      // Normal weekend review: 2 modules
+                      // Normal weekend: 2 modules
                       const modules = ['quiz', 'listen'];
                       debt = modules.where((m) => status[m] != true).length;
                     }

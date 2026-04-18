@@ -284,16 +284,20 @@ class ProgressService {
     final todayStr = _today;
 
     if (now.weekday == 6 || now.weekday == 7) {
-      // Check if user has books this week; if not (new user), treat as weekday
-      final weekBooks = await WeekService.thisWeekBooks();
-      if (weekBooks.isNotEmpty) {
+      // Check if today is registration day (treat as weekday)
+      final startStr = prefs.getString('book_start_date');
+      final startDate = startStr != null ? WeekService.parseDate(startStr) : null;
+      final isRegistrationDay = startDate != null &&
+          startDate.year == now.year && startDate.month == now.month && startDate.day == now.day;
+
+      if (!isRegistrationDay) {
         // Normal weekend: only quiz + listen
         int pending = 0;
         if (!(prefs.getBool(_kQuizDone) ?? false)) pending++;
         if (!(prefs.getBool('today_listen_done') ?? false)) pending++;
         return pending;
       }
-      // New user on weekend: fall through to weekday logic
+      // Registration day on weekend: fall through to weekday logic (4 modules)
     }
 
     int pending = 0;

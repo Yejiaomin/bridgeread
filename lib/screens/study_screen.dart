@@ -59,24 +59,29 @@ const _kWeekendZones = [
 const _kWeekendZoneColors = [Colors.green, Colors.purple];
 const _kWeekendZoneLabels = ['GAME', 'LISTEN'];
 
-/// Check if active date is weekend.
-/// If user has no books this week (just registered), treat weekend as weekday
-/// so they can start learning immediately.
+/// Check if active date is weekend
 bool _isWeekend() {
   final day = activeDate().weekday;
   return day == 6 || day == 7;
 }
 
-/// Async check: true weekend only if user has books to review this week.
+/// Async check: true weekend only if NOT the registration day.
+/// Registration day is always treated as weekday (4 tasks).
 Future<bool> _isReviewWeekend() async {
   final day = activeDate().weekday;
   if (day != 6 && day != 7) return false;
-  final weekBooks = await WeekService.thisWeekBooks();
-  return weekBooks.isNotEmpty;
+  // Registration day = weekday mode
+  final prefs = await SharedPreferences.getInstance();
+  final startStr = prefs.getString('book_start_date');
+  if (startStr == null) return false;
+  final startDate = WeekService.parseDate(startStr);
+  if (startDate == null) return false;
+  final now = activeDate();
+  final today = DateTime(now.year, now.month, now.day);
+  final start = DateTime(startDate.year, startDate.month, startDate.day);
+  if (today == start) return false; // registration day = weekday
+  return true; // normal weekend
 }
-
-/// Check if active date is Saturday
-bool _isSaturday() => activeDate().weekday == 6;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // StudyScreen

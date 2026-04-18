@@ -321,53 +321,56 @@ void main() {
       expect(debt, 0);
     });
 
-    test('new user first weekend should use 4 modules (weekday mode)', () {
-      // When start_date is in the same week as the weekend date
-      final startDate = DateTime(2026, 4, 18); // Saturday
-      final weekendDate = DateTime(2026, 4, 18); // Same day
-      final weekMonday = weekendDate.subtract(Duration(days: weekendDate.weekday - 1));
-
-      final startInThisWeek = !startDate.isBefore(weekMonday) &&
-          startDate.isBefore(weekMonday.add(const Duration(days: 7)));
-
-      expect(startInThisWeek, true); // new user's weekend = use 4 modules
+    test('registration day on weekend = 4 modules (weekday mode)', () {
+      final startDate = DateTime(2026, 4, 18); // Saturday registration
+      final today = DateTime(2026, 4, 18); // Same day
+      final isRegistrationDay = today == startDate;
+      expect(isRegistrationDay, true); // registration day = 4 modules
     });
 
-    test('normal weekend (start_date weeks ago) should use 2 modules', () {
-      final startDate = DateTime(2026, 3, 30); // Weeks ago
-      final weekendDate = DateTime(2026, 4, 19); // This Sunday
-      final weekMonday = weekendDate.subtract(Duration(days: weekendDate.weekday - 1));
+    test('day after registration on weekend = 2 modules (normal weekend)', () {
+      final startDate = DateTime(2026, 4, 18); // Saturday registration
+      final tomorrow = DateTime(2026, 4, 19); // Sunday
+      final isRegistrationDay = tomorrow == startDate;
+      expect(isRegistrationDay, false); // not registration day = 2 modules
+    });
 
-      final startInThisWeek = !startDate.isBefore(weekMonday) &&
-          startDate.isBefore(weekMonday.add(const Duration(days: 7)));
-
-      expect(startInThisWeek, false); // normal weekend = use 2 modules
+    test('normal weekend weeks later = 2 modules', () {
+      final startDate = DateTime(2026, 3, 30); // Registered weeks ago
+      final weekend = DateTime(2026, 4, 19); // This Sunday
+      final isRegistrationDay = weekend == startDate;
+      expect(isRegistrationDay, false); // normal weekend = 2 modules
     });
   });
 
   // ── Listen screen weekend playlist logic ───────────────────────────────────
 
   group('listen screen weekend playlist decision', () {
-    // Reproduces the three-way decision from listen_screen.dart
-
-    /// Determine playlist type for listen screen
+    /// Determine playlist type — now uses isRegistrationDay
     String playlistType({
       required bool isCalendarWeekend,
-      required List<BookInfo> weekBooks,
-      required bool allCompleted,
+      required bool isRegistrationDay,
+      bool hasWeekBooks = false,
+      bool allCompleted = false,
     }) {
-      final isReviewWeekend = isCalendarWeekend && weekBooks.isNotEmpty;
-      if (isReviewWeekend) return 'review_week_books';
-      if (isCalendarWeekend && weekBooks.isEmpty && allCompleted) return 'review_last_5';
+      final isReviewWeekend = isCalendarWeekend && !isRegistrationDay;
+      if (!isReviewWeekend) return 'weekday_current_book';
+      if (hasWeekBooks) return 'review_week_books';
+      if (allCompleted) return 'review_last_5';
       return 'weekday_current_book';
     }
 
-    test('normal weekend with books → review all week books', () {
+    test('registration day on weekend = weekday mode', () {
+      expect(playlistType(
+        isCalendarWeekend: true, isRegistrationDay: true,
+      ), 'weekday_current_book');
+    });
+
+    test('normal weekend with books = review', () {
       expect(
         playlistType(
           isCalendarWeekend: true,
-          weekBooks: [kAllBooks[0], kAllBooks[1], kAllBooks[2]],
-          allCompleted: false,
+          isRegistrationDay: false, hasWeekBooks: true,
         ),
         'review_week_books',
       );
@@ -377,8 +380,7 @@ void main() {
       expect(
         playlistType(
           isCalendarWeekend: true,
-          weekBooks: [],
-          allCompleted: false,
+          isRegistrationDay: false,
         ),
         'weekday_current_book',
       );
@@ -388,8 +390,7 @@ void main() {
       expect(
         playlistType(
           isCalendarWeekend: true,
-          weekBooks: [],
-          allCompleted: true,
+          isRegistrationDay: false, allCompleted: true,
         ),
         'review_last_5',
       );
@@ -399,8 +400,7 @@ void main() {
       expect(
         playlistType(
           isCalendarWeekend: false,
-          weekBooks: [kAllBooks[0]],
-          allCompleted: false,
+          isRegistrationDay: false, hasWeekBooks: true,
         ),
         'weekday_current_book',
       );
@@ -410,8 +410,7 @@ void main() {
       expect(
         playlistType(
           isCalendarWeekend: false,
-          weekBooks: [],
-          allCompleted: true,
+          isRegistrationDay: false, allCompleted: true,
         ),
         'weekday_current_book',
       );
@@ -423,8 +422,7 @@ void main() {
       // New behavior: weekend + empty weekBooks + NOT allCompleted → weekday mode
       final result = playlistType(
         isCalendarWeekend: true,
-        weekBooks: [],
-        allCompleted: false,
+        isRegistrationDay: true,
       );
       expect(result, isNot('review_last_5'));
       expect(result, 'weekday_current_book');
@@ -433,11 +431,11 @@ void main() {
     test('only allCompleted triggers last 5 review', () {
       // Last 5 should ONLY play when all 20 books are truly done
       expect(
-        playlistType(isCalendarWeekend: true, weekBooks: [], allCompleted: true),
+        playlistType(isCalendarWeekend: true, isRegistrationDay: false, allCompleted: true),
         'review_last_5',
       );
       expect(
-        playlistType(isCalendarWeekend: true, weekBooks: [], allCompleted: false),
+        playlistType(isCalendarWeekend: true, isRegistrationDay: false),
         'weekday_current_book', // NOT review_last_5
       );
     });
