@@ -123,7 +123,7 @@ class AudioPreloader {
 
   static Future<void> _fetchOne(String url) async {
     try {
-      _rawFetch(url.toJS).toDart.timeout(
+      await _rawFetch(url.toJS).toDart.timeout(
         const Duration(seconds: 10),
         onTimeout: () => null as dynamic,
       );

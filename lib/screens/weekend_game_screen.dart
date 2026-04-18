@@ -50,7 +50,7 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
       setState(() {});
       if (_reviewLessons.isEmpty) {
         // No books to review — go back
-        Navigator.pop(context);
+        if (mounted) Navigator.pop(context);
         return;
       }
       if (!_started) {

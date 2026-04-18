@@ -263,8 +263,10 @@ class _StudyScreenState extends State<StudyScreen>
     if (i < _pressCtrls.length) _pressCtrls[i].forward(from: 0);
     if (i < _ctrls.length) _ctrls[i].forward(from: 0).then((_) => _ctrls[i].reverse());
     // Per-zone SFX
-    try { _player.stop(); } catch (_) {}
-    try { _player.play(cdnAudioSource(_zones[i].sfx)); } catch (_) {}
+    if (i < _zones.length) {
+      try { _player.stop(); } catch (_) {}
+      try { _player.play(cdnAudioSource(_zones[i].sfx)); } catch (_) {}
+    }
 
     await Future.delayed(const Duration(milliseconds: 160));
     if (!mounted) return;

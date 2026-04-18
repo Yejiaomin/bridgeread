@@ -39,6 +39,7 @@ class _ReaderScreenState extends State<ReaderScreen>
   bool _isPaused = false;
   bool _waitingToAdvance = false;
   bool _isAudioLoading = false;
+  StreamSubscription<bool>? _loadingSub;
   bool _showSubtitles = false;
   bool _showCelebration = false;
   int _score = 0;
@@ -102,8 +103,8 @@ class _ReaderScreenState extends State<ReaderScreen>
     _celebAnim = CurvedAnimation(parent: _celebCtrl, curve: Curves.easeOut);
     _loadEggy();
     _loadLesson();
-    // Listen for audio loading state
-    _player.onLoadingChanged.listen((loading) {
+    // Listen for audio loading state (single subscription, cancelled in dispose)
+    _loadingSub = _player.onLoadingChanged.listen((loading) {
       if (mounted) setState(() => _isAudioLoading = loading);
     });
   }
@@ -118,6 +119,7 @@ class _ReaderScreenState extends State<ReaderScreen>
     _autoAdvanceTimer?.cancel();
     _positionSub?.cancel();
     _completeSub?.cancel();
+    _loadingSub?.cancel();
     _cancelled = true;
     _player.dispose();
     _videoController?.dispose();
