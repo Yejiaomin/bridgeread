@@ -61,16 +61,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Code (HTML, JS, CSS, JSON): Network-First
-  // Try network, fall back to cache for offline support
+  // Code (HTML, JS, CSS, JSON): Network-First with timeout + cache backup
   if (/\.(js|css|html|json)$/.test(url.pathname) || url.pathname === '/') {
+    var CODE_CACHE = 'bridgeread-code-v1';
     event.respondWith(
-      fetch(event.request).then((response) => {
-        return response;
-      }).catch(() => {
-        // Network failed — serve from cache if available
-        return caches.match(event.request).then((cached) => {
-          return cached || new Response('', { status: 503 });
+      caches.open(CODE_CACHE).then((cache) => {
+        // Race: network with 5s timeout vs cache
+        var networkFetch = fetch(event.request).then((response) => {
+          if (response.ok) {
+            cache.put(event.request, response.clone()); // cache for next time
+          }
+          return response;
+        });
+
+        var timeout = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('timeout')), 5000);
+        });
+
+        return Promise.race([networkFetch, timeout]).catch(() => {
+          // Network failed or timed out — serve from cache
+          return cache.match(event.request).then((cached) => {
+            return cached || new Response('', { status: 503 });
+          });
         });
       })
     );
