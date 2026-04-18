@@ -312,27 +312,32 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     if (_gachaInProgress || !_gachaAvailable || _totalStars < 30) return;
     _gachaInProgress = true;
 
-    setState(() {
-      _totalStars -= 30;
-      _gachaAvailable = _totalStars >= 30; // can draw again if still enough
-    });
-    _saveData();
-
-    // Sync star deduction to server
-    ApiService().spendStars(30).then((serverStars) {
-      if (serverStars != null && mounted) {
-        setState(() {
-          _totalStars = serverStars;
-          _gachaAvailable = _totalStars >= 30;
-        });
+    // Ask server FIRST — only deduct if confirmed
+    final serverStars = await ApiService().spendStars(30);
+    if (serverStars == null) {
+      // Server failed — don't deduct, show error
+      _gachaInProgress = false;
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('网络错误，请稍后重试')),
+        );
       }
-    });
+      return;
+    }
 
+    // Server confirmed — update UI and local cache
+    if (!mounted) { _gachaInProgress = false; return; }
+    setState(() {
+      _totalStars = serverStars;
+      _gachaAvailable = _totalStars >= 30;
+    });
     final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('total_stars', serverStars);
+
     final today = DateTime.now().toIso8601String().substring(0, 10);
-    await prefs.setString('gacha_date', today);
     final curDate = prefs.getString('gacha_date') ?? '';
     final curCount = (curDate == today) ? (prefs.getInt('gacha_count') ?? 0) : 0;
+    await prefs.setString('gacha_date', today);
     await prefs.setInt('gacha_count', curCount + 1);
     ApiService().updateStudyRoom({'gachaDate': today, 'gachaCount': curCount + 1});
 
