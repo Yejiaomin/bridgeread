@@ -314,6 +314,8 @@ class _PhonicsScreenState extends State<PhonicsScreen>
 
   @override
   void dispose() {
+    _echoPlayer?.dispose();
+    _echoPlaybackSub?.cancel();
     _player.dispose();
     for (final c in _tileControllers) {
       c.dispose();
@@ -593,6 +595,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
   }
 
   StreamSubscription? _echoPlaybackSub;
+  AudioPlayer? _echoPlayer; // store for disposal if screen exits during playback
 
   Future<void> _playEchoRecording() async {
     if (_recordingPath == null || _echoPlayingBack) return;
@@ -601,7 +604,9 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     _player.stop();
     final completer = Completer<void>();
     // Recording playback: use a separate native player (not asset-based)
+    _echoPlayer?.dispose();
     final echoPlayer = AudioPlayer();
+    _echoPlayer = echoPlayer;
     final source = kIsWeb
         ? UrlSource(_recordingPath!)
         : DeviceFileSource(_recordingPath!);

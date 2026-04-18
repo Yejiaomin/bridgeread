@@ -198,8 +198,16 @@
             var serverVer = e.data.version;
             var localVer = localStorage.getItem('app_version');
             if (localVer && localVer !== serverVer) {
+              // Prevent infinite reload: only reload once per minute
+              var lastReload = parseInt(localStorage.getItem('last_reload') || '0');
+              if (Date.now() - lastReload < 60000) {
+                console.warn('[Update] Skipping reload (too recent)');
+                localStorage.setItem('app_version', serverVer);
+                return;
+              }
               console.log('[Update] New version:', serverVer, '(was:', localVer, ')');
               localStorage.setItem('app_version', serverVer);
+              localStorage.setItem('last_reload', String(Date.now()));
               window.location.reload();
               return;
             }

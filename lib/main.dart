@@ -114,17 +114,26 @@ class _AuthGateState extends State<_AuthGate> {
     if (!mounted) return;
 
     if (token != null && token.isNotEmpty) {
-      // Validate JWT by fetching progress from server
-      final data = await ApiService().getProgress();
-      if (!mounted) return;
-      if (data != null && data['success'] == true) {
-        // Token valid — sync server data to local cache
-        await ProgressService.syncFromServer();
-        Navigator.pushReplacementNamed(context, '/ranking');
-      } else {
-        // Token expired or invalid — clear and go to login
-        await prefs.remove('auth_token');
-        Navigator.pushReplacementNamed(context, '/login');
+      // Try to validate JWT by fetching progress from server
+      try {
+        final data = await ApiService().getProgress()
+            .timeout(const Duration(seconds: 8));
+        if (!mounted) return;
+        if (data != null && data['success'] == true) {
+          // Token valid — sync server data to local cache
+          await ProgressService.syncFromServer();
+          Navigator.pushReplacementNamed(context, '/ranking');
+        } else if (data != null && data['success'] != true) {
+          // Server responded but token invalid — clear and go to login
+          await prefs.remove('auth_token');
+          Navigator.pushReplacementNamed(context, '/login');
+        } else {
+          // Network error (null response) — keep token, enter offline
+          Navigator.pushReplacementNamed(context, '/home');
+        }
+      } catch (_) {
+        // Network timeout/error — keep token, enter with cached data
+        if (mounted) Navigator.pushReplacementNamed(context, '/home');
       }
     } else {
       Navigator.pushReplacementNamed(context, '/login');
