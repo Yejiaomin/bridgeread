@@ -2,6 +2,10 @@
 .env
 .env.*
 
+# Production database (NEVER overwrite with git)
+server/data/bridgeread.db
+server/data/reports/
+
 # Miscellaneous
 *.class
 *.log
