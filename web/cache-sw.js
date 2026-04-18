@@ -33,11 +33,24 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   // Assets (audio/image/font): Cache-First, never expire
+  // But validate: don't cache truncated files (< 10KB for audio)
   if (CACHEABLE_ASSET.test(url.pathname)) {
     event.respondWith(
       caches.open(ASSET_CACHE).then((cache) => {
         return cache.match(event.request).then((cached) => {
-          if (cached) return cached;
+          if (cached) {
+            // Validate cached audio isn't truncated
+            var contentLength = cached.headers.get('content-length');
+            if (contentLength && parseInt(contentLength) < 10000 && /\.(mp3|wav)$/i.test(url.pathname)) {
+              // Suspiciously small audio — re-fetch
+              console.warn('[SW] Cached audio too small, re-fetching:', url.pathname);
+              return fetch(event.request).then((response) => {
+                if (response.ok) cache.put(event.request, response.clone());
+                return response;
+              }).catch(() => cached); // fall back to cached if network fails
+            }
+            return cached;
+          }
           return fetch(event.request).then((response) => {
             if (response.ok) cache.put(event.request, response.clone());
             return response;

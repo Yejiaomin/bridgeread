@@ -63,12 +63,13 @@
 
   var loadingPromises = {}; // url → Promise (prevent duplicate concurrent loads)
 
-  function loadBuffer(url) {
-    if (bufferCache[url]) return Promise.resolve(bufferCache[url]);
+  function loadBuffer(url, bypassCache) {
+    if (!bypassCache && bufferCache[url]) return Promise.resolve(bufferCache[url]);
     // Prevent duplicate concurrent loads for the same URL
     if (loadingPromises[url]) return loadingPromises[url];
 
-    loadingPromises[url] = fetch(url)
+    var fetchOpts = bypassCache ? { cache: 'reload' } : {};
+    loadingPromises[url] = fetch(url, fetchOpts)
       .then(function(res) {
         if (!res.ok) throw new Error('fetch failed: ' + res.status);
         return res.arrayBuffer();
@@ -79,6 +80,14 @@
         return ctx.decodeAudioData(data.slice(0));
       })
       .then(function(buffer) {
+        // Validate: narration audio should be > 2 seconds
+        // If suspiciously short and this was from cache, retry without cache
+        if (buffer.duration < 2 && !bypassCache && url.indexOf('.mp3') !== -1) {
+          console.warn('[WebAudio] Buffer too short (' + buffer.duration.toFixed(1) + 's), re-fetching:', url);
+          delete loadingPromises[url];
+          delete bufferCache[url];
+          return loadBuffer(url, true); // retry bypassing cache
+        }
         bufferCache[url] = buffer;
         delete loadingPromises[url];
         return buffer;
