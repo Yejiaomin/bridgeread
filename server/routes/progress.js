@@ -188,6 +188,19 @@ router.post('/batch', (req, res) => {
   res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status });
 });
 
+// ── Spend stars (gacha etc.) ─────────────────────────────────────────────────
+router.post('/spend-stars', (req, res) => {
+  const { amount } = req.body;
+  if (!amount || amount <= 0) return res.status(400).json({ error: 'invalid amount' });
+  const user = queryOne('SELECT total_stars FROM users WHERE id = ?', [req.userId]);
+  if (!user || user.total_stars < amount) {
+    return res.status(400).json({ error: 'not enough stars' });
+  }
+  run('UPDATE users SET total_stars = total_stars - ? WHERE id = ?', [amount, req.userId]);
+  const updated = queryOne('SELECT total_stars FROM users WHERE id = ?', [req.userId]);
+  res.json({ success: true, totalStars: updated.total_stars });
+});
+
 // ── Setup (book start date, series index) ───────────────────────────────────
 router.post('/setup', (req, res) => {
   const { bookStartDate, startSeriesIndex, appStartDate } = req.body;

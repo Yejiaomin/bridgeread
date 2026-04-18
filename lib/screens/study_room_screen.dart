@@ -223,7 +223,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     final today      = DateTime.now().toIso8601String().substring(0, 10);
     final gachaDate  = prefs.getString('gacha_date') ?? '';
     final gachaCount = (gachaDate == today) ? (prefs.getInt('gacha_count') ?? 0) : 0;
-    final gachaAvail = gachaCount < 2 && stars >= 30;
+    final gachaAvail = stars >= 30; // no daily limit, just need 30 stars
 
     // Eggy month: switch every 30 days from first launch
     if (!prefs.containsKey('app_start_date')) {
@@ -266,7 +266,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
           _treasureBoxItems = serverBoxList;
           if (serverAccessory.isNotEmpty) _equippedAccessory = serverAccessory;
           final sGachaCount = (serverGachaDate == today) ? serverGachaCount : 0;
-          _gachaAvailable = sGachaCount < 2 && _totalStars >= 30;
+          _gachaAvailable = _totalStars >= 30;
         });
         // Update local cache
         await prefs.setString('placed_items', serverPlaced);
@@ -310,19 +310,28 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     if (!_gachaAvailable || _totalStars < 30) return;
 
     setState(() {
-      _gachaAvailable = false;
-      _totalStars -= 30; // deduct cost
+      _totalStars -= 30;
+      _gachaAvailable = _totalStars >= 30; // can draw again if still enough
     });
     _saveData();
 
+    // Sync star deduction to server
+    ApiService().spendStars(30).then((serverStars) {
+      if (serverStars != null && mounted) {
+        setState(() {
+          _totalStars = serverStars;
+          _gachaAvailable = _totalStars >= 30;
+        });
+      }
+    });
+
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now().toIso8601String().substring(0, 10);
+    await prefs.setString('gacha_date', today);
     final curDate = prefs.getString('gacha_date') ?? '';
     final curCount = (curDate == today) ? (prefs.getInt('gacha_count') ?? 0) : 0;
-    final newCount = curCount + 1;
-    await prefs.setString('gacha_date', today);
-    await prefs.setInt('gacha_count', newCount);
-    ApiService().updateStudyRoom({'gachaDate': today, 'gachaCount': newCount});
+    await prefs.setInt('gacha_count', curCount + 1);
+    ApiService().updateStudyRoom({'gachaDate': today, 'gachaCount': curCount + 1});
 
     // Only decoration items (shelf items), no accessories (wearable)
     final pool = _decorationPool;

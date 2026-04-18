@@ -172,6 +172,22 @@ class ApiService {
     }
   }
 
+  /// Spend stars (gacha). Returns new total or null on failure.
+  Future<int?> spendStars(int amount) async {
+    try {
+      final res = await http.post(
+        Uri.parse('$_baseUrl/progress/spend-stars'),
+        headers: await _authHeaders(),
+        body: jsonEncode({'amount': amount}),
+      ).timeout(const Duration(seconds: 5));
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        return data['totalStars'] as int?;
+      }
+    } catch (_) {}
+    return null;
+  }
+
   /// Get ranking/leaderboard data.
   Future<Map<String, dynamic>?> getRanking({String period = 'week'}) async {
     try {
