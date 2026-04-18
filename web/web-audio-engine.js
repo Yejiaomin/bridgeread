@@ -22,6 +22,8 @@
   var onPositionCb = null;
   var onLoadingCb = null; // called with true=loading, false=ready
   var posInterval = null;
+  var retryCount = 0;     // prevent infinite retry loops
+  var MAX_RETRIES = 3;
 
   // ── Init: create AudioContext on first user gesture ─────────────────────
 
@@ -124,24 +126,38 @@
       // Check if audio actually finished or was interrupted
       var elapsed = ctx.currentTime - mainStartTime + mainOffset;
       var duration = buffer.duration;
-      var pctPlayed = elapsed / duration;
+      var pctPlayed = duration > 0 ? elapsed / duration : 1;
 
-      if (pctPlayed < 0.85 && duration > 1) {
-        // Audio ended prematurely (< 85% played) — likely iOS context interruption
-        console.warn('[WebAudio] Premature end at ' + (pctPlayed * 100).toFixed(0) + '%, resuming from ' + elapsed.toFixed(1) + 's');
-        // Try to resume from where we left off
+      if (pctPlayed < 0.85 && duration > 1 && retryCount < MAX_RETRIES) {
+        // Audio ended prematurely — likely iOS context interruption
+        retryCount++;
+        console.warn('[WebAudio] Premature end at ' + (pctPlayed * 100).toFixed(0) +
+          '%, retry ' + retryCount + '/' + MAX_RETRIES +
+          ', resuming from ' + elapsed.toFixed(1) + 's');
         mainSource = null;
-        if (ctx.state !== 'running') {
-          ctx.resume().then(function() {
-            playBuffer(buffer, elapsed);
-          });
-        } else {
-          playBuffer(buffer, elapsed);
-        }
+        var retryBuffer = buffer; // capture for closure
+        var retryOffset = elapsed;
+        // Wait a short moment for context to stabilize before retrying
+        setTimeout(function() {
+          // Guard: don't retry if a new play() was called in the meantime
+          if (mainBuffer !== retryBuffer) return;
+          if (ctx.state !== 'running') {
+            ctx.resume().then(function() {
+              if (mainBuffer !== retryBuffer) return;
+              playBuffer(retryBuffer, retryOffset);
+            });
+          } else {
+            playBuffer(retryBuffer, retryOffset);
+          }
+        }, 200);
         return;
       }
 
-      // Normal completion
+      // Normal completion (or max retries reached)
+      if (retryCount >= MAX_RETRIES) {
+        console.warn('[WebAudio] Max retries reached, treating as completed');
+      }
+      retryCount = 0;
       mainSource = null;
       stopPositionTracking();
       if (onEndCb) onEndCb();
@@ -165,6 +181,7 @@
     // Play audio from URL (loads if needed, plays immediately if cached)
     play: function(url) {
       ensureContext();
+      retryCount = 0; // new track, reset retries
       var cached = bufferCache[url];
       if (cached) {
         if (onLoadingCb) onLoadingCb(false);
