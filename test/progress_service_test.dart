@@ -53,39 +53,42 @@ void main() {
   });
 
   group('ProgressService.getTodayPending', () {
-    test('returns 4 when nothing is done', () async {
+    test('weekday: returns 4 when nothing is done', () async {
+      final now = _chinaTime();
+      final isWeekend = now.weekday > 5;
       SharedPreferences.setMockInitialValues({});
       final pending = await ProgressService.getTodayPending();
-      expect(pending, 4);
+      // Weekend with default thisWeekBooks (5 books) → 2 (quiz+listen)
+      // Weekday → 4 (all modules)
+      expect(pending, isWeekend ? 2 : 4);
     });
 
-    test('returns 3 when recap is done', () async {
+    test('weekday: returns 3 when recap is done', () async {
+      final now = _chinaTime();
+      final isWeekend = now.weekday > 5;
       final todayStr = _todayStr();
-
       SharedPreferences.setMockInitialValues({
         'today_recap_done': todayStr,
       });
-
       final pending = await ProgressService.getTodayPending();
-      expect(pending, 3);
+      expect(pending, isWeekend ? 2 : 3); // weekend doesn't track recap
     });
 
     test('returns 2 when recap and reader are done', () async {
+      final now = _chinaTime();
+      final isWeekend = now.weekday > 5;
       final todayStr = _todayStr();
-
       SharedPreferences.setMockInitialValues({
         'last_completed_date': todayStr,
         'today_recap_done': todayStr,
         'today_reader_done': true,
       });
-
       final pending = await ProgressService.getTodayPending();
-      expect(pending, 2);
+      expect(pending, isWeekend ? 2 : 2);
     });
 
-    test('returns 0 when all 4 modules are done', () async {
+    test('returns 0 when all modules are done', () async {
       final todayStr = _todayStr();
-
       SharedPreferences.setMockInitialValues({
         'last_completed_date': todayStr,
         'today_recap_done': todayStr,
@@ -93,22 +96,21 @@ void main() {
         'today_quiz_done': true,
         'today_listen_done': true,
       });
-
       final pending = await ProgressService.getTodayPending();
       expect(pending, 0);
     });
 
     test('recap from yesterday does not count as done today', () async {
-      final yesterday = _chinaTime().subtract(const Duration(days: 1));
+      final now = _chinaTime();
+      final isWeekend = now.weekday > 5;
+      final yesterday = now.subtract(const Duration(days: 1));
       final yesterdayStr =
           '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-
       SharedPreferences.setMockInitialValues({
         'today_recap_done': yesterdayStr,
       });
-
       final pending = await ProgressService.getTodayPending();
-      expect(pending, 4); // recap not counted because it's yesterday's
+      expect(pending, isWeekend ? 2 : 4);
     });
   });
 
@@ -348,12 +350,12 @@ void main() {
       final chinaStr = _todayStr();
 
       if (localStr != chinaStr) {
-        // Different timezones — recap with local time should NOT count
+        final isWeekend = _chinaTime().weekday > 5;
         SharedPreferences.setMockInitialValues({
           'today_recap_done': localStr,
         });
         final pending = await ProgressService.getTodayPending();
-        expect(pending, 4); // recap not counted
+        expect(pending, isWeekend ? 2 : 4); // recap not counted
       }
     });
   });
@@ -429,15 +431,16 @@ void main() {
       // Home screen should show "待补 8" on calendar
     });
 
-    test('todayPending counts 4 tracked modules: recap, reader, quiz, listen', () async {
+    test('todayPending decreases as modules are completed', () async {
       final todayStr = _todayStr();
+      final isWeekend = _chinaTime().weekday > 5;
 
-      // Only recap done
+      // Only recap done (weekend doesn't track recap)
       SharedPreferences.setMockInitialValues({
         'last_completed_date': todayStr,
         'today_recap_done': todayStr,
       });
-      expect(await ProgressService.getTodayPending(), 3);
+      expect(await ProgressService.getTodayPending(), isWeekend ? 2 : 3);
 
       // Recap + reader done
       SharedPreferences.setMockInitialValues({
@@ -445,7 +448,7 @@ void main() {
         'today_recap_done': todayStr,
         'today_reader_done': true,
       });
-      expect(await ProgressService.getTodayPending(), 2);
+      expect(await ProgressService.getTodayPending(), isWeekend ? 2 : 2);
 
       // Recap + reader + quiz done
       SharedPreferences.setMockInitialValues({
@@ -454,9 +457,9 @@ void main() {
         'today_reader_done': true,
         'today_quiz_done': true,
       });
-      expect(await ProgressService.getTodayPending(), 1);
+      expect(await ProgressService.getTodayPending(), isWeekend ? 1 : 1);
 
-      // All 4 done
+      // All done
       SharedPreferences.setMockInitialValues({
         'last_completed_date': todayStr,
         'today_recap_done': todayStr,
