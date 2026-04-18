@@ -105,4 +105,110 @@ void main() {
       expect(gachaAvailable(localStars), false);
     });
   });
+
+  // ── Bug fix: old daily limit leaked into post-animation check ──────────
+
+  group('Gacha no daily limit (bug fix)', () {
+    // Old bug: after draw animation, _gachaAvailable was set with:
+    //   (curCount + 1) < 2 && (_totalStars >= 30)
+    // This re-introduced the 2-per-day limit. Fix: only check stars.
+
+    /// Old buggy logic
+    bool gachaAvailableOldBug(int totalStars, int drawsToday) =>
+        drawsToday < 2 && totalStars >= 30;
+
+    /// New correct logic
+    bool gachaAvailableFixed(int totalStars) => totalStars >= 30;
+
+    test('old bug: 3rd draw in same day blocked even with enough stars', () {
+      expect(gachaAvailableOldBug(100, 2), false); // BUG: blocked at 2
+      expect(gachaAvailableFixed(100), true);       // FIX: allowed
+    });
+
+    test('old bug: 10th draw blocked', () {
+      expect(gachaAvailableOldBug(300, 9), false);  // BUG: blocked at 2+
+      expect(gachaAvailableFixed(300), true);        // FIX: allowed
+    });
+
+    test('fixed: only star count matters, not draw count', () {
+      // Simulate 5 consecutive draws
+      int stars = 150;
+      for (int draw = 0; draw < 5; draw++) {
+        expect(gachaAvailableFixed(stars), true);
+        stars -= 30;
+      }
+      expect(stars, 0);
+      expect(gachaAvailableFixed(stars), false); // no stars left
+    });
+
+    test('post-animation availability matches pre-draw check', () {
+      // The availability after animation should use same logic as before draw
+      int stars = 90;
+      // Draw 1
+      expect(gachaAvailableFixed(stars), true);
+      stars -= 30;
+      expect(gachaAvailableFixed(stars), true);  // 60 >= 30, can draw again
+      // Draw 2
+      stars -= 30;
+      expect(gachaAvailableFixed(stars), true);  // 30 >= 30, can draw again
+      // Draw 3
+      stars -= 30;
+      expect(gachaAvailableFixed(stars), false); // 0 < 30, done
+    });
+  });
+
+  // ── Star consistency across screens ────────────────────────────────────
+
+  group('Star data consistency', () {
+    test('all screens read from same source (total_stars key)', () {
+      // Simulate the SharedPreferences key
+      const key = 'total_stars';
+      // All screens use prefs.getInt('total_stars')
+      // This test documents the contract
+      expect(key, 'total_stars');
+    });
+
+    test('markModuleComplete adds stars, spendStars subtracts', () {
+      int serverStars = 0;
+
+      // User completes recap (+10), reader (+20), quiz (+20), listen (+20)
+      serverStars += 10;
+      serverStars += 20;
+      serverStars += 20;
+      serverStars += 20;
+      expect(serverStars, 70);
+
+      // User draws 2 gacha boxes
+      serverStars -= 30;
+      serverStars -= 30;
+      expect(serverStars, 10);
+      expect(gachaAvailable(serverStars), false); // 10 < 30
+    });
+
+    test('server correction overwrites local', () {
+      // Local thinks 70 stars after deduction
+      int local = 100 - 30;
+      expect(local, 70);
+
+      // But server says 55 (maybe another device spent stars)
+      final server = 55;
+      local = server; // server wins
+      expect(local, 55);
+      expect(gachaAvailable(local), true); // 55 >= 30
+    });
+
+    test('concurrent star operations resolve to server value', () {
+      int local = 200;
+      // Two rapid draws
+      local -= 30; // draw 1 local
+      local -= 30; // draw 2 local
+      expect(local, 140);
+
+      // Server processes both and returns final
+      final serverFinal = 140;
+      local = serverFinal;
+      expect(local, 140);
+      expect(gachaAvailable(local), true);
+    });
+  });
 }

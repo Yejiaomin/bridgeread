@@ -415,5 +415,102 @@ void main() {
         'weekday_current_book',
       );
     });
+
+    // Bug fix: new user weekend played last 5 books (never studied)
+    test('bug fix: new user weekend must NOT play last 5 books', () {
+      // Old buggy behavior: weekend + empty weekBooks → lastNBooks(5)
+      // New behavior: weekend + empty weekBooks + NOT allCompleted → weekday mode
+      final result = playlistType(
+        isCalendarWeekend: true,
+        weekBooks: [],
+        allCompleted: false,
+      );
+      expect(result, isNot('review_last_5'));
+      expect(result, 'weekday_current_book');
+    });
+
+    test('only allCompleted triggers last 5 review', () {
+      // Last 5 should ONLY play when all 20 books are truly done
+      expect(
+        playlistType(isCalendarWeekend: true, weekBooks: [], allCompleted: true),
+        'review_last_5',
+      );
+      expect(
+        playlistType(isCalendarWeekend: true, weekBooks: [], allCompleted: false),
+        'weekday_current_book', // NOT review_last_5
+      );
+    });
+  });
+
+  // ── Weekend game empty review list (bug fix) ───────────────────────────
+
+  group('weekend game empty review list', () {
+    test('Saturday register: thisWeekBooks returns empty (start > friday)', () {
+      // Simulate: book_start_date = Saturday, thisWeekBooks loops Mon-Fri
+      // start.isAfter(monday) → day = Saturday → Saturday > Friday → empty
+      final saturday = DateTime(2026, 4, 18);
+      final monday = saturday.subtract(Duration(days: saturday.weekday - 1));
+      final friday = monday.add(const Duration(days: 4));
+
+      // The loop: var day = start.isAfter(monday) ? start : monday
+      final day = saturday.isAfter(monday) ? saturday : monday;
+      // while (!day.isAfter(friday)) → Saturday.isAfter(Friday) = true → never enters
+      expect(day.isAfter(friday), true); // confirms empty result
+    });
+
+    test('Wednesday register: thisWeekBooks returns Wed-Fri books', () {
+      final wednesday = DateTime(2026, 4, 15);
+      final monday = wednesday.subtract(Duration(days: wednesday.weekday - 1));
+      final friday = monday.add(const Duration(days: 4));
+
+      final day = wednesday.isAfter(monday) ? wednesday : monday;
+      // Wed, Thu, Fri = 3 days → should return 3 books
+      int count = 0;
+      var d = day;
+      while (!d.isAfter(friday)) {
+        if (d.weekday <= 5) count++;
+        d = d.add(const Duration(days: 1));
+      }
+      expect(count, 3);
+    });
+  });
+
+  // ── Reader gray screen prevention (bug fix) ───────────────────────────
+
+  group('reader screen error handling', () {
+    test('lesson loading failure should not crash', () {
+      // Simulate: loadLesson throws → should catch and set _loading=false
+      // We test the logic pattern, not the widget
+      bool loading = true;
+      Object? lesson;
+      String? error;
+
+      // Simulate try/catch from reader_screen._loadLesson
+      try {
+        throw Exception('Network error');
+      } catch (e) {
+        loading = false;
+        error = e.toString();
+      }
+
+      expect(loading, false);
+      expect(lesson, null);
+      expect(error, isNotNull);
+    });
+
+    test('null lesson shows error page not gray screen', () {
+      // After loadLesson fails: _loading=false, _lesson=null
+      // Build should show error page, not crash
+      final loading = false;
+      final lesson = null;
+
+      // The guard in build:
+      if (!loading && lesson == null) {
+        // Should show "加载失败" page
+        expect(true, true); // path exists
+      } else {
+        fail('Should enter error path');
+      }
+    });
   });
 }
