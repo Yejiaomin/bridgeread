@@ -713,15 +713,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   int debt = 0;
                   final isInRange = (isPast || isToday) && _startDate != null && !date.isBefore(_startDate!);
                   if (isInRange && !isWeekend && book != null) {
-                    // Weekday: 4 tracked modules
+                    // Weekday with book: 4 tracked modules
                     final status = _moduleStatus[dateKey] ?? {};
                     const modules = ['recap', 'reader', 'quiz', 'listen'];
                     debt = modules.where((m) => status[m] != true).length;
                   } else if (isInRange && isWeekend) {
-                    // Weekend: 2 tracked modules
                     final status = _moduleStatus[dateKey] ?? {};
-                    const modules = ['quiz', 'listen'];
-                    debt = modules.where((m) => status[m] != true).length;
+                    // Check if this weekend is in the same week as start_date
+                    // (new user registered this week, weekend = weekday mode)
+                    final weekMonday = date.subtract(Duration(days: date.weekday - 1));
+                    final startInThisWeek = _startDate != null &&
+                        !_startDate!.isBefore(weekMonday) &&
+                        _startDate!.isBefore(weekMonday.add(const Duration(days: 7)));
+                    if (startInThisWeek) {
+                      // New user's first weekend: 4 modules (weekday mode)
+                      const modules = ['recap', 'reader', 'quiz', 'listen'];
+                      debt = modules.where((m) => status[m] != true).length;
+                    } else {
+                      // Normal weekend review: 2 modules
+                      const modules = ['quiz', 'listen'];
+                      debt = modules.where((m) => status[m] != true).length;
+                    }
                   }
 
                   return GestureDetector(
