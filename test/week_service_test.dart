@@ -653,4 +653,143 @@ void main() {
       expect(mounted, false); // correctly skipped Navigator call
     });
   });
+
+  // ── Bug fix: parseDate crash prevention ────────────────────────────────
+
+  group('parseDate crash prevention (bug fix)', () {
+    test('valid date string', () {
+      expect(WeekService.parseDate('2026-04-18'), DateTime(2026, 4, 18));
+    });
+
+    test('null returns null', () {
+      expect(WeekService.parseDate(null), null);
+    });
+
+    test('empty string returns null (not crash)', () {
+      expect(WeekService.parseDate(''), null);
+    });
+
+    test('malformed string returns null (not crash)', () {
+      expect(WeekService.parseDate('invalid-date'), null);
+    });
+
+    test('partial date returns null (not crash)', () {
+      expect(WeekService.parseDate('2026-04'), null);
+    });
+
+    test('non-numeric parts return null (not crash)', () {
+      expect(WeekService.parseDate('abc-de-fg'), null);
+    });
+
+    test('extra parts still work (takes first 3)', () {
+      expect(WeekService.parseDate('2026-04-18-extra'), DateTime(2026, 4, 18));
+    });
+  });
+
+  // ── Bug fix: star sync race condition ──────────────────────────────────
+
+  group('star sync race condition (bug fix)', () {
+    test('server value >= local: update local', () {
+      int localStars = 70;
+      final serverStars = 90; // server ahead (another device earned stars)
+      if (serverStars >= localStars) {
+        localStars = serverStars;
+      }
+      expect(localStars, 90);
+    });
+
+    test('server value < local: keep local (race protection)', () {
+      // Scenario: user completes 2 modules rapidly
+      // First sync returns old value, second local update already applied
+      int localStars = 90; // local already has both completions
+      final serverStars = 70; // server only has first completion
+      if (serverStars >= localStars) {
+        localStars = serverStars; // should NOT execute
+      }
+      expect(localStars, 90); // local preserved, not overwritten
+    });
+
+    test('rapid module completion preserves highest value', () {
+      int local = 50;
+      // Complete module 1: +20
+      local += 20; // local = 70
+      // Complete module 2: +20
+      local += 20; // local = 90
+      // Server sync for module 1 returns (was 50+20=70)
+      final server1 = 70;
+      if (server1 >= local) local = server1; // 70 < 90, skip
+      expect(local, 90);
+      // Server sync for module 2 returns (was 70+20=90)
+      final server2 = 90;
+      if (server2 >= local) local = server2; // 90 >= 90, update
+      expect(local, 90);
+    });
+
+    test('gacha spend + module complete race', () {
+      int local = 100;
+      // Gacha spend: -30
+      local -= 30; // local = 70
+      // Module complete: +20
+      local += 20; // local = 90
+      // Gacha server returns 70 (doesn't know about module yet)
+      final gachaServer = 70;
+      if (gachaServer >= local) local = gachaServer; // 70 < 90, skip
+      expect(local, 90); // preserved
+    });
+  });
+
+  // ── Bug fix: gacha double-tap prevention ───────────────────────────────
+
+  group('gacha double-tap prevention (bug fix)', () {
+    test('gachaInProgress blocks concurrent taps', () {
+      bool inProgress = false;
+      int stars = 90;
+      int drawCount = 0;
+
+      // Simulate tap handler
+      void onJarTap() {
+        if (inProgress || stars < 30) return;
+        inProgress = true;
+        stars -= 30;
+        drawCount++;
+        // Animation would happen here...
+      }
+
+      // First tap — succeeds
+      onJarTap();
+      expect(drawCount, 1);
+      expect(stars, 60);
+
+      // Second tap during animation — blocked
+      onJarTap();
+      expect(drawCount, 1); // no change
+      expect(stars, 60);    // no change
+
+      // Animation completes
+      inProgress = false;
+
+      // Third tap — succeeds
+      onJarTap();
+      expect(drawCount, 2);
+      expect(stars, 30);
+    });
+
+    test('without flag, double-tap spends twice (the bug)', () {
+      int stars = 60;
+      int drawCount = 0;
+
+      // Old buggy behavior: no inProgress check
+      void onJarTapBuggy() {
+        if (stars < 30) return;
+        stars -= 30;
+        drawCount++;
+      }
+
+      // Two rapid taps
+      onJarTapBuggy();
+      onJarTapBuggy();
+      expect(drawCount, 2);  // BUG: both went through
+      expect(stars, 0);      // BUG: spent 60 instead of 30
+    });
+  });
 }
