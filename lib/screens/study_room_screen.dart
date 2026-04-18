@@ -352,7 +352,7 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     setState(() {
       _droppedItem    = dropped;
       _showDropResult = true;
-      _gachaAvailable = (curCount + 1) < 2 && (_totalStars >= 30);
+      _gachaAvailable = _totalStars >= 30;
     });
     await _player.stop();
     // Use base name for audio: e.g. bunny_3 → bunny, princess_2 → princess
