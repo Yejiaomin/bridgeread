@@ -860,7 +860,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                 color: Colors.white70, size: R.s(22)),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
-            onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { Navigator.pushReplacementNamed(context, '/study'); } },
+            onPressed: () { Navigator.pushReplacementNamed(context, '/study'); },
           ),
           SizedBox(width: R.s(8)),
           // Progress dots
