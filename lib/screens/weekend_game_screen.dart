@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import '../services/lesson_service.dart';
 import '../services/week_service.dart';
 import 'quiz_screen.dart';
-import 'phonics_screen.dart';
-import 'recording_screen.dart';
 import 'eggy_celebration_screen.dart';
 
 /// Weekend Review Game Screen
-/// Chains through multiple days of quiz → phonics → recording.
+/// Plays quiz (消消乐) for each reviewed lesson, then goes to listen.
 ///
 /// Reviews only the lessons actually studied this week.
 /// Full week (5 days): Sat = first 3, Sun = last 2
@@ -27,7 +25,7 @@ class WeekendGameScreen extends StatefulWidget {
 
 class _WeekendGameScreenState extends State<WeekendGameScreen> {
   List<String> _reviewLessons = [];
-  int _phase = 0; // 0=quiz, 1=phonics, 2=recording
+  int _phase = 0; // 0=quiz only
   int _dayIdx = 0; // which day within current phase
   bool _started = false;
 
@@ -39,17 +37,13 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
 
   Future<void> _loadReviewLessons() async {
     final weekBooks = await WeekService.thisWeekBooks();
-    final studied = weekBooks.map((b) => b.lessonId).toList();
-    final isSaturday = activeDate().weekday == 6;
-    final n = studied.length;
-
-    // Split for Saturday / Sunday
-    if (n <= 2) {
-      _reviewLessons = studied;
+    if (weekBooks.isNotEmpty) {
+      // Normal review: all books studied this week
+      _reviewLessons = weekBooks.map((b) => b.lessonId).toList();
     } else {
-      _reviewLessons = isSaturday
-          ? studied.sublist(0, n - 2)
-          : studied.sublist(n - 2);
+      // All books completed, no new books this week → review last 5
+      final last5 = WeekService.lastNBooks(5);
+      _reviewLessons = last5.map((b) => b.lessonId).toList();
     }
 
     if (mounted) {
@@ -68,39 +62,19 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
   }
 
   Future<void> _runCurrentStep() async {
-    if (_phase >= 3) {
-      // All review phases done → go to listen
-      if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/listen', (r) => false);
-      return;
-    }
-
     if (_dayIdx >= _reviewLessons.length) {
+      // All quiz done → celebration → listen
       await _showCelebration();
-      _phase++;
-      _dayIdx = 0;
-      if (mounted) _runCurrentStep();
+      if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/listen', (r) => false);
       return;
     }
 
     await LessonService().setCurrentLesson(_reviewLessons[_dayIdx]);
     if (!mounted) return;
 
-    Widget screen;
-    switch (_phase) {
-      case 0:
-        screen = const QuizScreen(weekendMode: true);
-        break;
-      case 1:
-        screen = const PhonicsScreen(weekendMode: true);
-        break;
-      case 2:
-        screen = const RecordingScreen(weekendMode: true);
-        break;
-      default:
-        return;
-    }
-
-    await Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+    await Navigator.push(context, MaterialPageRoute(
+      builder: (_) => const QuizScreen(weekendMode: true),
+    ));
     if (!mounted) return;
 
     _dayIdx++;
@@ -108,20 +82,16 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
   }
 
   Future<void> _showCelebration() async {
-    final labels = ['消消乐全部完成！', '自然拼读全部完成！', '录音全部完成！'];
-    final nextLabels = ['开始自然拼读', '开始录音', '开始听力'];
-
     if (!mounted) return;
-
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => EggyCelebrationScreen(
           nextRoute: '',
-          nextLabel: _phase < 2 ? nextLabels[_phase] : '完成！',
-          moduleKey: ['quiz', 'phonics', 'recording'][_phase],
+          nextLabel: '开始听力 🎧',
+          moduleKey: 'quiz',
           modulePoints: 15,
-          customTitle: labels[_phase],
+          customTitle: '消消乐全部完成！',
           onComplete: () => Navigator.pop(context),
         ),
       ),
@@ -130,7 +100,7 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final phaseNames = ['消消乐', '自然拼读', '录音'];
+    const phaseNames = ['消消乐'];
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8F0),
       body: Center(
@@ -140,8 +110,8 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
             const Text('Weekend Review',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Color(0xFFFF8C42))),
             const SizedBox(height: 16),
-            if (_phase < 3) Text(
-              '${phaseNames[_phase]} (${_dayIdx + 1}/${_reviewLessons.length})',
+            if (_dayIdx < _reviewLessons.length) Text(
+              '${phaseNames[0]} (${_dayIdx + 1}/${_reviewLessons.length})',
               style: const TextStyle(fontSize: 18, color: Color(0xFF666666)),
             ),
             const SizedBox(height: 24),

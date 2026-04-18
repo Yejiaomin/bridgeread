@@ -132,8 +132,8 @@ class _Bubble {
   Offset drift(double t) {
     final a = t * 2 * pi;
     return Offset(
-      sin(a * speed + px) * 28,
-      cos(a * speed * 0.7 + py) * 22,
+      sin(a * speed + px) * 14,
+      cos(a * speed * 0.7 + py) * 11,
     );
   }
 }
@@ -305,7 +305,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     final colorOrder = List.generate(6, (i) => i)..shuffle(_rng);
 
     // Pre-generate sizes so _scatter can use per-bubble radii for collision
-    final sizes = List.generate(5, (_) => R.s(200.0 + _rng.nextDouble() * 60.0));
+    final sizes = List.generate(5, (_) => R.s(170.0 + _rng.nextDouble() * 50.0));
     final pos   = _scatter(sizes);
 
     if (r.type == _RType.image) {
@@ -406,9 +406,10 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       bool valid = true;
       for (int j = 0; j < out.length; j++) {
         final rj      = sizes[j] / 2;
-        // 0.92× = bubbles may kiss at edges but centers stay separated;
-        // fine because fill is only 0.15 opacity
-        final minDist = (ri + rj) * 0.92;
+        // Drift animation: ±14px x, ±11px y → worst case ~18px per bubble
+        // Two bubbles can drift toward each other = 36px closer than placed
+        // No overlap allowed: minDist = ri+rj + drift margin
+        final minDist = (ri + rj) * 0.5 + 36;
         final dx      = out[j].dx - px;
         final dy      = out[j].dy - py;
         if (sqrt(dx * dx + dy * dy) < minDist) { valid = false; break; }

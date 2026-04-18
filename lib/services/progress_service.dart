@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'week_service.dart' show activeDate, chinaTime;
+import 'week_service.dart' show activeDate, chinaTime, WeekService;
 import 'analytics_service.dart';
 import 'api_service.dart';
 
@@ -280,10 +280,16 @@ class ProgressService {
     final todayStr = _today;
 
     if (now.weekday == 6 || now.weekday == 7) {
-      int pending = 0;
-      if (!(prefs.getBool(_kQuizDone) ?? false)) pending++;
-      if (!(prefs.getBool('today_listen_done') ?? false)) pending++;
-      return pending;
+      // Check if user has books this week; if not (new user), treat as weekday
+      final weekBooks = await WeekService.thisWeekBooks();
+      if (weekBooks.isNotEmpty) {
+        // Normal weekend: only quiz + listen
+        int pending = 0;
+        if (!(prefs.getBool(_kQuizDone) ?? false)) pending++;
+        if (!(prefs.getBool('today_listen_done') ?? false)) pending++;
+        return pending;
+      }
+      // New user on weekend: fall through to weekday logic
     }
 
     int pending = 0;

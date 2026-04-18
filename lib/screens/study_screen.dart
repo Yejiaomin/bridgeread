@@ -59,10 +59,20 @@ const _kWeekendZones = [
 const _kWeekendZoneColors = [Colors.green, Colors.purple];
 const _kWeekendZoneLabels = ['GAME', 'LISTEN'];
 
-/// Check if active date is weekend
+/// Check if active date is weekend.
+/// If user has no books this week (just registered), treat weekend as weekday
+/// so they can start learning immediately.
 bool _isWeekend() {
-  final day = activeDate().weekday; // 6 = Saturday, 7 = Sunday
+  final day = activeDate().weekday;
   return day == 6 || day == 7;
+}
+
+/// Async check: true weekend only if user has books to review this week.
+Future<bool> _isReviewWeekend() async {
+  final day = activeDate().weekday;
+  if (day != 6 && day != 7) return false;
+  final weekBooks = await WeekService.thisWeekBooks();
+  return weekBooks.isNotEmpty;
 }
 
 /// Check if active date is Saturday
@@ -82,8 +92,9 @@ class _StudyScreenState extends State<StudyScreen>
     with TickerProviderStateMixin, RouteAware {
   final _player = AudioPlayer();
 
-  // Weekend mode
-  final bool _weekend = _isWeekend();
+  // Weekend mode — resolved async in initState
+  bool _weekend = _isWeekend(); // initial guess, refined by _resolveWeekend()
+  bool _resolved = false;
 
   List<_Zone> get _zones => _weekend ? _kWeekendZones : _kZones;
 
@@ -115,8 +126,9 @@ class _StudyScreenState extends State<StudyScreen>
   void initState() {
     super.initState();
     AnalyticsService.logEvent('book_start');
-    _loadProgress();
-    final zoneCount = _zones.length;
+    _resolveWeekend();
+    // Always create 4 controllers (max zones); use first N based on mode
+    const zoneCount = 4;
     _ctrls = List.generate(
       zoneCount,
       (_) => AnimationController(
@@ -138,6 +150,33 @@ class _StudyScreenState extends State<StudyScreen>
               TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.0), weight: 1),
             ]).animate(c))
         .toList();
+  }
+
+  /// Resolve weekend mode:
+  /// - Weekend + no books this week (new user) → weekday mode
+  /// - Weekday + all books completed → review mode (last 5 books)
+  /// - Otherwise → normal
+  Future<void> _resolveWeekend() async {
+    bool shouldBeWeekend = _weekend;
+
+    if (_weekend) {
+      // Weekend: check if user has books to review
+      final weekBooks = await WeekService.thisWeekBooks();
+      if (weekBooks.isEmpty) shouldBeWeekend = false; // new user, no review
+    } else {
+      // Weekday: check if all books are done (remaining days become review)
+      final allDone = await WeekService.allBooksCompleted();
+      final todayIdx = await WeekService.todayBookIndex();
+      if (allDone && todayIdx == null) shouldBeWeekend = true;
+    }
+
+    if (_weekend != shouldBeWeekend && mounted) {
+      setState(() {
+        _weekend = shouldBeWeekend;
+        _resolved = true;
+      });
+    }
+    _loadProgress();
   }
 
   Future<void> _loadProgress() async {

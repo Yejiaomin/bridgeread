@@ -153,6 +153,30 @@ class WeekService {
     return idx == null;
   }
 
+  /// Whether all books in the entire curriculum have been completed.
+  static Future<bool> allBooksCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    final startStr = prefs.getString('book_start_date');
+    if (startStr == null) return false;
+    final start = parseDate(startStr)!;
+    final now = activeDate();
+    final wdCount = _weekdaysBetween(start, now);
+    // Check if the last book has been assigned already
+    // Total weekdays needed for all books depends on start day
+    for (int wd = wdCount; wd >= 1; wd--) {
+      final idx = bookForWeekdayCount(wd, start.weekday);
+      if (idx == kAllBooks.length - 1) return true; // last book was assigned
+      if (idx != null) return false; // some book assigned but not the last
+    }
+    return false;
+  }
+
+  /// Get the last N books for end-of-series review.
+  static List<BookInfo> lastNBooks(int n) {
+    final start = (kAllBooks.length - n).clamp(0, kAllBooks.length);
+    return kAllBooks.sublist(start);
+  }
+
   /// This week's books (only actual new-book days, not review padding).
   /// Works for both weekdays and weekends.
   static Future<List<BookInfo>> thisWeekBooks() async {

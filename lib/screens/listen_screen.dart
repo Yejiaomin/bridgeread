@@ -208,10 +208,14 @@ class _ListenScreenState extends State<ListenScreen>
               book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
         }
       } else {
-        // Fallback: play current lesson (testing or no scheduled books)
-        final todayCover = await getCover(lessonId);
-        playlist.add(_Track(lesson.bookTitle, lesson.originalAudio,
-            showBook: true, lessonId: lessonId, coverImage: todayCover));
+        // All books done or new user: play last 5 books
+        final last5 = WeekService.lastNBooks(5);
+        for (int i = 0; i < last5.length; i++) {
+          final book = last5[i];
+          final cover = await getCover(book.lessonId);
+          playlist.add(_Track('${book.title} (${i + 1}/${last5.length})',
+              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
+        }
       }
     } else {
       // Weekday: today → yesterday → today, then loop
