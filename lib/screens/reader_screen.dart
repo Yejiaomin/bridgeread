@@ -38,6 +38,7 @@ class _ReaderScreenState extends State<ReaderScreen>
   bool _isAudioPlaying = false;
   bool _isPaused = false;
   bool _waitingToAdvance = false;
+  bool _isAudioLoading = false;
   bool _showSubtitles = false;
   bool _showCelebration = false;
   int _score = 0;
@@ -101,6 +102,10 @@ class _ReaderScreenState extends State<ReaderScreen>
     _celebAnim = CurvedAnimation(parent: _celebCtrl, curve: Curves.easeOut);
     _loadEggy();
     _loadLesson();
+    // Listen for audio loading state
+    _player.onLoadingChanged.listen((loading) {
+      if (mounted) setState(() => _isAudioLoading = loading);
+    });
   }
 
   @override
@@ -768,11 +773,35 @@ class _ReaderScreenState extends State<ReaderScreen>
                         child: _buildEggyAvatar(R.s(140)),
                       ),
                     ),
-                  // 🔊 Pulsing speaker icon while audio plays
-                  if (_isAudioPlaying && !_isPaused)
+                  // Loading indicator while audio downloads
+                  if (_isAudioLoading)
                     Positioned(
                       bottom: 16,
-                      left: 72, // offset right of the FAB
+                      left: 72,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(width: 16, height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.white70)),
+                            SizedBox(width: 8),
+                            Text('加载中...',
+                              style: TextStyle(color: Colors.white70, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  // 🔊 Pulsing speaker icon while audio plays
+                  if (_isAudioPlaying && !_isPaused && !_isAudioLoading)
+                    Positioned(
+                      bottom: 16,
+                      left: 72,
                       child: ScaleTransition(
                         scale: _speakerAnim,
                         child: Container(

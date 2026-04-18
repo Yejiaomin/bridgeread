@@ -20,6 +20,7 @@
   var bufferCache = {};  // url → AudioBuffer (decoded, ready to play)
   var onEndCb = null;
   var onPositionCb = null;
+  var onLoadingCb = null; // called with true=loading, false=ready
   var posInterval = null;
 
   // ── Init: create AudioContext on first user gesture ─────────────────────
@@ -134,12 +135,15 @@
       ensureContext();
       var cached = bufferCache[url];
       if (cached) {
+        if (onLoadingCb) onLoadingCb(false);
         playBuffer(cached, 0);
       } else {
-        // Load then play
+        // Not cached — notify loading, then load and play
+        if (onLoadingCb) onLoadingCb(true);
         loadBuffer(url).then(function(buffer) {
+          if (onLoadingCb) onLoadingCb(false);
           if (buffer) playBuffer(buffer, 0);
-          else if (onEndCb) onEndCb(); // load failed, treat as ended
+          else if (onEndCb) onEndCb();
         });
       }
     },
@@ -193,6 +197,7 @@
     },
 
     onEnd: function(cb) { onEndCb = cb; },
+    onLoading: function(cb) { onLoadingCb = cb; },
     onPosition: function(cb) { onPositionCb = cb; },
 
     // ── SFX (fire-and-forget, overlaps with main) ────────────────────────

@@ -28,6 +28,8 @@ external void _jsOnEnd(JSFunction cb);
 external void _jsOnPosition(JSFunction cb);
 @JS('window._brWebAudio.playSfx')
 external void _jsPlaySfx(JSString url);
+@JS('window._brWebAudio.onLoading')
+external void _jsOnLoading(JSFunction cb);
 @JS('window._brWebAudio.preload')
 external JSPromise<JSAny?> _jsPreload(JSString url);
 
@@ -42,6 +44,7 @@ class GameAudioPlayer {
   AudioPlayer? _native;
   StreamController<void>? _onCompleteCtrl;
   StreamController<Duration>? _onPositionCtrl;
+  StreamController<bool>? _onLoadingCtrl;
   bool _webCallbacksSet = false;
 
   GameAudioPlayer() {
@@ -105,8 +108,15 @@ class GameAudioPlayer {
     return _native!.onDurationChanged;
   }
 
+  /// Emits true when audio is loading from network, false when cached/ready.
+  /// Only fires on web. On mobile, assets are bundled so no loading delay.
+  Stream<bool> get onLoadingChanged {
+    if (kIsWeb) { _ensureWebCallbacks(); return _onLoadingCtrl!.stream; }
+    return const Stream.empty();
+  }
+
   void dispose() {
-    if (kIsWeb) { _jsStop(); _onCompleteCtrl?.close(); _onPositionCtrl?.close(); }
+    if (kIsWeb) { _jsStop(); _onCompleteCtrl?.close(); _onPositionCtrl?.close(); _onLoadingCtrl?.close(); }
     else { _native?.dispose(); }
   }
 
@@ -115,9 +125,13 @@ class GameAudioPlayer {
     _webCallbacksSet = true;
     _onCompleteCtrl = StreamController<void>.broadcast();
     _onPositionCtrl = StreamController<Duration>.broadcast();
+    _onLoadingCtrl = StreamController<bool>.broadcast();
     _jsOnEnd((() { _onCompleteCtrl?.add(null); }).toJS);
     _jsOnPosition(((JSNumber ms) {
       _onPositionCtrl?.add(Duration(milliseconds: ms.toDartInt));
+    }).toJS);
+    _jsOnLoading(((JSBoolean loading) {
+      _onLoadingCtrl?.add(loading.toDart);
     }).toJS);
   }
 }
