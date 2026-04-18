@@ -195,27 +195,29 @@ class _ListenScreenState extends State<ListenScreen>
     }
 
     final now = activeDate();
-    final isWeekend = now.weekday == 6 || now.weekday == 7;
+    final isCalendarWeekend = now.weekday == 6 || now.weekday == 7;
 
-    if (isWeekend) {
-      // Weekend: play all books studied this week in order, loop
-      final weekBooks = await WeekService.thisWeekBooks();
-      if (weekBooks.isNotEmpty) {
-        for (int i = 0; i < weekBooks.length; i++) {
-          final book = weekBooks[i];
-          final cover = await getCover(book.lessonId);
-          playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
-              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
-        }
-      } else {
-        // All books done or new user: play last 5 books
-        final last5 = WeekService.lastNBooks(5);
-        for (int i = 0; i < last5.length; i++) {
-          final book = last5[i];
-          final cover = await getCover(book.lessonId);
-          playlist.add(_Track('${book.title} (${i + 1}/${last5.length})',
-              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
-        }
+    // Check if this is truly a review weekend (has books to review)
+    // New user on weekend → treat as weekday (play today's book)
+    final weekBooks = isCalendarWeekend ? await WeekService.thisWeekBooks() : <BookInfo>[];
+    final isReviewWeekend = isCalendarWeekend && weekBooks.isNotEmpty;
+
+    if (isReviewWeekend) {
+      // Normal weekend: play all books studied this week
+      for (int i = 0; i < weekBooks.length; i++) {
+        final book = weekBooks[i];
+        final cover = await getCover(book.lessonId);
+        playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
+            book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
+      }
+    } else if (isCalendarWeekend && weekBooks.isEmpty && await WeekService.allBooksCompleted()) {
+      // All 20 books done: play last 5 books for review
+      final last5 = WeekService.lastNBooks(5);
+      for (int i = 0; i < last5.length; i++) {
+        final book = last5[i];
+        final cover = await getCover(book.lessonId);
+        playlist.add(_Track('${book.title} (${i + 1}/${last5.length})',
+            book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
       }
     } else {
       // Weekday: today → yesterday → today, then loop
@@ -261,7 +263,7 @@ class _ListenScreenState extends State<ListenScreen>
 
     // Weekday 3-track playlist: loop from track 1 (skip initial "today")
     // Weekend / 2-track / 1-track: loop from start
-    _loopStart = (!isWeekend && playlist.length == 3) ? 1 : 0;
+    _loopStart = (!isReviewWeekend && playlist.length == 3) ? 1 : 0;
 
     if (mounted) {
       setState(() {
