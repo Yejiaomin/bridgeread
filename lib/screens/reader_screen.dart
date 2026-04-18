@@ -151,13 +151,26 @@ class _ReaderScreenState extends State<ReaderScreen>
   }
 
   Future<void> _loadLesson() async {
-    final lessonId = widget.lessonId ?? await _lessonService.restoreCurrentLessonId();
-    final lesson = await _lessonService.loadLesson(lessonId);
-    setState(() {
-      _lesson = lesson;
-      _loading = false;
-    });
-    await _startPageAudio();
+    try {
+      final lessonId = widget.lessonId ?? await _lessonService.restoreCurrentLessonId();
+      final lesson = await _lessonService.loadLesson(lessonId);
+      if (!mounted) return;
+      setState(() {
+        _lesson = lesson;
+        _loading = false;
+      });
+      await _startPageAudio();
+    } catch (e) {
+      debugPrint('[Reader] loadLesson error: $e');
+      if (!mounted) return;
+      setState(() => _loading = false);
+      // Show error to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('加载失败，请返回重试: $e')),
+        );
+      }
+    }
   }
 
   StreamSubscription<void>? _completeSub;
@@ -573,6 +586,25 @@ class _ReaderScreenState extends State<ReaderScreen>
       return const Scaffold(
         backgroundColor: Color(0xFFFFF8F0),
         body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_lesson == null) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFFFF8F0),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('加载失败', style: TextStyle(fontSize: 18, color: Color(0xFFFF8C42))),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('返回'),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
