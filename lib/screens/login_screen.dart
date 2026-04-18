@@ -23,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _nameCtrl = TextEditingController();
-  int _booksCompleted = 0;
 
   final _api = ApiService();
 
@@ -61,38 +60,16 @@ class _LoginScreenState extends State<LoginScreen> {
     // Registration succeeded, token already saved by ApiService
     final prefs = await SharedPreferences.getInstance();
 
-    // Set up book start date based on books completed
+    // New user always starts from today, book 1
     final now = chinaTime();
     final today = DateTime(now.year, now.month, now.day);
-    final startDate = _goBackWeekdays(today, _booksCompleted);
-    final dateStr = _formatDate(startDate);
+    final dateStr = _formatDate(today);
     await prefs.setString('book_start_date', dateStr);
 
-    // Tell server about book start date
     await _api.setupProgress(
       bookStartDate: dateStr,
       startSeriesIndex: 0,
     );
-
-    // If user has completed books, batch sync past progress (done=true, 0 stars)
-    if (_booksCompleted > 0) {
-      final items = <Map<String, dynamic>>[];
-      var d = DateTime(startDate.year, startDate.month, startDate.day);
-      while (d.isBefore(today)) {
-        final ds = _formatDate(d);
-        if (d.weekday >= 1 && d.weekday <= 5) {
-          for (final mod in ['recap', 'reader', 'quiz', 'listen']) {
-            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 0});
-          }
-        } else {
-          for (final mod in ['quiz', 'listen']) {
-            items.add({'date': ds, 'module': mod, 'done': true, 'stars': 0});
-          }
-        }
-        d = d.add(const Duration(days: 1));
-      }
-      if (items.isNotEmpty) await _api.syncBatch(items);
-    }
 
     await prefs.setBool('assessment_done', true);
     await prefs.setInt('start_series_index', 0);
@@ -196,37 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
               if (!_isLogin) ...[
                 _inputField(_nameCtrl, '中文名/英文名', TextInputType.text, Icons.child_care),
                 const SizedBox(height: 12),
-                // How many books already learned
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.menu_book_rounded, color: _kOrange),
-                      const SizedBox(width: 12),
-                      const Text('已学了', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                      const SizedBox(width: 8),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<int>(
-                          value: _booksCompleted,
-                          style: const TextStyle(fontSize: 16, color: _kOrange, fontWeight: FontWeight.w700),
-                          items: List.generate(31, (i) => DropdownMenuItem(
-                            value: i,
-                            child: Text('$i'),
-                          )),
-                          onChanged: (v) => setState(() => _booksCompleted = v ?? 0),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text('本', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
               ],
 
               // Password
@@ -280,16 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _formatDate(DateTime d) =>
       '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
-  DateTime _goBackWeekdays(DateTime from, int count) {
-    if (count <= 0) return from;
-    var d = from;
-    int remaining = count;
-    while (remaining > 0) {
-      d = d.subtract(const Duration(days: 1));
-      if (d.weekday >= 1 && d.weekday <= 5) remaining--;
-    }
-    return d;
-  }
+
 
   Widget _tabButton(String label, bool active, VoidCallback onTap) {
     return GestureDetector(
