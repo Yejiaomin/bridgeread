@@ -343,4 +343,77 @@ void main() {
       expect(startInThisWeek, false); // normal weekend = use 2 modules
     });
   });
+
+  // ── Listen screen weekend playlist logic ───────────────────────────────────
+
+  group('listen screen weekend playlist decision', () {
+    // Reproduces the three-way decision from listen_screen.dart
+
+    /// Determine playlist type for listen screen
+    String playlistType({
+      required bool isCalendarWeekend,
+      required List<BookInfo> weekBooks,
+      required bool allCompleted,
+    }) {
+      final isReviewWeekend = isCalendarWeekend && weekBooks.isNotEmpty;
+      if (isReviewWeekend) return 'review_week_books';
+      if (isCalendarWeekend && weekBooks.isEmpty && allCompleted) return 'review_last_5';
+      return 'weekday_current_book';
+    }
+
+    test('normal weekend with books → review all week books', () {
+      expect(
+        playlistType(
+          isCalendarWeekend: true,
+          weekBooks: [kAllBooks[0], kAllBooks[1], kAllBooks[2]],
+          allCompleted: false,
+        ),
+        'review_week_books',
+      );
+    });
+
+    test('new user weekend (no books this week) → weekday mode', () {
+      expect(
+        playlistType(
+          isCalendarWeekend: true,
+          weekBooks: [],
+          allCompleted: false,
+        ),
+        'weekday_current_book',
+      );
+    });
+
+    test('all 20 books done, weekend → review last 5', () {
+      expect(
+        playlistType(
+          isCalendarWeekend: true,
+          weekBooks: [],
+          allCompleted: true,
+        ),
+        'review_last_5',
+      );
+    });
+
+    test('weekday → always current book mode', () {
+      expect(
+        playlistType(
+          isCalendarWeekend: false,
+          weekBooks: [kAllBooks[0]],
+          allCompleted: false,
+        ),
+        'weekday_current_book',
+      );
+    });
+
+    test('weekday even if all completed → current book mode', () {
+      expect(
+        playlistType(
+          isCalendarWeekend: false,
+          weekBooks: [],
+          allCompleted: true,
+        ),
+        'weekday_current_book',
+      );
+    });
+  });
 }
