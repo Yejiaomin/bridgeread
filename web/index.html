@@ -208,7 +208,23 @@
               console.log('[Update] New version:', serverVer, '(was:', localVer, ')');
               localStorage.setItem('app_version', serverVer);
               localStorage.setItem('last_reload', String(Date.now()));
-              window.location.reload();
+              // Clear ALL service workers and code caches before reload
+              // (keep asset cache — audio/images don't change)
+              Promise.all([
+                navigator.serviceWorker.getRegistrations().then(function(regs) {
+                  return Promise.all(regs.map(function(r) { return r.unregister(); }));
+                }),
+                caches.keys().then(function(names) {
+                  // Only delete non-asset caches
+                  return Promise.all(names.filter(function(n) {
+                    return n.indexOf('assets') === -1;
+                  }).map(function(n) { return caches.delete(n); }));
+                })
+              ]).then(function() {
+                window.location.reload();
+              }).catch(function() {
+                window.location.reload();
+              });
               return;
             }
             localStorage.setItem('app_version', serverVer);
@@ -222,19 +238,36 @@
         }, 3000);
       }
 
-      // Fallback: direct version check for browsers without SW
-      if (!('serviceWorker' in navigator)) {
-        fetch('/version.json?t=' + Date.now()).then(function(r) { return r.json(); })
-          .then(function(data) {
-            var localVer = localStorage.getItem('app_version');
-            if (localVer && localVer !== data.version) {
+      // Direct version check (works even if SW is stale/broken)
+      // This runs for ALL browsers, not just those without SW
+      fetch('/version.json?t=' + Date.now()).then(function(r) { return r.json(); })
+        .then(function(data) {
+          var localVer = localStorage.getItem('app_version');
+          if (localVer && localVer !== data.version) {
+            var lastReload = parseInt(localStorage.getItem('last_reload') || '0');
+            if (Date.now() - lastReload < 60000) {
               localStorage.setItem('app_version', data.version);
-              window.location.reload();
-            } else {
-              localStorage.setItem('app_version', data.version);
+              return;
             }
-          }).catch(function() {});
-      }
+            localStorage.setItem('app_version', data.version);
+            localStorage.setItem('last_reload', String(Date.now()));
+            // Unregister all SWs + clear code caches
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function(regs) {
+                regs.forEach(function(r) { r.unregister(); });
+              });
+            }
+            if ('caches' in window) {
+              caches.keys().then(function(names) {
+                names.filter(function(n) { return n.indexOf('assets') === -1; })
+                     .forEach(function(n) { caches.delete(n); });
+              });
+            }
+            setTimeout(function() { window.location.reload(); }, 500);
+          } else {
+            localStorage.setItem('app_version', data.version);
+          }
+        }).catch(function() {});
     })();
   </script>
   <script>
