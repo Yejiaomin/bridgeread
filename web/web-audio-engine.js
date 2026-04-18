@@ -61,26 +61,34 @@
 
   // ── Buffer loading & caching ───────────────────────────────────────────
 
+  var loadingPromises = {}; // url → Promise (prevent duplicate concurrent loads)
+
   function loadBuffer(url) {
     if (bufferCache[url]) return Promise.resolve(bufferCache[url]);
+    // Prevent duplicate concurrent loads for the same URL
+    if (loadingPromises[url]) return loadingPromises[url];
 
-    return fetch(url)
+    loadingPromises[url] = fetch(url)
       .then(function(res) {
         if (!res.ok) throw new Error('fetch failed: ' + res.status);
         return res.arrayBuffer();
       })
       .then(function(data) {
         ensureContext();
-        return ctx.decodeAudioData(data);
+        // Copy the ArrayBuffer before decoding (some browsers consume it)
+        return ctx.decodeAudioData(data.slice(0));
       })
       .then(function(buffer) {
         bufferCache[url] = buffer;
+        delete loadingPromises[url];
         return buffer;
       })
       .catch(function(err) {
         console.warn('[WebAudio] load error:', url, err);
+        delete loadingPromises[url];
         return null;
       });
+    return loadingPromises[url];
   }
 
   // ── Position tracking ──────────────────────────────────────────────────
@@ -108,6 +116,7 @@
       mainSource = null;
     }
     mainPaused = false;
+    mainPausedAt = 0;
     mainOffset = 0;
   }
 
@@ -252,20 +261,19 @@
     // ── SFX (fire-and-forget, overlaps with main) ────────────────────────
     playSfx: function(url) {
       ensureContext();
+      function playSrc(buf) {
+        var src = ctx.createBufferSource();
+        src.buffer = buf;
+        src.connect(ctx.destination);
+        src.onended = function() { src.disconnect(); }; // cleanup to prevent leak
+        src.start(0);
+      }
       var cached = bufferCache[url];
       if (cached) {
-        var src = ctx.createBufferSource();
-        src.buffer = cached;
-        src.connect(ctx.destination);
-        src.start(0);
+        playSrc(cached);
       } else {
         loadBuffer(url).then(function(buffer) {
-          if (buffer) {
-            var src = ctx.createBufferSource();
-            src.buffer = buffer;
-            src.connect(ctx.destination);
-            src.start(0);
-          }
+          if (buffer) playSrc(buffer);
         });
       }
     },
