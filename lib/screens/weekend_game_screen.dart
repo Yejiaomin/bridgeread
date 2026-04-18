@@ -48,7 +48,12 @@ class _WeekendGameScreenState extends State<WeekendGameScreen> {
 
     if (mounted) {
       setState(() {});
-      if (!_started && _reviewLessons.isNotEmpty) {
+      if (_reviewLessons.isEmpty) {
+        // No books to review — go back
+        Navigator.pop(context);
+        return;
+      }
+      if (!_started) {
         _started = true;
         Future.microtask(() => _runCurrentStep());
       }
