@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import '../utils/web_audio_player.dart';
+import '../utils/web_audio_engine.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'eggy_celebration_screen.dart';
@@ -27,9 +25,7 @@ class ReaderScreen extends StatefulWidget {
 class _ReaderScreenState extends State<ReaderScreen>
     with TickerProviderStateMixin {
   final LessonService _lessonService = LessonService();
-  // Use persistent HTML5 Audio on web (iOS autoplay compat), audioplayers on mobile
-  final WebAudioPlayer? _webPlayer = kIsWeb ? WebAudioPlayer() : null;
-  final AudioPlayer? _nativePlayer = kIsWeb ? null : AudioPlayer();
+  final GameAudioPlayer _player = GameAudioPlayer();
   bool _cancelled = false;
 
   Lesson? _lesson;
@@ -118,8 +114,7 @@ class _ReaderScreenState extends State<ReaderScreen>
     _positionSub?.cancel();
     _completeSub?.cancel();
     _cancelled = true;
-    _webPlayer?.dispose();
-    _nativePlayer?.dispose();
+    _player.dispose();
     _videoController?.dispose();
     super.dispose();
   }
@@ -166,17 +161,10 @@ class _ReaderScreenState extends State<ReaderScreen>
   Future<void> _playAndWait(String name) async {
     _completeSub?.cancel();
     final completer = Completer<void>();
-    if (_webPlayer != null) {
-      _completeSub = _webPlayer!.onComplete.listen((_) {
-        if (!completer.isCompleted) completer.complete();
-      });
-      _webPlayer!.play('audio/$name.mp3');
-    } else {
-      _completeSub = _nativePlayer!.onPlayerComplete.listen((_) {
-        if (!completer.isCompleted) completer.complete();
-      });
-      await _nativePlayer!.play(AssetSource('audio/$name.mp3'));
-    }
+    _completeSub = _player.onPlayerComplete.listen((_) {
+      if (!completer.isCompleted) completer.complete();
+    });
+    await _player.playAudio('audio/$name.mp3');
     await completer.future;
     _completeSub?.cancel();
     _completeSub = null;
@@ -255,10 +243,7 @@ class _ReaderScreenState extends State<ReaderScreen>
         // Start highlight tracking for EN
         final highlights = _lesson!.pages[_currentPage].highlights;
         _positionSub?.cancel();
-        final posStream = _webPlayer != null
-            ? _webPlayer!.onPositionChanged
-            : _nativePlayer!.onPositionChanged;
-        _positionSub = posStream.listen((pos) {
+        _positionSub = _player.onPositionChanged.listen((pos) {
           final ms = pos.inMilliseconds;
           for (int i = 0; i < highlights.length; i++) {
             if (ms >= highlights[i].positionMs &&
@@ -328,15 +313,13 @@ class _ReaderScreenState extends State<ReaderScreen>
       if (_waitingToAdvance) {
         _scheduleAdvance();
       } else {
-        _webPlayer?.resume();
-        _nativePlayer?.resume();
+        _player.resume();
         _videoController?.play();
       }
     } else {
       setState(() => _isPaused = true);
       _autoAdvanceTimer?.cancel();
-      _webPlayer?.pause();
-      _nativePlayer?.pause();
+      _player.pause();
       _videoController?.pause();
     }
   }

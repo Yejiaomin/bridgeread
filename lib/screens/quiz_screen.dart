@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
-import '../utils/safe_audio_player.dart';
+import '../utils/web_audio_engine.dart';
 import '../utils/audio_preloader.dart';
-import '../utils/web_audio_player.dart';
 
 // ---------------------------------------------------------------------------
 // Data
@@ -155,7 +152,7 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   final _rng    = Random();
-  final _player = SafeAudioPlayer();
+  final _player = GameAudioPlayer();
 
   List<_Round> _rounds = []; // shuffled at init
 
@@ -187,9 +184,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   // Background star field (150 stars, generated once)
   late final List<_StarData> _stars;
 
-  // SFX: use separate audio element so it doesn't conflict with main player
-  final WebSfxPlayer? _webSfx = kIsWeb ? WebSfxPlayer() : null;
-  final AudioPlayer? _nativeSfx = kIsWeb ? null : AudioPlayer();
+  final GameSfxPlayer _sfx = GameSfxPlayer();
 
   late final AnimationController _floatCtrl;
   late final AnimationController _popCtrl;
@@ -288,7 +283,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   void dispose() {
     _timer?.cancel();
     _player.dispose();
-    _nativeSfx?.dispose();
+    _sfx.dispose();
     _floatCtrl.dispose();
     _popCtrl.dispose();
     _wobCtrl.dispose();
@@ -453,12 +448,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       _locked = true;
     });
     // Play pop SFX simultaneously with the positive voice (fails silently if file missing)
-    // Pop SFX on separate audio element (doesn't interrupt word audio)
-    if (_webSfx != null) {
-      _webSfx!.play('audio/pop.wav');
-    } else {
-      _nativeSfx?.play(cdnAudioSource('audio/pop.wav'));
-    }
+    _sfx.playAudio('audio/pop.wav');
     _play(_randomPositive());
     _popCtrl.forward(from: 0).then((_) {
       if (!mounted) return;

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import '../utils/safe_audio_player.dart';
+import '../utils/web_audio_engine.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import '../services/progress_service.dart';
@@ -105,7 +105,7 @@ class PhonicsScreen extends StatefulWidget {
 
 class _PhonicsScreenState extends State<PhonicsScreen>
     with TickerProviderStateMixin {
-  final SafeAudioPlayer _player = SafeAudioPlayer();
+  final GameAudioPlayer _player = GameAudioPlayer();
   final Random _rng = Random();
 
   // Intro step: word-speaker feedback
@@ -598,7 +598,7 @@ class _PhonicsScreenState extends State<PhonicsScreen>
     if (_recordingPath == null || _echoPlayingBack) return;
     setState(() => _echoPlayingBack = true);
     _echoPlaybackSub?.cancel();
-    await _player.stop();
+    _player.stop();
     final completer = Completer<void>();
     // Recording playback: use a separate native player (not asset-based)
     final echoPlayer = AudioPlayer();
