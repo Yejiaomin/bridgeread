@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' show pi, sin;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show DefaultAssetBundle;
@@ -12,8 +13,8 @@ import '../main.dart' show routeObserver;
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/audio_preloader.dart';
-import '../services/analytics_service.dart';
 import '../services/telemetry.dart';
+import '../widgets/doodle_background.dart';
 
 class _RecapPage {
   final String imageAsset;
@@ -114,9 +115,11 @@ class _StudyScreenState extends State<StudyScreen>
   // Only reader(1) and quiz(2) are tracked in daily_progress for debt
   List<bool> _zoneDone = [false, false, false, false];
 
-  // Glow animations (420 ms)
-  late final List<AnimationController> _ctrls;
-  late final List<Animation<double>>   _anims;
+  // True once bg image's errorBuilder fires (image truly failed to load).
+  // CSS fallback (gradient + decorations + title + labels) only renders
+  // after this flag flips — during normal load the user sees just the
+  // Scaffold background, no flicker between CSS and the real bg art.
+  bool _bgFailed = false;
 
   // Press-down animations (150 ms) — 1.0 → 0.95 → 1.0
   late final List<AnimationController> _pressCtrls;
@@ -137,24 +140,12 @@ class _StudyScreenState extends State<StudyScreen>
   @override
   void initState() {
     super.initState();
-    AnalyticsService.logEvent('book_start');
     Telemetry.log('study_enter', {
       'weekend_initial': _weekend,
       'override_date': WeekService.overrideDate?.toIso8601String(),
     });
     _resolveWeekend();
-    // Always create 4 controllers (max zones); use first N based on mode
     const zoneCount = 4;
-    _ctrls = List.generate(
-      zoneCount,
-      (_) => AnimationController(
-          vsync: this, duration: const Duration(milliseconds: 420)),
-    );
-    _anims = _ctrls
-        .map((c) => Tween<double>(begin: 0, end: 1).animate(
-            CurvedAnimation(parent: c, curve: Curves.easeOut)))
-        .toList();
-
     _pressCtrls = List.generate(
       zoneCount,
       (_) => AnimationController(
@@ -252,7 +243,6 @@ class _StudyScreenState extends State<StudyScreen>
   void dispose() {
     routeObserver.unsubscribe(this);
     _player.dispose();
-    for (final c in _ctrls) c.dispose();
     for (final c in _pressCtrls) c.dispose();
     super.dispose();
   }
@@ -263,12 +253,11 @@ class _StudyScreenState extends State<StudyScreen>
     // Analytics: track zone start
     final labels = _weekend ? _kWeekendZoneLabels : _kZoneLabels;
     if (i < labels.length) {
-      AnalyticsService.logEvent('${labels[i].toLowerCase()}_start');
+      Telemetry.log('${labels[i].toLowerCase()}_start');
     }
 
     // Press-down animation
     if (i < _pressCtrls.length) _pressCtrls[i].forward(from: 0);
-    if (i < _ctrls.length) _ctrls[i].forward(from: 0).then((_) => _ctrls[i].reverse());
     // Per-zone SFX
     if (i < _zones.length) {
       try { _player.stop(); } catch (_) {}
@@ -314,80 +303,314 @@ class _StudyScreenState extends State<StudyScreen>
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // ── Background gradient (always renders, zero deps) ───
-                  Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFFFFE8D6),  // soft cream
-                          Color(0xFFFFCBA4),  // warm peach
-                          Color(0xFFFFAD7A),  // sunset orange
-                        ],
+                  // CSS fallback: only render when the bg image fails.
+                  // During normal load the user sees Scaffold bg color → image,
+                  // never the CSS flicker.
+                  if (_bgFailed) ...[
+                  // ── Background (doodle bg + 3-stop warm gradient) ─────
+                  const DoodleBackground(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFFFFF8E8),  // top: light cream
+                        Color(0xFFFFE2BC),  // mid: warm peach
+                        Color(0xFFFFB87A),  // bottom: soft orange
+                      ],
+                      stops: [0.0, 0.55, 1.0],
+                    ),
+                  ),
+
+                  // ── Sky elements: sun top-left (light source), plane right ──
+                  Positioned(
+                    top: h * 0.08, left: w * 0.09,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.9,
+                        child: Text('☀️', style: TextStyle(fontSize: 64))),
+                    ),
+                  ),
+                  Positioned(
+                    top: h * 0.08, left: w * 0.22,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.75,
+                        child: Text('☁️', style: TextStyle(fontSize: 44))),
+                    ),
+                  ),
+                  Positioned(
+                    top: h * 0.06, right: w * 0.08,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('✈️', style: TextStyle(fontSize: 48))),
+                    ),
+                  ),
+                  Positioned(
+                    top: h * 0.32, right: w * 0.22,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.7,
+                        child: Text('☁️', style: TextStyle(fontSize: 36))),
+                    ),
+                  ),
+
+                  // ── Bottom garden: layered plants for depth ──────────
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.02,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌳', style: TextStyle(fontSize: 76))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.13,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌷', style: TextStyle(fontSize: 36))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.20,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌻', style: TextStyle(fontSize: 40))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.30,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌿', style: TextStyle(fontSize: 32))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, right: w * 0.30,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌱', style: TextStyle(fontSize: 32))),
+                    ),
+                  ),
+
+                  // ── Middle bottom: fill the gap ───────────────────────
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.40,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🍄', style: TextStyle(fontSize: 36))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.46,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌳', style: TextStyle(fontSize: 60))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.55,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌲', style: TextStyle(fontSize: 56))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, left: w * 0.62,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🪴', style: TextStyle(fontSize: 36))),
+                    ),
+                  ),
+                  // 🐞 ladybug hiding in left flowers
+                  Positioned(
+                    bottom: h * 0.10, left: w * 0.18,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🐞', style: TextStyle(fontSize: 22))),
+                    ),
+                  ),
+                  // 🦋 butterfly floating above the garden
+                  Positioned(
+                    bottom: h * 0.18, left: w * 0.42,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.9,
+                        child: Text('🦋', style: TextStyle(fontSize: 36))),
+                    ),
+                  ),
+                  // 🦋 second butterfly on right side
+                  Positioned(
+                    bottom: h * 0.20, right: w * 0.30,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🦋', style: TextStyle(fontSize: 28))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, right: w * 0.20,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌼', style: TextStyle(fontSize: 38))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, right: w * 0.13,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌹', style: TextStyle(fontSize: 36))),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: h * 0.04, right: w * 0.02,
+                    child: const IgnorePointer(
+                      child: Opacity(opacity: 0.85,
+                        child: Text('🌲', style: TextStyle(fontSize: 72))),
+                    ),
+                  ),
+
+                  // ── Learning path: dashed line connecting modules ─────
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        painter: _LearningPathPainter(
+                          zones: _zones,
+                          screenW: w, screenH: h,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // ── Fallback "Study Journey" title (sepia plaque, ✨nested borders✨) ─
+                  Positioned(
+                    top: h * 0.16,
+                    left: 0, right: 0,
+                    child: IgnorePointer(
+                      child: Center(
+                        // Outer thick sepia frame
+                        child: Container(
+                          padding: EdgeInsets.all(R.s(5)),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFB8956A),
+                            borderRadius: BorderRadius.circular(R.s(28)),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x33B8956A),
+                                blurRadius: 12,
+                                offset: Offset(0, 5),
+                              )
+                            ],
+                          ),
+                          // Inner cream panel with thin gold border
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: R.s(36), vertical: R.s(12)),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFAEFE0),
+                              borderRadius: BorderRadius.circular(R.s(22)),
+                              border: Border.all(
+                                  color: const Color(0xFFD4B896), width: 1.5),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('✨',
+                                    style: TextStyle(fontSize: R.s(28))),
+                                SizedBox(width: R.s(14)),
+                                Text('Study Journey',
+                                    style: TextStyle(
+                                      fontSize: R.s(40),
+                                      fontWeight: FontWeight.w900,
+                                      color: const Color(0xFF8B6F4D),
+                                      letterSpacing: 1.8,
+                                    )),
+                                SizedBox(width: R.s(14)),
+                                Text('✨',
+                                    style: TextStyle(fontSize: R.s(28))),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
 
                   // ── Fallback labels (covered by bg image when it loads) ──
+                  // All cards are uniformly sized (matches RECAP zone) and
+                  // centered on each zone's natural center, so the fallback
+                  // looks tidy. The actual tap zones below still use their
+                  // varied sizes to match the bg image art.
                   ...List.generate(_zones.length, (i) {
                     final z = _zones[i];
-                    final cn = (_weekend ? _kWeekendZoneCN : _kZoneCN)[i];
+                    // Match original bg image's English labels (RECAP/STORY/GAME/LISTEN)
+                    final label = (_weekend ? _kWeekendZoneLabels : _kZoneLabels)[i];
                     final em = (_weekend ? _kWeekendZoneEmoji : _kZoneEmoji)[i];
+                    // Reference size + vertical center from first zone (RECAP)
+                    // — uniform width, height, and Y across all cards.
+                    final ref = _zones[0];
+                    final cardW = ref.w * w;
+                    final cardH = ref.h * h;
+                    final cx = (z.x + z.w / 2) * w;
+                    final cy = (ref.y + ref.h / 2) * h;
                     return Positioned(
-                      left: z.x * w, top: z.y * h, width: z.w * w, height: z.h * h,
+                      left: cx - cardW / 2,
+                      top: cy - cardH / 2,
+                      width: cardW,
+                      height: cardH,
                       child: IgnorePointer(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: Colors.white.withValues(alpha: 0.7), width: 1.5),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.12),
-                                blurRadius: 8,
-                                offset: const Offset(0, 3),
-                              )
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Halo: soft circular glow behind emoji to lift it
+                              // off the doodle background.
+                              Container(
+                                width: R.s(120),
+                                height: R.s(120),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white.withValues(alpha: 0.6),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFFB89968).withValues(alpha: 0.35),
+                                      blurRadius: 22,
+                                      spreadRadius: 3,
+                                    )
+                                  ],
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(em, style: TextStyle(fontSize: R.s(86))),
+                              ),
+                              SizedBox(height: R.s(12)),
+                              Text(label,
+                                  style: TextStyle(
+                                    fontSize: R.s(18),
+                                    fontWeight: FontWeight.w900,
+                                    color: const Color(0xFF8B6F4D),
+                                    letterSpacing: 1.5,
+                                  )),
                             ],
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(em, style: TextStyle(fontSize: R.s(34))),
-                                SizedBox(height: R.s(4)),
-                                Text(cn,
-                                    style: TextStyle(
-                                      fontSize: R.s(14),
-                                      fontWeight: FontWeight.w900,
-                                      color: const Color(0xFFB84A00),
-                                    )),
-                              ],
-                            ),
                           ),
                         ),
                       ),
                     );
                   }),
 
-                  // ── Background image (overlays labels when loaded) ────
+                  ],  // ← end if (_bgFailed)
+
+                  // ── Background image (always tries to render) ─────────
+                  // On error, sets _bgFailed=true → next build paints the
+                  // CSS fallback above. While loading, image is transparent
+                  // and Scaffold bg color shows through.
                   Image.asset(_bgImage,
                     key: ValueKey(_bgImage),
                     fit: BoxFit.cover,
                     width: w,
                     height: h,
                     errorBuilder: (_, err, __) {
-                      Telemetry.log('study_bg_load_error', {
-                        'image': _bgImage,
-                        'error': err.toString(),
-                      });
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        imageCache.evict(AssetImage(_bgImage));
-                        if (mounted) Future.delayed(const Duration(milliseconds: 800), () {
-                          if (mounted) setState(() {});
+                      if (!_bgFailed) {
+                        Telemetry.log('study_bg_load_error', {
+                          'image': _bgImage,
+                          'error': err.toString(),
                         });
-                      });
-                      // Transparent — labels + gradient below show through
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) setState(() => _bgFailed = true);
+                        });
+                      }
                       return const SizedBox.shrink();
                     },
                   ),
@@ -419,38 +642,26 @@ class _StudyScreenState extends State<StudyScreen>
                       width:  z.w * w,
                       height: z.h * h,
                       child: AnimatedBuilder(
-                        animation:
-                            Listenable.merge([_anims[i], _pressAnims[i]]),
+                        animation: _pressAnims[i],
                         builder: (_, __) {
-                          final v     = _anims[i].value;
-                          final scale = _pressAnims[i].value * (1.0 + v * 0.07);
                           return Transform.scale(
-                            scale: scale,
+                            scale: _pressAnims[i].value,
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () => _onZoneTap(i),
                               child: Stack(
                                 clipBehavior: Clip.none,
                                 children: [
+                                  // Transparent hit target (debug mode shows it)
                                   Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      color: _kDebugZones
-                                          ? _kZoneColors[i].withValues(alpha: 0.35)
-                                          : Colors.white.withValues(alpha: v * 0.22),
-                                      border: _kDebugZones
-                                          ? Border.all(color: _kZoneColors[i], width: 2)
-                                          : null,
-                                      boxShadow: !_kDebugZones && v > 0.02
-                                          ? [
-                                              BoxShadow(
-                                                color: Colors.yellowAccent.withValues(alpha: v * 0.65),
-                                                blurRadius: 28 * v,
-                                                spreadRadius: 6 * v,
-                                              )
-                                            ]
-                                          : null,
-                                    ),
+                                    decoration: _kDebugZones
+                                        ? BoxDecoration(
+                                            borderRadius: BorderRadius.circular(14),
+                                            color: _kZoneColors[i].withValues(alpha: 0.35),
+                                            border: Border.all(
+                                                color: _kZoneColors[i], width: 2),
+                                          )
+                                        : null,
                                     child: _kDebugZones
                                         ? Center(
                                             child: Text(
@@ -599,7 +810,7 @@ class _RecapScreenState extends State<RecapScreen>
   }
 
   Future<void> _markRecapDone() async {
-    AnalyticsService.logEvent('recap_done');
+    // markModuleComplete already fires Telemetry.log('recap_done')
     await ProgressService.markModuleComplete('recap', 10);
   }
 
@@ -981,4 +1192,59 @@ class _RecapBubbleTailPainter extends CustomPainter {
   }
   @override
   bool shouldRepaint(_RecapBubbleTailPainter _) => false;
+}
+
+/// Dashed wavy path connecting the 4 module zones, reinforcing the
+/// "Journey" theme. Drawn as small filled circles spaced along a curve.
+class _LearningPathPainter extends CustomPainter {
+  final List<_Zone> zones;
+  final double screenW;
+  final double screenH;
+
+  _LearningPathPainter({required this.zones, required this.screenW, required this.screenH});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (zones.length < 2) return;
+
+    // Module centers (where each emoji halo sits)
+    final ref = zones[0];
+    final cy = (ref.y + ref.h / 2) * screenH;
+    final centers = zones.map((z) => Offset((z.x + z.w / 2) * screenW, cy)).toList();
+
+    final paint = Paint()
+      ..color = const Color(0xFFB89968).withOpacity(0.55)
+      ..style = PaintingStyle.fill;
+
+    // Halo radius (R.s(60) on default scale ≈ 60). Path dots should start
+    // outside that. Use ~80 px buffer.
+    const haloRadius = 75.0;
+    const dotRadius = 4.0;
+    const dotSpacing = 16.0;
+
+    for (int i = 0; i < centers.length - 1; i++) {
+      final a = centers[i];
+      final b = centers[i + 1];
+      final dx = b.dx - a.dx;
+      final segLen = dx;  // y is constant; horizontal segment
+
+      // Skip the parts under each halo
+      final usableStart = a.dx + haloRadius;
+      final usableEnd = b.dx - haloRadius;
+      if (usableEnd <= usableStart) continue;
+
+      // Wavy: small sinusoidal y offset along the segment
+      // amp ≈ 14 px, period = full segment
+      const amp = 14.0;
+      for (double x = usableStart; x <= usableEnd; x += dotSpacing) {
+        final t = (x - a.dx) / segLen;  // 0..1
+        final y = a.dy + amp * sin(t * 2 * pi);
+        canvas.drawCircle(Offset(x, y), dotRadius, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _LearningPathPainter old) =>
+      old.zones != zones || old.screenW != screenW || old.screenH != screenH;
 }

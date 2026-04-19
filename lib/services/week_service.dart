@@ -86,7 +86,14 @@ class WeekService {
   /// Returns null if it's a review/padding day (series ended mid-week)
   /// or if all books are exhausted.
   ///
-  /// [startWeekday]: 1=Mon..5=Fri, the day the child first started.
+  /// [startWeekday]: 1=Mon..7=Sun (Dart DateTime.weekday convention).
+  /// - For Mon-Fri (1-5): first week starts that day, weekCapacity = 5-startWeekday+1
+  /// - For Sat-Sun (6-7): caller never invokes for the start day itself
+  ///   (todayBookIndex returns null on weekends), but the next Monday +
+  ///   onwards still hits this function. weekCapacity comes out negative,
+  ///   then the loop self-corrects in the second iteration so Monday → book 0,
+  ///   Tuesday → book 1, etc — equivalent to "user effectively starts Monday".
+  /// Don't change the math without retracing both Mon-Fri and Sat-Sun cases.
   static int? bookForWeekdayCount(int weekdayCount, int startWeekday) {
     int bookIdx = 0;         // next book to assign
     int daysProcessed = 0;   // weekday slots consumed so far

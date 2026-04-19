@@ -1,13 +1,13 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'services/week_service.dart' show initDebugOffset;
-import 'services/analytics_service.dart';
 import 'services/progress_service.dart';
 import 'services/api_service.dart';
 import 'services/error_reporter.dart';
 import 'services/telemetry.dart';
+import 'services/sync_queue.dart';
 import 'utils/cdn_asset.dart';
 import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
@@ -33,16 +33,17 @@ void main() async {
   Telemetry.install();
   ErrorReporter.install();
   Telemetry.log('app_start');
-  // Read debug time offset from SharedPreferences (set by timeTravel JS)
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final offset = prefs.getInt('debug_day_offset') ?? 0;
-    initDebugOffset(offset);
-  } catch (_) {}
-  // Initialize Umeng analytics (Android only)
-  if (!kIsWeb) {
-    await AnalyticsService.init();
-    AnalyticsService.logEvent('app_open');
+  // Retry any progress syncs that failed in previous sessions (network blip,
+  // app killed mid-sync, etc). Fire-and-forget — don't block startup.
+  SyncQueue.flush();
+  // Debug time-travel only available in non-release builds — production
+  // users must not be able to manipulate "today" by setting localStorage.
+  if (!kReleaseMode) {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final offset = prefs.getInt('debug_day_offset') ?? 0;
+      initDebugOffset(offset);
+    } catch (_) {}
   }
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,

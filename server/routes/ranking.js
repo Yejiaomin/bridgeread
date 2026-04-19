@@ -1,37 +1,25 @@
 const express = require('express');
 const { query, queryOne, run, runNoSave, saveDb } = require('../db');
+const { chinaToday, parseDate, fmtDate } = require('../lib/china_time');
 
 const router = express.Router();
 
-// ── China time helpers (same as progress.js) ─────────────────────────────────
-function chinaToday() {
-  const now = new Date();
-  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
-  const chinaMs = utcMs + 8 * 3600000;
-  const china = new Date(chinaMs);
-  china.setHours(0, 0, 0, 0);
-  return china;
-}
-
-function fmtDate(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
-/** Get Monday of the week containing `date` (China time) */
+/** Get Monday of the week containing `date`. Uses UTC accessors for
+ *  consistency with china_time helpers (which return UTC-midnight Dates). */
 function getWeekMonday(date) {
   const d = new Date(date);
-  const day = d.getDay(); // 0=Sun ... 6=Sat
+  const day = d.getUTCDay(); // 0=Sun ... 6=Sat
   const diff = day === 0 ? 6 : day - 1; // days since Monday
-  d.setDate(d.getDate() - diff);
-  d.setHours(0, 0, 0, 0);
+  d.setUTCDate(d.getUTCDate() - diff);
+  d.setUTCHours(0, 0, 0, 0);
   return d;
 }
 
-/** Get first day of month for `date` */
+/** Get first day of month for `date`. */
 function getMonthStart(date) {
   const d = new Date(date);
-  d.setDate(1);
-  d.setHours(0, 0, 0, 0);
+  d.setUTCDate(1);
+  d.setUTCHours(0, 0, 0, 0);
   return d;
 }
 
@@ -134,8 +122,8 @@ function ensureWeeklyGroup(userId) {
  */
 function fillGroupWithFakes(groupId, weekStart) {
   // Calculate average real stars this week for realistic fakes
-  const sunday = new Date(weekStart + 'T00:00:00');
-  sunday.setDate(sunday.getDate() + 6);
+  const sunday = parseDate(weekStart);
+  sunday.setUTCDate(sunday.getUTCDate() + 6);
   const weekEnd = fmtDate(sunday);
 
   const avgRow = queryOne(
@@ -205,7 +193,7 @@ function getWeeklyRanking(userId) {
   const monday = getWeekMonday(today);
   const weekStart = fmtDate(monday);
   const sunday = new Date(monday);
-  sunday.setDate(sunday.getDate() + 6);
+  sunday.setUTCDate(sunday.getUTCDate() + 6);
   const weekEnd = fmtDate(sunday);
 
   // Get real users in this group with their weekly stars

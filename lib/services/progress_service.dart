@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'week_service.dart' show activeDate, chinaTime, WeekService;
-import 'analytics_service.dart';
 import 'api_service.dart';
+import 'sync_queue.dart';
+import 'telemetry.dart';
 
 class ProgressService {
   static const _kTotalStars    = 'total_stars';
@@ -166,7 +167,7 @@ class ProgressService {
         'recording': 'recording_done',
       };
       final event = moduleToEvent[module] ?? '${module}_done';
-      AnalyticsService.logEvent(event);
+      Telemetry.log(event);
     }
 
     if (!wasAlreadyDone) {
@@ -185,38 +186,26 @@ class ProgressService {
       await prefs.setString(_kActiveDates, activeDates.join(','));
     }
 
-    // Update streak
+    // Update last_completed_date locally (used by getTodayPending and
+    // for tracking activity). Streak itself is server-driven now —
+    // SyncQueue.flush updates streak_days from the POST response.
     final lastDate = prefs.getString(_kLastDate) ?? '';
     if (lastDate != dateKey) {
-      final yesterday = _dateStr(
-          _chinaTime().subtract(const Duration(days: 1)));
-      final currentStreak = prefs.getInt(_kStreakDays) ?? 0;
-      final newStreak = lastDate == yesterday ? currentStreak + 1 : 1;
-      await prefs.setInt(_kStreakDays, newStreak);
       await prefs.setString(_kLastDate, dateKey);
     }
 
-    // Sync to server (fire-and-forget, don't block UI)
+    // Sync to server via persistent queue — survives app restarts and
+    // network blips. flush() is fire-and-forget; if it fails the item
+    // stays queued and retries on next enqueue / app start.
     final lessonId = prefs.getString('current_lesson_id');
-    _api.syncProgress(
+    await SyncQueue.enqueue(
       date: dateKey,
       module: module,
       done: true,
       stars: stars,
       lessonId: lessonId,
-    ).then((res) {
-      if (res != null) {
-        debugPrint('[Progress] synced $module to server');
-        // Update local cache with server totals (only if server is ahead)
-        if (res['totalStars'] != null) {
-          final serverStars = res['totalStars'] as int;
-          final localStars = prefs.getInt(_kTotalStars) ?? 0;
-          if (serverStars >= localStars) {
-            prefs.setInt(_kTotalStars, serverStars);
-          }
-        }
-      }
-    });
+    );
+    SyncQueue.flush();
   }
 
   /// Returns today's progress map.

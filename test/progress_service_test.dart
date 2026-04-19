@@ -150,28 +150,15 @@ void main() {
       expect(prefs.getInt('total_stars'), 10);
     });
 
-    test('updates streak on first completion of the day', () async {
-      final y = _chinaTime().subtract(const Duration(days: 1));
-      final yStr = '${y.year}-${y.month.toString().padLeft(2, '0')}-${y.day.toString().padLeft(2, '0')}';
-      SharedPreferences.setMockInitialValues({
-        'streak_days': 3,
-        'last_completed_date': yStr,
-      });
+    // Note: streak_days is now server-driven — markModuleComplete no longer
+    // updates it locally. The streak comes from the server's response to
+    // POST /api/progress (handled by SyncQueue.flush). Tests for streak
+    // computation belong in server-side tests (computeStreak in progress.js).
+    test('updates last_completed_date on completion', () async {
+      SharedPreferences.setMockInitialValues({});
       await ProgressService.markModuleComplete('reader', 10);
       final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getInt('streak_days'), 4);
-    });
-
-    test('resets streak when day is skipped', () async {
-      final t = _chinaTime().subtract(const Duration(days: 3));
-      final tStr = '${t.year}-${t.month.toString().padLeft(2, '0')}-${t.day.toString().padLeft(2, '0')}';
-      SharedPreferences.setMockInitialValues({
-        'streak_days': 10,
-        'last_completed_date': tStr,
-      });
-      await ProgressService.markModuleComplete('reader', 10);
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getInt('streak_days'), 1);
+      expect(prefs.getString('last_completed_date'), isNotEmpty);
     });
 
     test('records active date', () async {

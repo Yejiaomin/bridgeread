@@ -12,9 +12,11 @@ const request = require('supertest');
 const { app, getDb } = require('../index');
 const { query, queryOne, run, runNoSave, saveDb } = require('../db');
 
-// Helper: china-time-aware date formatting (mirrors ranking.js)
+// Helper: china-time-aware date formatting (mirrors ranking.js / china_time.js).
+// Uses UTC accessors because our date helpers return UTC-midnight Dates so
+// behavior is identical regardless of the test process timezone.
 function fmtDate(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
 }
 
 beforeAll(async () => {
@@ -54,27 +56,27 @@ describe('Ranking internals', () => {
   const { getWeekMonday, getMonthStart, generateFakeStars, FAKE_NAMES } = require('../routes/ranking')._internals;
 
   test('getWeekMonday returns Monday', () => {
-    // Wednesday 2026-04-08
-    const wed = new Date('2026-04-08T00:00:00');
+    // Wednesday 2026-04-08 UTC
+    const wed = new Date('2026-04-08T00:00:00Z');
     const mon = getWeekMonday(wed);
-    expect(mon.getDay()).toBe(1); // Monday
+    expect(mon.getUTCDay()).toBe(1); // Monday
     expect(fmtDate(mon)).toBe('2026-04-06');
   });
 
   test('getWeekMonday for Sunday returns previous Monday', () => {
-    const sun = new Date('2026-04-12T00:00:00');
+    const sun = new Date('2026-04-12T00:00:00Z');
     const mon = getWeekMonday(sun);
     expect(fmtDate(mon)).toBe('2026-04-06');
   });
 
   test('getWeekMonday for Monday returns itself', () => {
-    const mon = new Date('2026-04-06T00:00:00');
+    const mon = new Date('2026-04-06T00:00:00Z');
     const result = getWeekMonday(mon);
     expect(fmtDate(result)).toBe('2026-04-06');
   });
 
   test('getMonthStart returns first of month', () => {
-    const d = new Date('2026-04-15T00:00:00');
+    const d = new Date('2026-04-15T00:00:00Z');
     const first = getMonthStart(d);
     expect(fmtDate(first)).toBe('2026-04-01');
   });

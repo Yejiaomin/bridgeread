@@ -1,24 +1,11 @@
 const express = require('express');
 const { query, queryOne, run, runNoSave, saveDb, debugUser } = require('../db');
+const { chinaToday, parseDate, fmtDate } = require('../lib/china_time');
 
 const router = express.Router();
 
 const MODULES = ['recap', 'reader', 'quiz', 'listen', 'phonics', 'recording'];
 const REQUIRED_MODULES = ['recap', 'reader', 'quiz', 'listen']; // count toward debt
-
-// ── China time (UTC+8) for consistent date calculations ───────────────────
-function chinaToday() {
-  const now = new Date();
-  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
-  const chinaMs = utcMs + 8 * 3600000;
-  const china = new Date(chinaMs);
-  china.setHours(0, 0, 0, 0);
-  return china;
-}
-
-function fmtDate(d) {
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
 
 // ── Clean up old module records not in current MODULES list ────────────────
 function cleanOldModules(userId) {
@@ -27,17 +14,39 @@ function cleanOldModules(userId) {
     [userId, ...MODULES]);
 }
 
+// ── Compute consecutive-day streak (for user feedback / UI) ────────────────
+// Counts back from today over distinct dates with at least one done module.
+// If today has no completion yet, starts counting from yesterday.
+function computeStreak(userId) {
+  const todayStr = fmtDate(chinaToday());
+  const activeDays = query(
+    `SELECT DISTINCT date FROM daily_progress WHERE user_id = ? AND done = 1 ORDER BY date DESC`,
+    [userId]
+  ).map(r => r.date);
+
+  let streak = 0;
+  const checkDate = chinaToday();
+  if (!activeDays.includes(todayStr)) {
+    checkDate.setUTCDate(checkDate.getUTCDate() - 1);
+  }
+  while (activeDays.includes(fmtDate(checkDate))) {
+    streak++;
+    checkDate.setUTCDate(checkDate.getUTCDate() - 1);
+  }
+  return streak;
+}
+
 // ── Backfill missing days with done=0 records ──────────────────────────────
 function backfillDebt(userId) {
   const user = queryOne('SELECT book_start_date FROM users WHERE id = ?', [userId]);
   if (!user || !user.book_start_date) return;
 
-  const start = new Date(user.book_start_date + 'T00:00:00');
+  const start = parseDate(user.book_start_date);
   const today = chinaToday();
 
   let inserted = 0;
-  for (let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
-    const dow = d.getDay(); // 0=Sun, 6=Sat
+  for (let d = new Date(start); d <= today; d.setUTCDate(d.getUTCDate() + 1)) {
+    const dow = d.getUTCDay(); // 0=Sun, 6=Sat
     if (dow === 0 || dow === 6) continue; // skip weekends
 
     const dateStr = fmtDate(d);
@@ -89,28 +98,7 @@ router.get('/', (req, res) => {
     [userId, todayStr]
   );
 
-  // Calculate streak: consecutive days (backwards from today) with at least 1 done module
-  const activeDays = query(
-    `SELECT DISTINCT date FROM daily_progress WHERE user_id = ? AND done = 1 ORDER BY date DESC`,
-    [userId]
-  ).map(r => r.date);
-
-  let streak = 0;
-  let checkDate = new Date(chinaToday());
-  // Check if today has any completion — if not, start from yesterday
-  if (!activeDays.includes(todayStr)) {
-    checkDate.setDate(checkDate.getDate() - 1);
-  }
-  while (true) {
-    const ds = fmtDate(checkDate);
-    if (activeDays.includes(ds)) {
-      streak++;
-      checkDate.setDate(checkDate.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-
+  const streak = computeStreak(userId);
   res.json({ success: true, user, progress, totalOwed: owed.count, todayOwed: todayOwed.count, debtByDate, streak });
 });
 
@@ -131,7 +119,7 @@ router.post('/', (req, res) => {
   if (done === undefined || done === null) {
     const user = queryOne('SELECT total_stars, lock_status FROM users WHERE id = ?', [userId]);
     const owed = queryOne('SELECT COUNT(*) as count FROM daily_progress WHERE user_id = ? AND done = 0', [userId]);
-    return res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status });
+    return res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status, streak: computeStreak(userId) });
   }
 
   // Check if already completed (to avoid double-counting stars + protect against downgrade)
@@ -162,7 +150,7 @@ router.post('/', (req, res) => {
   const user = queryOne('SELECT total_stars, lock_status FROM users WHERE id = ?', [userId]);
   const owed = queryOne('SELECT COUNT(*) as count FROM daily_progress WHERE user_id = ? AND done = 0', [userId]);
 
-  res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status });
+  res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status, streak: computeStreak(userId) });
 });
 
 // ── Batch sync ──────────────────────────────────────────────────────────────
@@ -199,7 +187,7 @@ router.post('/batch', (req, res) => {
   const user = queryOne('SELECT total_stars, lock_status FROM users WHERE id = ?', [userId]);
   const owed = queryOne('SELECT COUNT(*) as count FROM daily_progress WHERE user_id = ? AND done = 0', [userId]);
 
-  res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status });
+  res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status, streak: computeStreak(userId) });
 });
 
 // ── Spend stars (gacha etc.) ─────────────────────────────────────────────────
@@ -239,3 +227,4 @@ function checkAndLock(userId) {
 }
 
 module.exports = router;
+module.exports._internals = { computeStreak };

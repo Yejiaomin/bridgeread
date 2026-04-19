@@ -56,11 +56,11 @@ router.post('/register', (req, res) => {
   if (!phone || !password || !childName) {
     return res.status(400).json({ error: '请填写所有字段' });
   }
-  if (!/^1\d{10}$/.test(phone)) return res.status(400).json({ error: '请输入正确的手机号' });
+  if (!/^\d{11}$/.test(phone)) return res.status(400).json({ error: '请输入11位用户号码' });
   if (!/^\d{8}$/.test(password)) return res.status(400).json({ error: '密码必须是 8 位数字' });
 
   const existing = queryOne('SELECT id FROM users WHERE phone = ?', [phone]);
-  if (existing) return res.status(400).json({ error: '该手机号已注册' });
+  if (existing) return res.status(400).json({ error: '该用户号码已注册' });
 
   const hash = bcrypt.hashSync(password, 10);
   run('INSERT INTO users (phone, password_hash, child_name) VALUES (?, ?, ?)', [phone, hash, childName]);
@@ -77,10 +77,10 @@ router.post('/register', (req, res) => {
 // ── Login ───────────────────────────────────────────────────────────────────
 router.post('/login', (req, res) => {
   const { phone, password } = req.body;
-  if (!phone || !password) return res.status(400).json({ error: '请输入手机号和密码' });
+  if (!phone || !password) return res.status(400).json({ error: '请输入用户号码和密码' });
 
   const user = queryOne('SELECT * FROM users WHERE phone = ?', [phone]);
-  if (!user) return res.status(400).json({ error: '手机号未注册' });
+  if (!user) return res.status(400).json({ error: '用户号码未注册' });
   if (!bcrypt.compareSync(password, user.password_hash)) return res.status(400).json({ error: '密码错误' });
 
   if (user.lock_status === 1) {

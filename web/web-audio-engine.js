@@ -80,13 +80,19 @@
         return ctx.decodeAudioData(data.slice(0));
       })
       .then(function(buffer) {
-        // Validate: narration audio should be > 2 seconds
-        // If suspiciously short and this was from cache, retry without cache
-        if (buffer.duration < 2 && !bypassCache && url.indexOf('.mp3') !== -1) {
+        // Validate: detect truncated/corrupt audio and re-fetch.
+        // Phonics single-letter sounds and phoneme feedback are short by
+        // design (0.5–2s) — exclude them from the < 2s check, otherwise
+        // every load re-fetches and doubles bandwidth.
+        var isShortByDesign = url.indexOf('phonics_sounds') !== -1 ||
+                              url.indexOf('phonemes') !== -1;
+        var trulyBroken = buffer.duration < 0.3;
+        var suspiciouslyShort = !isShortByDesign && buffer.duration < 2;
+        if ((trulyBroken || suspiciouslyShort) && !bypassCache && url.indexOf('.mp3') !== -1) {
           console.warn('[WebAudio] Buffer too short (' + buffer.duration.toFixed(1) + 's), re-fetching:', url);
           delete loadingPromises[url];
           delete bufferCache[url];
-          return loadBuffer(url, true); // retry bypassing cache
+          return loadBuffer(url, true);
         }
         bufferCache[url] = buffer;
         delete loadingPromises[url];

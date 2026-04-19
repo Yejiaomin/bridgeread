@@ -2,6 +2,7 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 const { getDb } = require('./db');
 
 const authRoutes = require('./routes/auth');
@@ -39,8 +40,16 @@ app.use('/api/speech-eval', authMiddleware, speechEvalRoutes);
 app.use('/api/profile', authMiddleware, profileRoutes);
 app.use('/api/studyroom', authMiddleware, studyroomRoutes);
 
-// Error/loading report (public, no auth)
-app.post('/api/report', (req, res) => {
+// Error/loading report (public, no auth) — rate-limited to prevent abuse.
+// 30 req/min per IP is generous for legit telemetry; spammers get 429.
+const reportLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  message: { error: 'too many reports, please slow down' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.post('/api/report', reportLimiter, (req, res) => {
   const { logs, ua, screen, url, time, type, sessionId, userId } = req.body;
   const ua2 = ua || req.headers['user-agent'];
   const sid = (sessionId || 'nosess').replace(/[^a-z0-9]/gi, '').slice(0, 12);

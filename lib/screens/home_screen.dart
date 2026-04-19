@@ -11,7 +11,6 @@ import '../services/week_service.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/audio_preloader.dart';
-import '../services/analytics_service.dart';
 import '../services/telemetry.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -117,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen>
     final visitedDate = prefs.getString('studyroom_visited_date') ?? '';
     final visitedToday = visitedDate == todayStr;
 
-    // Calculate total owed from debt_module_status
-    final owed = await _calcTotalOwed(prefs);
+    // Server is source of truth — owed comes from the last syncFromServer
+    // (refreshed on login + by SyncQueue.flush after each module completion).
+    final owed = await ProgressService.getTotalOwed();
     final pending = await ProgressService.getTodayPending();
 
     if (mounted) {
@@ -138,43 +138,6 @@ class _HomeScreenState extends State<HomeScreen>
         _eggyGlowCtrl.value = 0;
       }
     }
-  }
-
-  Future<int> _calcTotalOwed(SharedPreferences prefs) async {
-    final startStr = prefs.getString('book_start_date');
-    if (startStr == null) return 0;
-    final startDate = WeekService.parseDate(startStr);
-    if (startDate == null) return 0;
-
-    final rawStatus = prefs.getString('debt_module_status');
-    final moduleStatus = rawStatus != null
-        ? Map<String, dynamic>.from(jsonDecode(rawStatus))
-        : <String, dynamic>{};
-
-    final now = chinaTime();
-    final today = DateTime(now.year, now.month, now.day);
-    int total = 0;
-    var d = startDate;
-
-    while (d.isBefore(today)) {
-      final dateKey = '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
-      final status = moduleStatus[dateKey] as Map<String, dynamic>? ?? {};
-      final dDate = DateTime(d.year, d.month, d.day);
-      final sDate = DateTime(startDate.year, startDate.month, startDate.day);
-      final isRegistrationDay = dDate == sDate;
-
-      if (d.weekday >= 1 && d.weekday <= 5 || isRegistrationDay) {
-        // Weekday or registration day: 4 modules
-        const modules = ['recap', 'reader', 'quiz', 'listen'];
-        total += modules.where((m) => status[m] != true).length;
-      } else {
-        // Normal weekend: 2 modules
-        const modules = ['quiz', 'listen'];
-        total += modules.where((m) => status[m] != true).length;
-      }
-      d = d.add(const Duration(days: 1));
-    }
-    return total;
   }
 
   Future<void> _onBooksTap(BuildContext ctx) async {
@@ -563,7 +526,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-    AnalyticsService.logEvent('calendar_view');
     Telemetry.log('calendar_enter');
     final now = chinaTime();
     _viewMonth = DateTime(now.year, now.month);

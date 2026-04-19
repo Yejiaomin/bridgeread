@@ -4,7 +4,6 @@ import '../services/api_service.dart';
 import '../services/progress_service.dart';
 import '../services/week_service.dart' show chinaTime;
 import '../services/telemetry.dart';
-import '../services/analytics_service.dart';
 import '../utils/responsive_utils.dart';
 
 const _kOrange = Color(0xFFFF8C42);
@@ -33,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final childName = _nameCtrl.text.trim();
 
     if (phone.length != 11) {
-      setState(() => _error = '请输入11位手机号');
+      setState(() => _error = '请输入11位用户号码');
       return;
     }
     if (password.length != 8) {
@@ -78,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // Sync from server to ensure local state matches server
     await ProgressService.syncFromServer();
 
-    AnalyticsService.logEvent('register', {'phone': phone, 'child_name': childName});
+    Telemetry.log('register', {'phone': phone.substring(0, 3) + '****' + phone.substring(7), 'child_name': childName});
     setState(() => _isLoading = false);
     if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/ranking', (r) => false);
   }
@@ -88,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordCtrl.text.trim();
 
     if (phone.length != 11) {
-      setState(() => _error = '请输入11位手机号');
+      setState(() => _error = '请输入11位用户号码');
       return;
     }
 
@@ -123,7 +122,6 @@ class _LoginScreenState extends State<LoginScreen> {
     // Sync full progress from server (server is source of truth)
     await ProgressService.syncFromServer();
 
-    AnalyticsService.logEvent('login', {'phone': phone});
     setState(() => _isLoading = false);
     if (mounted) Navigator.pushNamedAndRemoveUntil(context, '/home', (r) => false);
   }
@@ -170,8 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Phone
-              _inputField(_phoneCtrl, '手机号', TextInputType.phone, Icons.phone),
+              // User ID (any 11 digits — not validated as real phone)
+              _inputField(_phoneCtrl, '用户号码（任意11位数字）', TextInputType.number, Icons.person),
               const SizedBox(height: 12),
 
               // Register fields
@@ -256,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
       controller: ctrl,
       keyboardType: type,
       obscureText: obscure,
-      maxLength: type == TextInputType.phone ? 11 : (obscure ? 8 : null),
+      maxLength: type == TextInputType.number ? 11 : (obscure ? 8 : null),
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(icon, color: _kOrange),

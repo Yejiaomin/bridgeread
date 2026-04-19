@@ -13,7 +13,6 @@ import '../services/lesson_service.dart';
 import '../models/lesson.dart';
 import 'eggy_celebration_screen.dart';
 import '../utils/cdn_asset.dart';
-import '../services/analytics_service.dart';
 import '../services/telemetry.dart';
 import '../utils/responsive_utils.dart';
 
@@ -64,7 +63,7 @@ class _RecordingScreenState extends State<RecordingScreen>
   @override
   void initState() {
     super.initState();
-    AnalyticsService.logEvent('recording_start');
+    Telemetry.log('recording_start');
     _loadData();
     _pulseCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
       ..repeat(reverse: true);

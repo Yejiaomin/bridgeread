@@ -7,6 +7,7 @@ import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/responsive_utils.dart';
+import '../widgets/doodle_background.dart';
 import '../services/api_service.dart';
 import '../services/telemetry.dart';
 
@@ -403,9 +404,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: _kBg,
       body: Stack(
         children: [
-          Positioned.fill(
-            child: CustomPaint(painter: _DoodleBgPainter()),
-          ),
+          const Positioned.fill(child: DoodleBackground()),
           SafeArea(
             child: _prefs == null
                 ? const Center(
@@ -979,180 +978,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// ─── Doodle Background Painter ───
-
-class _DoodleBgPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rng = Random(42);
-    final paint = Paint()
-      ..color = const Color(0xFFD4B896).withOpacity(0.5)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..strokeCap = StrokeCap.round;
-
-    // Draw doodles: each is a simple line-art icon
-    final drawFns = <void Function(Canvas, Offset, double)>[
-      _drawBook, _drawStar, _drawNote, _drawFlame, _drawPencil,
-      _drawCamera, _drawHeart, _drawCloud, _drawPaw, _drawFlower,
-    ];
-
-    // Grid-based placement for even distribution
-    const cols = 9;
-    const rows = 5;
-    final cellW = size.width / cols;
-    final cellH = size.height / rows;
-
-    for (int i = 0; i < cols * rows; i++) {
-      final col = i % cols;
-      final row = i ~/ cols;
-      // Center of cell + random offset within cell
-      final x = (col + 0.2 + rng.nextDouble() * 0.6) * cellW;
-      final y = (row + 0.2 + rng.nextDouble() * 0.6) * cellH;
-      final s = 21.0 + rng.nextDouble() * 18; // size 21-39
-      final rotation = (rng.nextDouble() - 0.5) * 0.4;
-      final fn = drawFns[i % drawFns.length];
-
-      canvas.save();
-      canvas.translate(x, y);
-      canvas.rotate(rotation);
-      fn(canvas, Offset.zero, s);
-      canvas.restore();
-    }
-  }
-
-  Paint get _p => Paint()
-    ..color = const Color(0xFFD4B896).withOpacity(0.5)
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 1.5
-    ..strokeCap = StrokeCap.round;
-
-  // Open book
-  void _drawBook(Canvas c, Offset o, double s) {
-    final p = _p;
-    // Left page
-    c.drawLine(Offset(o.dx, o.dy - s * 0.3), Offset(o.dx - s * 0.4, o.dy - s * 0.2), p);
-    c.drawLine(Offset(o.dx - s * 0.4, o.dy - s * 0.2), Offset(o.dx - s * 0.4, o.dy + s * 0.3), p);
-    c.drawLine(Offset(o.dx - s * 0.4, o.dy + s * 0.3), Offset(o.dx, o.dy + s * 0.2), p);
-    // Right page
-    c.drawLine(Offset(o.dx, o.dy - s * 0.3), Offset(o.dx + s * 0.4, o.dy - s * 0.2), p);
-    c.drawLine(Offset(o.dx + s * 0.4, o.dy - s * 0.2), Offset(o.dx + s * 0.4, o.dy + s * 0.3), p);
-    c.drawLine(Offset(o.dx + s * 0.4, o.dy + s * 0.3), Offset(o.dx, o.dy + s * 0.2), p);
-    // Spine
-    c.drawLine(Offset(o.dx, o.dy - s * 0.3), Offset(o.dx, o.dy + s * 0.2), p);
-  }
-
-  // 5-point star outline
-  void _drawStar(Canvas c, Offset o, double s) {
-    final p = _p;
-    final r = s * 0.4;
-    final ir = r * 0.4;
-    final path = Path();
-    for (int i = 0; i < 10; i++) {
-      final a = (i * pi / 5) - pi / 2;
-      final rad = i.isEven ? r : ir;
-      final pt = Offset(o.dx + cos(a) * rad, o.dy + sin(a) * rad);
-      if (i == 0) path.moveTo(pt.dx, pt.dy); else path.lineTo(pt.dx, pt.dy);
-    }
-    path.close();
-    c.drawPath(path, p);
-  }
-
-  // Music note
-  void _drawNote(Canvas c, Offset o, double s) {
-    final p = _p;
-    // Stem
-    c.drawLine(Offset(o.dx, o.dy - s * 0.35), Offset(o.dx, o.dy + s * 0.2), p);
-    // Flag
-    c.drawLine(Offset(o.dx, o.dy - s * 0.35), Offset(o.dx + s * 0.2, o.dy - s * 0.15), p);
-    // Note head
-    c.drawOval(Rect.fromCenter(
-      center: Offset(o.dx - s * 0.06, o.dy + s * 0.25), width: s * 0.22, height: s * 0.15), p);
-  }
-
-  // Flame
-  void _drawFlame(Canvas c, Offset o, double s) {
-    final p = _p;
-    final path = Path()
-      ..moveTo(o.dx, o.dy - s * 0.4)
-      ..quadraticBezierTo(o.dx + s * 0.3, o.dy - s * 0.1, o.dx + s * 0.15, o.dy + s * 0.3)
-      ..quadraticBezierTo(o.dx, o.dy + s * 0.15, o.dx, o.dy + s * 0.3)
-      ..quadraticBezierTo(o.dx, o.dy + s * 0.15, o.dx - s * 0.15, o.dy + s * 0.3)
-      ..quadraticBezierTo(o.dx - s * 0.3, o.dy - s * 0.1, o.dx, o.dy - s * 0.4);
-    c.drawPath(path, p);
-  }
-
-  // Pencil
-  void _drawPencil(Canvas c, Offset o, double s) {
-    final p = _p;
-    // Body
-    c.drawLine(Offset(o.dx - s * 0.3, o.dy + s * 0.3), Offset(o.dx + s * 0.2, o.dy - s * 0.2), p);
-    c.drawLine(Offset(o.dx - s * 0.25, o.dy + s * 0.22), Offset(o.dx + s * 0.25, o.dy - s * 0.28), p);
-    // Tip
-    c.drawLine(Offset(o.dx - s * 0.3, o.dy + s * 0.3), Offset(o.dx - s * 0.38, o.dy + s * 0.38), p);
-    // Eraser end
-    c.drawLine(Offset(o.dx + s * 0.2, o.dy - s * 0.2), Offset(o.dx + s * 0.25, o.dy - s * 0.28), p);
-  }
-
-  // Camera
-  void _drawCamera(Canvas c, Offset o, double s) {
-    final p = _p;
-    // Body
-    c.drawRRect(RRect.fromRectAndRadius(
-      Rect.fromCenter(center: Offset(o.dx, o.dy + s * 0.05), width: s * 0.7, height: s * 0.45),
-      Radius.circular(s * 0.06)), p);
-    // Lens
-    c.drawCircle(Offset(o.dx, o.dy + s * 0.05), s * 0.13, p);
-    // Top bump
-    c.drawLine(Offset(o.dx - s * 0.1, o.dy - s * 0.18), Offset(o.dx + s * 0.1, o.dy - s * 0.18), p);
-    c.drawLine(Offset(o.dx + s * 0.1, o.dy - s * 0.18), Offset(o.dx + s * 0.15, o.dy - s * 0.1), p);
-    c.drawLine(Offset(o.dx - s * 0.1, o.dy - s * 0.18), Offset(o.dx - s * 0.15, o.dy - s * 0.1), p);
-  }
-
-  // Heart
-  void _drawHeart(Canvas c, Offset o, double s) {
-    final p = _p;
-    final path = Path()
-      ..moveTo(o.dx, o.dy + s * 0.3)
-      ..cubicTo(o.dx - s * 0.4, o.dy, o.dx - s * 0.4, o.dy - s * 0.3, o.dx, o.dy - s * 0.1)
-      ..cubicTo(o.dx + s * 0.4, o.dy - s * 0.3, o.dx + s * 0.4, o.dy, o.dx, o.dy + s * 0.3);
-    c.drawPath(path, p);
-  }
-
-  // Cloud
-  void _drawCloud(Canvas c, Offset o, double s) {
-    final p = _p;
-    c.drawOval(Rect.fromCenter(center: Offset(o.dx - s * 0.15, o.dy), width: s * 0.35, height: s * 0.25), p);
-    c.drawOval(Rect.fromCenter(center: Offset(o.dx + s * 0.1, o.dy - s * 0.05), width: s * 0.4, height: s * 0.3), p);
-    c.drawOval(Rect.fromCenter(center: Offset(o.dx + s * 0.3, o.dy + s * 0.02), width: s * 0.3, height: s * 0.22), p);
-  }
-
-  // Paw print
-  void _drawPaw(Canvas c, Offset o, double s) {
-    final p = _p;
-    // Main pad
-    c.drawOval(Rect.fromCenter(center: Offset(o.dx, o.dy + s * 0.1), width: s * 0.3, height: s * 0.25), p);
-    // Toes
-    c.drawCircle(Offset(o.dx - s * 0.15, o.dy - s * 0.12), s * 0.08, p);
-    c.drawCircle(Offset(o.dx + s * 0.15, o.dy - s * 0.12), s * 0.08, p);
-    c.drawCircle(Offset(o.dx - s * 0.06, o.dy - s * 0.22), s * 0.07, p);
-    c.drawCircle(Offset(o.dx + s * 0.06, o.dy - s * 0.22), s * 0.07, p);
-  }
-
-  // Simple flower
-  void _drawFlower(Canvas c, Offset o, double s) {
-    final p = _p;
-    // Center
-    c.drawCircle(o, s * 0.1, p);
-    // Petals
-    for (int i = 0; i < 5; i++) {
-      final a = i * 2 * pi / 5 - pi / 2;
-      final px = o.dx + cos(a) * s * 0.22;
-      final py = o.dy + sin(a) * s * 0.22;
-      c.drawCircle(Offset(px, py), s * 0.1, p);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
