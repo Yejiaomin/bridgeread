@@ -9,13 +9,15 @@ class ProgressService {
   static const _kTotalStars    = 'total_stars';
   static const _kStreakDays    = 'streak_days';
   static const _kLastDate      = 'last_completed_date';
-  static const _kReaderDone    = 'today_reader_done';
-  static const _kPhonicsDone   = 'today_phonics_done';
-  static const _kQuizDone      = 'today_quiz_done';
-  static const _kRecordingDone = 'today_recording_done';
   static const _kActiveDates   = 'active_dates'; // comma-separated YYYY-MM-DD
   static const _kTotalOwed     = 'total_owed';
   static const _kDebtByDate    = 'debt_by_date'; // JSON map: {"2026-04-01": 3, ...}
+  static const _kModuleStatus  = 'debt_module_status'; // single source of truth
+  // Server-mirrored module completion. Schema:
+  //   { "<YYYY-MM-DD>": { "<module>": true, ... }, ... }
+  // Replaces all the per-module today_X_done bool flags — those were a
+  // parallel local truth that drifted out of sync (logout/login wiped flags
+  // but server was correct, etc).
 
   static final _api = ApiService();
 
@@ -69,13 +71,12 @@ class ProgressService {
       await prefs.setString(_kDebtByDate, jsonEncode(debtMap));
     }
 
-    // Update module status from server progress
+    // Update module status from server progress — debt_module_status is the
+    // single source of truth for "what's done on what date". No separate flags.
     final progress = data['progress'] as List?;
     if (progress != null) {
       final moduleStatus = <String, dynamic>{};
       final activeDates = <String>{};
-      final todayStr = _today;
-      bool anyTodayDone = false;
       String? latestDoneDate;
 
       for (final p in progress) {
@@ -83,7 +84,6 @@ class ProgressService {
         final module = p['module'] as String;
         final done = p['done'] == 1;
 
-        // Build module status map
         moduleStatus[date] ??= <String, dynamic>{};
         (moduleStatus[date] as Map<String, dynamic>)[module] = done;
 
@@ -93,31 +93,13 @@ class ProgressService {
             latestDoneDate = date;
           }
         }
-
-        // Update today's flags
-        if (date == todayStr && done) {
-          anyTodayDone = true;
-          switch (module) {
-            case 'reader': await prefs.setBool(_kReaderDone, true);
-            case 'phonics': await prefs.setBool(_kPhonicsDone, true);
-            case 'quiz': await prefs.setBool(_kQuizDone, true);
-            case 'recording': await prefs.setBool(_kRecordingDone, true);
-            case 'listen': await prefs.setBool('today_listen_done', true);
-            case 'recap': await prefs.setString('today_recap_done', todayStr);
-          }
-        }
       }
 
-      // Restore last_completed_date so resetTodayIfNewDay doesn't wipe today's
-      // flags after logout/login wipes prefs. Set to today if any today module
-      // is done; otherwise the latest done date from history.
-      if (anyTodayDone) {
-        await prefs.setString(_kLastDate, todayStr);
-      } else if (latestDoneDate != null) {
+      if (latestDoneDate != null) {
         await prefs.setString(_kLastDate, latestDoneDate);
       }
 
-      await prefs.setString('debt_module_status', jsonEncode(moduleStatus));
+      await prefs.setString(_kModuleStatus, jsonEncode(moduleStatus));
       final datesList = activeDates.toList()..sort();
       if (datesList.length > 30) datesList.removeRange(0, datesList.length - 30);
       await prefs.setString(_kActiveDates, datesList.join(','));
@@ -126,17 +108,21 @@ class ProgressService {
     debugPrint('[Progress] synced from server');
   }
 
-  /// Resets today's module flags if it's a new day.
-  static Future<void> resetTodayIfNewDay() async {
-    final prefs = await SharedPreferences.getInstance();
-    final lastDate = prefs.getString(_kLastDate) ?? '';
-    if (lastDate != _today) {
-      await prefs.setBool(_kReaderDone, false);
-      await prefs.setBool(_kPhonicsDone, false);
-      await prefs.setBool(_kQuizDone, false);
-      await prefs.setBool(_kRecordingDone, false);
-      await prefs.setBool('today_listen_done', false);
-    }
+  /// Whether [module] is marked done for today in the local mirror of server
+  /// state. Reads from debt_module_status, which is keyed by date — naturally
+  /// rolls over at midnight without needing an explicit reset.
+  static Future<bool> isDoneToday(String module) async {
+    final status = await getModuleStatusForDate(_today);
+    return status[module] == true;
+  }
+
+  /// Today's done state for all 6 modules.
+  static Future<Map<String, bool>> todayDoneFlags() async {
+    final status = await getModuleStatusForDate(_today);
+    return {
+      for (final m in ['recap', 'reader', 'quiz', 'listen', 'phonics', 'recording'])
+        m: status[m] == true,
+    };
   }
 
   /// Set the study date when entering from calendar.
@@ -157,9 +143,19 @@ class ProgressService {
   /// Mark a module complete and award stars.
   static Future<void> markModuleComplete(String module, int stars) async {
     final prefs = await SharedPreferences.getInstance();
-    final key = 'today_${module}_done';
-    final wasAlreadyDone = prefs.getBool(key) ?? false;
-    await prefs.setBool(key, true);
+    final syncDate = await _getStudyDate();
+    final dateKey = syncDate;
+
+    // Read current debt_module_status — that's the truth, not a parallel flag
+    final raw = prefs.getString(_kModuleStatus);
+    final all = raw != null ? Map<String, dynamic>.from(jsonDecode(raw)) : <String, dynamic>{};
+    final dayData = all[dateKey] != null
+        ? Map<String, dynamic>.from(all[dateKey] as Map)
+        : <String, dynamic>{};
+    final wasAlreadyDone = dayData[module] == true;
+    dayData[module] = true;
+    all[dateKey] = dayData;
+    await prefs.setString(_kModuleStatus, jsonEncode(all));
 
     // Analytics
     if (!wasAlreadyDone) {
@@ -172,19 +168,6 @@ class ProgressService {
       final event = moduleToEvent[module] ?? '${module}_done';
       AnalyticsService.logEvent(event);
     }
-
-    final syncDate = await _getStudyDate();
-
-    // Save to local debt_module_status
-    final dateKey = syncDate;
-    final raw = prefs.getString('debt_module_status');
-    final all = raw != null ? Map<String, dynamic>.from(jsonDecode(raw)) : <String, dynamic>{};
-    final dayData = all[dateKey] != null
-        ? Map<String, dynamic>.from(all[dateKey] as Map)
-        : <String, dynamic>{};
-    dayData[module] = true;
-    all[dateKey] = dayData;
-    await prefs.setString('debt_module_status', jsonEncode(all));
 
     if (!wasAlreadyDone) {
       final current = prefs.getInt(_kTotalStars) ?? 0;
@@ -238,8 +221,8 @@ class ProgressService {
 
   /// Returns today's progress map.
   static Future<Map<String, dynamic>> getTodayProgress() async {
-    await resetTodayIfNewDay();
     final prefs = await SharedPreferences.getInstance();
+    final flags = await todayDoneFlags();
 
     final now = _chinaTime();
     final activeDates = (prefs.getString(_kActiveDates) ?? '')
@@ -254,10 +237,10 @@ class ProgressService {
     return {
       'total_stars':    prefs.getInt(_kTotalStars) ?? 0,
       'streak_days':    prefs.getInt(_kStreakDays) ?? 0,
-      'reader_done':    prefs.getBool(_kReaderDone) ?? false,
-      'phonics_done':   prefs.getBool(_kPhonicsDone) ?? false,
-      'quiz_done':      prefs.getBool(_kQuizDone) ?? false,
-      'recording_done': prefs.getBool(_kRecordingDone) ?? false,
+      'reader_done':    flags['reader']!,
+      'phonics_done':   flags['phonics']!,
+      'quiz_done':      flags['quiz']!,
+      'recording_done': flags['recording']!,
       'week_active':    weekActive,
     };
   }
@@ -295,33 +278,22 @@ class ProgressService {
 
   /// Get today's pending module count.
   static Future<int> getTodayPending() async {
-    await resetTodayIfNewDay();
     final prefs = await SharedPreferences.getInstance();
     final now = _chinaTime();
-    final todayStr = _today;
+    final flags = await todayDoneFlags();
 
     if (now.weekday == 6 || now.weekday == 7) {
-      // Check if today is registration day (treat as weekday)
       final startStr = prefs.getString('book_start_date');
       final startDate = startStr != null ? WeekService.parseDate(startStr) : null;
       final isRegistrationDay = startDate != null &&
           startDate.year == now.year && startDate.month == now.month && startDate.day == now.day;
-
       if (!isRegistrationDay) {
-        // Normal weekend: only quiz + listen
-        int pending = 0;
-        if (!(prefs.getBool(_kQuizDone) ?? false)) pending++;
-        if (!(prefs.getBool('today_listen_done') ?? false)) pending++;
-        return pending;
+        return (flags['quiz']! ? 0 : 1) + (flags['listen']! ? 0 : 1);
       }
       // Registration day on weekend: fall through to weekday logic (4 modules)
     }
 
-    int pending = 0;
-    if (prefs.getString('today_recap_done') != todayStr) pending++;
-    if (!(prefs.getBool(_kReaderDone) ?? false)) pending++;
-    if (!(prefs.getBool(_kQuizDone) ?? false)) pending++;
-    if (!(prefs.getBool('today_listen_done') ?? false)) pending++;
-    return pending;
+    return (flags['recap']! ? 0 : 1) + (flags['reader']! ? 0 : 1) +
+           (flags['quiz']! ? 0 : 1) + (flags['listen']! ? 0 : 1);
   }
 }

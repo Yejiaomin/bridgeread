@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
+import '../services/progress_service.dart';
 
 const _kAvatarEmojis = [
   '🐱', '🐶', '🐰', '🐼', '🦊', '🐨', '🦁', '🐸', '🐧', '🦄', '🐮', '🐷',
@@ -155,7 +156,7 @@ class _RankingScreenState extends State<RankingScreen>
     final prefs = await SharedPreferences.getInstance();
     final myStars = prefs.getInt('total_stars') ?? 0;
     final childName = prefs.getString('child_name') ?? '我';
-    _listenDone = prefs.getBool('today_listen_done') ?? false;
+    _listenDone = await ProgressService.isDoneToday('listen');
 
     final rng = Random();
 

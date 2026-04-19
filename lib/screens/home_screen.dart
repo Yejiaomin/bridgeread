@@ -108,17 +108,14 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _loadStats() async {
-    // Reset module flags if it's a new day (must happen before reading any flags)
-    await ProgressService.resetTodayIfNewDay();
-
     final prefs = await SharedPreferences.getInstance();
     // Seed demo data on first run (streak_days == 0 means fresh install)
     if ((prefs.getInt('streak_days') ?? 0) == 0) {
       await seedTestData();
     }
 
-    // Same condition as study_screen end background: today_listen_done == true
-    final allDone = prefs.getBool('today_listen_done') ?? false;
+    // Studyroom unlocks once today's listen is done
+    final allDone = await ProgressService.isDoneToday('listen');
 
     // Check if studyroom was visited today
     final now = DateTime.now().toUtc().add(const Duration(hours: 8));

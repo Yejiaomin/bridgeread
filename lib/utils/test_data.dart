@@ -9,11 +9,8 @@ Future<void> seedTestData() async {
   await prefs.setInt('streak_days', 5);
   await prefs.setInt('total_stars', 35);
 
-  // Today's modules: all not done on fresh start
-  await prefs.setBool('today_reader_done',    false);
-  await prefs.setBool('today_phonics_done',   false);
-  await prefs.setBool('today_quiz_done',      false);
-  await prefs.setBool('today_recording_done', false);
+  // (No need to clear today_X_done flags — debt_module_status[today] is the
+  // single source of truth and is naturally empty for a fresh install.)
 
   // Mark Mon–Fri of the current week as active
   final now       = DateTime.now();

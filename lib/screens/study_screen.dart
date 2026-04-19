@@ -197,6 +197,11 @@ class _StudyScreenState extends State<StudyScreen>
     _loadProgress();
   }
 
+  String _today() {
+    final n = chinaTime();
+    return '${n.year}-${n.month.toString().padLeft(2,'0')}-${n.day.toString().padLeft(2,'0')}';
+  }
+
   Future<void> _loadProgress() async {
     final active = activeDate();
     final now = chinaTime();
@@ -204,27 +209,17 @@ class _StudyScreenState extends State<StudyScreen>
     final activeDay = DateTime(active.year, active.month, active.day);
     final isViewingToday = WeekService.overrideDate == null || activeDay == todayDate;
 
-    bool recapDone, readerDone, quizDone, listenDone;
-
-    if (isViewingToday) {
-      // Today: read from local SharedPreferences
-      await ProgressService.resetTodayIfNewDay();
-      final prefs = await SharedPreferences.getInstance();
-      final now = chinaTime();
-      final todayStr = '${now.year}-${now.month.toString().padLeft(2,'0')}-${now.day.toString().padLeft(2,'0')}';
-      recapDone = prefs.getString('today_recap_done') == todayStr;
-      readerDone = prefs.getBool('today_reader_done') == true;
-      quizDone = prefs.getBool('today_quiz_done') == true;
-      listenDone = prefs.getBool('today_listen_done') == true;
-    } else {
-      // Past date (from calendar): read from server-cached module status
-      final dateStr = '${active.year}-${active.month.toString().padLeft(2,'0')}-${active.day.toString().padLeft(2,'0')}';
-      final status = await ProgressService.getModuleStatusForDate(dateStr);
-      recapDone = status['recap'] ?? false;
-      readerDone = status['reader'] ?? false;
-      quizDone = status['quiz'] ?? false;
-      listenDone = status['listen'] ?? false;
-    }
+    // Single source: debt_module_status[date] (server-mirrored).
+    // No more separate today_X_done flags — they used to drift after
+    // logout/login or timezone edge cases.
+    final dateStr = '${active.year}-${active.month.toString().padLeft(2,'0')}-${active.day.toString().padLeft(2,'0')}';
+    final status = isViewingToday
+        ? await ProgressService.getModuleStatusForDate(_today())
+        : await ProgressService.getModuleStatusForDate(dateStr);
+    final recapDone = status['recap'] ?? false;
+    final readerDone = status['reader'] ?? false;
+    final quizDone = status['quiz'] ?? false;
+    final listenDone = status['listen'] ?? false;
 
     // Count completed modules (for zone-enable logic)
     int count = 0;
@@ -546,28 +541,8 @@ class _RecapScreenState extends State<RecapScreen>
   }
 
   Future<void> _markRecapDone() async {
-    final prefs = await SharedPreferences.getInstance();
-    final d = await ProgressService.getStudyDateStr();
-    await prefs.setString('today_recap_done', d);
     AnalyticsService.logEvent('recap_done');
-
-    // Save to debt_module_status for calendar history
-    final raw = prefs.getString('debt_module_status');
-    final all = raw != null ? Map<String, dynamic>.from(jsonDecode(raw)) : <String, dynamic>{};
-    final dayData = all[d] != null ? Map<String, dynamic>.from(all[d] as Map) : <String, dynamic>{};
-    dayData['recap'] = true;
-    all[d] = dayData;
-    await prefs.setString('debt_module_status', jsonEncode(all));
-
-    // Sync to server
-    final lessonId = prefs.getString('current_lesson_id');
-    ApiService().syncProgress(
-      date: d,
-      module: 'recap',
-      done: true,
-      stars: 10,
-      lessonId: lessonId,
-    );
+    await ProgressService.markModuleComplete('recap', 10);
   }
 
   // Get previous book from global order (no hardcoded map needed)
