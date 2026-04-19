@@ -331,8 +331,40 @@ class _StudyScreenState extends State<StudyScreen>
                       fit: BoxFit.cover,
                       width: w,
                       height: h,
-                      errorBuilder: (_, __, ___) =>
-                          Container(color: const Color(0xFFFFF4E6)),
+                      errorBuilder: (_, err, __) {
+                        Telemetry.log('study_bg_load_error', {
+                          'image': _bgImage,
+                          'error': err.toString(),
+                        });
+                        return Container(
+                          color: const Color(0xFFFFF4E6),
+                          alignment: Alignment.center,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.broken_image_outlined,
+                                  size: 48, color: Color(0xFFFF8C42)),
+                              const SizedBox(height: 12),
+                              const Text('背景图加载失败',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFFE65100))),
+                              const SizedBox(height: 4),
+                              const Text('请检查网络或刷新页面',
+                                  style: TextStyle(fontSize: 13, color: Colors.black54)),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () {
+                                  imageCache.evict(AssetImage(_bgImage));
+                                  setState(() {});
+                                },
+                                child: const Text('重试'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
 
