@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import '../services/progress_service.dart';
 import '../services/lesson_service.dart';
+import '../services/telemetry.dart';
 import '../models/lesson.dart';
 import 'eggy_celebration_screen.dart';
 import '../utils/cdn_asset.dart';
@@ -546,22 +547,27 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       final durationMs = _echoRecordStart == null ? 0
           : DateTime.now().difference(_echoRecordStart!).inMilliseconds;
       final result = await _recorder.stop();
-      _recordingPath = result ?? _recordingPath;
+      // On web, result is the real blob: URL — the input path was just a hint.
+      // If null, the recording failed (permission revoked, mic disconnected,
+      // stopped too quickly). Don't fall back to the input path; that yields a
+      // bogus URL that Chrome's FFmpeg demuxer fails on.
+      _recordingPath = result;
+      if (result == null) {
+        Telemetry.log('phonics_recording_null', {'durationMs': durationMs, 'web': kIsWeb});
+      }
       for (int i = 0; i < _barHeights.length; i++) _barHeights[i] = 0.15;
 
       final int pts = durationMs >= 1000 ? 10 : durationMs >= 300 ? 5 : 0;
       setState(() {
         _echoPhase = _EchoPhase.scored;
         _echoScorePoints = pts;
-        _echoShowButtons = false;
+        _echoShowButtons = result == null;  // skip playback, show buttons immediately
       });
 
       // Auto-play the recording back, show buttons after playback finishes
       if (_recordingPath != null) {
         await Future.delayed(const Duration(milliseconds: 300));
         if (mounted) await _playEchoRecording();
-      } else {
-        if (mounted) setState(() => _echoShowButtons = true);
       }
     } else {
       // ── START ──
@@ -615,13 +621,19 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       echoPlayer.dispose();
       if (!completer.isCompleted) completer.complete();
     });
+    // Catch async decode/source errors (Chrome FFmpeg DEMUXER failures etc) —
+    // they don't surface through play()'s try/catch
+    final errSub = echoPlayer.eventStream.listen((e) {}, onError: (err) {
+      Telemetry.log('phonics_playback_error', {'err': err.toString()});
+      if (!completer.isCompleted) completer.complete();
+    });
     try {
       await echoPlayer.play(source);
-    } catch (_) {
-      echoPlayer.dispose();
-      // Web may fail to play back recording
+    } catch (e) {
+      Telemetry.log('phonics_playback_throw', {'err': e.toString()});
       if (!completer.isCompleted) completer.complete();
     }
+    completer.future.whenComplete(() => errSub.cancel());
     // Wait for playback to actually finish
     await completer.future.timeout(const Duration(seconds: 5), onTimeout: () {});
     // Keep ear icon visible briefly after sound ends
