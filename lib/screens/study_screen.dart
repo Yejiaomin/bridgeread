@@ -114,6 +114,10 @@ class _StudyScreenState extends State<StudyScreen>
   // Only reader(1) and quiz(2) are tracked in daily_progress for debt
   List<bool> _zoneDone = [false, false, false, false];
 
+  // True once bg image has rendered at least one frame. While false, fall
+  // back to gradient + visible zone labels so user can still navigate.
+  bool _bgLoaded = false;
+
   // Glow animations (420 ms)
   late final List<AnimationController> _ctrls;
   late final List<Animation<double>>   _anims;
@@ -330,11 +334,19 @@ class _StudyScreenState extends State<StudyScreen>
                   ),
 
                   // ── Background image (overlays gradient when loaded) ──
-                  cdnImage(_bgImage,
+                  Image.asset(_bgImage,
                     key: ValueKey(_bgImage),
                     fit: BoxFit.cover,
                     width: w,
                     height: h,
+                    frameBuilder: (ctx, child, frame, wasSyncLoaded) {
+                      if (frame != null && !_bgLoaded) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) setState(() => _bgLoaded = true);
+                        });
+                      }
+                      return child;
+                    },
                     errorBuilder: (_, err, __) {
                       Telemetry.log('study_bg_load_error', {
                         'image': _bgImage,
@@ -346,7 +358,6 @@ class _StudyScreenState extends State<StudyScreen>
                           if (mounted) setState(() {});
                         });
                       });
-                      // Transparent — gradient below shows through
                       return const SizedBox.shrink();
                     },
                   ),
@@ -397,27 +408,37 @@ class _StudyScreenState extends State<StudyScreen>
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(14),
+                                      // Only show the white card backdrop when bg image
+                                      // failed — when image is present it has its own art
                                       color: _kDebugZones
                                           ? _kZoneColors[i].withValues(alpha: 0.35)
-                                          : Colors.white.withValues(alpha: 0.55 + v * 0.25),
+                                          : (!_bgLoaded
+                                              ? Colors.white.withValues(alpha: 0.55 + v * 0.25)
+                                              : Colors.white.withValues(alpha: v * 0.22)),
                                       border: _kDebugZones
-                                          ? Border.all(
-                                              color: _kZoneColors[i], width: 2)
-                                          : Border.all(
-                                              color: Colors.white.withValues(alpha: 0.7),
-                                              width: 1.5),
-                                      boxShadow: !_kDebugZones
-                                          ? [
-                                              BoxShadow(
-                                                color: v > 0.02
-                                                    ? Colors.yellowAccent.withValues(alpha: v * 0.65)
-                                                    : Colors.black.withValues(alpha: 0.12),
-                                                blurRadius: v > 0.02 ? 28 * v : 8,
-                                                spreadRadius: v > 0.02 ? 6 * v : 0,
-                                                offset: const Offset(0, 3),
-                                              )
-                                            ]
-                                          : null,
+                                          ? Border.all(color: _kZoneColors[i], width: 2)
+                                          : (!_bgLoaded
+                                              ? Border.all(color: Colors.white.withValues(alpha: 0.7), width: 1.5)
+                                              : null),
+                                      boxShadow: _kDebugZones
+                                          ? null
+                                          : (v > 0.02
+                                              ? [
+                                                  BoxShadow(
+                                                    color: Colors.yellowAccent.withValues(alpha: v * 0.65),
+                                                    blurRadius: 28 * v,
+                                                    spreadRadius: 6 * v,
+                                                  )
+                                                ]
+                                              : (!_bgLoaded
+                                                  ? [
+                                                      BoxShadow(
+                                                        color: Colors.black.withValues(alpha: 0.12),
+                                                        blurRadius: 8,
+                                                        offset: const Offset(0, 3),
+                                                      )
+                                                    ]
+                                                  : null)),
                                     ),
                                     child: _kDebugZones
                                         ? Center(
@@ -430,22 +451,24 @@ class _StudyScreenState extends State<StudyScreen>
                                               ),
                                             ),
                                           )
-                                        : Center(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(emojis[i],
-                                                    style: TextStyle(fontSize: R.s(34))),
-                                                SizedBox(height: R.s(4)),
-                                                Text(cnLabels[i],
-                                                    style: TextStyle(
-                                                      fontSize: R.s(14),
-                                                      fontWeight: FontWeight.w900,
-                                                      color: const Color(0xFFB84A00),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
+                                        : (!_bgLoaded
+                                            ? Center(
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Text(emojis[i],
+                                                        style: TextStyle(fontSize: R.s(34))),
+                                                    SizedBox(height: R.s(4)),
+                                                    Text(cnLabels[i],
+                                                        style: TextStyle(
+                                                          fontSize: R.s(14),
+                                                          fontWeight: FontWeight.w900,
+                                                          color: const Color(0xFFB84A00),
+                                                        )),
+                                                  ],
+                                                ),
+                                              )
+                                            : null),
                                   ),
                                   // Red debt badge
                                   if (showBadge)
