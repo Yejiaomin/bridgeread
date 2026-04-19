@@ -122,6 +122,17 @@ class _StudyScreenState extends State<StudyScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context)!);
+    // Preload all study bg variants so transitions don't hit a cold cache —
+    // mid/end load failures used to leave the screen blank when user returned
+    // from quiz/listen with new completion state.
+    for (final asset in [
+      'assets/home/study_bg_start.webp',
+      'assets/home/study_bg_mid.webp',
+      'assets/home/study_bg_end.webp',
+      'assets/home/weekend_bg.webp',
+    ]) {
+      precacheImage(AssetImage(asset), context);
+    }
   }
 
   // Called when the route above this one is popped — user is back on this screen
@@ -336,33 +347,21 @@ class _StudyScreenState extends State<StudyScreen>
                           'image': _bgImage,
                           'error': err.toString(),
                         });
-                        return Container(
-                          color: const Color(0xFFFFF4E6),
-                          alignment: Alignment.center,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.broken_image_outlined,
-                                  size: 48, color: Color(0xFFFF8C42)),
-                              const SizedBox(height: 12),
-                              const Text('背景图加载失败',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFFE65100))),
-                              const SizedBox(height: 4),
-                              const Text('请检查网络或刷新页面',
-                                  style: TextStyle(fontSize: 13, color: Colors.black54)),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  imageCache.evict(AssetImage(_bgImage));
-                                  setState(() {});
-                                },
-                                child: const Text('重试'),
-                              ),
-                            ],
-                          ),
+                        // Evict the failed image and trigger reload after a frame
+                        // — first request may have hit a race; SW often serves it
+                        // fine on retry. Meanwhile fall back to the start image
+                        // (always loaded when user enters study) so user never
+                        // sees a blank screen.
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          imageCache.evict(AssetImage(_bgImage));
+                          if (mounted) Future.delayed(const Duration(milliseconds: 800), () {
+                            if (mounted) setState(() {});
+                          });
+                        });
+                        return cdnImage('assets/home/study_bg_start.webp',
+                          fit: BoxFit.cover, width: w, height: h,
+                          errorBuilder: (_, __, ___) =>
+                              Container(color: const Color(0xFFFFF4E6)),
                         );
                       },
                     ),
