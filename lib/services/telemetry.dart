@@ -25,31 +25,27 @@ class Telemetry {
 
   static void setUser(int? userId) => _userId = userId;
 
-  static void log(String event, [Map<String, dynamic>? data]) {
-    final payload = {
-      'sessionId': sessionId,
-      if (_userId != null) 'userId': _userId,
-      'event': event,
-      'time': DateTime.now().toIso8601String(),
-      'url': Uri.base.toString(),
-      if (data != null) 'data': data,
-    };
+  /// Log an event. [type] controls the server-side filename prefix
+  /// (e.g. 'event' for normal telemetry, 'user_report' for user-submitted
+  /// feedback). Defaults to 'event'.
+  static void log(String event, [Map<String, dynamic>? data, String type = 'event']) {
+    final time = DateTime.now().toIso8601String();
     debugPrint('[Telemetry] $event ${data ?? ''}');
-    _post(payload);
+    _post(type: type, event: event, data: data, time: time);
   }
 
-  static Future<void> _post(Map<String, dynamic> payload) async {
+  static Future<void> _post({required String type, required String event, Map<String, dynamic>? data, required String time}) async {
     try {
       await http.post(
         Uri.parse('/api/report'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'type': 'event',
+          'type': type,
           'sessionId': sessionId,
           if (_userId != null) 'userId': _userId,
-          'time': payload['time'],
-          'url': payload['url'],
-          'logs': [payload['event'], if (payload['data'] != null) jsonEncode(payload['data'])],
+          'time': time,
+          'url': Uri.base.toString(),
+          'logs': [event, if (data != null) jsonEncode(data)],
         }),
       ).timeout(const Duration(seconds: 5));
     } catch (_) {}

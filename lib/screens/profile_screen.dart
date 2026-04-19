@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/responsive_utils.dart';
 import '../services/api_service.dart';
+import '../services/telemetry.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ProfileScreen — child profile / personal center (landscape two-column)
@@ -260,6 +261,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
           '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
       _saveBirthday(formatted);
     }
+  }
+
+  Future<void> _openFeedback() async {
+    final controller = TextEditingController();
+    final submit = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('反馈问题'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('描述一下遇到的问题，我们会带上诊断信息一起记录：',
+                style: TextStyle(fontSize: 13, color: Colors.black54)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              maxLines: 4,
+              maxLength: 500,
+              decoration: const InputDecoration(
+                hintText: '例如：点开今日任务后白屏…',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('提交')),
+        ],
+      ),
+    );
+    if (submit != true) return;
+    final text = controller.text.trim();
+    if (text.isEmpty) return;
+    Telemetry.log('user_report', {
+      'message': text,
+      'screen': ModalRoute.of(context)?.settings.name ?? 'unknown',
+    }, 'user_report');
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('✅ 反馈已提交，谢谢！')),
+    );
   }
 
   Future<void> _logout() async {
@@ -680,6 +725,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           SizedBox(height: R.s(20)),
+
+          // Feedback button
+          GestureDetector(
+            onTap: _openFeedback,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: R.s(32), vertical: R.s(10)),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF4E6),
+                borderRadius: BorderRadius.circular(R.s(20)),
+                border: Border.all(color: const Color(0xFFFFB74D), width: 1),
+              ),
+              child: Text('💬 反馈问题',
+                  style: TextStyle(
+                      fontSize: R.s(13),
+                      color: const Color(0xFFE65100),
+                      fontWeight: FontWeight.w600)),
+            ),
+          ),
+          SizedBox(height: R.s(10)),
 
           // Logout button
           GestureDetector(
