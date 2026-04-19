@@ -122,17 +122,8 @@ class _StudyScreenState extends State<StudyScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context)!);
-    // Preload all study bg variants so transitions don't hit a cold cache —
-    // mid/end load failures used to leave the screen blank when user returned
-    // from quiz/listen with new completion state.
-    for (final asset in [
-      'assets/home/study_bg_start.webp',
-      'assets/home/study_bg_mid.webp',
-      'assets/home/study_bg_end.webp',
-      'assets/home/weekend_bg.webp',
-    ]) {
-      precacheImage(AssetImage(asset), context);
-    }
+    precacheImage(const AssetImage('assets/home/study_bg.webp'), context);
+    precacheImage(const AssetImage('assets/home/weekend_bg.webp'), context);
   }
 
   // Called when the route above this one is popped — user is back on this screen
@@ -253,12 +244,8 @@ class _StudyScreenState extends State<StudyScreen>
 
   bool _listenDone = false;
 
-  String get _bgImage {
-    if (_weekend) return 'assets/home/weekend_bg.webp';
-    if (_completedCount == 4) return 'assets/home/study_bg_end.webp';
-    if (!_zoneDone[0]) return 'assets/home/study_bg_start.webp'; // recap not done
-    return 'assets/home/study_bg_mid.webp';
-  }
+  String get _bgImage =>
+      _weekend ? 'assets/home/weekend_bg.webp' : 'assets/home/study_bg.webp';
 
   // Zone 0 (RECAP) is always active; zones 1-3 unlock after RECAP is done
   // Weekend: all zones always active
@@ -335,36 +322,24 @@ class _StudyScreenState extends State<StudyScreen>
                 fit: StackFit.expand,
                 children: [
                   // ── Background ────────────────────────────────────────
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 600),
-                    child: cdnImage(_bgImage,
-                      key: ValueKey(_bgImage),
-                      fit: BoxFit.cover,
-                      width: w,
-                      height: h,
-                      errorBuilder: (_, err, __) {
-                        Telemetry.log('study_bg_load_error', {
-                          'image': _bgImage,
-                          'error': err.toString(),
+                  cdnImage(_bgImage,
+                    key: ValueKey(_bgImage),
+                    fit: BoxFit.cover,
+                    width: w,
+                    height: h,
+                    errorBuilder: (_, err, __) {
+                      Telemetry.log('study_bg_load_error', {
+                        'image': _bgImage,
+                        'error': err.toString(),
+                      });
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        imageCache.evict(AssetImage(_bgImage));
+                        if (mounted) Future.delayed(const Duration(milliseconds: 800), () {
+                          if (mounted) setState(() {});
                         });
-                        // Evict the failed image and trigger reload after a frame
-                        // — first request may have hit a race; SW often serves it
-                        // fine on retry. Meanwhile fall back to the start image
-                        // (always loaded when user enters study) so user never
-                        // sees a blank screen.
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          imageCache.evict(AssetImage(_bgImage));
-                          if (mounted) Future.delayed(const Duration(milliseconds: 800), () {
-                            if (mounted) setState(() {});
-                          });
-                        });
-                        return cdnImage('assets/home/study_bg_start.webp',
-                          fit: BoxFit.cover, width: w, height: h,
-                          errorBuilder: (_, __, ___) =>
-                              Container(color: const Color(0xFFFFF4E6)),
-                        );
-                      },
-                    ),
+                      });
+                      return Container(color: const Color(0xFFFFF4E6));
+                    },
                   ),
 
                   // ── Back button ───────────────────────────────────────
