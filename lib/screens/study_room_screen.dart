@@ -246,6 +246,18 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
       });
     }
 
+    // Sync star total from server — local cache may be stale after
+    // star-earning/spending on other devices or after server corrections
+    final progress = await ApiService().getProgress();
+    final serverStars = progress?['user']?['total_stars'] as int?;
+    if (serverStars != null && mounted) {
+      setState(() {
+        _totalStars = serverStars;
+        _gachaAvailable = _totalStars >= 30;
+      });
+      await prefs.setInt('total_stars', serverStars);
+    }
+
     // Sync from server
     final data = await ApiService().getStudyRoom();
     if (data != null && data['success'] == true && mounted) {
@@ -313,14 +325,30 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     _gachaInProgress = true;
 
     // Ask server FIRST — only deduct if confirmed
-    final serverStars = await ApiService().spendStars(30);
-    if (serverStars == null) {
-      // Server failed — don't deduct, show error
+    final result = await ApiService().spendStars(30);
+    if (result.stars == null) {
       _gachaInProgress = false;
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('网络错误，请稍后重试')),
-        );
+        const messages = {
+          'insufficient': '星星不够啦，先做任务赚星星吧～',
+          'unauthorized': '登录失效，请重新登录',
+          'network': '网络错误，请稍后重试',
+        };
+        final msg = messages[result.error] ?? '网络错误，请稍后重试';
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+        // Insufficient = local cache stale; sync from server so UI matches reality
+        if (result.error == 'insufficient') {
+          final fresh = await ApiService().getProgress();
+          final serverTotal = fresh?['user']?['total_stars'] as int?;
+          if (serverTotal != null && mounted) {
+            setState(() {
+              _totalStars = serverTotal;
+              _gachaAvailable = _totalStars >= 30;
+            });
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setInt('total_stars', serverTotal);
+          }
+        }
       }
       return;
     }
@@ -328,11 +356,11 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     // Server confirmed — update UI and local cache
     if (!mounted) { _gachaInProgress = false; return; }
     setState(() {
-      _totalStars = serverStars;
+      _totalStars = result.stars!;
       _gachaAvailable = _totalStars >= 30;
     });
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('total_stars', serverStars);
+    await prefs.setInt('total_stars', result.stars!);
 
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final curDate = prefs.getString('gacha_date') ?? '';

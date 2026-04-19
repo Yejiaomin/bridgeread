@@ -172,8 +172,9 @@ class ApiService {
     }
   }
 
-  /// Spend stars (gacha). Returns new total or null on failure.
-  Future<int?> spendStars(int amount) async {
+  /// Spend stars (gacha). Returns (stars: newTotal) on success,
+  /// (error: code) on failure. Codes: 'insufficient' | 'unauthorized' | 'network'.
+  Future<({int? stars, String? error})> spendStars(int amount) async {
     try {
       final res = await http.post(
         Uri.parse('$_baseUrl/progress/spend-stars'),
@@ -182,10 +183,15 @@ class ApiService {
       ).timeout(const Duration(seconds: 5));
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        return data['totalStars'] as int?;
+        return (stars: data['totalStars'] as int?, error: null);
+      }
+      if (res.statusCode == 401) return (stars: null, error: 'unauthorized');
+      if (res.statusCode == 400) {
+        final body = res.body;
+        if (body.contains('not enough stars')) return (stars: null, error: 'insufficient');
       }
     } catch (_) {}
-    return null;
+    return (stars: null, error: 'network');
   }
 
   /// Get ranking/leaderboard data.
