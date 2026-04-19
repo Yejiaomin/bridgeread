@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../services/progress_service.dart';
 import '../services/week_service.dart' show chinaTime;
+import '../services/telemetry.dart';
 import '../services/analytics_service.dart';
 import '../utils/responsive_utils.dart';
 
@@ -103,6 +104,10 @@ class _LoginScreenState extends State<LoginScreen> {
     // Login succeeded, token already saved by ApiService
     final prefs = await SharedPreferences.getInstance();
     final user = res['user'] as Map<String, dynamic>;
+    final uid = user['id'] as int?;
+    if (uid != null) await prefs.setInt('user_id', uid);
+    Telemetry.setUser(uid);
+    Telemetry.log('login_success', {'phone': phone.substring(0, 3) + '****' + phone.substring(7)});
 
     // Cache user data locally
     await prefs.setString('child_name', user['childName'] ?? '');

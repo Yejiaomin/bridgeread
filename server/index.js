@@ -41,14 +41,22 @@ app.use('/api/studyroom', authMiddleware, studyroomRoutes);
 
 // Error/loading report (public, no auth)
 app.post('/api/report', (req, res) => {
-  const { logs, ua, screen, url, time, type } = req.body;
+  const { logs, ua, screen, url, time, type, sessionId, userId } = req.body;
   const ua2 = ua || req.headers['user-agent'];
-  const report = { time: time || new Date().toISOString(), type: type || 'load', ua: ua2, screen, url, logs };
+  const sid = (sessionId || 'nosess').replace(/[^a-z0-9]/gi, '').slice(0, 12);
+  const report = {
+    time: time || new Date().toISOString(),
+    type: type || 'load',
+    sessionId: sid,
+    userId: userId ?? null,
+    ua: ua2, screen, url, logs,
+  };
   const fs = require('fs');
   const path = require('path');
   const dir = path.join(__dirname, 'data', 'reports');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  const filename = `${report.type}_${Date.now()}.json`;
+  // Filename: <sessionId>_<type>_<ts>.json — grep by sessionId reconstructs the user's whole session
+  const filename = `${sid}_${report.type}_${Date.now()}.json`;
   fs.writeFileSync(path.join(dir, filename), JSON.stringify(report, null, 2));
   console.log('[Report]', filename, ua2?.substring(0, 60));
   res.json({ success: true });

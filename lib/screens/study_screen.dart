@@ -13,6 +13,7 @@ import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/audio_preloader.dart';
 import '../services/analytics_service.dart';
+import '../services/telemetry.dart';
 
 class _RecapPage {
   final String imageAsset;
@@ -131,6 +132,10 @@ class _StudyScreenState extends State<StudyScreen>
   void initState() {
     super.initState();
     AnalyticsService.logEvent('book_start');
+    Telemetry.log('study_enter', {
+      'weekend_initial': _weekend,
+      'override_date': WeekService.overrideDate?.toIso8601String(),
+    });
     _resolveWeekend();
     // Always create 4 controllers (max zones); use first N based on mode
     const zoneCount = 4;
@@ -164,15 +169,18 @@ class _StudyScreenState extends State<StudyScreen>
   Future<void> _resolveWeekend() async {
     bool shouldBeWeekend = _weekend;
 
-    if (_weekend) {
-      // Weekend: check if user has books to review
-      final weekBooks = await WeekService.thisWeekBooks();
-      if (weekBooks.isEmpty) shouldBeWeekend = false; // new user, no review
-    } else {
-      // Weekday: check if all books are done (remaining days become review)
-      final allDone = await WeekService.allBooksCompleted();
-      final todayIdx = await WeekService.todayBookIndex();
-      if (allDone && todayIdx == null) shouldBeWeekend = true;
+    try {
+      if (_weekend) {
+        final weekBooks = await WeekService.thisWeekBooks();
+        if (weekBooks.isEmpty) shouldBeWeekend = false;
+      } else {
+        final allDone = await WeekService.allBooksCompleted();
+        final todayIdx = await WeekService.todayBookIndex();
+        if (allDone && todayIdx == null) shouldBeWeekend = true;
+      }
+    } catch (e, st) {
+      Telemetry.log('study_resolve_weekend_error', {'error': e.toString(), 'stack': st.toString().split('\n').take(3).join(' | ')});
+      rethrow;
     }
 
     if (_weekend != shouldBeWeekend && mounted) {
@@ -181,6 +189,7 @@ class _StudyScreenState extends State<StudyScreen>
         _resolved = true;
       });
     }
+    Telemetry.log('study_weekend_resolved', {'weekend': _weekend});
     _loadProgress();
   }
 

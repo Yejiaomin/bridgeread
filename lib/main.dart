@@ -7,6 +7,7 @@ import 'services/analytics_service.dart';
 import 'services/progress_service.dart';
 import 'services/api_service.dart';
 import 'services/error_reporter.dart';
+import 'services/telemetry.dart';
 import 'utils/cdn_asset.dart';
 import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
@@ -29,7 +30,9 @@ final routeObserver = RouteObserver<ModalRoute<void>>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Telemetry.install();
   ErrorReporter.install();
+  Telemetry.log('app_start');
   // Read debug time offset from SharedPreferences (set by timeTravel JS)
   try {
     final prefs = await SharedPreferences.getInstance();
@@ -113,6 +116,7 @@ class _AuthGateState extends State<_AuthGate> {
   Future<void> _checkAuth() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
+    Telemetry.setUser(prefs.getInt('user_id'));
     if (!mounted) return;
 
     if (token != null && token.isNotEmpty) {

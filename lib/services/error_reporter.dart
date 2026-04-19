@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'telemetry.dart';
 
 /// Posts Flutter runtime errors to /api/report so we can debug
 /// production issues users can't surface themselves.
@@ -33,6 +34,7 @@ class ErrorReporter {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'type': label,
+          'sessionId': Telemetry.sessionId,
           'time': now.toIso8601String(),
           'url': Uri.base.toString(),
           'logs': [message, if (stack != null) stack.toString()],

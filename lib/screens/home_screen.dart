@@ -13,6 +13,7 @@ import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/audio_preloader.dart';
 import '../services/analytics_service.dart';
+import '../services/telemetry.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HomeScreen — background image + transparent tap zones
@@ -572,6 +573,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     AnalyticsService.logEvent('calendar_view');
+    Telemetry.log('calendar_enter');
     final now = chinaTime();
     _viewMonth = DateTime(now.year, now.month);
     _load();
