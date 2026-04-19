@@ -72,8 +72,10 @@ self.addEventListener('fetch', (event) => {
       caches.open(CODE_CACHE).then((cache) => {
         // Race: network with 5s timeout vs cache
         var networkFetch = fetch(event.request).then((response) => {
-          if (response.ok) {
-            cache.put(event.request, response.clone()); // cache for next time
+          // Only cache 200 — 206 Partial Content (range requests) cannot be
+          // stored in Cache API (response.ok is true for 200-299, not strict enough)
+          if (response.status === 200) {
+            cache.put(event.request, response.clone());
           }
           return response;
         });
