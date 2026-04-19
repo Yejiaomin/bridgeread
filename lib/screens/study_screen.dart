@@ -183,7 +183,9 @@ class _StudyScreenState extends State<StudyScreen>
       rethrow;
     }
 
-    if (_weekend != shouldBeWeekend && mounted) {
+    // Always mark resolved (even if mode didn't flip) so build() stops showing
+    // the loading state and renders the correct zones in one go — no flicker.
+    if (mounted) {
       setState(() {
         _weekend = shouldBeWeekend;
         _resolved = true;
@@ -297,7 +299,17 @@ class _StudyScreenState extends State<StudyScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Wait until weekend mode is resolved before rendering — avoids the
+    // weekend → weekday flicker (and the brief blank during AnimatedSwitcher
+    // bg crossfade) for new users on Saturday/Sunday.
+    if (!_resolved) {
+      return const Scaffold(
+        backgroundColor: Color(0xFFFFF4E6),
+        body: Center(child: CircularProgressIndicator(color: Color(0xFFFF8C42))),
+      );
+    }
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF4E6),
       body: LayoutBuilder(
         builder: (ctx, box) {
           final w = box.maxWidth;
@@ -319,6 +331,8 @@ class _StudyScreenState extends State<StudyScreen>
                       fit: BoxFit.cover,
                       width: w,
                       height: h,
+                      errorBuilder: (_, __, ___) =>
+                          Container(color: const Color(0xFFFFF4E6)),
                     ),
                   ),
 
