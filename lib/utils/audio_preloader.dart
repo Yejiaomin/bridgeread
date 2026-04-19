@@ -43,14 +43,14 @@ class AudioPreloader {
         }
       }
 
-      // Feedback/SFX audio
+      // Feedback phonemes (mp3)
       for (final f in [
         'phonemes/you_got_it', 'phonemes/one_more_time',
         'phonemes/amazing', 'phonemes/bingo',
-        'sfx/book-open', 'pop',
       ]) {
         urls.add('assets/assets/audio/$f.mp3');
       }
+      // SFX are wav-only (sfx/ dir has no mp3 files, root pop is wav too)
       urls.add('assets/assets/audio/sfx/book-open.wav');
       urls.add('assets/assets/audio/pop.wav');
 
