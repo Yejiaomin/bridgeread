@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/responsive_utils.dart';
@@ -265,6 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _openFeedback() async {
     final controller = TextEditingController();
+    final sid = Telemetry.sessionId;
     final submit = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -286,6 +288,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 border: OutlineInputBorder(),
               ),
             ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF4E6),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  const Text('问题编号 ', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                  Expanded(
+                    child: SelectableText(sid,
+                        style: const TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'monospace',
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFE65100))),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      await Clipboard.setData(ClipboardData(text: sid));
+                      if (ctx.mounted) {
+                        ScaffoldMessenger.of(ctx).showSnackBar(
+                          const SnackBar(content: Text('问题编号已复制'), duration: Duration(seconds: 1)),
+                        );
+                      }
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      child: Icon(Icons.copy, size: 16, color: Color(0xFFE65100)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text('提交后请把这个编号告诉客服，方便快速定位问题',
+                style: TextStyle(fontSize: 11, color: Colors.black45)),
           ],
         ),
         actions: [
@@ -303,7 +343,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }, 'user_report');
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('✅ 反馈已提交，谢谢！')),
+      SnackBar(
+        content: Text('✅ 反馈已提交，编号 $sid'),
+        duration: const Duration(seconds: 5),
+        action: SnackBarAction(
+          label: '复制编号',
+          onPressed: () => Clipboard.setData(ClipboardData(text: sid)),
+        ),
+      ),
     );
   }
 
