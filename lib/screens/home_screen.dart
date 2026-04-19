@@ -3,7 +3,6 @@ import 'dart:math' show pi, cos, sin, min;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/test_data.dart';
 import '../main.dart' show routeObserver;
 import 'reader_screen.dart';
 import '../services/lesson_service.dart';
@@ -109,11 +108,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _loadStats() async {
     final prefs = await SharedPreferences.getInstance();
-    // Seed demo data on first run (streak_days == 0 means fresh install)
-    if ((prefs.getInt('streak_days') ?? 0) == 0) {
-      await seedTestData();
-    }
-
     // Studyroom unlocks once today's listen is done
     final allDone = await ProgressService.isDoneToday('listen');
 

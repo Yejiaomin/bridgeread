@@ -42,6 +42,8 @@ const _kZoneColors = [
 ];
 
 const _kZoneLabels = ['RECAP', 'STORY', 'GAME', 'LISTEN'];
+const _kZoneCN = ['回顾', '故事', '消消乐', '听力'];
+const _kZoneEmoji = ['📖', '📚', '🎮', '🎧'];
 
 // Weekday: 4 zones: recap / story / game / listen
 const _kZones = [
@@ -59,6 +61,8 @@ const _kWeekendZones = [
 
 const _kWeekendZoneColors = [Colors.green, Colors.purple];
 const _kWeekendZoneLabels = ['GAME', 'LISTEN'];
+const _kWeekendZoneCN = ['消消乐', '听力'];
+const _kWeekendZoneEmoji = ['🎮', '🎧'];
 
 /// Check if active date is weekend
 bool _isWeekend() {
@@ -310,7 +314,22 @@ class _StudyScreenState extends State<StudyScreen>
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // ── Background ────────────────────────────────────────
+                  // ── Background gradient (always renders, zero deps) ───
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFFFE8D6),  // soft cream
+                          Color(0xFFFFCBA4),  // warm peach
+                          Color(0xFFFFAD7A),  // sunset orange
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // ── Background image (overlays gradient when loaded) ──
                   cdnImage(_bgImage,
                     key: ValueKey(_bgImage),
                     fit: BoxFit.cover,
@@ -327,7 +346,8 @@ class _StudyScreenState extends State<StudyScreen>
                           if (mounted) setState(() {});
                         });
                       });
-                      return Container(color: const Color(0xFFFFF4E6));
+                      // Transparent — gradient below shows through
+                      return const SizedBox.shrink();
                     },
                   ),
 
@@ -353,6 +373,8 @@ class _StudyScreenState extends State<StudyScreen>
                     final z = _zones[i];
                     // Show "1" badge on all incomplete zones (weekday and weekend)
                     final showBadge = i < _zoneDone.length && !_zoneDone[i];
+                    final cnLabels = _weekend ? _kWeekendZoneCN : _kZoneCN;
+                    final emojis = _weekend ? _kWeekendZoneEmoji : _kZoneEmoji;
                     return Positioned(
                       left:   z.x * w,
                       top:    z.y * h,
@@ -377,18 +399,22 @@ class _StudyScreenState extends State<StudyScreen>
                                       borderRadius: BorderRadius.circular(14),
                                       color: _kDebugZones
                                           ? _kZoneColors[i].withValues(alpha: 0.35)
-                                          : Colors.white.withValues(alpha: v * 0.22),
+                                          : Colors.white.withValues(alpha: 0.55 + v * 0.25),
                                       border: _kDebugZones
                                           ? Border.all(
                                               color: _kZoneColors[i], width: 2)
-                                          : null,
-                                      boxShadow: !_kDebugZones && v > 0.02
+                                          : Border.all(
+                                              color: Colors.white.withValues(alpha: 0.7),
+                                              width: 1.5),
+                                      boxShadow: !_kDebugZones
                                           ? [
                                               BoxShadow(
-                                                color: Colors.yellowAccent
-                                                    .withValues(alpha: v * 0.65),
-                                                blurRadius: 28 * v,
-                                                spreadRadius: 6 * v,
+                                                color: v > 0.02
+                                                    ? Colors.yellowAccent.withValues(alpha: v * 0.65)
+                                                    : Colors.black.withValues(alpha: 0.12),
+                                                blurRadius: v > 0.02 ? 28 * v : 8,
+                                                spreadRadius: v > 0.02 ? 6 * v : 0,
+                                                offset: const Offset(0, 3),
                                               )
                                             ]
                                           : null,
@@ -404,7 +430,22 @@ class _StudyScreenState extends State<StudyScreen>
                                               ),
                                             ),
                                           )
-                                        : null,
+                                        : Center(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(emojis[i],
+                                                    style: TextStyle(fontSize: R.s(34))),
+                                                SizedBox(height: R.s(4)),
+                                                Text(cnLabels[i],
+                                                    style: TextStyle(
+                                                      fontSize: R.s(14),
+                                                      fontWeight: FontWeight.w900,
+                                                      color: const Color(0xFFB84A00),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
                                   ),
                                   // Red debt badge
                                   if (showBadge)
