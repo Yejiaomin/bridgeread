@@ -127,17 +127,22 @@ router.post('/', (req, res) => {
       [date, listenSeconds, userId]);
   }
 
-  // Check if already completed (to avoid double-counting stars)
+  // Check if already completed (to avoid double-counting stars + protect against downgrade)
   const existing = queryOne(
-    'SELECT done FROM daily_progress WHERE user_id = ? AND date = ? AND module = ?',
+    'SELECT done, stars FROM daily_progress WHERE user_id = ? AND date = ? AND module = ?',
     [userId, date, module]
   );
   const wasAlreadyDone = existing && existing.done === 1;
 
+  // Once a module is done, never downgrade it to undone (prevents client bugs
+  // like listen_screen sending done=false during loop replay from wiping completion)
+  const finalDone = (wasAlreadyDone || done) ? 1 : 0;
+  const finalStars = Math.max(existing?.stars || 0, stars || 0);
+
   run(`INSERT INTO daily_progress (user_id, date, module, done, stars, lesson_id)
        VALUES (?, ?, ?, ?, ?, ?)
        ON CONFLICT(user_id, date, module) DO UPDATE SET done=?, stars=?, lesson_id=?`,
-    [userId, date, module, done ? 1 : 0, stars || 0, lessonId || null, done ? 1 : 0, stars || 0, lessonId || null]);
+    [userId, date, module, finalDone, finalStars, lessonId || null, finalDone, finalStars, lessonId || null]);
 
   debugUser(userId);
   if (done && !wasAlreadyDone) {
@@ -161,18 +166,20 @@ router.post('/batch', (req, res) => {
 
   let totalNewStars = 0, latestDate = '';
   for (const item of items) {
-    // Check if already completed (to avoid double-counting stars)
+    // Check if already completed (to avoid double-counting stars + protect against downgrade)
     const existing = queryOne(
-      'SELECT done FROM daily_progress WHERE user_id = ? AND date = ? AND module = ?',
+      'SELECT done, stars FROM daily_progress WHERE user_id = ? AND date = ? AND module = ?',
       [userId, item.date, item.module]
     );
     const wasAlreadyDone = existing && existing.done === 1;
+    const finalDone = (wasAlreadyDone || item.done) ? 1 : 0;
+    const finalStars = Math.max(existing?.stars || 0, item.stars || 0);
 
     run(`INSERT INTO daily_progress (user_id, date, module, done, stars, lesson_id)
          VALUES (?, ?, ?, ?, ?, ?)
          ON CONFLICT(user_id, date, module) DO UPDATE SET done=?, stars=?, lesson_id=?`,
-      [userId, item.date, item.module, item.done ? 1 : 0, item.stars || 0, item.lessonId || null,
-       item.done ? 1 : 0, item.stars || 0, item.lessonId || null]);
+      [userId, item.date, item.module, finalDone, finalStars, item.lessonId || null,
+       finalDone, finalStars, item.lessonId || null]);
     if (item.done && !wasAlreadyDone && item.stars) totalNewStars += item.stars;
     if (item.date > latestDate) latestDate = item.date;
   }
