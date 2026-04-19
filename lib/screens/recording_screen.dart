@@ -14,6 +14,7 @@ import '../models/lesson.dart';
 import 'eggy_celebration_screen.dart';
 import '../utils/cdn_asset.dart';
 import '../services/analytics_service.dart';
+import '../services/telemetry.dart';
 import '../utils/responsive_utils.dart';
 
 const _kOrange = Color(0xFFFF8C42);
@@ -150,7 +151,15 @@ class _RecordingScreenState extends State<RecordingScreen>
     final recDuration = _recordStart != null
         ? DateTime.now().difference(_recordStart!)
         : Duration.zero;
-    final result = await _recorder.stop();
+    // Same as phonics_screen — recorder package can throw async exceptions
+    // for too-short recordings; catch so it doesn't bubble to Uncaught Error.
+    String? result;
+    try {
+      result = await _recorder.stop();
+    } catch (e) {
+      Telemetry.log('recording_stop_throw', {'err': e.toString(), 'durationMs': recDuration.inMilliseconds});
+      result = null;
+    }
 
     setState(() {
       _isRecording = false;
@@ -247,7 +256,12 @@ class _RecordingScreenState extends State<RecordingScreen>
     final path = _recordings[_currentIdx];
     if (path == null) return;
     setState(() => _isPlayingBack = true);
-    await _player.play(kIsWeb ? UrlSource(path) : DeviceFileSource(path));
+    try {
+      await _player.play(kIsWeb ? UrlSource(path) : DeviceFileSource(path));
+    } catch (e) {
+      Telemetry.log('recording_playback_throw', {'err': e.toString()});
+      if (mounted) setState(() => _isPlayingBack = false);
+    }
   }
 
   void _reRecord() => setState(() => _phase = _SentencePhase.record);
