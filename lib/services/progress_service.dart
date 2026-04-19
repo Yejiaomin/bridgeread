@@ -75,6 +75,8 @@ class ProgressService {
       final moduleStatus = <String, dynamic>{};
       final activeDates = <String>{};
       final todayStr = _today;
+      bool anyTodayDone = false;
+      String? latestDoneDate;
 
       for (final p in progress) {
         final date = p['date'] as String;
@@ -85,10 +87,16 @@ class ProgressService {
         moduleStatus[date] ??= <String, dynamic>{};
         (moduleStatus[date] as Map<String, dynamic>)[module] = done;
 
-        if (done) activeDates.add(date);
+        if (done) {
+          activeDates.add(date);
+          if (latestDoneDate == null || date.compareTo(latestDoneDate) > 0) {
+            latestDoneDate = date;
+          }
+        }
 
         // Update today's flags
         if (date == todayStr && done) {
+          anyTodayDone = true;
           switch (module) {
             case 'reader': await prefs.setBool(_kReaderDone, true);
             case 'phonics': await prefs.setBool(_kPhonicsDone, true);
@@ -98,6 +106,15 @@ class ProgressService {
             case 'recap': await prefs.setString('today_recap_done', todayStr);
           }
         }
+      }
+
+      // Restore last_completed_date so resetTodayIfNewDay doesn't wipe today's
+      // flags after logout/login wipes prefs. Set to today if any today module
+      // is done; otherwise the latest done date from history.
+      if (anyTodayDone) {
+        await prefs.setString(_kLastDate, todayStr);
+      } else if (latestDoneDate != null) {
+        await prefs.setString(_kLastDate, latestDoneDate);
       }
 
       await prefs.setString('debt_module_status', jsonEncode(moduleStatus));
