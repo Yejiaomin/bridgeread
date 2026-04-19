@@ -57,20 +57,26 @@ jobs:
           GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
         run: |
           GITEE_URL="https://oauth2:${GITEE_TOKEN}@gitee.com/Yejiaomin_e351/bridge-read.git"
-          # Always create a fresh orphan branch — single commit, no history.
-          # This keeps the Gitee repo size stable at ~build_size instead of
-          # growing with every deploy (incremental commits accumulated blobs
-          # and eventually exceeded Gitee's 1GB quota).
+          # Incremental: clone existing deploy branch then overwrite files —
+          # git deduplicates by content hash, so unchanged audio/images aren't
+          # re-uploaded. Push only sends ~5MB of changed JS each deploy, fast.
+          # (Orphan + full re-push would be 240MB every time → Gitee throttles.)
           tmpdir=$(mktemp -d)
-          cp -r build/web/* "$tmpdir/"
-          cd "$tmpdir"
-          git init -b deploy
+          if git clone --depth 1 --branch deploy "$GITEE_URL" "$tmpdir" 2>/dev/null; then
+            find "$tmpdir" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+            cp -r build/web/* "$tmpdir/"
+            cd "$tmpdir"
+          else
+            cp -r build/web/* "$tmpdir/"
+            cd "$tmpdir"
+            git init
+            git remote add origin "$GITEE_URL"
+          fi
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git remote add origin "$GITEE_URL"
           git add -A
-          git commit -m "Deploy $(date -u +%Y%m%d-%H%M%S)"
-          git push --force origin deploy
+          git commit -m "Deploy $(date -u +%Y%m%d-%H%M%S)" || true
+          git push --force origin HEAD:deploy
 
       # Build for GitHub Pages (with base-href)
       - run: flutter build web --base-href "/bridgeread/" 
