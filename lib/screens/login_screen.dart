@@ -86,8 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final phone = _phoneCtrl.text.trim();
     final password = _passwordCtrl.text.trim();
 
-    if (phone.length != 11) {
-      setState(() => _error = '请输入11位用户号码');
+    // Login: accept 10 or 11 digits (legacy users registered with 10)
+    if (phone.length < 10 || phone.length > 11 || !RegExp(r'^\d+$').hasMatch(phone)) {
+      setState(() => _error = '请输入用户号码（10或11位数字）');
       return;
     }
 
