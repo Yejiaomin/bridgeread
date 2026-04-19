@@ -1,0 +1,292 @@
+{
+  "id": "pup_book11_day1",
+  "bookTitle": "Biscuit and the Little Pup",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "You found your ball, Biscuit.",
+  "originalAudio": "books/11Biscuit_and_the_Little_Pup/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit and the Little Pup的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "pup_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "今天呀，小女孩带Biscuit出去玩啦！play就是玩。It's time to play——该玩耍啦！Biscuit好开心呀！",
+      "narrativeEN": "Here, Biscuit. It's time to play. Woof, woof!",
+      "keywords": [
+        "play"
+      ],
+      "audioCN": "pup_p1_cn",
+      "audioEN": "pup_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 25640
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哇！Biscuit找到了他的球！但是他还发现了什么呢？Arf！是一只小狗崽！little pup就是小小的狗宝宝。Biscuit交到新朋友啦！",
+      "narrativeEN": "You found your ball, Biscuit. DO Arf! You found a little pup, too. Woof, woof!",
+      "keywords": [
+        "ball",
+        "little"
+      ],
+      "audioCN": "pup_p2_cn",
+      "audioEN": "pup_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 31840
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩蹲下来说Come out, little pup——小狗崽你出来呀！What is your name——你叫什么名字呀？可是小狗崽好害羞，不敢出来呢！",
+      "narrativeEN": "Come out, little pup. What is your name? Woof, woof! Come out, little pup. Biscuit wants to play! Woof, woof!",
+      "keywords": [
+        "little",
+        "name"
+      ],
+      "audioCN": "pup_p3_cn",
+      "audioEN": "pup_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 42300
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小狗崽不想出来怎么办？Biscuit拿出了一个ball——球！又拿出了一个bone——骨头！想把小狗崽引出来。你觉得小狗崽会出来吗？",
+      "narrativeEN": "Arf! The little pup does not want to come out. Here, little pup. Biscuit has a ball. Woof, woof!",
+      "keywords": [
+        "little",
+        "ball"
+      ],
+      "audioCN": "pup_p4_cn",
+      "audioEN": "pup_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 46320
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "球也不行，骨头也不行，小狗崽就是不出来！Won't you come out——你能出来吗？小狗崽还是Arf Arf叫着不动。怎么办呀？",
+      "narrativeEN": "Biscuit has a bone. Woof, woof! Won't you come out, little pup? Arf! Arf! The little pup does not want to come out yet.",
+      "keywords": [
+        "bone",
+        "little"
+      ],
+      "audioCN": "pup_p5_cn",
+      "audioEN": "pup_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 70620
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩说What will we do now——我们现在怎么办呢？Biscuit突然跑走了！silly puppy——傻乎乎的小狗！他去哪里了？",
+      "narrativeEN": "What will we do now? Woof! Wait, Biscuit. Where are you going? Woof, woof! Silly puppy! It's not time for you to hide.",
+      "keywords": [
+        "wait",
+        "going"
+      ],
+      "audioCN": "pup_p6_cn",
+      "audioEN": "pup_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 85400
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "噢！Biscuit跑过去和小狗崽说话了！Arf Arf！小狗崽终于出来啦！原来Biscuit用自己的方式说服了他！",
+      "narrativeEN": "Arf! Arf! Arf! Arf! Woof, woof! Oh, Biscuit! Here comes the little pup!",
+      "keywords": [
+        "comes",
+        "little"
+      ],
+      "audioCN": "pup_p7_cn",
+      "audioEN": "pup_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 93780
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "两只小狗在一起，你追我我追你！Woof woof！Arf arf！他们玩得好开心呀！",
+      "narrativeEN": "Woof, woof! Arf! Arf!k",
+      "keywords": [],
+      "audioCN": "pup_p8_cn",
+      "audioEN": "pup_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈，两只funny puppies——两只搞笑的小狗！他们都想play——都想玩！",
+      "narrativeEN": "Funny puppies! G You both want to play.",
+      "keywords": [
+        "funny",
+        "puppies"
+      ],
+      "audioCN": "pup_p9_cn",
+      "audioEN": "pup_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 115960
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你猜他们要玩什么？Hide and seek——捉迷藏！你玩过捉迷藏吗？Biscuit和小狗崽藏好了吗？",
+      "narrativeEN": "You want to play hide-and-seek! Woof, woof!",
+      "keywords": [
+        "play",
+        "hide"
+      ],
+      "audioCN": "pup_p10_cn",
+      "audioEN": "pup_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 121860
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "找到啦！Ready or not——准备好了没有！We found both of you——我们两个都找到啦！两只小狗真可爱！",
+      "narrativeEN": "Ready or not, sweet puppies, we found both of you!",
+      "keywords": [
+        "ready",
+        "sweet"
+      ],
+      "audioCN": "pup_p11_cn",
+      "audioEN": "pup_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 128200
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Arf arf！Woof！小狗崽和Biscuit成了最好的朋友！他们一起开心地叫着，多可爱呀！",
+      "narrativeEN": "Arf! Arf! Woof!",
+      "keywords": [],
+      "audioCN": "pup_p12_cn",
+      "audioEN": "pup_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit交到了一个新朋友，小狗崽！你还记得pup和hide and seek是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "pup_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "hid",
+      "phonemes": [
+        "h",
+        "i",
+        "d"
+      ],
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_03.webp"
+    },
+    {
+      "word": "pup",
+      "phonemes": [
+        "p",
+        "u",
+        "p"
+      ],
+      "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_04.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/11Biscuit_and_the_Little_Pup/spread_03.webp",
+    "sentences": [
+      {
+        "text": "You found your ball, Biscuit.",
+        "audio": "audio/pup_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "You found a little pup, too.",
+        "audio": "audio/pup_rec_2.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

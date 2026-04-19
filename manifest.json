@@ -1,0 +1,35 @@
+{
+    "name": "BridgeRead",
+    "short_name": "BridgeRead",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#FFF8F0",
+    "theme_color": "#FF8C42",
+    "description": "儿童英语绘本阅读 - Children's English Reading",
+    "orientation": "landscape",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

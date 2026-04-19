@@ -1,0 +1,298 @@
+{
+  "id": "farm_book06_day1",
+  "bookTitle": "Biscuit's Day at the Farm",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "We're going to help on the farm today!",
+  "originalAudio": "books/06Biscuits_Day_at_the_Farm/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit's Day at the Farm的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "farm_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "呀，Biscuit，快点跟上！我们今天要去农场帮忙哦！这个farm就是农场，里面有很多可爱的小动物。help就是帮忙，小朋友你喜欢帮忙吗？我们一起看看Biscuit会帮什么忙吧！是不是很期待呀？",
+      "narrativeEN": "Come along, Biscuit. We're going to help on the farm today.",
+      "keywords": [
+        "farm",
+        "help"
+      ],
+      "audioCN": "farm_p1_cn",
+      "audioEN": "farm_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 25680
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Woof, woof！Biscuit好兴奋呀！他好像在说：我们来喂这些小母鸡hens吃东西吧！feed就是喂食，hens就是母鸡。你看，这些小母鸡都围过来了，是不是很可爱呀？",
+      "narrativeEN": "Woof, woof! We can feed the hens, Biscuit. U",
+      "keywords": [
+        "feed",
+        "hens"
+      ],
+      "audioCN": "farm_p2_cn",
+      "audioEN": "farm_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 33280
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Woof, woof！我们还可以喂小猪pigs吃东西呢！可是，你看，这个pigpen就是猪圈，它怎么empty了？empty就是空空的。小猪们都去哪里啦？你猜猜看它们藏在哪里了呢？是不是很奇怪呀？",
+      "narrativeEN": "Woof, woof! We can feed the pigs, too. The pigpen is empty, Biscuit. Where can the pigs be?",
+      "keywords": [
+        "pigs",
+        "empty",
+        "pigpen"
+      ],
+      "audioCN": "farm_p3_cn",
+      "audioEN": "farm_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 39200
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Woof, woof！哈哈，你真是个funny puppy！funny就是有趣好笑的。你找到了大猪pig，还找到了好多好多小piglets呢！piglets就是小猪宝宝。Biscuit真棒，一下就找到了！",
+      "narrativeEN": "Woof, woof! Funny puppy. You found the pig and the piglets, too. Woof!",
+      "keywords": [
+        "funny",
+        "piglets"
+      ],
+      "audioCN": "farm_p4_cn",
+      "audioEN": "farm_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 51700
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "呀，我们去喂小羊goats吃草吧！Woof, woof！哎呀，你听到了什么声音？Oink！糟糕！Biscuit，你快看！这只小piglet就是小猪宝宝，它out of the pen啦！out of the pen就是跑出猪圈了！怎么办呀？",
+      "narrativeEN": "Let's feed the goats, Biscuit. Woof, woof! Oink! Oh. Biscuit. The piglet is out of the pen.",
+      "keywords": [
+        "goats",
+        "out of the pen"
+      ],
+      "audioCN": "farm_p5_cn",
+      "audioEN": "farm_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 66140
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "我们得赶紧把小猪宝宝put back！put back就是放回去。Woof, woof！好了，我们接着去喂小绵羊sheep吃东西吧！sheep就是绵羊，它们毛茸茸的，是不是很可爱呀？",
+      "narrativeEN": "We must put the piglet back. Woof, woof! Let's feed the sheep, Biscuit. Woof, woof!",
+      "keywords": [
+        "put back",
+        "sheep"
+      ],
+      "audioCN": "farm_p6_cn",
+      "audioEN": "farm_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 72700
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Oink！Oh no, Biscuit！你快看，又是那只小猪宝宝！它又跑出来了！我们又要把它put back one more time！one more time就是再来一次！这只小猪宝宝是不是太调皮啦？",
+      "narrativeEN": "Oink! Oh no, Biscuit. It's the piglet! We must put the piglet back one more time. Woof, woof!",
+      "keywords": [
+        "one more time"
+      ],
+      "audioCN": "farm_p7_cn",
+      "audioEN": "farm_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 85480
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "我们来看看这些大白鹅geese吧！geese就是鹅。Woof, woof！哎呀，你听！Oink！又来了！这只小猪宝宝又跑出来了！它怎么总是跑出来呀？是不是很惊讶？",
+      "narrativeEN": "Here are the geese, Biscuit. Woof, woof! Oink! Here is the piglet again.",
+      "keywords": [
+        "geese",
+        "again"
+      ],
+      "audioCN": "farm_p8_cn",
+      "audioEN": "farm_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 97200
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Woof, woof！Oink, oink！Honk！哇，好多声音呀！Biscuit在叫，小猪在叫，连大白鹅geese也发出Honk的声音了！Honk就是鹅叫声，它们是不是都在跟小猪宝宝打招呼呀？",
+      "narrativeEN": "Woof, woof! Oink! Oink! Honk!",
+      "keywords": [
+        "Honk"
+      ],
+      "audioCN": "farm_p9_cn",
+      "audioEN": "farm_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "等等，Biscuit！别害怕，大白鹅们只是在说hello！hello就是你好！它们没有要欺负小猪宝宝，只是想跟它玩呢！是不是一场有趣的误会呀？",
+      "narrativeEN": "Wait, Biscuit! The geese are just saying hello. Woof!",
+      "keywords": [
+        "hello"
+      ],
+      "audioCN": "farm_p10_cn",
+      "audioEN": "farm_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 112900
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈，Silly puppy！这个silly就是傻傻的，淘气的！你看看，小猪宝宝终于back in the pen啦！back in the pen就是回到猪圈里了。不过，Biscuit你怎么也跑到猪圈里去啦？是不是太好玩了，哈哈！",
+      "narrativeEN": "Silly puppy! The piglet is back in the pen. And so are you, Biscuit!",
+      "keywords": [
+        "silly",
+        "back in the pen"
+      ],
+      "audioCN": "farm_p11_cn",
+      "audioEN": "farm_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 120340
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Oink！Woof, woof！小猪宝宝在猪圈里高兴地叫着，Biscuit也开心地叫着！它们是不是都在说：今天在农场帮忙，真是太开心啦！你觉得呢？",
+      "narrativeEN": "Oink! Woof, woof!",
+      "keywords": [
+        "Oink",
+        "Woof"
+      ],
+      "audioCN": "farm_p12_cn",
+      "audioEN": "farm_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 129400
+    },
+    {
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit's Day at the Farm真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "farm_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "feed",
+      "phonemes": [
+        "f",
+        "ee",
+        "d"
+      ],
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_03.webp"
+    },
+    {
+      "word": "pig",
+      "phonemes": [
+        "p",
+        "i",
+        "g"
+      ],
+      "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_04.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/06Biscuits_Day_at_the_Farm/spread_04.webp",
+    "sentences": [
+      {
+        "text": "We can feed the pigs, too.",
+        "audio": "audio/farm_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "The pigpen is empty, Biscuit.",
+        "audio": "audio/farm_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/bridgeread/">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="BridgeRead - 儿童英语绘本阅读">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="BridgeRead">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>BridgeRead</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="main.dart.js" as="script">
+  <link rel="preload" href="flutter.js" as="script">
+
+  <!-- Loading screen style -->
+  <style>
+    body { margin: 0; background: linear-gradient(135deg, #FFE8D6, #FFCBA4, #FFAD7A); }
+    #loading {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #FFE8D6, #FFCBA4, #FFAD7A);
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+    }
+    /* Decorative circles */
+    #loading::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+    }
+    #loading::after {
+      content: ''; position: absolute; bottom: 60px; left: -30px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: rgba(255,255,255,0.13);
+    }
+    /* Speech bubble */
+    .bubble {
+      background: white; border-radius: 24px;
+      padding: 16px 24px; text-align: center;
+      box-shadow: 0 4px 12px rgba(255,140,66,0.25);
+      position: relative; margin-bottom: 8px;
+      animation: bubbleBounce 2s ease-in-out infinite;
+    }
+    .bubble::after {
+      content: ''; position: absolute; bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid white;
+    }
+    .bubble-text { color: #FF6B35; font-weight: 800; font-size: 20px; line-height: 1.5; }
+    .bubble-text .countdown { font-size: 28px; font-weight: 900; }
+    @keyframes bubbleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    /* Eggy image */
+    .eggy-img {
+      width: 420px; height: 420px; object-fit: contain;
+      animation: eggyBreath 3s ease-in-out infinite;
+    }
+    @keyframes eggyBreath {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+    /* Title */
+    .loading-title {
+      font-size: 36px; font-weight: 900; color: #B84A00;
+      letter-spacing: 1.5px; margin-top: 12px;
+    }
+    .loading-subtitle {
+      font-size: 16px; color: #CC6622; font-weight: 600; margin-top: 4px; text-align: center;
+    }
+    /* PWA tip */
+    .pwa-tip {
+      color: #999; font-size: 13px; margin-top: 32px; text-align: center;
+      line-height: 1.6; display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading screen: Eggy + countdown bubble -->
+  <div id="loading">
+    <div class="bubble">
+      <div class="bubble-text">
+        给我<span class="countdown" id="countdown">30</span>秒钟<br>让我醒过来哦~
+      </div>
+    </div>
+    <img class="eggy-img" src="assets/assets/pet/eggy_transparent_bg.webp"
+         onerror="this.style.display='none'"
+         alt="Eggy">
+    <div class="loading-subtitle" id="pwaTip" style="display:none">
+      点击右上角 "添加到主屏幕"<br>下次直接从桌面打开哦
+    </div>
+  </div>
+  <script>
+    // ── Loading diagnostics ──────────────────────────────────────────────────
+    var _loadLog = [];
+    var _loadStart = Date.now();
+    function _log(msg) {
+      var t = ((Date.now() - _loadStart) / 1000).toFixed(1);
+      _loadLog.push('[' + t + 's] ' + msg);
+      console.log('[Load ' + t + 's] ' + msg);
+    }
+    _log('HTML parsed');
+    _log('UA: ' + navigator.userAgent);
+    _log('Screen: ' + screen.width + 'x' + screen.height);
+    _log('Window: ' + window.innerWidth + 'x' + window.innerHeight);
+
+    // Check key features
+    _log('WASM: ' + (typeof WebAssembly !== 'undefined'));
+    _log('SW: ' + ('serviceWorker' in navigator));
+    _log('ES modules: ' + (typeof Symbol !== 'undefined'));
+
+    // Countdown from 30 to 0, then show retry hint
+    var count = 30;
+    var countdownEl = document.getElementById('countdown');
+    var bubbleText = document.querySelector('.bubble-text');
+    var countdownTimer = setInterval(function() {
+      count--;
+      if (count > 0) {
+        countdownEl.textContent = count;
+      } else {
+        clearInterval(countdownTimer);
+        _log('Countdown finished, Flutter not loaded');
+        bubbleText.innerHTML = '快好了，再等一下~<br><span style="font-size:14px;font-weight:600;color:#999">如果一直打不开，请刷新页面试试</span>';
+      }
+    }, 1000);
+
+    // Fallback: if Flutter still not loaded after 45s, show report button
+    setTimeout(function() {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        _log('45s timeout — showing report button');
+        bubbleText.innerHTML = '加载太慢了...<br>'
+          + '<button onclick="location.reload()" style="margin-top:12px;padding:10px 28px;font-size:16px;font-weight:700;color:white;background:#FF8C42;border:none;border-radius:20px;cursor:pointer">点击刷新</button>'
+          + '<br><button onclick="_submitReport()" style="margin-top:8px;padding:8px 20px;font-size:13px;font-weight:600;color:#999;background:white;border:1px solid #ddd;border-radius:16px;cursor:pointer">📋 提交问题报告</button>';
+      }
+    }, 45000);
+
+    // Submit loading report to server
+    function _submitReport() {
+      _log('User submitted report');
+      var data = {
+        logs: _loadLog,
+        url: location.href,
+        ua: navigator.userAgent,
+        screen: screen.width + 'x' + screen.height,
+        time: new Date().toISOString()
+      };
+      fetch('/api/report', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      }).then(function() {
+        bubbleText.innerHTML = '✅ 报告已提交，谢谢！<br><span style="font-size:14px;color:#999">我们会尽快处理</span>';
+      }).catch(function() {
+        // Fallback: copy to clipboard
+        var text = _loadLog.join('\n');
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text);
+          bubbleText.innerHTML = '📋 诊断信息已复制<br><span style="font-size:14px;color:#999">请发给老师</span>';
+        } else {
+          alert('诊断信息:\n' + text);
+        }
+      });
+    }
+
+    // Only show PWA tip in browser mode (not installed PWA)
+    if (!window.matchMedia('(display-mode: standalone)').matches &&
+        !window.navigator.standalone) {
+      var tip = document.getElementById('pwaTip');
+      if (tip) tip.style.display = 'block';
+    }
+  </script>
+
+  <script>
+    // Auto-update: check version.json on every visit
+    // If server version differs from local, reload to get new code
+    // Audio/image assets stay cached (they never change)
+    (function() {
+      // Check version via Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', function(e) {
+          if (e.data && e.data.type === 'VERSION') {
+            var serverVer = e.data.version;
+            var localVer = localStorage.getItem('app_version');
+            if (localVer && localVer !== serverVer) {
+              // Prevent infinite reload: only reload once per minute
+              var lastReload = parseInt(localStorage.getItem('last_reload') || '0');
+              if (Date.now() - lastReload < 60000) {
+                console.warn('[Update] Skipping reload (too recent)');
+                localStorage.setItem('app_version', serverVer);
+                return;
+              }
+              console.log('[Update] New version:', serverVer, '(was:', localVer, ')');
+              localStorage.setItem('app_version', serverVer);
+              localStorage.setItem('last_reload', String(Date.now()));
+              // Clear ALL service workers and code caches before reload
+              // (keep asset cache — audio/images don't change)
+              Promise.all([
+                navigator.serviceWorker.getRegistrations().then(function(regs) {
+                  return Promise.all(regs.map(function(r) { return r.unregister(); }));
+                }),
+                caches.keys().then(function(names) {
+                  // Only delete non-asset caches
+                  return Promise.all(names.filter(function(n) {
+                    return n.indexOf('assets') === -1;
+                  }).map(function(n) { return caches.delete(n); }));
+                })
+              ]).then(function() {
+                window.location.reload();
+              }).catch(function() {
+                window.location.reload();
+              });
+              return;
+            }
+            localStorage.setItem('app_version', serverVer);
+          }
+        });
+        // Ask SW to check version after a short delay (let page render first)
+        setTimeout(function() {
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage('CHECK_VERSION');
+          }
+        }, 3000);
+      }
+
+      // Direct version check (works even if SW is stale/broken)
+      // This runs for ALL browsers, not just those without SW
+      fetch('/version.json?t=' + Date.now()).then(function(r) { return r.json(); })
+        .then(function(data) {
+          var localVer = localStorage.getItem('app_version');
+          if (localVer && localVer !== data.version) {
+            var lastReload = parseInt(localStorage.getItem('last_reload') || '0');
+            if (Date.now() - lastReload < 60000) {
+              localStorage.setItem('app_version', data.version);
+              return;
+            }
+            localStorage.setItem('app_version', data.version);
+            localStorage.setItem('last_reload', String(Date.now()));
+            // Unregister all SWs + clear code caches
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function(regs) {
+                regs.forEach(function(r) { r.unregister(); });
+              });
+            }
+            if ('caches' in window) {
+              caches.keys().then(function(names) {
+                names.filter(function(n) { return n.indexOf('assets') === -1; })
+                     .forEach(function(n) { caches.delete(n); });
+              });
+            }
+            setTimeout(function() { window.location.reload(); }, 500);
+          } else {
+            localStorage.setItem('app_version', data.version);
+          }
+        }).catch(function() {});
+    })();
+  </script>
+  <script>
+    // Remove loading screen once Flutter renders first frame
+    window.addEventListener('flutter-first-frame', function() {
+      _log('Flutter first frame!');
+      var el = document.getElementById('loading');
+      if (el) el.remove();
+    });
+
+    // Track JS/WASM loading progress
+    window.addEventListener('error', function(e) {
+      _log('ERROR: ' + (e.message || e.filename || 'unknown'));
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      _log('REJECT: ' + (e.reason || 'unknown'));
+    });
+
+    // Register custom cache service worker for audio/image caching
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('cache-sw.js').then(function(reg) {
+        console.log('[SW] registered:', reg.scope);
+      }).catch(function(err) {
+        console.warn('[SW] registration failed:', err);
+      });
+    }
+  </script>
+  <script>
+    // Fix font loading for China: gstatic.com is blocked
+    // Strategy: Roboto → local files; NotoSansSC → China CDN mirror → graceful fail
+    (function() {
+      var _origFetch = window.fetch;
+      // Map of known Roboto files to local paths
+      var _robotoLocal = {};
+      // Match any Roboto woff2 request and serve locally
+      window.fetch = function(url, opts) {
+        if (typeof url === 'string' && url.includes('fonts.gstatic.com')) {
+          // Roboto: serve from local /fonts/ directory
+          if (url.includes('/roboto/')) {
+            if (url.includes('KFOmCnqEu92Fr1Me4GZLCzYlKw')) {
+              url = 'fonts/Roboto-Regular.woff2';
+            } else if (url.includes('KFOlCnqEu92Fr1MmEU9f')) {
+              url = 'fonts/Roboto-Medium.woff2';
+            } else if (url.includes('KFOlCnqEu92Fr1MmWUlf')) {
+              url = 'fonts/Roboto-Bold.woff2';
+            } else {
+              // Other Roboto variants: try local Regular as fallback
+              url = 'fonts/Roboto-Regular.woff2';
+            }
+          }
+          // NotoSansSC (Chinese): try China-accessible mirror
+          else if (url.includes('notosanssc') || url.includes('notosans')) {
+            url = url.replace('fonts.gstatic.com', 'gstatic.loli.net');
+          }
+          // Other Google fonts: try mirror
+          else {
+            url = url.replace('fonts.gstatic.com', 'gstatic.loli.net');
+          }
+        }
+        // Also intercept Google Fonts API CSS (fonts.googleapis.com)
+        if (typeof url === 'string' && url.includes('fonts.googleapis.com')) {
+          url = url.replace('fonts.googleapis.com', 'fonts.googleapis.cn');
+        }
+        return _origFetch.call(this, url, opts);
+      };
+    })();
+  </script>
+  <script>
+    // Debug: time travel for testing
+    // Usage in browser console:
+    //   timeTravel(1)   → jump to tomorrow
+    //   timeTravel(3)   → jump to 3 days later
+    //   timeTravel(-1)  → go back 1 day
+    //   timeTravel(0)   → reset to real time
+    // Debug: inspect module status data
+    window.debugData = function() {
+      var keys = ['flutter.debt_module_status', 'flutter._current_study_date',
+        'flutter.active_dates', 'flutter.last_completed_date', 'flutter.today_reader_done',
+        'flutter.today_phonics_done', 'flutter.today_quiz_done', 'flutter.today_recording_done',
+        'flutter.today_listen_done', 'flutter.today_recap_done', 'flutter.book_start_date',
+        'debug_day_offset'];
+      keys.forEach(function(k) {
+        var v = localStorage.getItem(k);
+        if (v) console.log(k + ' = ' + v);
+      });
+    };
+
+    window.timeTravel = function(days) {
+      localStorage.setItem('debug_day_offset', String(days || 0));
+      localStorage.setItem('flutter.debug_day_offset', String(days || 0));
+      localStorage.removeItem('flutter.today_reader_done');
+      localStorage.removeItem('flutter.today_phonics_done');
+      localStorage.removeItem('flutter.today_quiz_done');
+      localStorage.removeItem('flutter.today_recording_done');
+      localStorage.removeItem('flutter.today_listen_done');
+      localStorage.removeItem('flutter.today_recap_done');
+      localStorage.removeItem('flutter.last_completed_date');
+      console.log('[TimeTravel] Set to ' + (days > 0 ? '+' : '') + days + ' days. Reloading...');
+      location.reload();
+    };
+  </script>
+  <script src="audio-player.js"></script>
+  <script src="web-audio-engine.js"></script>
+  <script src="flutter_bootstrap.js" async></script>
+  <!-- ICP 备案号（法律要求） -->
+  <div id="beian" style="position:fixed;bottom:0;left:0;right:0;text-align:center;padding:4px;background:rgba(0,0,0,0.03);font-size:11px;z-index:1;pointer-events:auto;">
+    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener" style="color:#999;text-decoration:none;">闽ICP备2026011901号</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,399 @@
+{
+  "id": "biscuit_baby_book2_day1",
+  "bookTitle": "Biscuit and the Baby",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.png",
+  "featuredSentence": "Biscuit wants to meet the baby!",
+  "originalAudio": "audio/biscuit_baby_original.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/cover.webp",
+      "narrativeCN": "Hello Hello！我们又见面啦！今天Amy要给你们讲一个新故事——Biscuit and the Baby！Biscuit要认识一个小宝宝啦，你猜猜会发生什么呢？Let's find out！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "biscuit_baby_intro",
+      "audioEN": null,
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "highlights": []
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_01.webp",
+      "teacherExpression": "excited",
+      "narrativeCN": "哎呀，Biscuit看到了什么呀？Woof woof！他好兴奋！see就是看到的意思。你看他的小尾巴是不是都摇起来了？他到底看到了什么呢，我们翻过去看看！",
+      "narrativeEN": "Woof, woof! What does Biscuit see?",
+      "keywords": [
+        "see"
+      ],
+      "audioCN": "biscuit_baby_p1_cn",
+      "audioEN": "biscuit_baby_p1_en",
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "highlights": [
+        {
+          "word": "see",
+          "x": 0.8621,
+          "y": 0.8509,
+          "width": 0.0425,
+          "height": 0.0312,
+          "color": "#FFD93D",
+          "positionMs": 2984
+        }
+      ],
+      "pageStartMs": 26120
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "原来Biscuit看到了一个baby！baby就是小宝宝！你们家里有没有小宝宝呀？Biscuit看到小宝宝好开心呢！",
+      "narrativeEN": "Woof, woof! Biscuit sees the baby.",
+      "keywords": [
+        "baby"
+      ],
+      "audioCN": "biscuit_baby_p2_cn",
+      "audioEN": "biscuit_baby_p2_en",
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "happy"
+      },
+      "highlights": [
+        {
+          "word": "baby",
+          "x": 0.3146,
+          "y": 0.5722,
+          "width": 0.0663,
+          "height": 0.0377,
+          "color": "#FFD93D",
+          "positionMs": 3855
+        }
+      ],
+      "pageStartMs": 33580
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_03.webp",
+      "teacherExpression": "excited",
+      "narrativeCN": "Biscuit好想去认识小宝宝呀！meet就是见面、认识的意思。但是呢，嘘——小声点！小宝宝正在sleeping，sleeping就是睡觉！小宝宝在睡觉呢，我们要安静哦！",
+      "narrativeEN": "Biscuit wants to meet the baby! Woof, woof! Sshhh! Quiet, Biscuit. The baby is sleeping.",
+      "keywords": [
+        "meet",
+        "sleeping"
+      ],
+      "audioCN": "biscuit_baby_p3_cn",
+      "audioEN": "biscuit_baby_p3_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "highlights": [
+        {
+          "word": "meet",
+          "x": 0.1604,
+          "y": 0.2222,
+          "width": 0.0663,
+          "height": 0.0377,
+          "color": "#FFD93D",
+          "positionMs": 1834
+        },
+        {
+          "word": "sleeping",
+          "x": 0.7762,
+          "y": 0.2929,
+          "width": 0.1142,
+          "height": 0.0401,
+          "color": "#FFD93D",
+          "positionMs": 9172
+        }
+      ],
+      "pageStartMs": 69660
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_04.webp",
+      "teacherExpression": "wow",
+      "narrativeCN": "现在还不能去见小宝宝哦！但是Biscuit看到了什么？他看到了baby的rattle！rattle就是小摇铃，就是那种摇一摇会响的小玩具！你小时候是不是也有一个小摇铃呀？",
+      "narrativeEN": "It's not time to meet the baby yet. Woof, woof! Biscuit sees the baby's rattle.",
+      "keywords": [
+        "rattle"
+      ],
+      "audioCN": "biscuit_baby_p4_cn",
+      "audioEN": "biscuit_baby_p4_en",
+      "characterPos": {
+        "x": 0.7,
+        "y": 0.7,
+        "action": "wow"
+      },
+      "highlights": [
+        {
+          "word": "rattle",
+          "x": 0.8892,
+          "y": 0.848,
+          "width": 0.0704,
+          "height": 0.0397,
+          "color": "#FFD93D",
+          "positionMs": 8731
+        }
+      ],
+      "pageStartMs": 80710
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit又看到了小宝宝的bunny！bunny就是小兔子，一个毛茸茸的小兔子玩偶！Biscuit好想去认识小宝宝呀，他一直在说Woof woof！",
+      "narrativeEN": "Woof, woof! Biscuit sees the baby's bunny. Woof, woof! Biscuit wants to meet the baby!",
+      "keywords": [
+        "bunny"
+      ],
+      "audioCN": "biscuit_baby_p5_cn",
+      "audioEN": "biscuit_baby_p5_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "happy"
+      },
+      "highlights": [
+        {
+          "word": "bunny",
+          "x": 0.3646,
+          "y": 0.848,
+          "width": 0.0854,
+          "height": 0.0389,
+          "color": "#FFD93D",
+          "positionMs": 4714
+        }
+      ],
+      "pageStartMs": 62000
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_06.webp",
+      "teacherExpression": "gentle",
+      "narrativeCN": "嘘！quiet！quiet就是安静的意思。小宝宝还在睡觉呢！哎呀，Biscuit你在干什么？你拿了小宝宝的blanket！blanket就是小毯子！silly puppy，你真是个小傻瓜！那不是你的毯子呀！",
+      "narrativeEN": "Sshhh! Quiet, Biscuit. The baby is still sleeping. It's not time to meet the baby yet. Woof, woof! Silly puppy! That's not your blanket.",
+      "keywords": [
+        "quiet",
+        "blanket"
+      ],
+      "audioCN": "biscuit_baby_p6_cn",
+      "audioEN": "biscuit_baby_p6_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "gentle"
+      },
+      "highlights": [
+        {
+          "word": "quiet",
+          "x": 0.1833,
+          "y": 0.1479,
+          "width": 0.075,
+          "height": 0.0365,
+          "color": "#FFD93D",
+          "positionMs": 1881
+        },
+        {
+          "word": "blanket",
+          "x": 0.8137,
+          "y": 0.8491,
+          "width": 0.1008,
+          "height": 0.0377,
+          "color": "#FFD93D",
+          "positionMs": 16533
+        }
+      ],
+      "pageStartMs": 72000
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈，Biscuit又拿了什么？他拿了小宝宝的booties！booties就是小婴儿穿的那种小鞋子小袜子。funny puppy，funny就是搞笑的意思。Biscuit你真是太搞笑啦，你那么想见小宝宝，但是现在还不行哦！",
+      "narrativeEN": "Oh no, Biscuit. Those booties are for the baby. Woof, woof! Funny puppy! You want to meet the baby. But it's not time to meet the baby yet.",
+      "keywords": [
+        "booties",
+        "funny"
+      ],
+      "audioCN": "biscuit_baby_p7_cn",
+      "audioEN": "biscuit_baby_p7_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "happy"
+      },
+      "highlights": [
+        {
+          "word": "booties",
+          "x": 0.2292,
+          "y": 0.2174,
+          "width": 0.0963,
+          "height": 0.0312,
+          "color": "#FFD93D",
+          "positionMs": 2055
+        },
+        {
+          "word": "funny",
+          "x": 0.5733,
+          "y": 0.6388,
+          "width": 0.0867,
+          "height": 0.0389,
+          "color": "#FFD93D",
+          "positionMs": 6269
+        }
+      ],
+      "pageStartMs": 93400
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_08.webp",
+      "teacherExpression": "surprised",
+      "narrativeCN": "Woof！Biscuit叫了一大声！哎呀，发生什么事了？",
+      "narrativeEN": "Woof!",
+      "keywords": [],
+      "audioCN": "biscuit_baby_p8_cn",
+      "audioEN": "biscuit_baby_p8_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "surprised"
+      },
+      "highlights": [],
+      "pageStartMs": 97000
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_09.webp",
+      "teacherExpression": "wow",
+      "narrativeCN": "哎呀不好了！小宝宝被吵醒了！Waa Waa Waa！小宝宝在哭呢！Biscuit也在一直叫Woof Woof Woof！你说他们两个谁的声音更大呀？哈哈！",
+      "narrativeEN": "Waa! Waa! Waa! Waa! Woof! Woof! Woof! Woof!",
+      "keywords": [],
+      "audioCN": "biscuit_baby_p9_cn",
+      "audioEN": "biscuit_baby_p9_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "highlights": [],
+      "pageStartMs": 100000
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_10.webp",
+      "teacherExpression": "excited",
+      "narrativeCN": "Biscuit吓了一跳想跑掉！come back就是回来的意思！小女孩说，回来呀Biscuit，这只是小宝宝呀，不用害怕！",
+      "narrativeEN": "Biscuit, come back. It's only the baby! Woof, woof!",
+      "keywords": [
+        "come back"
+      ],
+      "audioCN": "biscuit_baby_p10_cn",
+      "audioEN": "biscuit_baby_p10_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "highlights": [
+        {
+          "word": "come back",
+          "x": 0.2367,
+          "y": 0.7843,
+          "width": 0.1475,
+          "height": 0.0342,
+          "color": "#FFD93D",
+          "positionMs": 0
+        }
+      ],
+      "pageStartMs": 123000
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_11.webp",
+      "teacherExpression": "praise",
+      "narrativeCN": "终于到时间啦！sweet puppy，sweet就是甜甜的可爱的。现在可以认识小宝宝了！最棒的是，小宝宝也认识了一个new friend，一个新朋友！你说这个新朋友是谁呀？对了，就是Biscuit！",
+      "narrativeEN": "Here, sweet puppy. Now it's time to meet the baby. Woof, woof! Best of all, it's time for the baby to meet a new friend!",
+      "keywords": [
+        "sweet",
+        "friend"
+      ],
+      "audioCN": "biscuit_baby_p11_cn",
+      "audioEN": "biscuit_baby_p11_en",
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "praise"
+      },
+      "highlights": [
+        {
+          "word": "sweet",
+          "x": 0.2238,
+          "y": 0.647,
+          "width": 0.0788,
+          "height": 0.0383,
+          "color": "#FFD93D",
+          "positionMs": 627
+        },
+        {
+          "word": "friend",
+          "x": 0.7129,
+          "y": 0.8521,
+          "width": 0.0821,
+          "height": 0.0354,
+          "color": "#FFD93D",
+          "positionMs": 11958
+        }
+      ],
+      "pageStartMs": 131400
+    },
+    {
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_12.webp",
+      "teacherExpression": "praise",
+      "narrativeCN": "今天Biscuit认识了一个新朋友——小宝宝！你还记得Biscuit看到了小宝宝的哪些东西吗？有rattle小摇铃，有bunny小兔子，还有blanket小毯子和booties小鞋子！下次我们再来听Biscuit的新故事吧！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "biscuit_baby_done",
+      "audioEN": null,
+      "characterPos": {
+        "x": 0.5,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "highlights": []
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "nap",
+      "phonemes": [
+        "n",
+        "a",
+        "p"
+      ],
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_03.webp"
+    },
+    {
+      "word": "pet",
+      "phonemes": [
+        "p",
+        "e",
+        "t"
+      ],
+      "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_11.webp"
+    }
+  ],
+  "originalAudioDurationMs": 184300,
+  "recordingPage": {
+    "imageAsset": "assets/books/02Biscuit_and_the_Baby/spread_03.webp",
+    "sentences": [
+      {
+        "text": "Biscuit wants to meet the baby!",
+        "audio": "audio/baby_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Quiet, Biscuit. The baby is sleeping.",
+        "audio": "audio/baby_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

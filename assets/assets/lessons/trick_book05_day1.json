@@ -1,0 +1,278 @@
+{
+  "id": "trick_book05_day1",
+  "bookTitle": "Biscuit's New Trick",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "You learned a new trick!",
+  "originalAudio": "books/05Biscuits_New_Trick/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit's New Trick的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "trick_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_01.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "你看！小女孩拿了一个东西要给Biscuit看！Look就是看。她说Here Biscuit！快过来看看我有什么！Biscuit好兴奋呀！",
+      "narrativeEN": "Here, Biscuit! Look what I have. Woof, woof!",
+      "keywords": [
+        "look"
+      ],
+      "audioCN": "trick_p1_cn",
+      "audioEN": "trick_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 19520
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "今天要学一个新本领啦！trick就是小把戏、小本领。要学什么呢？fetch the ball——就是把球捡回来！你家的小狗会捡球吗？",
+      "narrativeEN": "It's time to learn a new trick, Biscuit. Woof, woof! It's time to learn to fetch the ball. Ready?",
+      "keywords": [
+        "learn",
+        "trick"
+      ],
+      "audioCN": "trick_p2_cn",
+      "audioEN": "trick_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 25720
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩把球扔出去了——Fetch the ball！去捡球呀！可是Biscuit怎么了？他不去捡球，他在地上roll over——打滚呢！哈哈，silly puppy！",
+      "narrativeEN": "Fetch the ball, Biscuit. Woof, woof! Silly puppy! Don't roll over now. Get the ball, Biscuit.",
+      "keywords": [
+        "fetch",
+        "ball"
+      ],
+      "audioCN": "trick_p3_cn",
+      "audioEN": "trick_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 37240
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩又说了一次，Fetch the ball！可是Biscuit又跑到别的地方去了！他跑到哪里去啦？",
+      "narrativeEN": "Fetch the ball, Biscuit. Woof, woof! Where are you going, Biscuit? Woof!",
+      "keywords": [
+        "fetch",
+        "ball"
+      ],
+      "audioCN": "trick_p4_cn",
+      "audioEN": "trick_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 49900
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈，funny puppy！Biscuit没去捡球，他把自己的bone——骨头叼回来了！不是球是骨头呀！小女孩说我们再试一次吧！",
+      "narrativeEN": "Funny puppy! Fetch the ball, not your bone. Let's try again. Fetch the ball, Biscuit! Woof, woof!",
+      "keywords": [
+        "funny",
+        "puppy"
+      ],
+      "audioCN": "trick_p5_cn",
+      "audioEN": "trick_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 65800
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "这次Biscuit终于捡到球啦！Good puppy！好狗狗！You got the ball——你拿到球了！Biscuit真棒！",
+      "narrativeEN": "Good puppy! You got the ball. Woof!",
+      "keywords": [
+        "good",
+        "puppy"
+      ],
+      "audioCN": "trick_p6_cn",
+      "audioEN": "trick_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 72780
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "等等！Biscuit你别跑呀！Bring the ball back——把球带回来呀！Wait就是等一等。Biscuit怎么叼着球不还呢，哈哈！",
+      "narrativeEN": "Wait, Biscuit. Bring the ball back! Woof, woof!",
+      "keywords": [
+        "wait",
+        "bring"
+      ],
+      "audioCN": "trick_p7_cn",
+      "audioEN": "trick_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 78540
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩说我们再试最后一次！one more time——再来一次。可是Biscuit把球扔到哪里去了？哎呀，不会是掉到水里了吧！",
+      "narrativeEN": "Let's try one more time. Fetch the ball, Biscuit! Woof, woof! Oh no! Not in the mud!",
+      "keywords": [
+        "fetch",
+        "ball"
+      ],
+      "audioCN": "trick_p8_cn",
+      "audioEN": "trick_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 86020
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "糟糕！Stop Biscuit！Stop就是停下来！Don't fetch it now——现在别去捡了！可是Biscuit已经跳进去了！",
+      "narrativeEN": "Stop, Biscuit! Don't fetch it now! Woof!",
+      "keywords": [
+        "stop",
+        "fetch"
+      ],
+      "audioCN": "trick_p9_cn",
+      "audioEN": "trick_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 98900
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈！Oh Biscuit！你看他湿淋淋的样子，是不是很搞笑呀？",
+      "narrativeEN": "Oh, Biscuit!",
+      "keywords": [],
+      "audioCN": "trick_p10_cn",
+      "audioEN": "trick_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 99400
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "耶！Biscuit终于学会了！You did it——你做到了！他learned a new trick——学会了一个新本领！虽然过程有点搞笑，但是Biscuit真的很棒！",
+      "narrativeEN": "You did it! You learned a new trick! Woof, woof!",
+      "keywords": [
+        "learned",
+        "trick"
+      ],
+      "audioCN": "trick_p11_cn",
+      "audioEN": "trick_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 106960
+    },
+    {
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_11.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit学会了fetch the ball！你还记得trick和fetch是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "trick_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "got",
+      "phonemes": [
+        "g",
+        "o",
+        "t"
+      ],
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_02.webp"
+    },
+    {
+      "word": "fetch",
+      "phonemes": [
+        "f",
+        "e",
+        "tch"
+      ],
+      "imageAsset": "assets/books/05Biscuits_New_Trick/spread_03.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/05Biscuits_New_Trick/spread_02.webp",
+    "sentences": [
+      {
+        "text": "It's time to learn a new trick, Biscuit!",
+        "audio": "audio/trick_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "It's time to learn to fetch the ball.",
+        "audio": "audio/trick_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

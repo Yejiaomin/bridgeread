@@ -1,0 +1,197 @@
+{
+  "id": "snowy_book20_day1",
+  "bookTitle": "Biscuit's Snowy Day",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "\"I'll put on my mittens and boots.",
+  "originalAudio": "books/20Biscuits_Snowy_Day/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit's Snowy Day的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "snowy_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_01.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "下雪啦！It's snowing——在下雪呢！小女孩说Come along Biscuit，我们要出去玩雪！A great snowy day——美好的雪天！",
+      "narrativeEN": "\"Come along, Biscuit. It's snowing! We're going to have a great snowy day!\" Woof, woof!",
+      "keywords": [
+        "along",
+        "snowing"
+      ],
+      "audioCN": "snowy_p1_cn",
+      "audioEN": "snowy_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 4820
+    },
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "出去玩雪要穿暖和！mittens就是手套，boots就是靴子。还给Biscuit穿了一件cozy sweater——暖和的毛衣！Let's go——走吧！",
+      "narrativeEN": "\"I'll put on my mittens and boots.\" Woof, woof! \"And here's a cozy sweater for you. Let's go, sweet puppy!\" Woof!",
+      "keywords": [
+        "mittens",
+        "boots"
+      ],
+      "audioCN": "snowy_p2_cn",
+      "audioEN": "snowy_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 12100
+    },
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "大家一起build a snowman——堆雪人！Everyone can help——每个人都来帮忙！要roll——滚一个big big snowball——大大的雪球！",
+      "narrativeEN": "\"We're all going to build a snowman, Biscuit. Everyone can help roll a big, big snowball!\" Woof, woof! \"Funny puppy! That's the way!\" Woof!",
+      "keywords": [
+        "going",
+        "build"
+      ],
+      "audioCN": "snowy_p3_cn",
+      "audioEN": "snowy_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 28500
+    },
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "雪好soft and powdery——又松又软！可以做snow angel——雪天使！还可以做snow puppy——雪狗狗！哈哈！",
+      "narrativeEN": "\"The snow is so soft and powdery. It's perfect for making snow angels.\" \"And snow puppies, too.\" Woof, woof! Bow, wow!",
+      "keywords": [
+        "snow",
+        "soft"
+      ],
+      "audioCN": "snowy_p4_cn",
+      "audioEN": "snowy_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 56280
+    },
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Look！该go sledding——滑雪橇啦！Hold on tight——抓紧了！Here we go——出发！Biscuit玩得好开心！",
+      "narrativeEN": "\"Look, Biscuit. It's time to go sledding! Hold on tight, sweet puppy.\" Woof, woof! e \"Here we go!\" Woof!",
+      "keywords": [
+        "look",
+        "sledding"
+      ],
+      "audioCN": "snowy_p5_cn",
+      "audioEN": "snowy_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 68160
+    },
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "玩了一天好累呀！回家有hot cocoa——热可可和treats——小零食！还有lots of love——满满的爱！What a great snowy day！",
+      "narrativeEN": "\"There's nothing like a great snowy day, Biscuit. There's hot cocoa and treats.\" Woof, woof! \"And lots of fun for all!\"",
+      "keywords": [
+        "nothing",
+        "like"
+      ],
+      "audioCN": "snowy_p6_cn",
+      "audioEN": "snowy_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 86020
+    },
+    {
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_06.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit的雪天真开心！你还记得snow和boots是什么意思吗？这是我们Biscuit系列的最后一本啦，你真棒！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "snowy_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "boot",
+      "phonemes": [
+        "b",
+        "oo",
+        "t"
+      ],
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_02.webp"
+    },
+    {
+      "word": "roll",
+      "phonemes": [
+        "r",
+        "o",
+        "ll"
+      ],
+      "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_03.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/20Biscuits_Snowy_Day/spread_02.webp",
+    "sentences": [
+      {
+        "text": "\"I'll put on my mittens and boots.",
+        "audio": "audio/snowy_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "\" Woof, woof.",
+        "audio": "audio/snowy_rec_2.mp3",
+        "side": "left"
+      },
+      {
+        "text": "\"And here's a cozy sweater for you.",
+        "audio": "audio/snowy_rec_3.mp3",
+        "side": "right"
+      },
+      {
+        "text": "Let's go, sweet puppy.",
+        "audio": "audio/snowy_rec_4.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}
