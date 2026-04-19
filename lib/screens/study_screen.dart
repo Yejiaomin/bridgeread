@@ -247,13 +247,7 @@ class _StudyScreenState extends State<StudyScreen>
   String get _bgImage =>
       _weekend ? 'assets/home/weekend_bg.webp' : 'assets/home/study_bg.webp';
 
-  // Zone 0 (RECAP) is always active; zones 1-3 unlock after RECAP is done
-  // Weekend: all zones always active
-  bool _zoneEnabled(int i) {
-    if (_weekend) return true;
-    if (i == 0) return true;
-    return _zoneDone[0]; // RECAP done → all others unlocked
-  }
+  bool _zoneEnabled(int i) => true;
 
   @override
   void dispose() {
