@@ -333,11 +333,13 @@ class _ListenScreenState extends State<ListenScreen>
     final today = _dateStr(DateTime.now());
     await prefs.setString('listen_date', today);
     await prefs.setInt('listen_seconds', _listenSeconds);
-    // Sync to server (fire-and-forget)
+    // Telemetry only — completion is signaled exclusively via
+    // markModuleComplete('listen', 20). Don't pass `done` here, otherwise
+    // replaying single books (which resets _allTracksCompleted) would post
+    // done=false and overwrite the completion.
     ApiService().syncProgress(
       date: today,
       module: 'listen',
-      done: _allTracksCompleted,
       stars: 0,
       listenSeconds: _listenSeconds,
     );

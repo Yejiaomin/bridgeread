@@ -127,6 +127,13 @@ router.post('/', (req, res) => {
       [date, listenSeconds, userId]);
   }
 
+  // Telemetry-only update (e.g. periodic listen-time save) — skip daily_progress
+  if (done === undefined || done === null) {
+    const user = queryOne('SELECT total_stars, lock_status FROM users WHERE id = ?', [userId]);
+    const owed = queryOne('SELECT COUNT(*) as count FROM daily_progress WHERE user_id = ? AND done = 0', [userId]);
+    return res.json({ success: true, totalStars: user.total_stars, totalOwed: owed.count, lockStatus: user.lock_status });
+  }
+
   // Check if already completed (to avoid double-counting stars + protect against downgrade)
   const existing = queryOne(
     'SELECT done, stars FROM daily_progress WHERE user_id = ? AND date = ? AND module = ?',
@@ -134,8 +141,8 @@ router.post('/', (req, res) => {
   );
   const wasAlreadyDone = existing && existing.done === 1;
 
-  // Once a module is done, never downgrade it to undone (prevents client bugs
-  // like listen_screen sending done=false during loop replay from wiping completion)
+  // Once a module is done, never downgrade it to undone (defense-in-depth
+  // even though clients now omit `done` for telemetry-only updates)
   const finalDone = (wasAlreadyDone || done) ? 1 : 0;
   const finalStars = Math.max(existing?.stars || 0, stars || 0);
 

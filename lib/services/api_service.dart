@@ -98,22 +98,24 @@ class ApiService {
 
   /// Sync a single module completion to server.
   /// Called by ProgressService after marking a module complete.
+  /// Pass [done] = null for telemetry-only updates (e.g. periodic listen-time
+  /// saves) — server will not touch daily_progress in that case.
   Future<Map<String, dynamic>?> syncProgress({
     required String date,
     required String module,
-    required bool done,
+    bool? done,
     int stars = 0,
     String? lessonId,
     int? listenSeconds,
   }) async {
     try {
-      final body = {
+      final body = <String, dynamic>{
         'date': date,
         'module': module,
-        'done': done,
         'stars': stars,
         'lessonId': lessonId,
       };
+      if (done != null) body['done'] = done;
       if (listenSeconds != null) body['listenSeconds'] = listenSeconds;
       final res = await http.post(
         Uri.parse('$_baseUrl/progress'),
