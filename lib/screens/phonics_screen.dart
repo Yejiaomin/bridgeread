@@ -546,7 +546,15 @@ class _PhonicsScreenState extends State<PhonicsScreen>
       _waveCtrl.stop();
       final durationMs = _echoRecordStart == null ? 0
           : DateTime.now().difference(_echoRecordStart!).inMilliseconds;
-      final result = await _recorder.stop();
+      // Stop is wrapped — recorder package can throw async exceptions for
+      // too-short recordings (< 1s) which surface as Uncaught Error otherwise.
+      String? result;
+      try {
+        result = await _recorder.stop();
+      } catch (e) {
+        Telemetry.log('phonics_recording_stop_throw', {'err': e.toString(), 'durationMs': durationMs});
+        result = null;
+      }
       // On web, result is the real blob: URL — the input path was just a hint.
       // If null, the recording failed (permission revoked, mic disconnected,
       // stopped too quickly). Don't fall back to the input path; that yields a
