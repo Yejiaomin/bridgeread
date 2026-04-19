@@ -6,6 +6,7 @@ import 'services/week_service.dart' show initDebugOffset;
 import 'services/analytics_service.dart';
 import 'services/progress_service.dart';
 import 'services/api_service.dart';
+import 'services/error_reporter.dart';
 import 'utils/cdn_asset.dart';
 import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
@@ -28,6 +29,7 @@ final routeObserver = RouteObserver<ModalRoute<void>>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ErrorReporter.install();
   // Read debug time offset from SharedPreferences (set by timeTravel JS)
   try {
     final prefs = await SharedPreferences.getInstance();
