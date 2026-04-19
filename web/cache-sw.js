@@ -44,15 +44,19 @@ self.addEventListener('fetch', (event) => {
             var contentLength = cached.headers.get('content-length');
             if (contentLength && parseInt(contentLength) < 2000 && /\.(mp3|wav)$/i.test(url.pathname)) {
               console.warn('[SW] Cached audio too small, re-fetching:', url.pathname);
-              return fetch(event.request).then((response) => {
-                if (response.ok) cache.put(event.request, response.clone());
+              // Refetch without Range headers so we get full 200, not 206
+              // (Cache API rejects 206 Partial Content responses)
+              return fetch(url.pathname).then((response) => {
+                if (response.status === 200) cache.put(event.request, response.clone());
                 return response;
-              }).catch(() => cached); // fall back to cached if network fails
+              }).catch(() => cached);
             }
             return cached;
           }
           return fetch(event.request).then((response) => {
-            if (response.ok) cache.put(event.request, response.clone());
+            // Only cache full 200 responses — 206 Partial Content (range
+            // requests for audio) cannot be stored in Cache API.
+            if (response.status === 200) cache.put(event.request, response.clone());
             return response;
           }).catch(() => new Response('', { status: 503 }));
         });
