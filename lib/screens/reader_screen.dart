@@ -10,6 +10,7 @@ import '../models/book_page.dart';
 import '../services/lesson_service.dart';
 import '../services/progress_service.dart';
 import '../services/api_service.dart';
+import '../services/telemetry.dart';
 import '../widgets/highlighter_overlay.dart';
 import '../utils/cdn_asset.dart';
 import '../utils/responsive_utils.dart';
@@ -181,13 +182,39 @@ class _ReaderScreenState extends State<ReaderScreen>
   Future<void> _playAndWait(String name) async {
     _completeSub?.cancel();
     final completer = Completer<void>();
+    final startTs = DateTime.now();
+    int? lastPositionMs;
+    StreamSubscription? posSub;
+
+    Telemetry.log('reader_audio_start', {'name': name, 'page': _currentPage});
+
     _completeSub = _player.onPlayerComplete.listen((_) {
       if (!completer.isCompleted) completer.complete();
+    });
+    // Track latest position so when complete fires we know where it stopped
+    posSub = _player.onPositionChanged.listen((p) {
+      lastPositionMs = p.inMilliseconds;
     });
     await _player.playAudio('audio/$name.mp3');
     await completer.future;
     _completeSub?.cancel();
     _completeSub = null;
+    await posSub.cancel();
+
+    // Diagnose premature endings — if player thinks audio "completed" but
+    // wall-clock elapsed is way shorter than expected, the cached buffer
+    // was likely truncated. Telemetry lets us detect this without user reports.
+    final elapsedMs = DateTime.now().difference(startTs).inMilliseconds;
+    final durationMs = _player.durationMs;
+    Telemetry.log('reader_audio_end', {
+      'name': name,
+      'page': _currentPage,
+      'elapsedMs': elapsedMs,
+      'durationMs': durationMs,  // 0 on mobile (audioplayers doesn't expose)
+      'positionMs': lastPositionMs ?? -1,
+      // < 8000ms is suspicious for narration audio (typical p1_cn ~30s)
+      'short': elapsedMs < 8000,
+    });
   }
 
   Future<void> _startPageAudio() async {
