@@ -181,16 +181,19 @@ class _ReaderScreenState extends State<ReaderScreen>
   /// Play a single audio asset and wait for completion.
   Future<void> _playAndWait(String name) async {
     _completeSub?.cancel();
-    _positionSub?.cancel();
     final completer = Completer<void>();
     final startTs = DateTime.now();
     int? lastPositionMs;
     int? loadedDurationMs;
+    bool gotFirstPosition = false;
+    bool loadingFinished = false;
+    // Local subs for telemetry — separate from the class-level _loadingSub
+    // that drives the loading indicator UI.
+    StreamSubscription<Duration>? localPosSub;
+    StreamSubscription<bool>? localLoadingSub;
 
     Telemetry.log('reader_audio_start', {'name': name, 'page': _currentPage});
 
-    // Log inside callback so the event fires regardless of whether the outer
-    // await ever resolves (e.g. user navigates away mid-play).
     _completeSub = _player.onPlayerComplete.listen((_) {
       final elapsedMs = DateTime.now().difference(startTs).inMilliseconds;
       Telemetry.log('reader_audio_complete', {
@@ -199,21 +202,40 @@ class _ReaderScreenState extends State<ReaderScreen>
         'elapsedMs': elapsedMs,
         'durationMs': loadedDurationMs ?? _player.durationMs,
         'positionMs': lastPositionMs ?? -1,
-        // < 8000ms suspicious for narration (typical pX_cn is 15-40s)
+        'gotFirstPosition': gotFirstPosition,
+        'loadingFinished': loadingFinished,
         'short': elapsedMs < 8000,
       });
       if (!completer.isCompleted) completer.complete();
     });
-    _positionSub = _player.onPositionChanged.listen((p) {
+    // First position event = audio actually started producing time updates
+    // (i.e. it's decoded and playing). If this never fires, audio never started.
+    localPosSub = _player.onPositionChanged.listen((p) {
       lastPositionMs = p.inMilliseconds;
-      // Capture duration on first position update — Web Audio sets it after load
       loadedDurationMs ??= _player.durationMs;
+      if (!gotFirstPosition) {
+        gotFirstPosition = true;
+        Telemetry.log('reader_audio_first_position', {
+          'name': name,
+          'msToFirstPos': DateTime.now().difference(startTs).inMilliseconds,
+          'durationMs': loadedDurationMs,
+        });
+      }
+    });
+    // Loading state — true while fetching/decoding, false once ready.
+    // Only fires on web (mobile audio is bundled, no loading delay).
+    localLoadingSub = _player.onLoadingChanged.listen((loading) {
+      if (!loading && !loadingFinished) {
+        loadingFinished = true;
+        Telemetry.log('reader_audio_loaded', {
+          'name': name,
+          'msToLoaded': DateTime.now().difference(startTs).inMilliseconds,
+        });
+      }
     });
 
     await _player.playAudio('audio/$name.mp3');
 
-    // Safety timeout: if player never reports complete after 90s, log
-    // the stuck state so we can diagnose silently-failing audio.
     try {
       await completer.future.timeout(const Duration(seconds: 90));
     } on TimeoutException {
@@ -223,10 +245,14 @@ class _ReaderScreenState extends State<ReaderScreen>
         'elapsedMs': DateTime.now().difference(startTs).inMilliseconds,
         'positionMs': lastPositionMs ?? -1,
         'durationMs': loadedDurationMs ?? _player.durationMs,
+        'gotFirstPosition': gotFirstPosition,
+        'loadingFinished': loadingFinished,
       });
     }
     _completeSub?.cancel();
     _completeSub = null;
+    await localPosSub.cancel();
+    await localLoadingSub.cancel();
   }
 
   Future<void> _startPageAudio() async {
