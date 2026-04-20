@@ -522,6 +522,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   bool _testMode = true;
   Map<String, int> _debtByDate = {};
   Map<String, Map<String, dynamic>> _moduleStatus = {};
+  final ScrollController _gridController = ScrollController();
 
   @override
   void initState() {
@@ -530,6 +531,40 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final now = chinaTime();
     _viewMonth = DateTime(now.year, now.month);
     _load();
+    // After first paint, jump to today's row if it's not already in view.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToToday());
+  }
+
+  @override
+  void dispose() {
+    _gridController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToToday() {
+    if (!_gridController.hasClients) return;
+    final now = chinaTime();
+    if (now.year != _viewMonth.year || now.month != _viewMonth.month) return;
+    // Compute today's row index in the grid
+    final firstOfMonth = DateTime(_viewMonth.year, _viewMonth.month, 1);
+    final startWeekday = firstOfMonth.weekday;
+    final cellIdx = (startWeekday - 1) + (now.day - 1);
+    final todayRow = cellIdx ~/ 7;
+    if (todayRow == 0) return; // already at top
+    // Approximate row height from current viewport: total scrollable height
+    // divided by total rows. Using maxScrollExtent + viewportDimension.
+    final pos = _gridController.position;
+    final totalHeight = pos.maxScrollExtent + pos.viewportDimension;
+    // dynamicItemCount used in build: round up rows × 7
+    final cellsNeeded = (startWeekday - 1) +
+        DateTime(_viewMonth.year, _viewMonth.month + 1, 0).day;
+    final rowsNeeded = (cellsNeeded / 7).ceil();
+    final rowHeight = totalHeight / rowsNeeded;
+    // Scroll so today's row is centered (or as close as possible)
+    final target = (todayRow * rowHeight - pos.viewportDimension / 2 + rowHeight / 2)
+        .clamp(0.0, pos.maxScrollExtent);
+    _gridController.animateTo(target,
+        duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
   }
 
   Future<void> _load() async {
@@ -637,14 +672,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     color: d == '六' || d == '日' ? Colors.grey : orange))))).toList(),
             ),
             const SizedBox(height: 6),
-            // Calendar grid
-            Expanded(
+            // Calendar grid — only render rows that actually contain days
+            // (most months need 5 rows, only some need 6)
+            Builder(builder: (context) {
+              final cellsNeeded = (startWeekday - 1) + daysInMonth;
+              final rowsNeeded = (cellsNeeded / 7).ceil();
+              final dynamicItemCount = rowsNeeded * 7;
+              return Expanded(
               child: GridView.builder(
+                controller: _gridController,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7, childAspectRatio: 0.85, crossAxisSpacing: 4, mainAxisSpacing: 4,
+                  crossAxisCount: 7, childAspectRatio: 1.05, crossAxisSpacing: 4, mainAxisSpacing: 4,
                 ),
                 padding: const EdgeInsets.all(2),
-                itemCount: 42, // 6 weeks max
+                itemCount: dynamicItemCount,
                 itemBuilder: (context, idx) {
                   final dayNum = idx - (startWeekday - 1) + 1;
                   if (dayNum < 1 || dayNum > daysInMonth) {
@@ -841,7 +882,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   );
                 },
               ),
-            ),
+            );
+            }),
           ],
         ),
       ),
