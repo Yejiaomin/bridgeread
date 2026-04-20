@@ -181,40 +181,52 @@ class _ReaderScreenState extends State<ReaderScreen>
   /// Play a single audio asset and wait for completion.
   Future<void> _playAndWait(String name) async {
     _completeSub?.cancel();
+    _positionSub?.cancel();
     final completer = Completer<void>();
     final startTs = DateTime.now();
     int? lastPositionMs;
-    StreamSubscription? posSub;
+    int? loadedDurationMs;
 
     Telemetry.log('reader_audio_start', {'name': name, 'page': _currentPage});
 
+    // Log inside callback so the event fires regardless of whether the outer
+    // await ever resolves (e.g. user navigates away mid-play).
     _completeSub = _player.onPlayerComplete.listen((_) {
+      final elapsedMs = DateTime.now().difference(startTs).inMilliseconds;
+      Telemetry.log('reader_audio_complete', {
+        'name': name,
+        'page': _currentPage,
+        'elapsedMs': elapsedMs,
+        'durationMs': loadedDurationMs ?? _player.durationMs,
+        'positionMs': lastPositionMs ?? -1,
+        // < 8000ms suspicious for narration (typical pX_cn is 15-40s)
+        'short': elapsedMs < 8000,
+      });
       if (!completer.isCompleted) completer.complete();
     });
-    // Track latest position so when complete fires we know where it stopped
-    posSub = _player.onPositionChanged.listen((p) {
+    _positionSub = _player.onPositionChanged.listen((p) {
       lastPositionMs = p.inMilliseconds;
+      // Capture duration on first position update — Web Audio sets it after load
+      loadedDurationMs ??= _player.durationMs;
     });
+
     await _player.playAudio('audio/$name.mp3');
-    await completer.future;
+
+    // Safety timeout: if player never reports complete after 90s, log
+    // the stuck state so we can diagnose silently-failing audio.
+    try {
+      await completer.future.timeout(const Duration(seconds: 90));
+    } on TimeoutException {
+      Telemetry.log('reader_audio_stuck', {
+        'name': name,
+        'page': _currentPage,
+        'elapsedMs': DateTime.now().difference(startTs).inMilliseconds,
+        'positionMs': lastPositionMs ?? -1,
+        'durationMs': loadedDurationMs ?? _player.durationMs,
+      });
+    }
     _completeSub?.cancel();
     _completeSub = null;
-    await posSub.cancel();
-
-    // Diagnose premature endings — if player thinks audio "completed" but
-    // wall-clock elapsed is way shorter than expected, the cached buffer
-    // was likely truncated. Telemetry lets us detect this without user reports.
-    final elapsedMs = DateTime.now().difference(startTs).inMilliseconds;
-    final durationMs = _player.durationMs;
-    Telemetry.log('reader_audio_end', {
-      'name': name,
-      'page': _currentPage,
-      'elapsedMs': elapsedMs,
-      'durationMs': durationMs,  // 0 on mobile (audioplayers doesn't expose)
-      'positionMs': lastPositionMs ?? -1,
-      // < 8000ms is suspicious for narration audio (typical p1_cn ~30s)
-      'short': elapsedMs < 8000,
-    });
   }
 
   Future<void> _startPageAudio() async {
