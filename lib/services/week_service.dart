@@ -186,6 +186,33 @@ class WeekService {
     return kAllBooks.sublist(start);
   }
 
+  /// The N most recent books actually assigned to this user up to today
+  /// (oldest first). Differs from [lastNBooks] in that it respects the
+  /// user's progress: e.g. mid-series-1 user gets last N of series 1 books
+  /// they've seen, not last N of all books in kAllBooks (which could be
+  /// future series content they haven't unlocked yet).
+  static Future<List<BookInfo>> lastNAssignedBooks(int n) async {
+    if (n <= 0) return [];
+    final prefs = await SharedPreferences.getInstance();
+    final startStr = prefs.getString('book_start_date');
+    if (startStr == null) return kAllBooks.take(n).toList();
+    final start = parseDate(startStr);
+    if (start == null) return kAllBooks.take(n).toList();
+    final now = activeDate();
+    final wdCount = _weekdaysBetween(start, now);
+    if (wdCount <= 0) return [];
+
+    final indices = <int>{};
+    for (int wd = wdCount; wd >= 1 && indices.length < n; wd--) {
+      final idx = bookForWeekdayCount(wd, start.weekday);
+      if (idx != null && idx < kAllBooks.length) {
+        indices.add(idx);
+      }
+    }
+    final sorted = indices.toList()..sort();
+    return sorted.map((i) => kAllBooks[i]).toList();
+  }
+
   /// This week's books (only actual new-book days, not review padding).
   /// Works for both weekdays and weekends.
   static Future<List<BookInfo>> thisWeekBooks() async {

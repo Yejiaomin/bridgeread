@@ -204,28 +204,24 @@ class _ListenScreenState extends State<ListenScreen>
     final isRegistrationDay = isCalendarWeekend && startDate2 != null &&
         now.year == startDate2.year && now.month == startDate2.month && now.day == startDate2.day;
 
-    // Determine weekend type
+    // Review mode triggers when:
+    //  - Calendar weekend (and not registration day)
+    //  - OR weekday with no assigned book (series-end padding before next series)
+    final todayBookIdx = await WeekService.todayBookIndex();
     final isReviewWeekend = isCalendarWeekend && !isRegistrationDay;
+    final isReviewPadding = !isCalendarWeekend && todayBookIdx == null;
+    final isReviewMode = isReviewWeekend || isReviewPadding;
 
-    if (isReviewWeekend) {
-      final weekBooks = await WeekService.thisWeekBooks();
-      if (weekBooks.isNotEmpty) {
-        // Normal weekend: play all books studied this week
-        for (int i = 0; i < weekBooks.length; i++) {
-          final book = weekBooks[i];
-          final cover = await getCover(book.lessonId);
-          playlist.add(_Track('${book.title} (${i + 1}/${weekBooks.length})',
-              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
-        }
-      } else if (await WeekService.allBooksCompleted()) {
-        // All 20 books done: play last 5
-        final last5 = WeekService.lastNBooks(5);
-        for (int i = 0; i < last5.length; i++) {
-          final book = last5[i];
-          final cover = await getCover(book.lessonId);
-          playlist.add(_Track('${book.title} (${i + 1}/${last5.length})',
-              book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
-        }
+    if (isReviewMode) {
+      // Review: play last N assigned books (oldest first). Works for both
+      // normal weekends (this week's books) and series-end padding days
+      // (last 5 books of the just-finished series).
+      final reviewBooks = await WeekService.lastNAssignedBooks(5);
+      for (int i = 0; i < reviewBooks.length; i++) {
+        final book = reviewBooks[i];
+        final cover = await getCover(book.lessonId);
+        playlist.add(_Track('${book.title} (${i + 1}/${reviewBooks.length})',
+            book.originalAudio, showBook: true, lessonId: book.lessonId, coverImage: cover));
       }
     } else {
       // Weekday: today → yesterday → today, then loop
@@ -271,7 +267,7 @@ class _ListenScreenState extends State<ListenScreen>
 
     // Weekday 3-track playlist: loop from track 1 (skip initial "today")
     // Weekend / 2-track / 1-track: loop from start
-    _loopStart = (!isReviewWeekend && playlist.length == 3) ? 1 : 0;
+    _loopStart = (!isReviewMode && playlist.length == 3) ? 1 : 0;
 
     if (mounted) {
       setState(() {

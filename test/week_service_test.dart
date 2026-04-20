@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bridgeread/services/week_service.dart';
 
 void main() {
@@ -788,6 +789,132 @@ void main() {
       onJarTapBuggy();
       expect(drawCount, 2);  // BUG: both went through
       expect(stars, 0);      // BUG: spent 60 instead of 30
+    });
+  });
+
+  // ── lastNAssignedBooks ──────────────────────────────────────────────────
+  // Returns up to N most recent books actually assigned in the user's
+  // curriculum (oldest first). Critical for review playlists when a series
+  // ends mid-week or when transitioning between series.
+
+  group('lastNAssignedBooks', () {
+    setUp(() {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      WeekService.overrideDate = null;
+    });
+
+    tearDown(() {
+      WeekService.overrideDate = null;
+    });
+
+    test('no book_start_date → fallback to first N from kAllBooks', () async {
+      SharedPreferences.setMockInitialValues({});
+      final books = await WeekService.lastNAssignedBooks(3);
+      expect(books.length, 3);
+      expect(books[0].lessonId, kAllBooks[0].lessonId);
+    });
+
+    test('zero N → empty', () async {
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 4, 13);
+      expect(await WeekService.lastNAssignedBooks(0), isEmpty);
+    });
+
+    test('day 1 of Mon-registered → 1 book (book 0)', () async {
+      // Monday 2026-04-13 = registration + today
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 4, 13);
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books.length, 1);
+      expect(books[0].lessonId, kAllBooks[0].lessonId);
+    });
+
+    test('Friday of week 1 (Mon-registered) → 5 books (0..4)', () async {
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 4, 17);  // Friday
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books.length, 5);
+      expect(books.map((b) => b.lessonId).toList(),
+          [kAllBooks[0].lessonId, kAllBooks[1].lessonId, kAllBooks[2].lessonId,
+           kAllBooks[3].lessonId, kAllBooks[4].lessonId]);
+    });
+
+    test('Saturday of week 1 → still 5 books from this week', () async {
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 4, 18);  // Saturday
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books.length, 5);
+      expect(books.last.lessonId, kAllBooks[4].lessonId);
+    });
+
+    test('Wed of week 3 → most recent 5 books (so far ~10 done)', () async {
+      // Mon-registered, week 3 Wed = wdCount 13 → book 12
+      // Last 5 = books 8, 9, 10, 11, 12
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 4, 29);  // 2 wks + 2 days = Wed week 3
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books.length, 5);
+      expect(books.first.lessonId, kAllBooks[8].lessonId);
+      expect(books.last.lessonId, kAllBooks[12].lessonId);
+    });
+
+    test('week 4 Friday (Mon user, last book) → books 15..19', () async {
+      // Mon-registered, week 4 Fri = wdCount 20 → book 19
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 5, 8);  // Fri week 4
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books.length, 5);
+      expect(books.map((b) => kAllBooks.indexOf(b)).toList(), [15, 16, 17, 18, 19]);
+    });
+
+    test('Tue user week 5 padding day → still last 5 of finished series', () async {
+      // Tue 2026-04-14 = registration. wdCount progression:
+      //   week 1: Tue=1, Wed=2, Thu=3, Fri=4 (books 0-3)
+      //   week 2-4: 15 books (4-18) over 15 weekdays
+      //   week 5 Mon: wdCount 20 → book 19 (last Biscuit)
+      //   week 5 Tue: wdCount 21 → null (padding)
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-14'});
+      WeekService.overrideDate = DateTime(2026, 5, 12);  // Tue week 5 (padding)
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books.length, 5);
+      expect(books.map((b) => kAllBooks.indexOf(b)).toList(), [15, 16, 17, 18, 19]);
+    });
+
+    test('returns books in ascending order (oldest first)', () async {
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 4, 24);  // Friday week 2
+      final books = await WeekService.lastNAssignedBooks(5);
+      final indices = books.map((b) => kAllBooks.indexOf(b)).toList();
+      // Should be ascending
+      for (int i = 1; i < indices.length; i++) {
+        expect(indices[i], greaterThan(indices[i - 1]));
+      }
+    });
+
+    test('weekend during week 5 padding → same last 5', () async {
+      // Tue user, Saturday of week 5 (after Mon=book 19 + Tue-Fri padding)
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-14'});
+      WeekService.overrideDate = DateTime(2026, 5, 16);  // Sat week 5
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books.length, 5);
+      expect(books.map((b) => kAllBooks.indexOf(b)).toList(), [15, 16, 17, 18, 19]);
+    });
+
+    test('N larger than assigned → returns all assigned', () async {
+      SharedPreferences.setMockInitialValues({'book_start_date': '2026-04-13'});
+      WeekService.overrideDate = DateTime(2026, 4, 14);  // Tue week 1, only 2 books done
+      final books = await WeekService.lastNAssignedBooks(10);
+      expect(books.length, 2);
+      expect(books[0].lessonId, kAllBooks[0].lessonId);
+      expect(books[1].lessonId, kAllBooks[1].lessonId);
+    });
+
+    test('start date in the future → empty', () async {
+      // Edge case: book_start_date is tomorrow (shouldn't happen but defensive)
+      SharedPreferences.setMockInitialValues({'book_start_date': '2099-01-01'});
+      WeekService.overrideDate = DateTime(2026, 4, 13);
+      final books = await WeekService.lastNAssignedBooks(5);
+      expect(books, isEmpty);
     });
   });
 }

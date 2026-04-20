@@ -171,9 +171,14 @@ class _StudyScreenState extends State<StudyScreen>
         final weekBooks = await WeekService.thisWeekBooks();
         if (weekBooks.isEmpty) shouldBeWeekend = false;
       } else {
-        final allDone = await WeekService.allBooksCompleted();
+        // Any weekday with no assigned book → review mode. Catches both:
+        //  (a) all curriculum books are exhausted
+        //  (b) padding days between two series (series 1 ends Wed, days
+        //      Thu/Fri before next Monday's series 2 should be review)
+        // Without this, padding days fall through to weekday mode but show
+        // no new book — user re-reads the previous day's book pointlessly.
         final todayIdx = await WeekService.todayBookIndex();
-        if (allDone && todayIdx == null) shouldBeWeekend = true;
+        if (todayIdx == null) shouldBeWeekend = true;
       }
     } catch (e, st) {
       Telemetry.log('study_resolve_weekend_error', {'error': e.toString(), 'stack': st.toString().split('\n').take(3).join(' | ')});
