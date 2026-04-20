@@ -641,7 +641,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7, childAspectRatio: 0.65, crossAxisSpacing: 6, mainAxisSpacing: 6,
+                  crossAxisCount: 7, childAspectRatio: 0.85, crossAxisSpacing: 4, mainAxisSpacing: 4,
                 ),
                 padding: const EdgeInsets.all(2),
                 itemCount: 42, // 6 weeks max
@@ -716,23 +716,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: LayoutBuilder(
                           builder: (context, constraints) {
                             final cellW = constraints.maxWidth;
-                            final imgW = cellW * 0.55;
-                            final imgH = imgW * 1.4; // book cover aspect ratio
+                            final imgW = cellW * 0.5;
+                            final imgH = imgW * 1.35;
+                            // Decode book covers at 2x display size (Retina)
+                            // — saves ~95% of memory vs full 1024px source.
+                            final imgCacheW = (imgW * 2).round();
                             return Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                // Date circle (no red for today or debt)
                                 Container(
-                                  width: 24, height: 24,
+                                  width: 18, height: 18,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: isToday ? orange : Colors.black.withValues(alpha: 0.3),
                                   ),
                                   child: Center(child: Text('$dayNum',
-                                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Colors.white))),
+                                    style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: Colors.white))),
                                 ),
-                                const SizedBox(height: 3),
+                                const SizedBox(height: 2),
                                 // Image with debt badge on top-right of book cover
                                 if (book != null)
                                   Stack(
@@ -752,6 +754,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           Positioned.fill(child: ClipRRect(
                                             borderRadius: BorderRadius.circular(6),
                                             child: cdnImage(book.coverAsset, fit: BoxFit.cover,
+                                              cacheWidth: imgCacheW,
                                               errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade200)),
                                           )),
                                           if (!unlocked)
@@ -822,11 +825,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   )
                                 else
                                   SizedBox(height: imgH),
-                                const SizedBox(height: 3),
+                                const SizedBox(height: 2),
                                 // Label
                                 Text(
                                   book != null ? book.titleCN : isActiveWeekend ? '游戏+放松' : '',
-                                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700,
+                                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700,
                                     color: book != null ? const Color(0xFF666666) : const Color(0xFFFFB74D)),
                                   maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                                 ),

@@ -13,6 +13,10 @@ import 'package:flutter/material.dart';
 /// Load an image. Uses Image.asset which works on both web and mobile.
 /// On web, Flutter requests `/assets/{assetPath}` via HTTP — nginx serves it.
 /// [assetPath] starts with 'assets/', e.g. 'assets/books/01Biscuit/cover.webp'
+///
+/// Pass [cacheWidth]/[cacheHeight] to downsample large images at decode time.
+/// Critical for tiny thumbnail uses (like Calendar cells) where decoding a
+/// 1024px source at full resolution wastes memory and CPU.
 Widget cdnImage(
   String assetPath, {
   Key? key,
@@ -21,6 +25,8 @@ Widget cdnImage(
   double? height,
   Alignment alignment = Alignment.center,
   Widget Function(BuildContext, Object, StackTrace?)? errorBuilder,
+  int? cacheWidth,
+  int? cacheHeight,
 }) {
   return Image.asset(
     assetPath,
@@ -30,6 +36,8 @@ Widget cdnImage(
     height: height,
     alignment: alignment,
     errorBuilder: errorBuilder,
+    cacheWidth: cacheWidth,
+    cacheHeight: cacheHeight,
   );
 }
 
