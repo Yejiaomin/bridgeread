@@ -115,11 +115,11 @@ class _StudyScreenState extends State<StudyScreen>
   // Only reader(1) and quiz(2) are tracked in daily_progress for debt
   List<bool> _zoneDone = [false, false, false, false];
 
-  // True once bg image's errorBuilder fires (image truly failed to load).
-  // CSS fallback (gradient + decorations + title + labels) only renders
-  // after this flag flips — during normal load the user sees just the
-  // Scaffold background, no flicker between CSS and the real bg art.
-  bool _bgFailed = false;
+  // CSS fallback always renders underneath the bg image. When image loads
+  // successfully it covers the CSS — user sees original art. When image
+  // silently fails to load (no error event, e.g. SW returns empty response
+  // or hangs forever), CSS shows through. Trade-off: brief flash of CSS
+  // during initial load, accepted to guarantee no "white screen" outcome.
 
   // Press-down animations (150 ms) — 1.0 → 0.95 → 1.0
   late final List<AnimationController> _pressCtrls;
@@ -303,10 +303,9 @@ class _StudyScreenState extends State<StudyScreen>
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // CSS fallback: only render when the bg image fails.
-                  // During normal load the user sees Scaffold bg color → image,
-                  // never the CSS flicker.
-                  if (_bgFailed) ...[
+                  // CSS fallback layer — always rendered, covered by bg image
+                  // when it loads. Guarantees no white-screen even if image
+                  // hangs/silently-fails (errorBuilder won't fire in that case).
                   // ── Background (doodle bg + 3-stop warm gradient) ─────
                   const DoodleBackground(
                     gradient: LinearGradient(
@@ -590,27 +589,19 @@ class _StudyScreenState extends State<StudyScreen>
                     );
                   }),
 
-                  ],  // ← end if (_bgFailed)
-
-                  // ── Background image (always tries to render) ─────────
-                  // On error, sets _bgFailed=true → next build paints the
-                  // CSS fallback above. While loading, image is transparent
-                  // and Scaffold bg color shows through.
+                  // ── Background image (covers the CSS fallback when loaded) ──
+                  // If image silently never loads (no error event), the CSS
+                  // layer below remains visible — user always sees something.
                   Image.asset(_bgImage,
                     key: ValueKey(_bgImage),
                     fit: BoxFit.cover,
                     width: w,
                     height: h,
                     errorBuilder: (_, err, __) {
-                      if (!_bgFailed) {
-                        Telemetry.log('study_bg_load_error', {
-                          'image': _bgImage,
-                          'error': err.toString(),
-                        });
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (mounted) setState(() => _bgFailed = true);
-                        });
-                      }
+                      Telemetry.log('study_bg_load_error', {
+                        'image': _bgImage,
+                        'error': err.toString(),
+                      });
                       return const SizedBox.shrink();
                     },
                   ),
