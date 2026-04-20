@@ -381,6 +381,13 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
     await Future.delayed(const Duration(milliseconds: 300));
     _flyGachaItem(dropped);
 
+    // Start the "You got X" audio NOW, in parallel with the fly animation —
+    // by the time the result card shows ~800ms later, audio is already
+    // playing (or close to it), no perceived gap before sound.
+    final audioId = dropped.replaceAll(RegExp(r'_\d+$'), '');
+    _player.stop();
+    _player.play(cdnAudioSource('audio/items/$audioId.mp3'));
+
     // Show result card after fly
     await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
@@ -391,10 +398,6 @@ class _StudyRoomScreenState extends State<StudyRoomScreen>
       _gachaAvailable = _totalStars >= 30;
     });
     _gachaInProgress = false; // allow next draw
-    await _player.stop();
-    // Use base name for audio: e.g. bunny_3 → bunny, princess_2 → princess
-    final audioId = dropped.replaceAll(RegExp(r'_\d+$'), '');
-    await _player.play(cdnAudioSource('audio/items/$audioId.mp3'));
   }
 
   void _flyGachaItem(String itemId) {
