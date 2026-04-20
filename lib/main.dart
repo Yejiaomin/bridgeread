@@ -9,6 +9,7 @@ import 'services/error_reporter.dart';
 import 'services/telemetry.dart';
 import 'services/sync_queue.dart';
 import 'utils/cdn_asset.dart';
+import 'utils/web_audio_engine.dart' show registerAudioSuspendCallback;
 import 'utils/responsive_utils.dart';
 import 'screens/home_screen.dart';
 import 'screens/study_screen.dart';
@@ -36,6 +37,12 @@ void main() async {
   // Retry any progress syncs that failed in previous sessions (network blip,
   // app killed mid-sync, etc). Fire-and-forget — don't block startup.
   SyncQueue.flush();
+  // Track AudioContext interruption frequency in production. iOS/WeChat
+  // browsers silently suspend mid-playback; the engine restarts the source
+  // and notifies us here so we can measure how often it happens.
+  registerAudioSuspendCallback((state, posSec) {
+    Telemetry.log('audio_ctx_suspended', {'state': state, 'posSec': posSec});
+  });
   // Debug time-travel only available in non-release builds — production
   // users must not be able to manipulate "today" by setting localStorage.
   if (!kReleaseMode) {

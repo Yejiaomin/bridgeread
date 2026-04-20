@@ -47,15 +47,27 @@
   document.addEventListener('touchend', unlock, { once: false, passive: true });
   document.addEventListener('click', unlock, { once: false, passive: true });
 
-  // Auto-resume AudioContext if iOS suspends it
+  // Auto-recover when AudioContext is suspended/interrupted mid-playback.
+  // Just calling ctx.resume() is not enough — when iOS interrupts the context,
+  // the BufferSourceNode is killed but onended never fires. We must restart
+  // playback from the last known position, otherwise audio silently dies and
+  // user sees "5 seconds then no sound".
   setInterval(function() {
-    if (ctx && ctx.state === 'interrupted') {
-      console.warn('[WebAudio] Context interrupted, resuming...');
-      ctx.resume();
-    }
-    if (ctx && ctx.state === 'suspended' && mainSource) {
-      console.warn('[WebAudio] Context suspended during playback, resuming...');
-      ctx.resume();
+    if (!ctx || !mainSource || mainPaused) return;
+    if (ctx.state === 'interrupted' || ctx.state === 'suspended') {
+      var stateBefore = ctx.state;
+      var bufferRef = mainBuffer;
+      var resumePos = ctx.currentTime - mainStartTime + mainOffset;
+      console.warn('[WebAudio] Context ' + stateBefore +
+        ' during playback at pos=' + resumePos.toFixed(1) + 's, resuming + restarting source');
+      ctx.resume().then(function() {
+        if (mainBuffer !== bufferRef) return; // user changed track meanwhile
+        // Telemetry hook (set from Dart) — lets us measure frequency in prod
+        if (window._brAudioOnSuspend) {
+          try { window._brAudioOnSuspend(stateBefore, resumePos); } catch(e) {}
+        }
+        playBuffer(bufferRef, resumePos);
+      });
     }
   }, 500);
 

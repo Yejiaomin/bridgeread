@@ -33,6 +33,20 @@ external void _jsOnLoading(JSFunction cb);
 @JS('window._brWebAudio.preload')
 external JSPromise<JSAny?> _jsPreload(JSString url);
 
+@JS('window._brAudioOnSuspend')
+external set _jsAudioOnSuspend(JSFunction cb);
+
+/// Register a callback fired when AudioContext gets suspended/interrupted
+/// mid-playback and the engine had to restart the source. Web only.
+/// `state` is the ctx.state before resume ('suspended' or 'interrupted'),
+/// `posSec` is the playback position when interruption was detected.
+void registerAudioSuspendCallback(void Function(String state, double posSec) cb) {
+  if (!kIsWeb) return;
+  _jsAudioOnSuspend = ((JSString state, JSNumber posSec) {
+    cb(state.toDart, posSec.toDartDouble);
+  }).toJS;
+}
+
 // ── GameAudioPlayer (main audio — narration, words, phonemes) ───────────────
 
 /// Unified audio player using Web Audio API on web, audioplayers on mobile.
