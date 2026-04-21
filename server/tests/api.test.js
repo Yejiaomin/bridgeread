@@ -774,3 +774,65 @@ describe('Spend Stars', () => {
     expect(res.body.error).toBe('not enough stars');
   });
 });
+
+// ── Profile API ────────────────────────────────────────────────────────────
+
+describe('Profile API', () => {
+  let token;
+
+  beforeEach(async () => {
+    run('DELETE FROM users');
+    run('DELETE FROM daily_progress');
+    run('DELETE FROM sms_codes');
+    try { run("DELETE FROM sqlite_sequence"); } catch (_) {}
+
+    const reg = await registerUser();
+    token = reg.body.token;
+  });
+
+  test('GET /api/profile — booksCompleted counts reader done=1 rows', async () => {
+    // Seed 3 reader-done days + 1 reader-not-done day + other modules
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,'2026-04-01','reader',1,10)");
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,'2026-04-02','reader',1,10)");
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,'2026-04-03','reader',1,10)");
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,'2026-04-04','reader',0,0)");
+    // Quiz/listen on same days should NOT count
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,'2026-04-01','quiz',1,5)");
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,'2026-04-02','listen',1,5)");
+
+    const res = await request(app)
+      .get('/api/profile')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.profile.booksCompleted).toBe(3);
+  });
+
+  test('GET /api/profile — booksCompleted is 0 for new user', async () => {
+    const res = await request(app)
+      .get('/api/profile')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.profile.booksCompleted).toBe(0);
+    expect(res.body.profile.streakDays).toBe(0);
+  });
+
+  test('GET /api/profile — streakDays comes from server, not client', async () => {
+    // Complete reader for today + yesterday → streak = 2
+    const today = new Date();
+    const yest = new Date(today.getTime() - 86400000);
+    const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,?,'reader',1,10)", [fmt(today)]);
+    run("INSERT INTO daily_progress (user_id,date,module,done,stars) VALUES (1,?,'reader',1,10)", [fmt(yest)]);
+
+    const res = await request(app)
+      .get('/api/profile')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(typeof res.body.profile.streakDays).toBe('number');
+    expect(res.body.profile.streakDays).toBeGreaterThanOrEqual(1);
+  });
+});

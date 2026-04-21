@@ -126,6 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _gender = prefs.getString('profile_gender') ?? '';
       _totalStars = prefs.getInt('total_stars') ?? 0;
       _streakDays = prefs.getInt('streak_days') ?? 0;
+      _booksCompleted = prefs.getInt('books_completed') ?? 0;
       final hobbiesStr = prefs.getString('profile_hobbies') ?? '';
       _selectedHobbies =
           hobbiesStr.isEmpty ? {} : hobbiesStr.split(',').toSet();
@@ -148,6 +149,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _birthday = p['birthday'] ?? _birthday;
         _gender = p['gender'] ?? _gender;
         _totalStars = p['totalStars'] ?? _totalStars;
+        _booksCompleted = p['booksCompleted'] ?? _booksCompleted;
+        _streakDays = p['streakDays'] ?? _streakDays;
         final hobbies = p['hobbies'] as String? ?? '';
         _selectedHobbies = hobbies.isEmpty ? _selectedHobbies : hobbies.split(',').toSet();
         _goal = p['goal'] ?? _goal;
@@ -165,6 +168,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await prefs.setString('profile_hobbies', _selectedHobbies.join(','));
       await prefs.setString('profile_goal', _goal);
       await prefs.setInt('total_stars', _totalStars);
+      await prefs.setInt('books_completed', _booksCompleted);
+      await prefs.setInt('streak_days', _streakDays);
     }
   }
 
@@ -393,7 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  int get _booksCompleted => (_totalStars / 10).floor();
+  int _booksCompleted = 0;
 
   // ─── Build ───
 

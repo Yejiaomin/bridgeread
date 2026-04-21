@@ -1,5 +1,6 @@
 const express = require('express');
 const { queryOne, run } = require('../db');
+const { _internals: { computeStreak } } = require('./progress');
 
 const router = express.Router();
 
@@ -12,6 +13,13 @@ router.get('/', (req, res) => {
   );
   if (!user) return res.status(404).json({ error: '用户不存在' });
 
+  // 完成绘本 = reader 模块 done=1 的天数。UNIQUE(user_id,date,module) 保证 1 行 = 1 本。
+  const books = queryOne(
+    `SELECT COUNT(*) AS n FROM daily_progress
+     WHERE user_id = ? AND module = 'reader' AND done = 1`,
+    [req.userId]
+  );
+
   res.json({
     success: true,
     profile: {
@@ -23,6 +31,8 @@ router.get('/', (req, res) => {
       goal: user.profile_goal ?? '',
       customAvatar: user.profile_custom_avatar ?? '',
       totalStars: user.total_stars ?? 0,
+      booksCompleted: books?.n ?? 0,
+      streakDays: computeStreak(req.userId),
     },
   });
 });
