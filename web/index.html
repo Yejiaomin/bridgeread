@@ -124,7 +124,10 @@
     _log('SW: ' + ('serviceWorker' in navigator));
     _log('ES modules: ' + (typeof Symbol !== 'undefined'));
 
-    // Countdown from 30 to 0, then show retry hint
+    // Countdown from 30 to 0, then auto-heal (clear bad SW/code cache + reload).
+    // Triggered when main.dart.js / canvaskit failed to init within 30s — usually
+    // a Safari SW that cached a broken/corrupt version. Self-heals so users don't
+    // need to manually clear cache. Guarded by self_heal_at to avoid reload loops.
     var count = 30;
     var countdownEl = document.getElementById('countdown');
     var bubbleText = document.querySelector('.bubble-text');
@@ -135,7 +138,30 @@
       } else {
         clearInterval(countdownTimer);
         _log('Countdown finished, Flutter not loaded');
-        bubbleText.innerHTML = '快好了，再等一下~<br><span style="font-size:14px;font-weight:600;color:#999">如果一直打不开，请刷新页面试试</span>';
+        var lastHeal = parseInt(localStorage.getItem('self_heal_at') || '0');
+        if (Date.now() - lastHeal < 5 * 60 * 1000) {
+          // Already tried in the last 5 min — don't loop, let user submit report
+          _log('Self-heal skipped (tried recently)');
+          bubbleText.innerHTML = '快好了，再等一下~<br><span style="font-size:14px;font-weight:600;color:#999">如果一直打不开，请刷新页面试试</span>';
+        } else {
+          _log('Self-heal: clearing SW + code cache, then reload');
+          localStorage.setItem('self_heal_at', String(Date.now()));
+          bubbleText.innerHTML = '正在自动修复...';
+          var jobs = [];
+          if ('serviceWorker' in navigator) {
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function(regs) {
+              return Promise.all(regs.map(function(r) { return r.unregister(); }));
+            }));
+          }
+          if ('caches' in window) {
+            jobs.push(caches.keys().then(function(names) {
+              return Promise.all(names.filter(function(n) { return n.indexOf('assets') === -1; })
+                                     .map(function(n) { return caches.delete(n); }));
+            }));
+          }
+          Promise.all(jobs).then(function() { window.location.reload(); })
+                          .catch(function() { window.location.reload(); });
+        }
       }
     }, 1000);
 
