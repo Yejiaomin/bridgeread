@@ -84,10 +84,6 @@ const List<String> _hobbyOptions = [
   '做饭', '旅行', '摄影', '手工', '棋类', '滑板', '骑车', '钓鱼', '种植', '看电影',
 ];
 
-const List<String> _goalOptions = [
-  '7天', '14天', '30天', '60天', '100天', '200天', '300天', 'Forever',
-];
-
 class _ProfileScreenState extends State<ProfileScreen> {
   SharedPreferences? _prefs;
 
@@ -99,8 +95,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _totalStars = 0;
   int _streakDays = 0;
   String _gender = '';
+  int _userId = 0;
   Set<String> _selectedHobbies = {};
-  String _goal = '';
 
   @override
   void initState() {
@@ -124,13 +120,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _nameCtrl.text = _childName;
       _birthday = prefs.getString('profile_birthday') ?? '';
       _gender = prefs.getString('profile_gender') ?? '';
+      _userId = prefs.getInt('user_id') ?? 0;
       _totalStars = prefs.getInt('total_stars') ?? 0;
       _streakDays = prefs.getInt('streak_days') ?? 0;
       _booksCompleted = prefs.getInt('books_completed') ?? 0;
       final hobbiesStr = prefs.getString('profile_hobbies') ?? '';
       _selectedHobbies =
           hobbiesStr.isEmpty ? {} : hobbiesStr.split(',').toSet();
-      _goal = prefs.getString('profile_goal') ?? '';
       final avatarBase64 = prefs.getString('profile_custom_avatar');
       if (avatarBase64 != null && avatarBase64.isNotEmpty) {
         _customAvatar = base64Decode(avatarBase64);
@@ -153,7 +149,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _streakDays = p['streakDays'] ?? _streakDays;
         final hobbies = p['hobbies'] as String? ?? '';
         _selectedHobbies = hobbies.isEmpty ? _selectedHobbies : hobbies.split(',').toSet();
-        _goal = p['goal'] ?? _goal;
         final customAv = p['customAvatar'] as String? ?? '';
         if (customAv.isNotEmpty) {
           _customAvatar = base64Decode(customAv);
@@ -166,7 +161,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await prefs.setString('profile_birthday', _birthday);
       await prefs.setString('profile_gender', _gender);
       await prefs.setString('profile_hobbies', _selectedHobbies.join(','));
-      await prefs.setString('profile_goal', _goal);
       await prefs.setInt('total_stars', _totalStars);
       await prefs.setInt('books_completed', _booksCompleted);
       await prefs.setInt('streak_days', _streakDays);
@@ -234,12 +228,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final hobbiesStr = _selectedHobbies.join(',');
     await _prefs?.setString('profile_hobbies', hobbiesStr);
     _syncToServer({'hobbies': hobbiesStr});
-  }
-
-  Future<void> _saveGoal(String value) async {
-    setState(() => _goal = value);
-    await _prefs?.setString('profile_goal', value);
-    _syncToServer({'goal': value});
   }
 
   Future<void> _pickBirthday() async {
@@ -618,8 +606,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildStatsRow(),
           SizedBox(height: R.s(14)),
 
-          // Name card
-          // Name + Gender side by side
+          // Name + User ID side by side
           Row(
             children: [
               Expanded(
@@ -648,14 +635,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: R.s(20)),
               Expanded(
                 child: _buildFormCard(
-                  icon: Icons.wc_rounded,
-                  label: 'Gender',
-                  child: Row(
-                    children: [
-                      _buildGenderChip('Girl', '👧'),
-                      SizedBox(width: R.s(6)),
-                      _buildGenderChip('Boy', '👦'),
-                    ],
+                  icon: Icons.badge_rounded,
+                  label: 'User ID',
+                  child: _buildInputField(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: R.s(10), vertical: R.s(10)),
+                      child: Text(
+                        _userId > 0 ? '$_userId' : '-',
+                        style: TextStyle(
+                            fontSize: R.s(12), color: Colors.brown.shade700),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -663,7 +654,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(height: R.s(10)),
 
-          // Birthday + Goal side by side
+          // Birthday + Gender side by side
           Row(
             children: [
               Expanded(
@@ -703,35 +694,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: R.s(20)),
               Expanded(
                 child: _buildFormCard(
-                  icon: Icons.flag_rounded,
-                  label: 'Goal',
-                  child: _buildInputField(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: R.s(10), vertical: R.s(8)),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: _goal.isEmpty ? null : _goal,
-                          hint: Text('选择坚持天数',
-                              style: TextStyle(
-                                  fontSize: R.s(12),
-                                  color: Colors.brown.shade300)),
-                          icon: Icon(Icons.keyboard_arrow_down_rounded,
-                              color: Colors.brown.shade400, size: R.s(18)),
-                          style: TextStyle(
-                              fontSize: R.s(12), color: Colors.brown.shade700),
-                          dropdownColor: _kBg,
-                          borderRadius: BorderRadius.circular(R.s(12)),
-                          isDense: true,
-                          isExpanded: true,
-                          items: _goalOptions
-                              .map((g) => DropdownMenuItem(value: g, child: Text(g)))
-                              .toList(),
-                          onChanged: (v) {
-                            if (v != null) _saveGoal(v);
-                          },
-                        ),
-                      ),
-                    ),
+                  icon: Icons.wc_rounded,
+                  label: 'Gender',
+                  child: Row(
+                    children: [
+                      _buildGenderChip('Girl', '👧'),
+                      SizedBox(width: R.s(6)),
+                      _buildGenderChip('Boy', '👦'),
+                    ],
                   ),
                 ),
               ),
