@@ -29,7 +29,21 @@ app.use((req, _res, next) => {
 });
 app.use('/recordings', express.static(path.join(__dirname, 'data', 'recordings')));
 
-// Public
+// Public — rate-limited to defend against brute-force password attacks
+// and bulk account creation. 10 req/min/IP is generous for real users
+// (a parent typo-ing password 2-3 times then succeeding); attackers
+// scripting 100s of requests/sec immediately hit 429.
+const authLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  message: { error: '操作过于频繁，请稍后再试' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Tests need to register/login many times in quick succession
+  skip: () => process.env.NODE_ENV === 'test',
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 app.use('/api/auth', authRoutes);
 
 // Protected
