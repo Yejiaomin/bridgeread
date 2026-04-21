@@ -59,6 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Registration succeeded, token already saved by ApiService
     final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phone', phone);
+    await prefs.setString('child_name', childName);
 
     // New user always starts from today, book 1
     final now = chinaTime();
@@ -110,6 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Telemetry.log('login_success', {'phone': phone.substring(0, 3) + '****' + phone.substring(7)});
 
     // Cache user data locally
+    await prefs.setString('phone', phone);
     await prefs.setString('child_name', user['childName'] ?? '');
     if (user['bookStartDate'] != null) {
       await prefs.setString('book_start_date', user['bookStartDate']);

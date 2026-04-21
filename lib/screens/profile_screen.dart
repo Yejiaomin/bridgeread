@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _totalStars = 0;
   int _streakDays = 0;
   String _gender = '';
-  int _userId = 0;
+  String _phone = '';
   Set<String> _selectedHobbies = {};
 
   @override
@@ -120,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _nameCtrl.text = _childName;
       _birthday = prefs.getString('profile_birthday') ?? '';
       _gender = prefs.getString('profile_gender') ?? '';
-      _userId = prefs.getInt('user_id') ?? 0;
+      _phone = prefs.getString('phone') ?? '';
       _totalStars = prefs.getInt('total_stars') ?? 0;
       _streakDays = prefs.getInt('streak_days') ?? 0;
       _booksCompleted = prefs.getInt('books_completed') ?? 0;
@@ -144,6 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _avatarIndex = p['avatar'] ?? _avatarIndex;
         _birthday = p['birthday'] ?? _birthday;
         _gender = p['gender'] ?? _gender;
+        _phone = p['phone'] ?? _phone;
         _totalStars = p['totalStars'] ?? _totalStars;
         _booksCompleted = p['booksCompleted'] ?? _booksCompleted;
         _streakDays = p['streakDays'] ?? _streakDays;
@@ -160,6 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await prefs.setString('child_name', _childName);
       await prefs.setString('profile_birthday', _birthday);
       await prefs.setString('profile_gender', _gender);
+      await prefs.setString('phone', _phone);
       await prefs.setString('profile_hobbies', _selectedHobbies.join(','));
       await prefs.setInt('total_stars', _totalStars);
       await prefs.setInt('books_completed', _booksCompleted);
@@ -635,14 +637,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(width: R.s(20)),
               Expanded(
                 child: _buildFormCard(
-                  icon: Icons.badge_rounded,
-                  label: 'User ID',
+                  icon: Icons.phone_rounded,
+                  label: 'Phone',
                   child: _buildInputField(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: R.s(10), vertical: R.s(10)),
                       child: Text(
-                        _userId > 0 ? '$_userId' : '-',
+                        _phone.length >= 11
+                            ? '${_phone.substring(0, 3)}****${_phone.substring(7)}'
+                            : (_phone.isNotEmpty ? _phone : '-'),
                         style: TextStyle(
                             fontSize: R.s(12), color: Colors.brown.shade700),
                       ),

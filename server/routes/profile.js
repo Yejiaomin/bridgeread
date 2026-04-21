@@ -7,7 +7,7 @@ const router = express.Router();
 // ── Get profile ────────────────────────────────────────────────────────────
 router.get('/', (req, res) => {
   const user = queryOne(
-    `SELECT child_name, profile_avatar, profile_birthday, profile_gender,
+    `SELECT phone, child_name, profile_avatar, profile_birthday, profile_gender,
             profile_hobbies, profile_goal, profile_custom_avatar, total_stars
      FROM users WHERE id = ?`, [req.userId]
   );
@@ -23,6 +23,7 @@ router.get('/', (req, res) => {
   res.json({
     success: true,
     profile: {
+      phone: user.phone,
       childName: user.child_name,
       avatar: user.profile_avatar ?? 0,
       birthday: user.profile_birthday ?? '',
