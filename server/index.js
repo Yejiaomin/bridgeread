@@ -17,6 +17,11 @@ const authMiddleware = require('./middleware/auth');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Behind nginx — trust the immediate proxy so req.ip / X-Forwarded-For
+// resolve to the real client IP. Without this express-rate-limit logs
+// ERR_ERL_UNEXPECTED_X_FORWARDED_FOR on every request.
+app.set('trust proxy', 1);
+
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 
