@@ -10,33 +10,21 @@
  * - Lock triggers at >= 15 owed
  */
 
-const initSqlJs = require('sql.js');
+const Database = require('better-sqlite3');
 
 // ── In-memory DB helpers (same interface as db.js) ─────────────────────────
 let db;
 
-function setupDb() {
-  const SQL = require('sql.js');
-  // sql.js returns a promise in newer versions but sync in others
-  // We'll initialize in beforeAll
-}
-
 function query(sql, params = []) {
-  const stmt = db.prepare(sql);
-  if (params.length) stmt.bind(params);
-  const rows = [];
-  while (stmt.step()) rows.push(stmt.getAsObject());
-  stmt.free();
-  return rows;
+  return db.prepare(sql).all(...params);
 }
 
 function queryOne(sql, params = []) {
-  const rows = query(sql, params);
-  return rows[0] || null;
+  return db.prepare(sql).get(...params) || null;
 }
 
 function run(sql, params = []) {
-  db.run(sql, params);
+  db.prepare(sql).run(...params);
 }
 
 // ── Progress logic (extracted from routes/progress.js) ─────────────────────
@@ -106,10 +94,10 @@ function checkAndLock(userId) {
 // ── Tests ──────────────────────────────────────────────────────────────────
 
 beforeAll(async () => {
-  const SQL = await initSqlJs();
-  db = new SQL.Database();
+  db = new Database(':memory:');
+  db.pragma('foreign_keys = OFF');
 
-  db.run(`
+  db.exec(`
     CREATE TABLE users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       phone TEXT UNIQUE NOT NULL,
@@ -126,7 +114,7 @@ beforeAll(async () => {
     )
   `);
 
-  db.run(`
+  db.exec(`
     CREATE TABLE daily_progress (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -142,13 +130,13 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-  db.run('DELETE FROM daily_progress');
-  db.run('DELETE FROM users');
+  db.exec('DELETE FROM daily_progress');
+  db.exec('DELETE FROM users');
   // Reset autoincrement so user always gets id=1
-  db.run("DELETE FROM sqlite_sequence");
+  try { db.exec('DELETE FROM sqlite_sequence'); } catch (_) {}
   // Create a test user with book_start_date = Monday 2026-03-30
-  db.run(`INSERT INTO users (phone, password_hash, child_name, book_start_date)
-          VALUES ('13800000000', 'hash', 'TestChild', '2026-03-30')`);
+  db.exec(`INSERT INTO users (phone, password_hash, child_name, book_start_date)
+           VALUES ('13800000000', 'hash', 'TestChild', '2026-03-30')`);
 });
 
 afterAll(() => {

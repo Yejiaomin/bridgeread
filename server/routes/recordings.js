@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const db = require('../db');
+const { query, run } = require('../db');
 
 const router = express.Router();
 
@@ -39,9 +39,10 @@ router.post('/upload', upload.single('audio'), (req, res) => {
 
   const filePath = `recordings/${userId}/${req.file.filename}`;
 
-  db.prepare(
-    'INSERT INTO recordings (user_id, date, lesson_id, sentence, file_path) VALUES (?, ?, ?, ?, ?)'
-  ).run(userId, date || new Date().toISOString().slice(0, 10), lessonId || '', sentence || '', filePath);
+  run(
+    'INSERT INTO recordings (user_id, date, lesson_id, sentence, file_path) VALUES (?, ?, ?, ?, ?)',
+    [userId, date || new Date().toISOString().slice(0, 10), lessonId || '', sentence || '', filePath]
+  );
 
   res.json({ success: true, filePath });
 });
@@ -51,14 +52,14 @@ router.get('/', (req, res) => {
   const userId = req.userId;
   const { date, lessonId } = req.query;
 
-  let query = 'SELECT * FROM recordings WHERE user_id = ?';
+  let sql = 'SELECT * FROM recordings WHERE user_id = ?';
   const params = [userId];
 
-  if (date) { query += ' AND date = ?'; params.push(date); }
-  if (lessonId) { query += ' AND lesson_id = ?'; params.push(lessonId); }
-  query += ' ORDER BY created_at DESC';
+  if (date) { sql += ' AND date = ?'; params.push(date); }
+  if (lessonId) { sql += ' AND lesson_id = ?'; params.push(lessonId); }
+  sql += ' ORDER BY created_at DESC';
 
-  const recordings = db.prepare(query).all(...params);
+  const recordings = query(sql, params);
   res.json({ success: true, recordings });
 });
 

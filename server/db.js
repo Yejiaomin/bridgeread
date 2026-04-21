@@ -1,5 +1,7 @@
-const initSqlJs = require('sql.js');
-const fs = require('fs');
+// SQLite via better-sqlite3 — direct file I/O, ~100x faster than sql.js for
+// our write-heavy progress sync workload. Same .db file format as before, so
+// migration is a drop-in: existing data file works as-is.
+const Database = require('better-sqlite3');
 const path = require('path');
 
 const DB_PATH = path.join(__dirname, 'data', 'bridgeread.db');
@@ -9,18 +11,16 @@ let db;
 async function getDb() {
   if (db) return db;
 
-  const SQL = await initSqlJs();
+  db = new Database(DB_PATH);
+  // WAL mode = better concurrent read perf, smaller fsync footprint
+  db.pragma('journal_mode = WAL');
+  db.pragma('synchronous = NORMAL');
+  // Match prior sql.js behavior: don't enforce FK constraints. Existing
+  // tables and code paths rely on lax FK semantics (e.g. progress rows
+  // outliving deleted users). Enable later only after auditing all routes.
+  db.pragma('foreign_keys = OFF');
 
-  // Load existing DB or create new
-  if (fs.existsSync(DB_PATH)) {
-    const buffer = fs.readFileSync(DB_PATH);
-    db = new SQL.Database(buffer);
-  } else {
-    db = new SQL.Database();
-  }
-
-  // Create tables
-  db.run(`
+  db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       phone TEXT UNIQUE NOT NULL,
@@ -34,10 +34,8 @@ async function getDb() {
       last_active_date TEXT,
       assessment_result TEXT,
       created_at TEXT DEFAULT (datetime('now'))
-    )
-  `);
+    );
 
-  db.run(`
     CREATE TABLE IF NOT EXISTS daily_progress (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -48,10 +46,8 @@ async function getDb() {
       lesson_id TEXT,
       FOREIGN KEY (user_id) REFERENCES users(id),
       UNIQUE(user_id, date, module)
-    )
-  `);
+    );
 
-  db.run(`
     CREATE TABLE IF NOT EXISTS recordings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -61,10 +57,8 @@ async function getDb() {
       file_path TEXT NOT NULL,
       created_at TEXT DEFAULT (datetime('now')),
       FOREIGN KEY (user_id) REFERENCES users(id)
-    )
-  `);
+    );
 
-  db.run(`
     CREATE TABLE IF NOT EXISTS sms_codes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       phone TEXT NOT NULL,
@@ -72,10 +66,38 @@ async function getDb() {
       expires_at TEXT NOT NULL,
       used INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
-    )
+    );
+
+    CREATE TABLE IF NOT EXISTS study_room (
+      user_id INTEGER PRIMARY KEY,
+      placed_items TEXT DEFAULT '{}',
+      treasure_box_items TEXT DEFAULT '[]',
+      equipped_accessory TEXT DEFAULT '',
+      gacha_date TEXT,
+      gacha_count INTEGER DEFAULT 0,
+      today_eggy TEXT DEFAULT '',
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS weekly_groups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      week_start TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS weekly_group_members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      group_id INTEGER NOT NULL,
+      user_id INTEGER,
+      fake_name TEXT,
+      fake_stars INTEGER DEFAULT 0,
+      avatar_month INTEGER DEFAULT 1,
+      FOREIGN KEY (group_id) REFERENCES weekly_groups(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
   `);
 
-  // Add profile columns to users (safe to re-run, uses try/catch)
+  // Profile columns added later — safe to re-run, ignore "duplicate column" errors
   const profileCols = [
     ['profile_avatar', 'INTEGER DEFAULT 0'],
     ['profile_birthday', 'TEXT'],
@@ -88,92 +110,38 @@ async function getDb() {
     ['app_start_date', 'TEXT'],
   ];
   for (const [col, def] of profileCols) {
-    try { db.run(`ALTER TABLE users ADD COLUMN ${col} ${def}`); } catch (_) {}
+    try { db.exec(`ALTER TABLE users ADD COLUMN ${col} ${def}`); } catch (_) {}
   }
-
-  db.run(`
-    CREATE TABLE IF NOT EXISTS study_room (
-      user_id INTEGER PRIMARY KEY,
-      placed_items TEXT DEFAULT '{}',
-      treasure_box_items TEXT DEFAULT '[]',
-      equipped_accessory TEXT DEFAULT '',
-      gacha_date TEXT,
-      gacha_count INTEGER DEFAULT 0,
-      today_eggy TEXT DEFAULT '',
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    )
-  `);
-  // Add today_eggy column for existing DBs
-  try { db.run("ALTER TABLE study_room ADD COLUMN today_eggy TEXT DEFAULT ''"); } catch (_) {}
-
-  db.run(`
-    CREATE TABLE IF NOT EXISTS weekly_groups (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      week_start TEXT NOT NULL,
-      created_at TEXT DEFAULT (datetime('now'))
-    )
-  `);
-
-  db.run(`
-    CREATE TABLE IF NOT EXISTS weekly_group_members (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      group_id INTEGER NOT NULL,
-      user_id INTEGER,
-      fake_name TEXT,
-      fake_stars INTEGER DEFAULT 0,
-      avatar_month INTEGER DEFAULT 1,
-      FOREIGN KEY (group_id) REFERENCES weekly_groups(id),
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    )
-  `);
-
-  // Auto-save every 30 seconds
-  setInterval(() => saveDb(), 30000);
+  try { db.exec("ALTER TABLE study_room ADD COLUMN today_eggy TEXT DEFAULT ''"); } catch (_) {}
 
   return db;
 }
 
-function saveDb() {
-  if (!db) return;
-  const data = db.export();
-  const buffer = Buffer.from(data);
-  fs.writeFileSync(DB_PATH, buffer);
-}
-
-// Helper: run query and return rows
+// Helper: SELECT rows
 function query(sql, params = []) {
-  const stmt = db.prepare(sql);
-  if (params.length) stmt.bind(params);
-  const rows = [];
-  while (stmt.step()) rows.push(stmt.getAsObject());
-  stmt.free();
-  return rows;
+  return db.prepare(sql).all(...params);
 }
 
-// Helper: run query and return first row
+// Helper: SELECT first row
 function queryOne(sql, params = []) {
-  const rows = query(sql, params);
-  return rows[0] || null;
+  return db.prepare(sql).get(...params) || null;
 }
 
-// Helper: run statement (INSERT/UPDATE/DELETE)
+// Helper: INSERT/UPDATE/DELETE — returns { lastInsertRowid, changes }
 function run(sql, params = []) {
-  db.run(sql, params);
-  saveDb(); // save after writes
-  // sql.js returns last_insert_rowid differently
-  const stmt = db.prepare("SELECT last_insert_rowid()");
-  stmt.step();
-  const id = stmt.get()[0];
-  stmt.free();
-  return { lastInsertRowid: id };
+  return db.prepare(sql).run(...params);
 }
 
-// Helper: run statement without saving (for batch operations)
+// Kept for API compatibility — better-sqlite3 persists immediately,
+// no manual save needed.
 function runNoSave(sql, params = []) {
-  db.run(sql, params);
+  db.prepare(sql).run(...params);
 }
 
-// Debug: log userId lookup
+function saveDb() {
+  // No-op — better-sqlite3 writes synchronously to the WAL on every commit.
+}
+
 function debugUser(userId) {
   const all = query('SELECT id, phone, child_name FROM users');
   console.log('[DEBUG] All users:', all, 'looking for:', userId);
