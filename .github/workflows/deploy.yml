@@ -62,11 +62,15 @@ jobs:
           # re-uploaded. Push only sends ~5MB of changed JS each deploy, fast.
           # (Orphan + full re-push would be 240MB every time → Gitee throttles.)
           tmpdir=$(mktemp -d)
-          if git clone --depth 1 --branch deploy "$GITEE_URL" "$tmpdir" 2>/dev/null; then
+          echo "=== Cloning Gitee deploy branch ==="
+          if git clone --depth 1 --branch deploy "$GITEE_URL" "$tmpdir"; then
+            echo "=== ✅ Clone succeeded → INCREMENTAL path ==="
+            echo "Files in cloned deploy: $(find "$tmpdir" -type f ! -path '*/.git/*' | wc -l)"
             find "$tmpdir" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
             cp -r build/web/* "$tmpdir/"
             cd "$tmpdir"
           else
+            echo "=== ⚠️  Clone FAILED → ORPHAN path (full re-push, will be slow) ==="
             cp -r build/web/* "$tmpdir/"
             cd "$tmpdir"
             git init
@@ -75,6 +79,8 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add -A
+          echo "=== Diff summary (vs deploy HEAD) ==="
+          git diff --cached --stat | tail -5
           git commit -m "Deploy $(date -u +%Y%m%d-%H%M%S)" || true
           git push --force origin HEAD:deploy
 
