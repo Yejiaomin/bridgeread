@@ -2,6 +2,14 @@
 <html>
 <head>
   <base href="$FLUTTER_BASE_HREF">
+
+  <!-- WeChat in-app browser (XWEB) can't run Flutter Web — redirect to guide page -->
+  <script>
+    if (/MicroMessenger/i.test(navigator.userAgent)) {
+      window.location.replace('wechat-guide.html');
+    }
+  </script>
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="BridgeRead - 儿童英语绘本阅读">
