@@ -308,6 +308,10 @@
     // Remove loading screen once Flutter renders first frame
     window.addEventListener('flutter-first-frame', function() {
       _log('Flutter first frame!');
+      // Cancel the 30s self-heal countdown — Flutter loaded fine, no rescue needed.
+      // Without this, the timer fires at 30s and triggers a mid-session reload
+      // (clearing SW + caches + window.location.reload) that interrupts learning.
+      if (typeof countdownTimer !== 'undefined') clearInterval(countdownTimer);
       var el = document.getElementById('loading');
       if (el) el.remove();
     });
