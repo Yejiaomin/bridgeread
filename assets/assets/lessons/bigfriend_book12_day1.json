@@ -1,0 +1,279 @@
+{
+  "id": "bigfriend_book12_day1",
+  "bookTitle": "Biscuit's Big Friend",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "Biscuit is a small puppy.",
+  "originalAudio": "books/12Biscuits_Big_Friend/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit's Big Friend的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "bigfriend_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "今天我们来认识Biscuit的好朋友！他叫Sam。friend就是朋友。你看Sam长什么样呀？",
+      "narrativeEN": "This is Biscuit and his friend Sam.",
+      "keywords": [
+        "friend"
+      ],
+      "audioCN": "bigfriend_p1_cn",
+      "audioEN": "bigfriend_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 18940
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit是一只small puppy——小小的狗。Sam呢？Sam是一只big dog——大大的狗！虽然一个大一个小，但他们是best friends——最好的朋友！",
+      "narrativeEN": "Biscuit is a small puppy. Woof, woof! Sam is a big dog. Ruff! Biscuit and Sam are good friends.",
+      "keywords": [
+        "small",
+        "puppy"
+      ],
+      "audioCN": "bigfriend_p2_cn",
+      "audioEN": "bigfriend_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 34020
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Ruff！Sam跑得好快呀！run fast就是跑得快。你看他的腿多长！",
+      "narrativeEN": "Ruff! Sam can run fast.",
+      "keywords": [
+        "ruff",
+        "fast"
+      ],
+      "audioCN": "bigfriend_p3_cn",
+      "audioEN": "bigfriend_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 39440
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit也想跑快快！他说我也要run fast！可是他的小短腿跑得起来吗？哈哈！",
+      "narrativeEN": "Woof, woof! Biscuit wants to run fast, too!",
+      "keywords": [
+        "fast"
+      ],
+      "audioCN": "bigfriend_p4_cn",
+      "audioEN": "bigfriend_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 44580
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Sam还能carry a big stick——叼着一根大树枝！carry就是搬运叼着。Biscuit也想叼，可是树枝比他还大呢！",
+      "narrativeEN": "Ruff! Sam can carry a big stick. Woof, woof! Biscuit wants to carry a big stick, too.",
+      "keywords": [
+        "ruff",
+        "carry"
+      ],
+      "audioCN": "bigfriend_p5_cn",
+      "audioEN": "bigfriend_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "两只狗一起玩tug——拔河！你玩过拔河吗？一个大一个小，谁会赢呢？",
+      "narrativeEN": "Woof, woof! Ruff! Biscuit and Sam want to play tug. ana",
+      "keywords": [
+        "ruff",
+        "play"
+      ],
+      "audioCN": "bigfriend_p6_cn",
+      "audioEN": "bigfriend_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 63620
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "玩累了要喝水啦！drink就是喝水。Splash！哎呀Biscuit你怎么跳进Sam的水盆里了！silly puppy！",
+      "narrativeEN": "Here, Biscuit! Here, Sam! It's time for a drink. Splash! Silly puppy! Sam's dish is too big for you!",
+      "keywords": [
+        "drink",
+        "splash"
+      ],
+      "audioCN": "bigfriend_p7_cn",
+      "audioEN": "bigfriend_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 67880
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "他们还要玩fetch——捡球！Ready? Fetch！准备好了吗？去捡球！",
+      "narrativeEN": "Woof, woof! Ruff! Biscuit and Sam Ready? Fetch! want to play fetch. M",
+      "keywords": [
+        "ruff",
+        "ready"
+      ],
+      "audioCN": "bigfriend_p8_cn",
+      "audioEN": "bigfriend_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "糟糕！球飞到fence——围栏后面去了！Sam太大了过不去！怎么办呢？",
+      "narrativeEN": "Uh-oh! There goes the ball! Now what will we do? Wait, Sam! That fence is too big for you!",
+      "keywords": [
+        "goes",
+        "ball"
+      ],
+      "audioCN": "bigfriend_p9_cn",
+      "audioEN": "bigfriend_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 92600
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit钻过去了！小小的身体就是有好处！只有small puppy才能钻过去！",
+      "narrativeEN": "Woof! Oh, Biscuit!",
+      "keywords": [],
+      "audioCN": "bigfriend_p10_cn",
+      "audioEN": "bigfriend_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "看！Sam虽然是big friend——大朋友，但是小小的Biscuit也很棒！他们各有各的本领！是不是很有趣呀？",
+      "narrativeEN": "Sam is a big friend, but only a small puppy like you could do that! Ruff! Woof, woof!",
+      "keywords": [
+        "friend",
+        "only"
+      ],
+      "audioCN": "bigfriend_p11_cn",
+      "audioEN": "bigfriend_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 106800
+    },
+    {
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_12.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit和Sam虽然一大一小，但是最好的朋友！你还记得small和big是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "bigfriend_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "big",
+      "phonemes": [
+        "b",
+        "i",
+        "g"
+      ],
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_03.webp"
+    },
+    {
+      "word": "run",
+      "phonemes": [
+        "r",
+        "u",
+        "n"
+      ],
+      "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_05.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/12Biscuits_Big_Friend/spread_03.webp",
+    "sentences": [
+      {
+        "text": "Biscuit is a small puppy.",
+        "audio": "audio/bigfriend_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Sam is a big dog.",
+        "audio": "audio/bigfriend_rec_2.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Biscuit and Sam are good friends.",
+        "audio": "audio/bigfriend_rec_3.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

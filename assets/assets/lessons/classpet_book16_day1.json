@@ -1,0 +1,301 @@
+{
+  "id": "classpet_book16_day1",
+  "bookTitle": "Biscuit Meets the Class Pet",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "This is Nibbles.",
+  "originalAudio": "books/16Biscuit_Meets_the_Class_Pet/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Meets the Class Pet的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "classpet_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "今天有一个特别的客人来家里做客啦！Come meet Nibbles——来认识Nibbles！Nibbles是谁呀？",
+      "narrativeEN": "Here, Biscuit. Come meet Nibbles! Woof, woof!",
+      "keywords": [
+        "meet",
+        "nibbles"
+      ],
+      "audioCN": "classpet_p1_cn",
+      "audioEN": "classpet_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 26100
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Nibbles是我们的class pet——班级宠物！他是一只小兔子，来家里visit——做客了！Biscuit好兴奋呀！",
+      "narrativeEN": "This is Nibbles. Nibbles is our class pet. Nibbles is here for a visit. Woof, woof! Hop, hop! Look, Biscuit! Nibbles found your bone.",
+      "keywords": [
+        "nibbles",
+        "class"
+      ],
+      "audioCN": "classpet_p2_cn",
+      "audioEN": "classpet_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 31640
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Hop hop！Nibbles蹦蹦跳跳的，他发现了Biscuit的ball——球！小兔子也喜欢玩球吗？",
+      "narrativeEN": "Woof, woof! Hop, hop! Nibbles found your ball.",
+      "keywords": [
+        "nibbles",
+        "ball"
+      ],
+      "audioCN": "classpet_p3_cn",
+      "audioEN": "classpet_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 52440
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Hop hop！Nibbles又发现了Biscuit的bed——小床！他跳到Biscuit的床上去了！",
+      "narrativeEN": "Woof, woof! Hop, hop! Nibbles found your bed, too!",
+      "keywords": [
+        "nibbles"
+      ],
+      "audioCN": "classpet_p4_cn",
+      "audioEN": "classpet_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 60720
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Silly puppy！不能跟Nibbles拉扯！No tugging——不许拉！小女孩去拿snack——零食给Nibbles。",
+      "narrativeEN": "\" Woof! Silly puppy! No tugging. Stay here, Biscuit. I will get a snack for Nibbles.",
+      "keywords": [
+        "silly",
+        "puppy"
+      ],
+      "audioCN": "classpet_p5_cn",
+      "audioEN": "classpet_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 69220
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit和Nibbles在一起又蹦又跳！Hop hop！Woof woof！他们玩得好开心！",
+      "narrativeEN": "Woof, woof! Hop, hop! Yoles •)) XS AC",
+      "keywords": [
+        "yoles"
+      ],
+      "audioCN": "classpet_p6_cn",
+      "audioEN": "classpet_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "他们追来追去！Hop hop！Woof！Nibbles跳得好快，Biscuit跟在后面跑！",
+      "narrativeEN": "# Woof! Hop, hop! Woof! Hop, hop!",
+      "keywords": [],
+      "audioCN": "classpet_p7_cn",
+      "audioEN": "classpet_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 81800
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "越跑越快！Nibbles到处蹦！Biscuit到处追！",
+      "narrativeEN": "Woof, woof! Woof, woof! Hop!",
+      "keywords": [],
+      "audioCN": "classpet_p8_cn",
+      "audioEN": "classpet_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哎呀！Oh no！Nibbles不见了！Where is Nibbles——Nibbles去哪里了？快找找！",
+      "narrativeEN": "N Oh no, Biscuit! Where is Nibbles? Woof, woof! We must find him.",
+      "keywords": [
+        "nibbles",
+        "must"
+      ],
+      "audioCN": "classpet_p9_cn",
+      "audioEN": "classpet_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 97800
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit到处找！Not under the table——不在桌子下面。Not on the chair——不在椅子上。到底在哪里呀？",
+      "narrativeEN": "Woof, woof! Nibbles is not under the table. Woof, woof! Nibbles is not on the chair.",
+      "keywords": [
+        "nibbles",
+        "under"
+      ],
+      "audioCN": "classpet_p10_cn",
+      "audioEN": "classpet_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 114040
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Where can Nibbles be——Nibbles在哪里呢？Sweet puppy！Biscuit你能找到他吗？",
+      "narrativeEN": "Woof, woof! Where can Nibbles be? Woof, woof! Sweet puppy!",
+      "keywords": [
+        "nibbles",
+        "sweet"
+      ],
+      "audioCN": "classpet_p11_cn",
+      "audioEN": "classpet_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 122520
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "找到啦！原来Nibbles藏在Biscuit的窝里！他还抱着Biscuit的bone和ball和bed！你说Nibbles是不是太调皮了！",
+      "narrativeEN": "Nibbles found your bone and your ball and your bed! Woof, woof! And you found Nibbles. Woof!",
+      "keywords": [
+        "nibbles",
+        "bone"
+      ],
+      "audioCN": "classpet_p12_cn",
+      "audioEN": "classpet_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 131800
+    },
+    {
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit和班级宠物Nibbles成了好朋友！你还记得class pet是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "classpet_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "class",
+      "phonemes": [
+        "cl",
+        "a",
+        "ss"
+      ],
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_03.webp"
+    },
+    {
+      "word": "pet",
+      "phonemes": [
+        "p",
+        "e",
+        "t"
+      ],
+      "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_03.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/16Biscuit_Meets_the_Class_Pet/spread_03.webp",
+    "sentences": [
+      {
+        "text": "This is Nibbles.",
+        "audio": "audio/classpet_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Nibbles is our class pet.",
+        "audio": "audio/classpet_rec_2.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Nibbles is here for a visit.",
+        "audio": "audio/classpet_rec_3.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Nibbles found your bone.",
+        "audio": "audio/classpet_rec_4.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

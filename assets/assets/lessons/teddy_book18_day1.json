@@ -1,0 +1,298 @@
+{
+  "id": "teddy_book18_day1",
+  "bookTitle": "Biscuit and the Lost Teddy Bear",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "Is it a bird.",
+  "originalAudio": "books/18Biscuit_and_the_Lost_Teddy_Bear/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit and the Lost Teddy Bear的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "teddy_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit看到了什么？What do you see——你看到了什么？",
+      "narrativeEN": "M Woof, woof! What do you see, Biscuit?",
+      "keywords": [],
+      "audioCN": "teddy_p1_cn",
+      "audioEN": "teddy_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 28540
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "是bird——小鸟吗？不是！是butterfly——蝴蝶吗？也不是！到底是什么呢？",
+      "narrativeEN": "Is it a bird? Woof, woof! Is it a butterfly? Woof, woof!",
+      "keywords": [
+        "bird",
+        "butterfly"
+      ],
+      "audioCN": "teddy_p2_cn",
+      "audioEN": "teddy_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 33360
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "原来是一个teddy bear——泰迪熊！someone lost it——有人把它弄丢了！是谁的呢？我们帮他找找主人吧！",
+      "narrativeEN": "Oh, Biscuit. It is a teddy bear! Woof, woof! Someone lost a teddy bear. Who can it be? Woof, woof!",
+      "keywords": [
+        "teddy",
+        "bear"
+      ],
+      "audioCN": "teddy_p3_cn",
+      "audioEN": "teddy_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 45420
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "是Sam的吗？Ruff！不是Sam的。Is this your teddy bear——这是你的泰迪熊吗？",
+      "narrativeEN": "Woof, woof! Is this your teddy bear, Sam? Ruff! No. It is not Sam's bear.",
+      "keywords": [
+        "teddy",
+        "bear"
+      ],
+      "audioCN": "teddy_p4_cn",
+      "audioEN": "teddy_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 64100
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "是Puddles的吗？Bow wow！也不是Puddles的。那到底是谁的呢？",
+      "narrativeEN": "Woof, woof! Is this your teddy bear, Puddles? Bow wow! No. It is not Puddles's bear.",
+      "keywords": [
+        "teddy",
+        "bear"
+      ],
+      "audioCN": "teddy_p5_cn",
+      "audioEN": "teddy_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 78120
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Someone lost a teddy bear——有人丢了泰迪熊。But who can it be——到底是谁呢？Biscuit要去找线索了！",
+      "narrativeEN": "Woof, woof! Someone lost a teddy bear. But who can it be? Woof, woof! Wait, Biscuit. What do you see now?",
+      "keywords": [
+        "someone",
+        "lost"
+      ],
+      "audioCN": "teddy_p6_cn",
+      "audioEN": "teddy_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 93280
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit看到了一辆big truck——大卡车！这是搬家的卡车！",
+      "narrativeEN": "Woof! Biscuit sees a big truck.",
+      "keywords": [
+        "sees",
+        "truck"
+      ],
+      "audioCN": "teddy_p7_cn",
+      "audioEN": "teddy_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 109960
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "还有a lot of boxes——好多箱子！有人在搬家呢！",
+      "narrativeEN": "C Woof! Biscuit sees a lot of boxes.",
+      "keywords": [
+        "sees",
+        "boxes"
+      ],
+      "audioCN": "teddy_p8_cn",
+      "audioEN": "teddy_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 116320
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit还看到了一个little boy——小男孩！他看起来好伤心呀！",
+      "narrativeEN": "Woof, woof! Biscuit sees a little boy, too.",
+      "keywords": [
+        "sees",
+        "little"
+      ],
+      "audioCN": "teddy_p9_cn",
+      "audioEN": "teddy_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 124120
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit跑过去问小男孩——Is this your teddy bear——这是你的泰迪熊吗？",
+      "narrativeEN": "Woof, woof! Woof, woof! Is this your teddy bear, little boy? าว",
+      "keywords": [
+        "teddy",
+        "bear"
+      ],
+      "audioCN": "teddy_p10_cn",
+      "audioEN": "teddy_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 132240
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Yes！对！就是小男孩的！The little boy lost his teddy bear——小男孩弄丢了他的泰迪熊，但是Biscuit found it——找到了！",
+      "narrativeEN": "Yes. It is! Woof! The little boy lost his teddy bear, Biscuit, but you found it! Woof, woof!",
+      "keywords": [
+        "little",
+        "lost"
+      ],
+      "audioCN": "teddy_p11_cn",
+      "audioEN": "teddy_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 136880
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小男孩给了泰迪熊一个big hug——大大的拥抱！还给了Biscuit一个大拥抱！Biscuit真棒，帮人找到了丢失的东西！",
+      "narrativeEN": "The teddy bear gets a big hug. Woof, woof! And Biscuit gets a big hug, too! Woof!",
+      "keywords": [
+        "teddy",
+        "bear"
+      ],
+      "audioCN": "teddy_p12_cn",
+      "audioEN": "teddy_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 150960
+    },
+    {
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit帮小男孩找回了teddy bear！你还记得lost和hug是什么意思吗？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "teddy_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "bird",
+      "phonemes": [
+        "b",
+        "ir",
+        "d"
+      ],
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_03.webp"
+    },
+    {
+      "word": "sam",
+      "phonemes": [
+        "s",
+        "a",
+        "m"
+      ],
+      "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_05.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/18Biscuit_and_the_Lost_Teddy_Bear/spread_03.webp",
+    "sentences": [
+      {
+        "text": "Is it a bird.",
+        "audio": "audio/teddy_rec_1.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Is it a butterfly.",
+        "audio": "audio/teddy_rec_2.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}

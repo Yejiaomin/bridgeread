@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>BridgeRead - 请在浏览器中打开</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #FFE8D6, #FFCBA4, #FFAD7A);
+      font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      color: #7A3A00;
+    }
+    .header { padding: 48px 24px 28px; text-align: center; }
+    .header .icon { font-size: 72px; line-height: 1; }
+    .header h2 { font-size: 26px; font-weight: 900; color: #B84A00; margin: 20px 0 8px; }
+    .header p { font-size: 15px; color: #8A5A30; margin: 0; }
+    .card {
+      background: white; border-radius: 20px; padding: 24px;
+      margin: 0 20px 24px;
+      box-shadow: 0 6px 20px rgba(255,140,66,0.15);
+    }
+    .section-title { font-weight: 800; color: #FF6B35; font-size: 17px; margin-bottom: 10px; }
+    .section-body { color: #555; font-size: 14px; line-height: 1.7; }
+    .section-body b { color: #FF6B35; }
+    .divider { height: 1px; background: #F3EBE0; margin: 22px -4px; }
+    .url-box {
+      background: #FFF4E6; border-radius: 12px;
+      padding: 12px 14px; font-size: 15px;
+      color: #B84A00; font-weight: 700;
+      -webkit-user-select: all; user-select: all;
+      text-align: center; margin-top: 14px;
+    }
+    .copy-wrap { text-align: center; padding: 0 24px 40px; }
+    .copy-btn {
+      background: #FF8C42; color: white; border: none;
+      padding: 14px 36px; border-radius: 24px;
+      font-size: 16px; font-weight: 700;
+      box-shadow: 0 4px 14px rgba(255,140,66,0.35);
+      cursor: pointer;
+    }
+    .copy-btn.done { background: #4CAF50; }
+    .dot { color: #FF6B35; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="icon">📱</div>
+    <h2>请在浏览器中打开</h2>
+    <p>微信内无法正常使用 BridgeRead</p>
+  </div>
+  <div class="card">
+    <div>
+      <div class="section-title">方法 1：右上角打开</div>
+      <div class="section-body">
+        点击右上角 <b class="dot">⋯</b> 菜单<br>
+        选择 <b>"在浏览器中打开"</b>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="section-title">方法 2：复制网址</div>
+      <div class="section-body">粘贴到 <b>Safari</b> 或<b>手机自带浏览器</b></div>
+      <div class="url-box">mybridgeread.com</div>
+    </div>
+  </div>
+  <div class="copy-wrap">
+    <button id="br-copy" class="copy-btn">📋 一键复制网址</button>
+  </div>
+  <script>
+    (function() {
+      var btn = document.getElementById('br-copy');
+      var url = 'https://mybridgeread.com';
+      function done() {
+        btn.textContent = '✅ 已复制，打开浏览器粘贴';
+        btn.classList.add('done');
+      }
+      function fallback() {
+        var i = document.createElement('input');
+        i.value = url;
+        document.body.appendChild(i);
+        i.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(i);
+      }
+      btn.onclick = function() {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done).catch(fallback);
+        } else {
+          fallback();
+        }
+      };
+    })();
+  </script>
+</body>
+</html>

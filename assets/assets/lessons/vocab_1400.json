@@ -1,0 +1,5054 @@
+[
+  {
+    "word": "foot",
+    "category": "人体"
+  },
+  {
+    "word": "head",
+    "category": "人体"
+  },
+  {
+    "word": "face",
+    "category": "人体"
+  },
+  {
+    "word": "hand",
+    "category": "人体"
+  },
+  {
+    "word": "leg",
+    "category": "人体"
+  },
+  {
+    "word": "eye",
+    "category": "人体"
+  },
+  {
+    "word": "ear",
+    "category": "人体"
+  },
+  {
+    "word": "nose",
+    "category": "人体"
+  },
+  {
+    "word": "mouth",
+    "category": "人体"
+  },
+  {
+    "word": "hair",
+    "category": "人体"
+  },
+  {
+    "word": "finger",
+    "category": "人体"
+  },
+  {
+    "word": "arm",
+    "category": "人体"
+  },
+  {
+    "word": "knee",
+    "category": "人体"
+  },
+  {
+    "word": "elbow",
+    "category": "人体"
+  },
+  {
+    "word": "wrist",
+    "category": "人体"
+  },
+  {
+    "word": "ankle",
+    "category": "人体"
+  },
+  {
+    "word": "shoulder",
+    "category": "人体"
+  },
+  {
+    "word": "chest",
+    "category": "人体"
+  },
+  {
+    "word": "back",
+    "category": "人体"
+  },
+  {
+    "word": "neck",
+    "category": "人体"
+  },
+  {
+    "word": "body",
+    "category": "人体"
+  },
+  {
+    "word": "tongue",
+    "category": "人体"
+  },
+  {
+    "word": "lip",
+    "category": "人体"
+  },
+  {
+    "word": "nail",
+    "category": "人体"
+  },
+  {
+    "word": "tooth",
+    "category": "人体"
+  },
+  {
+    "word": "toe",
+    "category": "人体"
+  },
+  {
+    "word": "thumb",
+    "category": "人体"
+  },
+  {
+    "word": "waist",
+    "category": "人体"
+  },
+  {
+    "word": "red",
+    "category": "颜色"
+  },
+  {
+    "word": "blue",
+    "category": "颜色"
+  },
+  {
+    "word": "pencil",
+    "category": "学习用品"
+  },
+  {
+    "word": "book",
+    "category": "学习用品"
+  },
+  {
+    "word": "eraser",
+    "category": "学习用品"
+  },
+  {
+    "word": "notebook",
+    "category": "学习用品"
+  },
+  {
+    "word": "chinese book",
+    "category": "学习用品"
+  },
+  {
+    "word": "maths book",
+    "category": "学习用品"
+  },
+  {
+    "word": "comic book",
+    "category": "学习用品"
+  },
+  {
+    "word": "pencil case",
+    "category": "学习用品"
+  },
+  {
+    "word": "ruler -",
+    "category": "学习用品"
+  },
+  {
+    "word": "schoolbag",
+    "category": "学习用品"
+  },
+  {
+    "word": "crayon",
+    "category": "学习用品"
+  },
+  {
+    "word": "paper",
+    "category": "学习用品"
+  },
+  {
+    "word": "scissors",
+    "category": "学习用品"
+  },
+  {
+    "word": "glue -",
+    "category": "学习用品"
+  },
+  {
+    "word": "bag",
+    "category": "学习用品"
+  },
+  {
+    "word": "pen",
+    "category": "学习用品"
+  },
+  {
+    "word": "calculator it",
+    "category": "学习用品"
+  },
+  {
+    "word": "binder",
+    "category": "学习用品"
+  },
+  {
+    "word": "sharpener",
+    "category": "学习用品"
+  },
+  {
+    "word": "marker",
+    "category": "学习用品"
+  },
+  {
+    "word": "compass",
+    "category": "学习用品"
+  },
+  {
+    "word": "board",
+    "category": "学习用品"
+  },
+  {
+    "word": "textbook",
+    "category": "学习用品"
+  },
+  {
+    "word": "dictionary",
+    "category": "学习用品"
+  },
+  {
+    "word": "ball pen",
+    "category": "学习用品"
+  },
+  {
+    "word": "ink",
+    "category": "学习用品"
+  },
+  {
+    "word": "map",
+    "category": "学习用品"
+  },
+  {
+    "word": "shape",
+    "category": "形状类"
+  },
+  {
+    "word": "circle",
+    "category": "形状类"
+  },
+  {
+    "word": "square",
+    "category": "形状类"
+  },
+  {
+    "word": "triangle",
+    "category": "形状类"
+  },
+  {
+    "word": "rectangle kar",
+    "category": "形状类"
+  },
+  {
+    "word": "green",
+    "category": "形状类"
+  },
+  {
+    "word": "yellow",
+    "category": "形状类"
+  },
+  {
+    "word": "white",
+    "category": "形状类"
+  },
+  {
+    "word": "black",
+    "category": "形状类"
+  },
+  {
+    "word": "oval",
+    "category": "形状类"
+  },
+  {
+    "word": "orange",
+    "category": "形状类"
+  },
+  {
+    "word": "star",
+    "category": "形状类"
+  },
+  {
+    "word": "purple",
+    "category": "形状类"
+  },
+  {
+    "word": "heart",
+    "category": "形状类"
+  },
+  {
+    "word": "pink",
+    "category": "形状类"
+  },
+  {
+    "word": "diamond",
+    "category": "形状类"
+  },
+  {
+    "word": "brown",
+    "category": "形状类"
+  },
+  {
+    "word": "polygon",
+    "category": "形状类"
+  },
+  {
+    "word": "gray",
+    "category": "形状类"
+  },
+  {
+    "word": "cylinder",
+    "category": "形状类"
+  },
+  {
+    "word": "gold",
+    "category": "形状类"
+  },
+  {
+    "word": "sphere",
+    "category": "形状类"
+  },
+  {
+    "word": "silver",
+    "category": "形状类"
+  },
+  {
+    "word": "cube",
+    "category": "形状类"
+  },
+  {
+    "word": "classroom",
+    "category": "学校"
+  },
+  {
+    "word": "teacher",
+    "category": "学校"
+  },
+  {
+    "word": "student",
+    "category": "学校"
+  },
+  {
+    "word": "principal",
+    "category": "学校"
+  },
+  {
+    "word": "story-book",
+    "category": "学校"
+  },
+  {
+    "word": "blackboard",
+    "category": "学校"
+  },
+  {
+    "word": "chalk",
+    "category": "学校"
+  },
+  {
+    "word": "desk",
+    "category": "学校"
+  },
+  {
+    "word": "chair",
+    "category": "学校"
+  },
+  {
+    "word": "library",
+    "category": "学校"
+  },
+  {
+    "word": "playground",
+    "category": "学校"
+  },
+  {
+    "word": "cafeteria",
+    "category": "学校"
+  },
+  {
+    "word": "laboratory",
+    "category": "学校"
+  },
+  {
+    "word": "shelf",
+    "category": "学校"
+  },
+  {
+    "word": "homework",
+    "category": "学校"
+  },
+  {
+    "word": "bell",
+    "category": "学校"
+  },
+  {
+    "word": "locker",
+    "category": "学校"
+  },
+  {
+    "word": "grade",
+    "category": "学校"
+  },
+  {
+    "word": "school bus",
+    "category": "学校"
+  },
+  {
+    "word": "office",
+    "category": "学校"
+  },
+  {
+    "word": "newspaper",
+    "category": "学校"
+  },
+  {
+    "word": "postcard",
+    "category": "学校"
+  },
+  {
+    "word": "magazine",
+    "category": "学校"
+  },
+  {
+    "word": "tape",
+    "category": "学校"
+  },
+  {
+    "word": "library card",
+    "category": "学校"
+  },
+  {
+    "word": "recorder",
+    "category": "学校"
+  },
+  {
+    "word": "letter",
+    "category": "学校"
+  },
+  {
+    "word": "word",
+    "category": "学校"
+  },
+  {
+    "word": "car",
+    "category": "交通工具"
+  },
+  {
+    "word": "bicycle",
+    "category": "交通工具"
+  },
+  {
+    "word": "bus",
+    "category": "交通工具"
+  },
+  {
+    "word": "train",
+    "category": "交通工具"
+  },
+  {
+    "word": "airplane",
+    "category": "交通工具"
+  },
+  {
+    "word": "motorcycle",
+    "category": "交通工具"
+  },
+  {
+    "word": "boat",
+    "category": "交通工具"
+  },
+  {
+    "word": "subway",
+    "category": "交通工具"
+  },
+  {
+    "word": "truck",
+    "category": "交通工具"
+  },
+  {
+    "word": "taxi",
+    "category": "交通工具"
+  },
+  {
+    "word": "helicopter",
+    "category": "交通工具"
+  },
+  {
+    "word": "ferry",
+    "category": "交通工具"
+  },
+  {
+    "word": "ship",
+    "category": "交通工具"
+  },
+  {
+    "word": "time",
+    "category": "交通工具"
+  },
+  {
+    "word": "morning",
+    "category": "时间"
+  },
+  {
+    "word": "afternoon",
+    "category": "时间"
+  },
+  {
+    "word": "evening",
+    "category": "时间"
+  },
+  {
+    "word": "today",
+    "category": "时间"
+  },
+  {
+    "word": "tomorrow",
+    "category": "时间"
+  },
+  {
+    "word": "yesterday",
+    "category": "时间"
+  },
+  {
+    "word": "day off",
+    "category": "时间"
+  },
+  {
+    "word": "night time",
+    "category": "时间"
+  },
+  {
+    "word": "day",
+    "category": "时间"
+  },
+  {
+    "word": "week",
+    "category": "时间"
+  },
+  {
+    "word": "month -",
+    "category": "时间"
+  },
+  {
+    "word": "year",
+    "category": "时间"
+  },
+  {
+    "word": "second",
+    "category": "时间"
+  },
+  {
+    "word": "minute",
+    "category": "时间"
+  },
+  {
+    "word": "hour",
+    "category": "时间"
+  },
+  {
+    "word": "daily",
+    "category": "时间"
+  },
+  {
+    "word": "calendar",
+    "category": "时间"
+  },
+  {
+    "word": "leap year",
+    "category": "时间"
+  },
+  {
+    "word": "date",
+    "category": "时间"
+  },
+  {
+    "word": "holiday",
+    "category": "时间"
+  },
+  {
+    "word": "weekday ib",
+    "category": "时间"
+  },
+  {
+    "word": "tonight",
+    "category": "时间"
+  },
+  {
+    "word": "clock",
+    "category": "时间"
+  },
+  {
+    "word": "sometimes",
+    "category": "时间"
+  },
+  {
+    "word": "someday",
+    "category": "时间"
+  },
+  {
+    "word": "new year",
+    "category": "节日"
+  },
+  {
+    "word": "spring festival",
+    "category": "节日"
+  },
+  {
+    "word": "mid-autumn festival",
+    "category": "节日"
+  },
+  {
+    "word": "dragon boat festival",
+    "category": "节日"
+  },
+  {
+    "word": "christmas",
+    "category": "节日"
+  },
+  {
+    "word": "thanksgiving -",
+    "category": "节日"
+  },
+  {
+    "word": "valentine's day",
+    "category": "节日"
+  },
+  {
+    "word": "national day",
+    "category": "节日"
+  },
+  {
+    "word": "labor day",
+    "category": "节日"
+  },
+  {
+    "word": "children's day - jl",
+    "category": "节日"
+  },
+  {
+    "word": "women's day",
+    "category": "节日"
+  },
+  {
+    "word": "mother's day",
+    "category": "节日"
+  },
+  {
+    "word": "violet",
+    "category": "节日"
+  },
+  {
+    "word": "beige",
+    "category": "节日"
+  },
+  {
+    "word": "maroon",
+    "category": "节日"
+  },
+  {
+    "word": "navy blue",
+    "category": "节日"
+  },
+  {
+    "word": "cone",
+    "category": "节日"
+  },
+  {
+    "word": "spiral",
+    "category": "节日"
+  },
+  {
+    "word": "crescent",
+    "category": "节日"
+  },
+  {
+    "word": "hexagon",
+    "category": "节日"
+  },
+  {
+    "word": "van",
+    "category": "节日"
+  },
+  {
+    "word": "yacht",
+    "category": "节日"
+  },
+  {
+    "word": "jeep",
+    "category": "节日"
+  },
+  {
+    "word": "father's day",
+    "category": "节日"
+  },
+  {
+    "word": "spaceship",
+    "category": "节日"
+  },
+  {
+    "word": "apple",
+    "category": "节日"
+  },
+  {
+    "word": "banana",
+    "category": "节日"
+  },
+  {
+    "word": "doctor",
+    "category": "职业"
+  },
+  {
+    "word": "engineer",
+    "category": "职业"
+  },
+  {
+    "word": "nurse",
+    "category": "职业"
+  },
+  {
+    "word": "policeman",
+    "category": "职业"
+  },
+  {
+    "word": "firefighter",
+    "category": "职业"
+  },
+  {
+    "word": "shirt",
+    "category": "水果"
+  },
+  {
+    "word": "pants",
+    "category": "水果"
+  },
+  {
+    "word": "dress",
+    "category": "水果"
+  },
+  {
+    "word": "skirt",
+    "category": "水果"
+  },
+  {
+    "word": "jacket",
+    "category": "水果"
+  },
+  {
+    "word": "coat",
+    "category": "水果"
+  },
+  {
+    "word": "dentist",
+    "category": "水果"
+  },
+  {
+    "word": "hat",
+    "category": "水果"
+  },
+  {
+    "word": "salesperson",
+    "category": "水果"
+  },
+  {
+    "word": "cap",
+    "category": "水果"
+  },
+  {
+    "word": "mountain",
+    "category": "水果"
+  },
+  {
+    "word": "river",
+    "category": "水果"
+  },
+  {
+    "word": "ocean",
+    "category": "水果"
+  },
+  {
+    "word": "forest",
+    "category": "水果"
+  },
+  {
+    "word": "lawyer",
+    "category": "水果"
+  },
+  {
+    "word": "chef",
+    "category": "水果"
+  },
+  {
+    "word": "pilot",
+    "category": "水果"
+  },
+  {
+    "word": "artist",
+    "category": "水果"
+  },
+  {
+    "word": "singer",
+    "category": "水果"
+  },
+  {
+    "word": "scientist",
+    "category": "水果"
+  },
+  {
+    "word": "actor",
+    "category": "水果"
+  },
+  {
+    "word": "actress",
+    "category": "水果"
+  },
+  {
+    "word": "writer",
+    "category": "水果"
+  },
+  {
+    "word": "banker",
+    "category": "水果"
+  },
+  {
+    "word": "mechanic",
+    "category": "水果"
+  },
+  {
+    "word": "architect",
+    "category": "水果"
+  },
+  {
+    "word": "driver",
+    "category": "水果"
+  },
+  {
+    "word": "scarf",
+    "category": "水果"
+  },
+  {
+    "word": "gloves",
+    "category": "水果"
+  },
+  {
+    "word": "shoes",
+    "category": "水果"
+  },
+  {
+    "word": "socks",
+    "category": "水果"
+  },
+  {
+    "word": "sweater",
+    "category": "水果"
+  },
+  {
+    "word": "tie",
+    "category": "水果"
+  },
+  {
+    "word": "raincoat",
+    "category": "水果"
+  },
+  {
+    "word": "boots",
+    "category": "水果"
+  },
+  {
+    "word": "slippers",
+    "category": "水果"
+  },
+  {
+    "word": "blouse",
+    "category": "水果"
+  },
+  {
+    "word": "jeans",
+    "category": "水果"
+  },
+  {
+    "word": "tree",
+    "category": "水果"
+  },
+  {
+    "word": "flower",
+    "category": "水果"
+  },
+  {
+    "word": "grass",
+    "category": "水果"
+  },
+  {
+    "word": "seed",
+    "category": "水果"
+  },
+  {
+    "word": "sky",
+    "category": "水果"
+  },
+  {
+    "word": "cloud",
+    "category": "水果"
+  },
+  {
+    "word": "sun",
+    "category": "水果"
+  },
+  {
+    "word": "moon",
+    "category": "水果"
+  },
+  {
+    "word": "rainbow",
+    "category": "水果"
+  },
+  {
+    "word": "air",
+    "category": "水果"
+  },
+  {
+    "word": "wind -",
+    "category": "水果"
+  },
+  {
+    "word": "rain",
+    "category": "水果"
+  },
+  {
+    "word": "water -",
+    "category": "水果"
+  },
+  {
+    "word": "fire",
+    "category": "水果"
+  },
+  {
+    "word": "desert",
+    "category": "水果"
+  },
+  {
+    "word": "pear",
+    "category": "水果"
+  },
+  {
+    "word": "watermelon",
+    "category": "水果"
+  },
+  {
+    "word": "grape",
+    "category": "水果"
+  },
+  {
+    "word": "cherry",
+    "category": "水果"
+  },
+  {
+    "word": "mango",
+    "category": "水果"
+  },
+  {
+    "word": "strawberry",
+    "category": "水果"
+  },
+  {
+    "word": "peach",
+    "category": "水果"
+  },
+  {
+    "word": "lemon",
+    "category": "水果"
+  },
+  {
+    "word": "pineapple",
+    "category": "水果"
+  },
+  {
+    "word": "kiwifruit",
+    "category": "水果"
+  },
+  {
+    "word": "coconut",
+    "category": "水果"
+  },
+  {
+    "word": "durian",
+    "category": "水果"
+  },
+  {
+    "word": "pomelo",
+    "category": "水果"
+  },
+  {
+    "word": "green beans",
+    "category": "水果"
+  },
+  {
+    "word": "pea",
+    "category": "水果"
+  },
+  {
+    "word": "pumpkin",
+    "category": "水果"
+  },
+  {
+    "word": "onion",
+    "category": "水果"
+  },
+  {
+    "word": "cucumber",
+    "category": "水果"
+  },
+  {
+    "word": "eggplant",
+    "category": "水果"
+  },
+  {
+    "word": "accountant - it",
+    "category": "水果"
+  },
+  {
+    "word": "farmer",
+    "category": "水果"
+  },
+  {
+    "word": "cleaner",
+    "category": "水果"
+  },
+  {
+    "word": "assistant",
+    "category": "水果"
+  },
+  {
+    "word": "waiter",
+    "category": "水果"
+  },
+  {
+    "word": "postman",
+    "category": "水果"
+  },
+  {
+    "word": "window",
+    "category": "家居"
+  },
+  {
+    "word": "floor",
+    "category": "家居"
+  },
+  {
+    "word": "wall",
+    "category": "家居"
+  },
+  {
+    "word": "house",
+    "category": "家居"
+  },
+  {
+    "word": "bedroom",
+    "category": "家居"
+  },
+  {
+    "word": "bathroom",
+    "category": "家居"
+  },
+  {
+    "word": "restaurant",
+    "category": "家居"
+  },
+  {
+    "word": "air-conditioner",
+    "category": "家居"
+  },
+  {
+    "word": "sofa",
+    "category": "家居"
+  },
+  {
+    "word": "curtains",
+    "category": "家居"
+  },
+  {
+    "word": "table",
+    "category": "家居"
+  },
+  {
+    "word": "fan",
+    "category": "家居"
+  },
+  {
+    "word": "closet",
+    "category": "家居"
+  },
+  {
+    "word": "door",
+    "category": "家居"
+  },
+  {
+    "word": "bed",
+    "category": "家居"
+  },
+  {
+    "word": "suit",
+    "category": "家居"
+  },
+  {
+    "word": "sunglasses",
+    "category": "家居"
+  },
+  {
+    "word": "shorts",
+    "category": "家居"
+  },
+  {
+    "word": "sneakers",
+    "category": "家居"
+  },
+  {
+    "word": "trousers",
+    "category": "家居"
+  },
+  {
+    "word": "vest",
+    "category": "家居"
+  },
+  {
+    "word": "sandals",
+    "category": "家居"
+  },
+  {
+    "word": "light",
+    "category": "家居"
+  },
+  {
+    "word": "lamp",
+    "category": "家居"
+  },
+  {
+    "word": "phone",
+    "category": "家居"
+  },
+  {
+    "word": "tv",
+    "category": "家居"
+  },
+  {
+    "word": "mirror",
+    "category": "家居"
+  },
+  {
+    "word": "umbrella",
+    "category": "家居"
+  },
+  {
+    "word": "toothbrush",
+    "category": "家居"
+  },
+  {
+    "word": "knife -",
+    "category": "家居"
+  },
+  {
+    "word": "fork",
+    "category": "家居"
+  },
+  {
+    "word": "chopsticks",
+    "category": "家居"
+  },
+  {
+    "word": "key",
+    "category": "家居"
+  },
+  {
+    "word": "lock",
+    "category": "家居"
+  },
+  {
+    "word": "pot",
+    "category": "家居"
+  },
+  {
+    "word": "fridge",
+    "category": "家居"
+  },
+  {
+    "word": "spoon",
+    "category": "家居"
+  },
+  {
+    "word": "island",
+    "category": "家居"
+  },
+  {
+    "word": "lake",
+    "category": "家居"
+  },
+  {
+    "word": "waterfall",
+    "category": "家居"
+  },
+  {
+    "word": "beach",
+    "category": "家居"
+  },
+  {
+    "word": "stream",
+    "category": "家居"
+  },
+  {
+    "word": "potato",
+    "category": "家居"
+  },
+  {
+    "word": "stone",
+    "category": "家居"
+  },
+  {
+    "word": "rose",
+    "category": "家居"
+  },
+  {
+    "word": "hammer",
+    "category": "家居"
+  },
+  {
+    "word": "parcel",
+    "category": "家居"
+  },
+  {
+    "word": "menu",
+    "category": "家居"
+  },
+  {
+    "word": "vase",
+    "category": "家居"
+  },
+  {
+    "word": "box",
+    "category": "家居"
+  },
+  {
+    "word": "doorbell",
+    "category": "家居"
+  },
+  {
+    "word": "stairs",
+    "category": "家居"
+  },
+  {
+    "word": "lantern",
+    "category": "家居"
+  },
+  {
+    "word": "photo",
+    "category": "家居"
+  },
+  {
+    "word": "stamp",
+    "category": "家居"
+  },
+  {
+    "word": "study",
+    "category": "家居"
+  },
+  {
+    "word": "toy",
+    "category": "家居"
+  },
+  {
+    "word": "doll",
+    "category": "家居"
+  },
+  {
+    "word": "balloon",
+    "category": "家居"
+  },
+  {
+    "word": "camera",
+    "category": "家居"
+  },
+  {
+    "word": "radio",
+    "category": "家居"
+  },
+  {
+    "word": "plate",
+    "category": "家居"
+  },
+  {
+    "word": "kite",
+    "category": "家居"
+  },
+  {
+    "word": "cup",
+    "category": "家居"
+  },
+  {
+    "word": "cabbage",
+    "category": "家居"
+  },
+  {
+    "word": "tomato",
+    "category": "家居"
+  },
+  {
+    "word": "carrot",
+    "category": "家居"
+  },
+  {
+    "word": "sweet potato -",
+    "category": "家居"
+  },
+  {
+    "word": "gift",
+    "category": "家居"
+  },
+  {
+    "word": "zipper",
+    "category": "家居"
+  },
+  {
+    "word": "money",
+    "category": "家居"
+  },
+  {
+    "word": "card",
+    "category": "家居"
+  },
+  {
+    "word": "pet",
+    "category": "家居"
+  },
+  {
+    "word": "game",
+    "category": "家居"
+  },
+  {
+    "word": "chess",
+    "category": "家居"
+  },
+  {
+    "word": "swing",
+    "category": "家居"
+  },
+  {
+    "word": "slide",
+    "category": "家居"
+  },
+  {
+    "word": "jigsaw",
+    "category": "家居"
+  },
+  {
+    "word": "yo-yo",
+    "category": "家居"
+  },
+  {
+    "word": "computer",
+    "category": "家居"
+  },
+  {
+    "word": "keyboard",
+    "category": "家居"
+  },
+  {
+    "word": "monitor",
+    "category": "家居"
+  },
+  {
+    "word": "mouse",
+    "category": "家居"
+  },
+  {
+    "word": "message",
+    "category": "家居"
+  },
+  {
+    "word": "e-mail",
+    "category": "家居"
+  },
+  {
+    "word": "spring",
+    "category": "季节"
+  },
+  {
+    "word": "summer",
+    "category": "季节"
+  },
+  {
+    "word": "autumn",
+    "category": "季节"
+  },
+  {
+    "word": "winter",
+    "category": "季节"
+  },
+  {
+    "word": "season",
+    "category": "季节"
+  },
+  {
+    "word": "hot",
+    "category": "季节"
+  },
+  {
+    "word": "cold",
+    "category": "季节"
+  },
+  {
+    "word": "warm",
+    "category": "季节"
+  },
+  {
+    "word": "cool",
+    "category": "季节"
+  },
+  {
+    "word": "snowy",
+    "category": "季节"
+  },
+  {
+    "word": "rainy",
+    "category": "季节"
+  },
+  {
+    "word": "hail",
+    "category": "季节"
+  },
+  {
+    "word": "lightning",
+    "category": "季节"
+  },
+  {
+    "word": "humidity",
+    "category": "季节"
+  },
+  {
+    "word": "icy",
+    "category": "季节"
+  },
+  {
+    "word": "sunny",
+    "category": "季节"
+  },
+  {
+    "word": "cloudy",
+    "category": "季节"
+  },
+  {
+    "word": "windy",
+    "category": "季节"
+  },
+  {
+    "word": "shower",
+    "category": "季节"
+  },
+  {
+    "word": "temperature",
+    "category": "季节"
+  },
+  {
+    "word": "weather",
+    "category": "季节"
+  },
+  {
+    "word": "egg",
+    "category": "食品"
+  },
+  {
+    "word": "fish",
+    "category": "食品"
+  },
+  {
+    "word": "soup",
+    "category": "食品"
+  },
+  {
+    "word": "ice -",
+    "category": "食品"
+  },
+  {
+    "word": "tea",
+    "category": "食品"
+  },
+  {
+    "word": "monday",
+    "category": "星期"
+  },
+  {
+    "word": "tuesday",
+    "category": "星期"
+  },
+  {
+    "word": "wednesday",
+    "category": "星期"
+  },
+  {
+    "word": "thursday",
+    "category": "星期"
+  },
+  {
+    "word": "friday",
+    "category": "星期"
+  },
+  {
+    "word": "saturday",
+    "category": "星期"
+  },
+  {
+    "word": "math",
+    "category": "科目"
+  },
+  {
+    "word": "science",
+    "category": "科目"
+  },
+  {
+    "word": "language arts",
+    "category": "科目"
+  },
+  {
+    "word": "english",
+    "category": "科目"
+  },
+  {
+    "word": "sunday",
+    "category": "科目"
+  },
+  {
+    "word": "weekend",
+    "category": "科目"
+  },
+  {
+    "word": "january",
+    "category": "科目"
+  },
+  {
+    "word": "february",
+    "category": "科目"
+  },
+  {
+    "word": "march",
+    "category": "科目"
+  },
+  {
+    "word": "april",
+    "category": "科目"
+  },
+  {
+    "word": "may",
+    "category": "科目"
+  },
+  {
+    "word": "june",
+    "category": "科目"
+  },
+  {
+    "word": "july -",
+    "category": "科目"
+  },
+  {
+    "word": "august",
+    "category": "科目"
+  },
+  {
+    "word": "september",
+    "category": "科目"
+  },
+  {
+    "word": "october",
+    "category": "科目"
+  },
+  {
+    "word": "december",
+    "category": "科目"
+  },
+  {
+    "word": "ice-cream",
+    "category": "科目"
+  },
+  {
+    "word": "chicken",
+    "category": "科目"
+  },
+  {
+    "word": "noodles",
+    "category": "科目"
+  },
+  {
+    "word": "mutton",
+    "category": "科目"
+  },
+  {
+    "word": "pork",
+    "category": "科目"
+  },
+  {
+    "word": "history",
+    "category": "科目"
+  },
+  {
+    "word": "geography",
+    "category": "科目"
+  },
+  {
+    "word": "pe",
+    "category": "科目"
+  },
+  {
+    "word": "music",
+    "category": "科目"
+  },
+  {
+    "word": "art",
+    "category": "科目"
+  },
+  {
+    "word": "chinese",
+    "category": "科目"
+  },
+  {
+    "word": "biology",
+    "category": "科目"
+  },
+  {
+    "word": "chemistry",
+    "category": "科目"
+  },
+  {
+    "word": "physics",
+    "category": "科目"
+  },
+  {
+    "word": "social studies-tt",
+    "category": "科目"
+  },
+  {
+    "word": "health",
+    "category": "科目"
+  },
+  {
+    "word": "economics",
+    "category": "科目"
+  },
+  {
+    "word": "psychology",
+    "category": "科目"
+  },
+  {
+    "word": "civics",
+    "category": "科目"
+  },
+  {
+    "word": "drama",
+    "category": "科目"
+  },
+  {
+    "word": "french",
+    "category": "科目"
+  },
+  {
+    "word": "china",
+    "category": "国家"
+  },
+  {
+    "word": "england",
+    "category": "国家"
+  },
+  {
+    "word": "america",
+    "category": "国家"
+  },
+  {
+    "word": "france",
+    "category": "国家"
+  },
+  {
+    "word": "canada",
+    "category": "国家"
+  },
+  {
+    "word": "sports",
+    "category": "运动"
+  },
+  {
+    "word": "basketball",
+    "category": "运动"
+  },
+  {
+    "word": "football",
+    "category": "运动"
+  },
+  {
+    "word": "volleyball",
+    "category": "运动"
+  },
+  {
+    "word": "tennis",
+    "category": "运动"
+  },
+  {
+    "word": "badminton",
+    "category": "运动"
+  },
+  {
+    "word": "swimming",
+    "category": "运动"
+  },
+  {
+    "word": "baseball",
+    "category": "运动"
+  },
+  {
+    "word": "running",
+    "category": "运动"
+  },
+  {
+    "word": "gymnastics",
+    "category": "运动"
+  },
+  {
+    "word": "martial arts",
+    "category": "运动"
+  },
+  {
+    "word": "table tennis",
+    "category": "运动"
+  },
+  {
+    "word": "hockey",
+    "category": "运动"
+  },
+  {
+    "word": "boxing",
+    "category": "运动"
+  },
+  {
+    "word": "golf",
+    "category": "运动"
+  },
+  {
+    "word": "jump rope",
+    "category": "运动"
+  },
+  {
+    "word": "cycling",
+    "category": "运动"
+  },
+  {
+    "word": "skating",
+    "category": "运动"
+  },
+  {
+    "word": "wrestling",
+    "category": "运动"
+  },
+  {
+    "word": "archery",
+    "category": "运动"
+  },
+  {
+    "word": "high jump",
+    "category": "运动"
+  },
+  {
+    "word": "erhu",
+    "category": "音乐"
+  },
+  {
+    "word": "guitar",
+    "category": "音乐"
+  },
+  {
+    "word": "drum",
+    "category": "音乐"
+  },
+  {
+    "word": "zither",
+    "category": "音乐"
+  },
+  {
+    "word": "french fries",
+    "category": "音乐"
+  },
+  {
+    "word": "rice",
+    "category": "音乐"
+  },
+  {
+    "word": "jam",
+    "category": "音乐"
+  },
+  {
+    "word": "mexico",
+    "category": "音乐"
+  },
+  {
+    "word": "flute",
+    "category": "音乐"
+  },
+  {
+    "word": "bread",
+    "category": "音乐"
+  },
+  {
+    "word": "salad",
+    "category": "音乐"
+  },
+  {
+    "word": "india -",
+    "category": "音乐"
+  },
+  {
+    "word": "horn",
+    "category": "音乐"
+  },
+  {
+    "word": "beef",
+    "category": "音乐"
+  },
+  {
+    "word": "scotland",
+    "category": "音乐"
+  },
+  {
+    "word": "meat",
+    "category": "音乐"
+  },
+  {
+    "word": "milk",
+    "category": "音乐"
+  },
+  {
+    "word": "yogurt",
+    "category": "音乐"
+  },
+  {
+    "word": "flour",
+    "category": "音乐"
+  },
+  {
+    "word": "tofu",
+    "category": "音乐"
+  },
+  {
+    "word": "cake",
+    "category": "音乐"
+  },
+  {
+    "word": "hot dog",
+    "category": "音乐"
+  },
+  {
+    "word": "biscuit",
+    "category": "音乐"
+  },
+  {
+    "word": "vegetable",
+    "category": "音乐"
+  },
+  {
+    "word": "cola",
+    "category": "音乐"
+  },
+  {
+    "word": "juice",
+    "category": "音乐"
+  },
+  {
+    "word": "cheese",
+    "category": "音乐"
+  },
+  {
+    "word": "sausage",
+    "category": "音乐"
+  },
+  {
+    "word": "dumpling",
+    "category": "音乐"
+  },
+  {
+    "word": "coffee",
+    "category": "音乐"
+  },
+  {
+    "word": "chocolate",
+    "category": "音乐"
+  },
+  {
+    "word": "sandwich",
+    "category": "音乐"
+  },
+  {
+    "word": "hamburger",
+    "category": "音乐"
+  },
+  {
+    "word": "dessert",
+    "category": "音乐"
+  },
+  {
+    "word": "pizza",
+    "category": "音乐"
+  },
+  {
+    "word": "ham",
+    "category": "音乐"
+  },
+  {
+    "word": "salt",
+    "category": "音乐"
+  },
+  {
+    "word": "sugar",
+    "category": "音乐"
+  },
+  {
+    "word": "lemonade",
+    "category": "音乐"
+  },
+  {
+    "word": "corn",
+    "category": "音乐"
+  },
+  {
+    "word": "peanut",
+    "category": "音乐"
+  },
+  {
+    "word": "sweets",
+    "category": "音乐"
+  },
+  {
+    "word": "fast food",
+    "category": "音乐"
+  },
+  {
+    "word": "breakfast",
+    "category": "音乐"
+  },
+  {
+    "word": "lunch",
+    "category": "音乐"
+  },
+  {
+    "word": "dinner",
+    "category": "音乐"
+  },
+  {
+    "word": "australia",
+    "category": "音乐"
+  },
+  {
+    "word": "new york",
+    "category": "音乐"
+  },
+  {
+    "word": "london",
+    "category": "音乐"
+  },
+  {
+    "word": "sydney",
+    "category": "音乐"
+  },
+  {
+    "word": "moscow",
+    "category": "音乐"
+  },
+  {
+    "word": "cairo",
+    "category": "音乐"
+  },
+  {
+    "word": "washington",
+    "category": "音乐"
+  },
+  {
+    "word": "san francisco-ib",
+    "category": "音乐"
+  },
+  {
+    "word": "hong kong",
+    "category": "音乐"
+  },
+  {
+    "word": "tibet",
+    "category": "音乐"
+  },
+  {
+    "word": "harbin",
+    "category": "音乐"
+  },
+  {
+    "word": "un",
+    "category": "音乐"
+  },
+  {
+    "word": "west lake",
+    "category": "音乐"
+  },
+  {
+    "word": "mount tai",
+    "category": "音乐"
+  },
+  {
+    "word": "the yellow river",
+    "category": "音乐"
+  },
+  {
+    "word": "the great wall",
+    "category": "音乐"
+  },
+  {
+    "word": "violin",
+    "category": "音乐"
+  },
+  {
+    "word": "dancing",
+    "category": "音乐"
+  },
+  {
+    "word": "piano",
+    "category": "音乐"
+  },
+  {
+    "word": "trumpet",
+    "category": "音乐"
+  },
+  {
+    "word": "song",
+    "category": "音乐"
+  },
+  {
+    "word": "pop music",
+    "category": "音乐"
+  },
+  {
+    "word": "classical music",
+    "category": "音乐"
+  },
+  {
+    "word": "have a fever",
+    "category": "患病"
+  },
+  {
+    "word": "hurt",
+    "category": "患病"
+  },
+  {
+    "word": "have a cold",
+    "category": "患病"
+  },
+  {
+    "word": "have a toothache",
+    "category": "患病"
+  },
+  {
+    "word": "have a headache",
+    "category": "患病"
+  },
+  {
+    "word": "have a sore throat",
+    "category": "患病"
+  },
+  {
+    "word": "have a stomachache",
+    "category": "患病"
+  },
+  {
+    "word": "have a cough",
+    "category": "患病"
+  },
+  {
+    "word": "friend - aa",
+    "category": "人物"
+  },
+  {
+    "word": "boy",
+    "category": "人物"
+  },
+  {
+    "word": "girl",
+    "category": "人物"
+  },
+  {
+    "word": "mother",
+    "category": "人物"
+  },
+  {
+    "word": "father",
+    "category": "人物"
+  },
+  {
+    "word": "brother",
+    "category": "人物"
+  },
+  {
+    "word": "sister",
+    "category": "人物"
+  },
+  {
+    "word": "grandma",
+    "category": "人物"
+  },
+  {
+    "word": "grandpa",
+    "category": "人物"
+  },
+  {
+    "word": "uncle",
+    "category": "人物"
+  },
+  {
+    "word": "aunt",
+    "category": "人物"
+  },
+  {
+    "word": "man",
+    "category": "人物"
+  },
+  {
+    "word": "woman",
+    "category": "人物"
+  },
+  {
+    "word": "husband",
+    "category": "人物"
+  },
+  {
+    "word": "wife",
+    "category": "人物"
+  },
+  {
+    "word": "classmate",
+    "category": "人物"
+  },
+  {
+    "word": "nephew",
+    "category": "人物"
+  },
+  {
+    "word": "niece",
+    "category": "人物"
+  },
+  {
+    "word": "cat",
+    "category": "动物"
+  },
+  {
+    "word": "dog",
+    "category": "动物"
+  },
+  {
+    "word": "pig",
+    "category": "动物"
+  },
+  {
+    "word": "duck",
+    "category": "动物"
+  },
+  {
+    "word": "rabbit",
+    "category": "动物"
+  },
+  {
+    "word": "lion",
+    "category": "动物"
+  },
+  {
+    "word": "cousin",
+    "category": "动物"
+  },
+  {
+    "word": "baby - jl",
+    "category": "动物"
+  },
+  {
+    "word": "parents",
+    "category": "动物"
+  },
+  {
+    "word": "miss",
+    "category": "动物"
+  },
+  {
+    "word": "lady",
+    "category": "动物"
+  },
+  {
+    "word": "mum",
+    "category": "动物"
+  },
+  {
+    "word": "dad",
+    "category": "动物"
+  },
+  {
+    "word": "son - jl",
+    "category": "动物"
+  },
+  {
+    "word": "daughter jl",
+    "category": "动物"
+  },
+  {
+    "word": "kid",
+    "category": "动物"
+  },
+  {
+    "word": "visitor",
+    "category": "动物"
+  },
+  {
+    "word": "neighbor",
+    "category": "动物"
+  },
+  {
+    "word": "pen pal",
+    "category": "动物"
+  },
+  {
+    "word": "tourist",
+    "category": "动物"
+  },
+  {
+    "word": "sir",
+    "category": "动物"
+  },
+  {
+    "word": "madam",
+    "category": "动物"
+  },
+  {
+    "word": "robot",
+    "category": "动物"
+  },
+  {
+    "word": "people",
+    "category": "动物"
+  },
+  {
+    "word": "parrot",
+    "category": "动物"
+  },
+  {
+    "word": "kangaroo",
+    "category": "动物"
+  },
+  {
+    "word": "elephant",
+    "category": "动物"
+  },
+  {
+    "word": "zebra",
+    "category": "动物"
+  },
+  {
+    "word": "shark",
+    "category": "动物"
+  },
+  {
+    "word": "home",
+    "category": "地点"
+  },
+  {
+    "word": "room",
+    "category": "地点"
+  },
+  {
+    "word": "kitchen",
+    "category": "地点"
+  },
+  {
+    "word": "park",
+    "category": "地点"
+  },
+  {
+    "word": "garden",
+    "category": "地点"
+  },
+  {
+    "word": "canteen",
+    "category": "地点"
+  },
+  {
+    "word": "flat",
+    "category": "地点"
+  },
+  {
+    "word": "company",
+    "category": "地点"
+  },
+  {
+    "word": "factory -",
+    "category": "地点"
+  },
+  {
+    "word": "farm",
+    "category": "地点"
+  },
+  {
+    "word": "village",
+    "category": "地点"
+  },
+  {
+    "word": "bank -",
+    "category": "地点"
+  },
+  {
+    "word": "post office",
+    "category": "地点"
+  },
+  {
+    "word": "pet shop",
+    "category": "地点"
+  },
+  {
+    "word": "cinema",
+    "category": "地点"
+  },
+  {
+    "word": "gymnasium",
+    "category": "地点"
+  },
+  {
+    "word": "school",
+    "category": "地点"
+  },
+  {
+    "word": "airport",
+    "category": "地点"
+  },
+  {
+    "word": "station",
+    "category": "地点"
+  },
+  {
+    "word": "community",
+    "category": "地点"
+  },
+  {
+    "word": "museum",
+    "category": "地点"
+  },
+  {
+    "word": "theatre",
+    "category": "地点"
+  },
+  {
+    "word": "store",
+    "category": "地点"
+  },
+  {
+    "word": "circus",
+    "category": "地点"
+  },
+  {
+    "word": "street",
+    "category": "地点"
+  },
+  {
+    "word": "hotel",
+    "category": "地点"
+  },
+  {
+    "word": "supermarket",
+    "category": "地点"
+  },
+  {
+    "word": "chinatown",
+    "category": "地点"
+  },
+  {
+    "word": "hospital",
+    "category": "地点"
+  },
+  {
+    "word": "sports field",
+    "category": "地点"
+  },
+  {
+    "word": "city",
+    "category": "地点"
+  },
+  {
+    "word": "zoo",
+    "category": "地点"
+  },
+  {
+    "word": "one",
+    "category": "数字"
+  },
+  {
+    "word": "naturepark",
+    "category": "数字"
+  },
+  {
+    "word": "ninety",
+    "category": "数字"
+  },
+  {
+    "word": "hundred",
+    "category": "数字"
+  },
+  {
+    "word": "thousand",
+    "category": "数字"
+  },
+  {
+    "word": "million",
+    "category": "数字"
+  },
+  {
+    "word": "zero",
+    "category": "数字"
+  },
+  {
+    "word": "first",
+    "category": "数字"
+  },
+  {
+    "word": "third",
+    "category": "数字"
+  },
+  {
+    "word": "two",
+    "category": "数字"
+  },
+  {
+    "word": "three",
+    "category": "数字"
+  },
+  {
+    "word": "seal",
+    "category": "数字"
+  },
+  {
+    "word": "four",
+    "category": "数字"
+  },
+  {
+    "word": "dragon",
+    "category": "数字"
+  },
+  {
+    "word": "five",
+    "category": "数字"
+  },
+  {
+    "word": "donkey",
+    "category": "数字"
+  },
+  {
+    "word": "six",
+    "category": "数字"
+  },
+  {
+    "word": "seven",
+    "category": "数字"
+  },
+  {
+    "word": "fourth",
+    "category": "数字"
+  },
+  {
+    "word": "eight",
+    "category": "数字"
+  },
+  {
+    "word": "fifth",
+    "category": "数字"
+  },
+  {
+    "word": "nine",
+    "category": "数字"
+  },
+  {
+    "word": "sixth",
+    "category": "数字"
+  },
+  {
+    "word": "seventh",
+    "category": "数字"
+  },
+  {
+    "word": "eleven",
+    "category": "数字"
+  },
+  {
+    "word": "eighth",
+    "category": "数字"
+  },
+  {
+    "word": "ninth",
+    "category": "数字"
+  },
+  {
+    "word": "thirteen",
+    "category": "数字"
+  },
+  {
+    "word": "tiger",
+    "category": "数字"
+  },
+  {
+    "word": "fox",
+    "category": "数字"
+  },
+  {
+    "word": "deer",
+    "category": "数字"
+  },
+  {
+    "word": "snake",
+    "category": "数字"
+  },
+  {
+    "word": "hen",
+    "category": "数字"
+  },
+  {
+    "word": "sheep",
+    "category": "数字"
+  },
+  {
+    "word": "goat",
+    "category": "数字"
+  },
+  {
+    "word": "cow",
+    "category": "数字"
+  },
+  {
+    "word": "bird",
+    "category": "数字"
+  },
+  {
+    "word": "camel",
+    "category": "数字"
+  },
+  {
+    "word": "frog",
+    "category": "数字"
+  },
+  {
+    "word": "cock",
+    "category": "数字"
+  },
+  {
+    "word": "horse",
+    "category": "数字"
+  },
+  {
+    "word": "goose",
+    "category": "数字"
+  },
+  {
+    "word": "lobster",
+    "category": "数字"
+  },
+  {
+    "word": "giraffe",
+    "category": "数字"
+  },
+  {
+    "word": "eagle",
+    "category": "数字"
+  },
+  {
+    "word": "squirrel",
+    "category": "数字"
+  },
+  {
+    "word": "gorilla",
+    "category": "数字"
+  },
+  {
+    "word": "kitten",
+    "category": "数字"
+  },
+  {
+    "word": "duckling",
+    "category": "数字"
+  },
+  {
+    "word": "puppy",
+    "category": "数字"
+  },
+  {
+    "word": "chick",
+    "category": "数字"
+  },
+  {
+    "word": "ten",
+    "category": "数字"
+  },
+  {
+    "word": "twelve",
+    "category": "数字"
+  },
+  {
+    "word": "fourteen",
+    "category": "数字"
+  },
+  {
+    "word": "fifteen",
+    "category": "数字"
+  },
+  {
+    "word": "sixteen",
+    "category": "数字"
+  },
+  {
+    "word": "seventeen",
+    "category": "数字"
+  },
+  {
+    "word": "eighteen",
+    "category": "数字"
+  },
+  {
+    "word": "nineteen",
+    "category": "数字"
+  },
+  {
+    "word": "tenth",
+    "category": "数字"
+  },
+  {
+    "word": "eleventh",
+    "category": "数字"
+  },
+  {
+    "word": "twelfth",
+    "category": "数字"
+  },
+  {
+    "word": "twentieth",
+    "category": "数字"
+  },
+  {
+    "word": "thirtieth",
+    "category": "数字"
+  },
+  {
+    "word": "fortieth",
+    "category": "数字"
+  },
+  {
+    "word": "east",
+    "category": "方位"
+  },
+  {
+    "word": "swan",
+    "category": "方位"
+  },
+  {
+    "word": "turkey",
+    "category": "方位"
+  },
+  {
+    "word": "turtle",
+    "category": "方位"
+  },
+  {
+    "word": "twenty",
+    "category": "方位"
+  },
+  {
+    "word": "ant",
+    "category": "方位"
+  },
+  {
+    "word": "butterfly",
+    "category": "方位"
+  },
+  {
+    "word": "thirty",
+    "category": "方位"
+  },
+  {
+    "word": "insect",
+    "category": "方位"
+  },
+  {
+    "word": "forty",
+    "category": "方位"
+  },
+  {
+    "word": "south",
+    "category": "方位"
+  },
+  {
+    "word": "monkey",
+    "category": "方位"
+  },
+  {
+    "word": "dolphin",
+    "category": "方位"
+  },
+  {
+    "word": "fifty",
+    "category": "方位"
+  },
+  {
+    "word": "panda",
+    "category": "方位"
+  },
+  {
+    "word": "hare",
+    "category": "方位"
+  },
+  {
+    "word": "sixty",
+    "category": "方位"
+  },
+  {
+    "word": "west",
+    "category": "方位"
+  },
+  {
+    "word": "north -",
+    "category": "方位"
+  },
+  {
+    "word": "bear",
+    "category": "方位"
+  },
+  {
+    "word": "owl",
+    "category": "方位"
+  },
+  {
+    "word": "wolf",
+    "category": "方位"
+  },
+  {
+    "word": "dinosaur",
+    "category": "方位"
+  },
+  {
+    "word": "seventy",
+    "category": "方位"
+  },
+  {
+    "word": "eighty",
+    "category": "方位"
+  },
+  {
+    "word": "left",
+    "category": "方位"
+  },
+  {
+    "word": "right",
+    "category": "方位"
+  },
+  {
+    "word": "big",
+    "category": "形容词"
+  },
+  {
+    "word": "small",
+    "category": "形容词"
+  },
+  {
+    "word": "famous",
+    "category": "形容词"
+  },
+  {
+    "word": "bright",
+    "category": "形容词"
+  },
+  {
+    "word": "scary fa",
+    "category": "形容词"
+  },
+  {
+    "word": "fast",
+    "category": "形容词"
+  },
+  {
+    "word": "long -",
+    "category": "形容词"
+  },
+  {
+    "word": "great",
+    "category": "形容词"
+  },
+  {
+    "word": "heavy",
+    "category": "形容词"
+  },
+  {
+    "word": "short",
+    "category": "形容词"
+  },
+  {
+    "word": "tall",
+    "category": "形容词"
+  },
+  {
+    "word": "thin",
+    "category": "形容词"
+  },
+  {
+    "word": "fat",
+    "category": "形容词"
+  },
+  {
+    "word": "old",
+    "category": "形容词"
+  },
+  {
+    "word": "little",
+    "category": "形容词"
+  },
+  {
+    "word": "young",
+    "category": "形容词"
+  },
+  {
+    "word": "strong",
+    "category": "形容词"
+  },
+  {
+    "word": "hungry",
+    "category": "形容词"
+  },
+  {
+    "word": "thirsty",
+    "category": "形容词"
+  },
+  {
+    "word": "tired",
+    "category": "形容词"
+  },
+  {
+    "word": "sad",
+    "category": "形容词"
+  },
+  {
+    "word": "shy",
+    "category": "形容词"
+  },
+  {
+    "word": "high",
+    "category": "形容词"
+  },
+  {
+    "word": "wide",
+    "category": "形容词"
+  },
+  {
+    "word": "lovely",
+    "category": "形容词"
+  },
+  {
+    "word": "welcome",
+    "category": "形容词"
+  },
+  {
+    "word": "difficult",
+    "category": "形容词"
+  },
+  {
+    "word": "busy",
+    "category": "形容词"
+  },
+  {
+    "word": "really",
+    "category": "形容词"
+  },
+  {
+    "word": "lucky",
+    "category": "形容词"
+  },
+  {
+    "word": "enough",
+    "category": "形容词"
+  },
+  {
+    "word": "fantastic",
+    "category": "形容词"
+  },
+  {
+    "word": "tidy",
+    "category": "形容词"
+  },
+  {
+    "word": "useful",
+    "category": "形容词"
+  },
+  {
+    "word": "exciting",
+    "category": "形容词"
+  },
+  {
+    "word": "happy",
+    "category": "形容词"
+  },
+  {
+    "word": "blind",
+    "category": "形容词"
+  },
+  {
+    "word": "thick",
+    "category": "形容词"
+  },
+  {
+    "word": "dangerous",
+    "category": "形容词"
+  },
+  {
+    "word": "interesting",
+    "category": "形容词"
+  },
+  {
+    "word": "angry",
+    "category": "形容词"
+  },
+  {
+    "word": "bored",
+    "category": "形容词"
+  },
+  {
+    "word": "excited",
+    "category": "形容词"
+  },
+  {
+    "word": "nervous",
+    "category": "形容词"
+  },
+  {
+    "word": "normal",
+    "category": "形容词"
+  },
+  {
+    "word": "favorite",
+    "category": "形容词"
+  },
+  {
+    "word": "dear",
+    "category": "形容词"
+  },
+  {
+    "word": "new",
+    "category": "形容词"
+  },
+  {
+    "word": "old -",
+    "category": "形容词"
+  },
+  {
+    "word": "lost",
+    "category": "形容词"
+  },
+  {
+    "word": "quiet",
+    "category": "形容词"
+  },
+  {
+    "word": "behind",
+    "category": "形容词"
+  },
+  {
+    "word": "nextto",
+    "category": "形容词"
+  },
+  {
+    "word": "over",
+    "category": "形容词"
+  },
+  {
+    "word": "in front of",
+    "category": "形容词"
+  },
+  {
+    "word": "beside",
+    "category": "形容词"
+  },
+  {
+    "word": "by",
+    "category": "形容词"
+  },
+  {
+    "word": "with",
+    "category": "形容词"
+  },
+  {
+    "word": "to",
+    "category": "形容词"
+  },
+  {
+    "word": "at",
+    "category": "形容词"
+  },
+  {
+    "word": "along",
+    "category": "形容词"
+  },
+  {
+    "word": "before",
+    "category": "形容词"
+  },
+  {
+    "word": "after",
+    "category": "形容词"
+  },
+  {
+    "word": "during",
+    "category": "形容词"
+  },
+  {
+    "word": "until",
+    "category": "形容词"
+  },
+  {
+    "word": "through",
+    "category": "形容词"
+  },
+  {
+    "word": "across",
+    "category": "形容词"
+  },
+  {
+    "word": "below",
+    "category": "形容词"
+  },
+  {
+    "word": "inside",
+    "category": "形容词"
+  },
+  {
+    "word": "for",
+    "category": "形容词"
+  },
+  {
+    "word": "talented",
+    "category": "代词"
+  },
+  {
+    "word": "traditional",
+    "category": "代词"
+  },
+  {
+    "word": "deaf",
+    "category": "代词"
+  },
+  {
+    "word": "special",
+    "category": "代词"
+  },
+  {
+    "word": "proud",
+    "category": "代词"
+  },
+  {
+    "word": "wrong",
+    "category": "代词"
+  },
+  {
+    "word": "noisy",
+    "category": "代词"
+  },
+  {
+    "word": "important",
+    "category": "代词"
+  },
+  {
+    "word": "weak",
+    "category": "代词"
+  },
+  {
+    "word": "dirty",
+    "category": "代词"
+  },
+  {
+    "word": "safe",
+    "category": "代词"
+  },
+  {
+    "word": "dark",
+    "category": "代词"
+  },
+  {
+    "word": "free",
+    "category": "代词"
+  },
+  {
+    "word": "nice",
+    "category": "代词"
+  },
+  {
+    "word": "active",
+    "category": "代词"
+  },
+  {
+    "word": "well",
+    "category": "代词"
+  },
+  {
+    "word": "rich",
+    "category": "代词"
+  },
+  {
+    "word": "stupid",
+    "category": "代词"
+  },
+  {
+    "word": "juicy",
+    "category": "代词"
+  },
+  {
+    "word": "easy",
+    "category": "代词"
+  },
+  {
+    "word": "same",
+    "category": "代词"
+  },
+  {
+    "word": "cute",
+    "category": "代词"
+  },
+  {
+    "word": "clever",
+    "category": "代词"
+  },
+  {
+    "word": "me",
+    "category": "代词"
+  },
+  {
+    "word": "we",
+    "category": "代词"
+  },
+  {
+    "word": "us",
+    "category": "代词"
+  },
+  {
+    "word": "you",
+    "category": "代词"
+  },
+  {
+    "word": "he-fitt",
+    "category": "代词"
+  },
+  {
+    "word": "him - ft",
+    "category": "代词"
+  },
+  {
+    "word": "she",
+    "category": "代词"
+  },
+  {
+    "word": "her -",
+    "category": "代词"
+  },
+  {
+    "word": "it -",
+    "category": "代词"
+  },
+  {
+    "word": "they ft",
+    "category": "代词"
+  },
+  {
+    "word": "them",
+    "category": "代词"
+  },
+  {
+    "word": "my",
+    "category": "代词"
+  },
+  {
+    "word": "our",
+    "category": "代词"
+  },
+  {
+    "word": "your",
+    "category": "代词"
+  },
+  {
+    "word": "this",
+    "category": "代词"
+  },
+  {
+    "word": "that",
+    "category": "代词"
+  },
+  {
+    "word": "these",
+    "category": "代词"
+  },
+  {
+    "word": "those",
+    "category": "代词"
+  },
+  {
+    "word": "here",
+    "category": "代词"
+  },
+  {
+    "word": "there",
+    "category": "代词"
+  },
+  {
+    "word": "all over",
+    "category": "代词"
+  },
+  {
+    "word": "myself",
+    "category": "代词"
+  },
+  {
+    "word": "yourself",
+    "category": "代词"
+  },
+  {
+    "word": "himself",
+    "category": "代词"
+  },
+  {
+    "word": "herself",
+    "category": "代词"
+  },
+  {
+    "word": "itself",
+    "category": "代词"
+  },
+  {
+    "word": "ourselves",
+    "category": "代词"
+  },
+  {
+    "word": "yourselves",
+    "category": "代词"
+  },
+  {
+    "word": "themselves",
+    "category": "代词"
+  },
+  {
+    "word": "all",
+    "category": "代词"
+  },
+  {
+    "word": "both",
+    "category": "代词"
+  },
+  {
+    "word": "none",
+    "category": "代词"
+  },
+  {
+    "word": "some",
+    "category": "代词"
+  },
+  {
+    "word": "something",
+    "category": "代词"
+  },
+  {
+    "word": "someone",
+    "category": "代词"
+  },
+  {
+    "word": "somebody",
+    "category": "代词"
+  },
+  {
+    "word": "any",
+    "category": "代词"
+  },
+  {
+    "word": "anybody",
+    "category": "代词"
+  },
+  {
+    "word": "anything",
+    "category": "代词"
+  },
+  {
+    "word": "nobody",
+    "category": "代词"
+  },
+  {
+    "word": "other",
+    "category": "代词"
+  },
+  {
+    "word": "another",
+    "category": "代词"
+  },
+  {
+    "word": "either",
+    "category": "代词"
+  },
+  {
+    "word": "each",
+    "category": "代词"
+  },
+  {
+    "word": "everybody",
+    "category": "代词"
+  },
+  {
+    "word": "everyone",
+    "category": "代词"
+  },
+  {
+    "word": "everything",
+    "category": "代词"
+  },
+  {
+    "word": "nothing",
+    "category": "代词"
+  },
+  {
+    "word": "much",
+    "category": "代词"
+  },
+  {
+    "word": "naughty",
+    "category": "代词"
+  },
+  {
+    "word": "cheap",
+    "category": "代词"
+  },
+  {
+    "word": "expensive",
+    "category": "代词"
+  },
+  {
+    "word": "soft",
+    "category": "代词"
+  },
+  {
+    "word": "beautiful",
+    "category": "代词"
+  },
+  {
+    "word": "better",
+    "category": "代词"
+  },
+  {
+    "word": "worse",
+    "category": "代词"
+  },
+  {
+    "word": "boiling",
+    "category": "代词"
+  },
+  {
+    "word": "different",
+    "category": "代词"
+  },
+  {
+    "word": "healthy",
+    "category": "代词"
+  },
+  {
+    "word": "in",
+    "category": "介词"
+  },
+  {
+    "word": "on",
+    "category": "介词"
+  },
+  {
+    "word": "under",
+    "category": "介词"
+  },
+  {
+    "word": "near",
+    "category": "介词"
+  },
+  {
+    "word": "his",
+    "category": "介词"
+  },
+  {
+    "word": "her",
+    "category": "介词"
+  },
+  {
+    "word": "their",
+    "category": "介词"
+  },
+  {
+    "word": "mine",
+    "category": "介词"
+  },
+  {
+    "word": "ours",
+    "category": "介词"
+  },
+  {
+    "word": "yours",
+    "category": "介词"
+  },
+  {
+    "word": "hers",
+    "category": "介词"
+  },
+  {
+    "word": "theirs",
+    "category": "介词"
+  },
+  {
+    "word": "its -",
+    "category": "介词"
+  },
+  {
+    "word": "neither",
+    "category": "介词"
+  },
+  {
+    "word": "who",
+    "category": "介词"
+  },
+  {
+    "word": "whom -",
+    "category": "介词"
+  },
+  {
+    "word": "whose",
+    "category": "介词"
+  },
+  {
+    "word": "what",
+    "category": "介词"
+  },
+  {
+    "word": "which",
+    "category": "介词"
+  },
+  {
+    "word": "listen -",
+    "category": "介词"
+  },
+  {
+    "word": "talk",
+    "category": "介词"
+  },
+  {
+    "word": "speak",
+    "category": "介词"
+  },
+  {
+    "word": "go",
+    "category": "介词"
+  },
+  {
+    "word": "finish",
+    "category": "介词"
+  },
+  {
+    "word": "begin",
+    "category": "介词"
+  },
+  {
+    "word": "change",
+    "category": "介词"
+  },
+  {
+    "word": "fall -",
+    "category": "介词"
+  },
+  {
+    "word": "practice",
+    "category": "介词"
+  },
+  {
+    "word": "point",
+    "category": "介词"
+  },
+  {
+    "word": "look",
+    "category": "介词"
+  },
+  {
+    "word": "play",
+    "category": "动词"
+  },
+  {
+    "word": "how",
+    "category": "动词"
+  },
+  {
+    "word": "sing",
+    "category": "动词"
+  },
+  {
+    "word": "when",
+    "category": "动词"
+  },
+  {
+    "word": "read",
+    "category": "动词"
+  },
+  {
+    "word": "where",
+    "category": "动词"
+  },
+  {
+    "word": "write",
+    "category": "动词"
+  },
+  {
+    "word": "why",
+    "category": "动词"
+  },
+  {
+    "word": "always",
+    "category": "动词"
+  },
+  {
+    "word": "draw",
+    "category": "动词"
+  },
+  {
+    "word": "usually",
+    "category": "动词"
+  },
+  {
+    "word": "drink",
+    "category": "动词"
+  },
+  {
+    "word": "often",
+    "category": "动词"
+  },
+  {
+    "word": "jump",
+    "category": "动词"
+  },
+  {
+    "word": "like",
+    "category": "动词"
+  },
+  {
+    "word": "watch",
+    "category": "动词"
+  },
+  {
+    "word": "ride",
+    "category": "动词"
+  },
+  {
+    "word": "see",
+    "category": "动词"
+  },
+  {
+    "word": "seldom",
+    "category": "动词"
+  },
+  {
+    "word": "row",
+    "category": "动词"
+  },
+  {
+    "word": "never",
+    "category": "动词"
+  },
+  {
+    "word": "run",
+    "category": "动词"
+  },
+  {
+    "word": "swim",
+    "category": "动词"
+  },
+  {
+    "word": "very",
+    "category": "动词"
+  },
+  {
+    "word": "much -",
+    "category": "动词"
+  },
+  {
+    "word": "wash",
+    "category": "动词"
+  },
+  {
+    "word": "hold",
+    "category": "动词"
+  },
+  {
+    "word": "almost",
+    "category": "动词"
+  },
+  {
+    "word": "wear",
+    "category": "动词"
+  },
+  {
+    "word": "hardly",
+    "category": "动词"
+  },
+  {
+    "word": "dance",
+    "category": "动词"
+  },
+  {
+    "word": "hear",
+    "category": "动词"
+  },
+  {
+    "word": "rather",
+    "category": "动词"
+  },
+  {
+    "word": "quite",
+    "category": "动词"
+  },
+  {
+    "word": "walk",
+    "category": "动词"
+  },
+  {
+    "word": "eat",
+    "category": "动词"
+  },
+  {
+    "word": "count",
+    "category": "动词"
+  },
+  {
+    "word": "want",
+    "category": "动词"
+  },
+  {
+    "word": "love",
+    "category": "动词"
+  },
+  {
+    "word": "think",
+    "category": "动词"
+  },
+  {
+    "word": "agree",
+    "category": "动词"
+  },
+  {
+    "word": "start",
+    "category": "动词"
+  },
+  {
+    "word": "meet",
+    "category": "动词"
+  },
+  {
+    "word": "travel",
+    "category": "动词"
+  },
+  {
+    "word": "return",
+    "category": "动词"
+  },
+  {
+    "word": "prefer",
+    "category": "动词"
+  },
+  {
+    "word": "solve",
+    "category": "动词"
+  },
+  {
+    "word": "suggesti",
+    "category": "动词"
+  },
+  {
+    "word": "disagree",
+    "category": "动词"
+  },
+  {
+    "word": "sound",
+    "category": "动词"
+  },
+  {
+    "word": "become",
+    "category": "动词"
+  },
+  {
+    "word": "spend",
+    "category": "动词"
+  },
+  {
+    "word": "laugh",
+    "category": "动词"
+  },
+  {
+    "word": "understand",
+    "category": "动词"
+  },
+  {
+    "word": "worry",
+    "category": "动词"
+  },
+  {
+    "word": "sleep",
+    "category": "动词"
+  },
+  {
+    "word": "fold",
+    "category": "动词"
+  },
+  {
+    "word": "stay",
+    "category": "动词"
+  },
+  {
+    "word": "relax",
+    "category": "动词"
+  },
+  {
+    "word": "now",
+    "category": "动词"
+  },
+  {
+    "word": "then",
+    "category": "动词"
+  },
+  {
+    "word": "click",
+    "category": "动词"
+  },
+  {
+    "word": "type",
+    "category": "动词"
+  },
+  {
+    "word": "clean -",
+    "category": "动词"
+  },
+  {
+    "word": "catch",
+    "category": "动词"
+  },
+  {
+    "word": "collect",
+    "category": "动词"
+  },
+  {
+    "word": "born",
+    "category": "动词"
+  },
+  {
+    "word": "feel",
+    "category": "动词"
+  },
+  {
+    "word": "prepare",
+    "category": "动词"
+  },
+  {
+    "word": "leave",
+    "category": "动词"
+  },
+  {
+    "word": "believe",
+    "category": "动词"
+  },
+  {
+    "word": "clap",
+    "category": "动词"
+  },
+  {
+    "word": "show",
+    "category": "动词"
+  },
+  {
+    "word": "fail",
+    "category": "动词"
+  },
+  {
+    "word": "turn",
+    "category": "动词"
+  },
+  {
+    "word": "stop",
+    "category": "动词"
+  },
+  {
+    "word": "remember",
+    "category": "动词"
+  },
+  {
+    "word": "get",
+    "category": "动词"
+  },
+  {
+    "word": "design it",
+    "category": "动词"
+  },
+  {
+    "word": "live",
+    "category": "动词"
+  },
+  {
+    "word": "guess",
+    "category": "动词"
+  },
+  {
+    "word": "help",
+    "category": "动词"
+  },
+  {
+    "word": "already",
+    "category": "动词"
+  },
+  {
+    "word": "pass",
+    "category": "动词"
+  },
+  {
+    "word": "enjoy",
+    "category": "动词"
+  },
+  {
+    "word": "skate",
+    "category": "动词"
+  },
+  {
+    "word": "water",
+    "category": "动词"
+  },
+  {
+    "word": "later",
+    "category": "动词"
+  },
+  {
+    "word": "take",
+    "category": "动词"
+  },
+  {
+    "word": "shine",
+    "category": "动词"
+  },
+  {
+    "word": "soon",
+    "category": "动词"
+  },
+  {
+    "word": "let it",
+    "category": "动词"
+  },
+  {
+    "word": "ring",
+    "category": "动词"
+  },
+  {
+    "word": "stand",
+    "category": "动词"
+  },
+  {
+    "word": "work ie",
+    "category": "动词"
+  },
+  {
+    "word": "make",
+    "category": "动词"
+  },
+  {
+    "word": "know",
+    "category": "动词"
+  },
+  {
+    "word": "please",
+    "category": "动词"
+  },
+  {
+    "word": "out",
+    "category": "动词"
+  },
+  {
+    "word": "buy",
+    "category": "动词"
+  },
+  {
+    "word": "anywhere",
+    "category": "动词"
+  },
+  {
+    "word": "come",
+    "category": "动词"
+  },
+  {
+    "word": "happen",
+    "category": "动词"
+  },
+  {
+    "word": "carry",
+    "category": "动词"
+  },
+  {
+    "word": "bump",
+    "category": "动词"
+  },
+  {
+    "word": "invent",
+    "category": "动词"
+  },
+  {
+    "word": "use",
+    "category": "动词"
+  },
+  {
+    "word": "taste",
+    "category": "动词"
+  },
+  {
+    "word": "feed",
+    "category": "动词"
+  },
+  {
+    "word": "everywhere",
+    "category": "动词"
+  },
+  {
+    "word": "find",
+    "category": "动词"
+  },
+  {
+    "word": "shop",
+    "category": "动词"
+  },
+  {
+    "word": "put",
+    "category": "动词"
+  },
+  {
+    "word": "slowly th",
+    "category": "动词"
+  },
+  {
+    "word": "carefully",
+    "category": "动词"
+  },
+  {
+    "word": "angrily",
+    "category": "动词"
+  },
+  {
+    "word": "happily",
+    "category": "动词"
+  },
+  {
+    "word": "suddenly",
+    "category": "动词"
+  },
+  {
+    "word": "repair",
+    "category": "动词"
+  },
+  {
+    "word": "try",
+    "category": "动词"
+  },
+  {
+    "word": "visit",
+    "category": "动词"
+  },
+  {
+    "word": "cost",
+    "category": "动词"
+  },
+  {
+    "word": "pay",
+    "category": "动词"
+  },
+  {
+    "word": "fly",
+    "category": "动词"
+  },
+  {
+    "word": "argue",
+    "category": "动词"
+  },
+  {
+    "word": "control",
+    "category": "动词"
+  },
+  {
+    "word": "wait",
+    "category": "动词"
+  },
+  {
+    "word": "tell",
+    "category": "动词"
+  },
+  {
+    "word": "send",
+    "category": "动词"
+  },
+  {
+    "word": "smell",
+    "category": "动词"
+  },
+  {
+    "word": "cross",
+    "category": "动词"
+  },
+  {
+    "word": "call",
+    "category": "动词"
+  },
+  {
+    "word": "cook",
+    "category": "动词"
+  },
+  {
+    "word": "open",
+    "category": "动词"
+  },
+  {
+    "word": "set",
+    "category": "动词"
+  },
+  {
+    "word": "fight -",
+    "category": "动词"
+  },
+  {
+    "word": "plant",
+    "category": "动词"
+  },
+  {
+    "word": "dive -",
+    "category": "动词"
+  },
+  {
+    "word": "drive",
+    "category": "动词"
+  },
+  {
+    "word": "need",
+    "category": "动词"
+  },
+  {
+    "word": "hike",
+    "category": "动词"
+  },
+  {
+    "word": "thank",
+    "category": "动词"
+  },
+  {
+    "word": "also - too",
+    "category": "同义词"
+  },
+  {
+    "word": "a lot of lots of",
+    "category": "同义词"
+  },
+  {
+    "word": "author writer",
+    "category": "同义词"
+  },
+  {
+    "word": "alone - lonely",
+    "category": "同义词"
+  },
+  {
+    "word": "almost nearly",
+    "category": "同义词"
+  },
+  {
+    "word": "again once more",
+    "category": "同义词"
+  },
+  {
+    "word": "afraid - terrified",
+    "category": "同义词"
+  },
+  {
+    "word": "always all the time",
+    "category": "同义词"
+  },
+  {
+    "word": "arrive - reach",
+    "category": "同义词"
+  },
+  {
+    "word": "bike bicycle",
+    "category": "同义词"
+  },
+  {
+    "word": "by bus take a bus",
+    "category": "同义词"
+  },
+  {
+    "word": "be from come from",
+    "category": "同义词"
+  },
+  {
+    "word": "final - last",
+    "category": "同义词"
+  },
+  {
+    "word": "finally at last",
+    "category": "同义词"
+  },
+  {
+    "word": "go home - come home",
+    "category": "同义词"
+  },
+  {
+    "word": "great - terrific",
+    "category": "同义词"
+  },
+  {
+    "word": "glad - happy",
+    "category": "同义词"
+  },
+  {
+    "word": "be good at - do well in",
+    "category": "同义词"
+  },
+  {
+    "word": "big - large",
+    "category": "同义词"
+  },
+  {
+    "word": "begin - start",
+    "category": "同义词"
+  },
+  {
+    "word": "bear stand",
+    "category": "同义词"
+  },
+  {
+    "word": "build-set up",
+    "category": "同义词"
+  },
+  {
+    "word": "beat knock",
+    "category": "同义词"
+  },
+  {
+    "word": "cup - glass",
+    "category": "同义词"
+  },
+  {
+    "word": "classlesson",
+    "category": "同义词"
+  },
+  {
+    "word": "pretty - beautiful",
+    "category": "同义词"
+  },
+  {
+    "word": "park - garden",
+    "category": "同义词"
+  },
+  {
+    "word": "purse wallet",
+    "category": "同义词"
+  },
+  {
+    "word": "photo - picture",
+    "category": "同义词"
+  },
+  {
+    "word": "plane - airplane",
+    "category": "同义词"
+  },
+  {
+    "word": "phone - telephone",
+    "category": "同义词"
+  },
+  {
+    "word": "people - person",
+    "category": "同义词"
+  },
+  {
+    "word": "grasp - master",
+    "category": "同义词"
+  },
+  {
+    "word": "pen pal - pen friend",
+    "category": "同义词"
+  },
+  {
+    "word": "private-personal",
+    "category": "同义词"
+  },
+  {
+    "word": "prefect - excellent",
+    "category": "同义词"
+  },
+  {
+    "word": "quite - very",
+    "category": "同义词"
+  },
+  {
+    "word": "quiet - silent",
+    "category": "同义词"
+  },
+  {
+    "word": "room - space",
+    "category": "同义词"
+  },
+  {
+    "word": "right - correct",
+    "category": "同义词"
+  },
+  {
+    "word": "report - account",
+    "category": "同义词"
+  },
+  {
+    "word": "home-house",
+    "category": "同义词"
+  },
+  {
+    "word": "hate - dislike",
+    "category": "同义词"
+  },
+  {
+    "word": "hi - hello",
+    "category": "同义词"
+  },
+  {
+    "word": "holiday - vacation",
+    "category": "同义词"
+  },
+  {
+    "word": "happen - take place",
+    "category": "同义词"
+  },
+  {
+    "word": "high - tall",
+    "category": "同义词"
+  },
+  {
+    "word": "hard - difficult",
+    "category": "同义词"
+  },
+  {
+    "word": "hold - have",
+    "category": "同义词"
+  },
+  {
+    "word": "hold - catch",
+    "category": "同义词"
+  },
+  {
+    "word": "rude - impolite",
+    "category": "同义词"
+  },
+  {
+    "word": "reply - answer",
+    "category": "同义词"
+  },
+  {
+    "word": "just now - amoment ago",
+    "category": "同义词"
+  },
+  {
+    "word": "ring - telephone",
+    "category": "同义词"
+  },
+  {
+    "word": "center middle",
+    "category": "同义词"
+  },
+  {
+    "word": "job work",
+    "category": "同义词"
+  },
+  {
+    "word": "sure - of course",
+    "category": "同义词"
+  },
+  {
+    "word": "can - may",
+    "category": "同义词"
+  },
+  {
+    "word": "join - take part in",
+    "category": "同义词"
+  },
+  {
+    "word": "shop store",
+    "category": "同义词"
+  },
+  {
+    "word": "chance opportunity",
+    "category": "同义词"
+  },
+  {
+    "word": "kid - child",
+    "category": "同义词"
+  },
+  {
+    "word": "create invent",
+    "category": "同义词"
+  },
+  {
+    "word": "carzy - mad",
+    "category": "同义词"
+  },
+  {
+    "word": "cause reason",
+    "category": "同义词"
+  },
+  {
+    "word": "keep away - far from",
+    "category": "同义词"
+  },
+  {
+    "word": "chief major",
+    "category": "同义词"
+  },
+  {
+    "word": "concern - care",
+    "category": "同义词"
+  },
+  {
+    "word": "check examine",
+    "category": "同义词"
+  },
+  {
+    "word": "dad father",
+    "category": "同义词"
+  },
+  {
+    "word": "desk table",
+    "category": "同义词"
+  },
+  {
+    "word": "know understand",
+    "category": "同义词"
+  },
+  {
+    "word": "learn - study",
+    "category": "同义词"
+  },
+  {
+    "word": "lift elevator",
+    "category": "同义词"
+  },
+  {
+    "word": "see - look",
+    "category": "同义词"
+  },
+  {
+    "word": "small-little",
+    "category": "同义词"
+  },
+  {
+    "word": "sea ocean",
+    "category": "同义词"
+  },
+  {
+    "word": "shut close",
+    "category": "同义词"
+  },
+  {
+    "word": "spot - place",
+    "category": "同义词"
+  },
+  {
+    "word": "sick - ill",
+    "category": "同义词"
+  },
+  {
+    "word": "laugh - smile",
+    "category": "同义词"
+  },
+  {
+    "word": "sickness - illness",
+    "category": "同义词"
+  },
+  {
+    "word": "dear expensive",
+    "category": "同义词"
+  },
+  {
+    "word": "luckily - fortunately",
+    "category": "同义词"
+  },
+  {
+    "word": "daily everyday",
+    "category": "同义词"
+  },
+  {
+    "word": "look after take care of",
+    "category": "同义词"
+  },
+  {
+    "word": "look out be careful",
+    "category": "同义词"
+  },
+  {
+    "word": "talk speak",
+    "category": "同义词"
+  },
+  {
+    "word": "trash rubbish",
+    "category": "同义词"
+  },
+  {
+    "word": "term- semester",
+    "category": "同义词"
+  },
+  {
+    "word": "danger peril",
+    "category": "同义词"
+  },
+  {
+    "word": "loss - miss",
+    "category": "同义词"
+  },
+  {
+    "word": "turn - become",
+    "category": "同义词"
+  },
+  {
+    "word": "dull - boring",
+    "category": "同义词"
+  },
+  {
+    "word": "low - short",
+    "category": "同义词"
+  },
+  {
+    "word": "tourist traveler",
+    "category": "同义词"
+  },
+  {
+    "word": "during - in",
+    "category": "同义词"
+  },
+  {
+    "word": "mum - mother",
+    "category": "同义词"
+  },
+  {
+    "word": "tasty - delicious",
+    "category": "同义词"
+  },
+  {
+    "word": "draw paint",
+    "category": "同义词"
+  },
+  {
+    "word": "much many",
+    "category": "同义词"
+  },
+  {
+    "word": "deadly fateful",
+    "category": "同义词"
+  },
+  {
+    "word": "discover - find",
+    "category": "同义词"
+  },
+  {
+    "word": "maybe - perhaps",
+    "category": "同义词"
+  },
+  {
+    "word": "mad - angry",
+    "category": "同义词"
+  },
+  {
+    "word": "everyone - everybody",
+    "category": "同义词"
+  },
+  {
+    "word": "each every",
+    "category": "同义词"
+  },
+  {
+    "word": "exam test",
+    "category": "同义词"
+  },
+  {
+    "word": "example instance",
+    "category": "同义词"
+  },
+  {
+    "word": "easy - simple",
+    "category": "同义词"
+  },
+  {
+    "word": "except but",
+    "category": "同义词"
+  },
+  {
+    "word": "eat - feed",
+    "category": "同义词"
+  },
+  {
+    "word": "entire whole",
+    "category": "同义词"
+  },
+  {
+    "word": "fast - quick",
+    "category": "同义词"
+  },
+  {
+    "word": "film-movie",
+    "category": "同义词"
+  },
+  {
+    "word": "tonight - this evening",
+    "category": "同义词"
+  },
+  {
+    "word": "memorize - remember",
+    "category": "同义词"
+  },
+  {
+    "word": "night - evening",
+    "category": "同义词"
+  },
+  {
+    "word": "funny-interesting",
+    "category": "同义词"
+  },
+  {
+    "word": "near-beside",
+    "category": "同义词"
+  },
+  {
+    "word": "next following",
+    "category": "同义词"
+  },
+  {
+    "word": "noise voice",
+    "category": "同义词"
+  },
+  {
+    "word": "on-above",
+    "category": "同义词"
+  },
+  {
+    "word": "on - about",
+    "category": "同义词"
+  },
+  {
+    "word": "often - usually",
+    "category": "同义词"
+  },
+  {
+    "word": "own - have",
+    "category": "同义词"
+  },
+  {
+    "word": "opinion idea",
+    "category": "同义词"
+  },
+  {
+    "word": "over - more than",
+    "category": "同义词"
+  },
+  {
+    "word": "ture - real",
+    "category": "同义词"
+  },
+  {
+    "word": "tidy - clean",
+    "category": "同义词"
+  },
+  {
+    "word": "usual common",
+    "category": "同义词"
+  },
+  {
+    "word": "useful helpful",
+    "category": "同义词"
+  },
+  {
+    "word": "unusual - special",
+    "category": "同义词"
+  },
+  {
+    "word": "use up run out of",
+    "category": "同义词"
+  },
+  {
+    "word": "until-til",
+    "category": "同义词"
+  },
+  {
+    "word": "universal popular",
+    "category": "同义词"
+  },
+  {
+    "word": "want would like",
+    "category": "同义词"
+  },
+  {
+    "word": "wc - toilet",
+    "category": "同义词"
+  },
+  {
+    "word": "well - fine",
+    "category": "同义词"
+  },
+  {
+    "word": "wish hope",
+    "category": "同义词"
+  },
+  {
+    "word": "father - mother",
+    "category": "反义词"
+  },
+  {
+    "word": "good - ill",
+    "category": "反义词"
+  },
+  {
+    "word": "all - none",
+    "category": "反义词"
+  },
+  {
+    "word": "alone - together",
+    "category": "反义词"
+  },
+  {
+    "word": "always - sometimes",
+    "category": "反义词"
+  },
+  {
+    "word": "answer",
+    "category": "反义词"
+  },
+  {
+    "word": "ask - answer",
+    "category": "反义词"
+  },
+  {
+    "word": "above - below",
+    "category": "反义词"
+  },
+  {
+    "word": "after - before",
+    "category": "反义词"
+  },
+  {
+    "word": "back - front",
+    "category": "反义词"
+  },
+  {
+    "word": "bad - good",
+    "category": "反义词"
+  },
+  {
+    "word": "badly - well",
+    "category": "反义词"
+  },
+  {
+    "word": "beautiful-ugly",
+    "category": "反义词"
+  },
+  {
+    "word": "begin - end",
+    "category": "反义词"
+  },
+  {
+    "word": "great - small",
+    "category": "反义词"
+  },
+  {
+    "word": "happy - unhappy",
+    "category": "反义词"
+  },
+  {
+    "word": "hard - easy",
+    "category": "反义词"
+  },
+  {
+    "word": "hard - soft",
+    "category": "反义词"
+  },
+  {
+    "word": "hate - love",
+    "category": "反义词"
+  },
+  {
+    "word": "here-there",
+    "category": "反义词"
+  },
+  {
+    "word": "high-low",
+    "category": "反义词"
+  },
+  {
+    "word": "hold-drop",
+    "category": "反义词"
+  },
+  {
+    "word": "holiday-weekday",
+    "category": "反义词"
+  },
+  {
+    "word": "hungry- full",
+    "category": "反义词"
+  },
+  {
+    "word": "ill-healthy",
+    "category": "反义词"
+  },
+  {
+    "word": "inside - outside",
+    "category": "反义词"
+  },
+  {
+    "word": "best - worst",
+    "category": "反义词"
+  },
+  {
+    "word": "better - worse",
+    "category": "反义词"
+  },
+  {
+    "word": "big - little",
+    "category": "反义词"
+  },
+  {
+    "word": "black - white",
+    "category": "反义词"
+  },
+  {
+    "word": "borrow - return",
+    "category": "反义词"
+  },
+  {
+    "word": "into-outof",
+    "category": "反义词"
+  },
+  {
+    "word": "in - out",
+    "category": "反义词"
+  },
+  {
+    "word": "take - give",
+    "category": "反义词"
+  },
+  {
+    "word": "take on",
+    "category": "反义词"
+  },
+  {
+    "word": "teach learn",
+    "category": "反义词"
+  },
+  {
+    "word": "thin-fat",
+    "category": "反义词"
+  },
+  {
+    "word": "leave-arrive",
+    "category": "反义词"
+  },
+  {
+    "word": "leave-stay",
+    "category": "反义词"
+  },
+  {
+    "word": "busy-free",
+    "category": "反义词"
+  },
+  {
+    "word": "left-right",
+    "category": "反义词"
+  },
+  {
+    "word": "buy-sell",
+    "category": "反义词"
+  },
+  {
+    "word": "boy - girl",
+    "category": "反义词"
+  },
+  {
+    "word": "brother - sister",
+    "category": "反义词"
+  },
+  {
+    "word": "light-dark",
+    "category": "反义词"
+  },
+  {
+    "word": "joyful -joyless",
+    "category": "反义词"
+  },
+  {
+    "word": "kill-save",
+    "category": "反义词"
+  },
+  {
+    "word": "thin - thick",
+    "category": "反义词"
+  },
+  {
+    "word": "light-heavy",
+    "category": "反义词"
+  },
+  {
+    "word": "like-hate",
+    "category": "反义词"
+  },
+  {
+    "word": "clean - dirty",
+    "category": "反义词"
+  },
+  {
+    "word": "clever - foolish",
+    "category": "反义词"
+  },
+  {
+    "word": "cloudy - sunny",
+    "category": "反义词"
+  },
+  {
+    "word": "cold - hot",
+    "category": "反义词"
+  },
+  {
+    "word": "cheap - expensive",
+    "category": "反义词"
+  },
+  {
+    "word": "lose-win",
+    "category": "反义词"
+  },
+  {
+    "word": "late-early",
+    "category": "反义词"
+  },
+  {
+    "word": "like-unlike",
+    "category": "反义词"
+  },
+  {
+    "word": "many-few",
+    "category": "缩略词"
+  },
+  {
+    "word": "come - go",
+    "category": "缩略词"
+  },
+  {
+    "word": "cry - laugh",
+    "category": "缩略词"
+  },
+  {
+    "word": "miss - catch",
+    "category": "缩略词"
+  },
+  {
+    "word": "miss-hit",
+    "category": "缩略词"
+  },
+  {
+    "word": "danger - safety",
+    "category": "缩略词"
+  },
+  {
+    "word": "dark - bright",
+    "category": "缩略词"
+  },
+  {
+    "word": "day-night",
+    "category": "缩略词"
+  },
+  {
+    "word": "more-less",
+    "category": "缩略词"
+  },
+  {
+    "word": "most-least",
+    "category": "缩略词"
+  },
+  {
+    "word": "dead - alive",
+    "category": "缩略词"
+  },
+  {
+    "word": "death - life",
+    "category": "缩略词"
+  },
+  {
+    "word": "move-stop",
+    "category": "缩略词"
+  },
+  {
+    "word": "much little",
+    "category": "缩略词"
+  },
+  {
+    "word": "dad-mum",
+    "category": "缩略词"
+  },
+  {
+    "word": "die - live",
+    "category": "缩略词"
+  },
+  {
+    "word": "down-up",
+    "category": "缩略词"
+  },
+  {
+    "word": "dry - wet",
+    "category": "缩略词"
+  },
+  {
+    "word": "deep - shallow",
+    "category": "缩略词"
+  },
+  {
+    "word": "man-woman",
+    "category": "缩略词"
+  },
+  {
+    "word": "neat-messy",
+    "category": "缩略词"
+  },
+  {
+    "word": "never-ever",
+    "category": "缩略词"
+  },
+  {
+    "word": "nest-last",
+    "category": "缩略词"
+  },
+  {
+    "word": "nothing -everything",
+    "category": "缩略词"
+  },
+  {
+    "word": "now-then",
+    "category": "缩略词"
+  },
+  {
+    "word": "old-new",
+    "category": "缩略词"
+  },
+  {
+    "word": "old-young",
+    "category": "缩略词"
+  },
+  {
+    "word": "on-off",
+    "category": "缩略词"
+  },
+  {
+    "word": "early - late",
+    "category": "缩略词"
+  },
+  {
+    "word": "easy - difficult",
+    "category": "缩略词"
+  },
+  {
+    "word": "empty-fill",
+    "category": "缩略词"
+  },
+  {
+    "word": "empty-full",
+    "category": "缩略词"
+  },
+  {
+    "word": "entrance - exit",
+    "category": "缩略词"
+  },
+  {
+    "word": "east - west",
+    "category": "缩略词"
+  },
+  {
+    "word": "fall -rise",
+    "category": "缩略词"
+  },
+  {
+    "word": "far-near",
+    "category": "缩略词"
+  },
+  {
+    "word": "fast - slow",
+    "category": "缩略词"
+  },
+  {
+    "word": "finish - begin",
+    "category": "缩略词"
+  },
+  {
+    "word": "first-last",
+    "category": "缩略词"
+  },
+  {
+    "word": "forget - remember",
+    "category": "缩略词"
+  },
+  {
+    "word": "freeze - melt",
+    "category": "缩略词"
+  },
+  {
+    "word": "from-to",
+    "category": "缩略词"
+  },
+  {
+    "word": "open-close",
+    "category": "缩略词"
+  },
+  {
+    "word": "over-under",
+    "category": "缩略词"
+  },
+  {
+    "word": "pain-pleasure",
+    "category": "缩略词"
+  },
+  {
+    "word": "pass-fail",
+    "category": "缩略词"
+  },
+  {
+    "word": "poor-rich",
+    "category": "缩略词"
+  },
+  {
+    "word": "quiet-noisy",
+    "category": "缩略词"
+  },
+  {
+    "word": "rainy-dry",
+    "category": "缩略词"
+  },
+  {
+    "word": "glad - sad",
+    "category": "缩略词"
+  },
+  {
+    "word": "pull-push",
+    "category": "缩略词"
+  },
+  {
+    "word": "punish-reward",
+    "category": "缩略词"
+  },
+  {
+    "word": "plus-minus",
+    "category": "缩略词"
+  },
+  {
+    "word": "right-wrong",
+    "category": "缩略词"
+  }
+]

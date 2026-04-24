@@ -1,0 +1,298 @@
+{
+  "id": "prize_book08_day1",
+  "bookTitle": "Biscuit Wins a Prize",
+  "characterName": "Biscuit",
+  "characterAsset": "assets/characters/teacher_default.webp",
+  "featuredSentence": "It's time for the pet show!",
+  "originalAudio": "books/08Biscuit_Wins_a_Prize/audio.mp3",
+  "pages": [
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/cover.webp",
+      "narrativeCN": "Hello Hello, my dear friend！I am Amy! How are you？...... I'm good！Good！今天我们要讲Biscuit Wins a Prize的故事！Are you ready？Let's go！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "prize_intro",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_02.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "呀，小女孩叫着Biscuit说：Here, Biscuit! 快看，Biscuit！It's time for the pet show！Time for就是该做什么了，pet show就是宠物秀、宠物表演！原来Biscuit要和他的小主人一起去参加宠物表演啦！你猜猜看，他会表演什么呢？",
+      "narrativeEN": "Here, Biscuit. It's time for the pet show! Woof, woof!",
+      "keywords": [
+        "pet show",
+        "Time for"
+      ],
+      "audioCN": "prize_p1_cn",
+      "audioEN": "prize_p1_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 26210
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_03.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩告诉Biscuit，pet show上会有好多好多pets，pets就是小宠物！而且呀，还会有prizes，prizes就是奖品呢！她说：Come along, sweet puppy. 快过来，我的小甜心！我们要打扮得漂漂亮亮，展现出最棒的一面去参加比赛！是不是很期待呀？",
+      "narrativeEN": "There will be lots of pets, and prizes, too! Woof, woof! Come along, sweet puppy. You want to look your best. Woof!",
+      "keywords": [
+        "pets",
+        "prizes"
+      ],
+      "audioCN": "prize_p2_cn",
+      "audioEN": "prize_p2_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 32440
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_04.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "看，小女孩正在给Biscuit梳毛呢，想让他变得美美的！可是Biscuit好像不太听话，扭来扭去的。小女孩说：Hold still, Biscuit! Hold still就是“别动，站好”的意思。哈哈，Biscuit真是个funny puppy，funny就是有趣的、好笑的！他是不是有点调皮呀？",
+      "narrativeEN": "Hold still, Biscuit. Woof, woof! Funny puppy! Don't tug now! 7221 Hold still, Biscuit. Woof, woof!",
+      "keywords": [
+        "Hold still",
+        "funny"
+      ],
+      "audioCN": "prize_p3_cn",
+      "audioEN": "prize_p3_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 46560
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_05.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哎呀，Biscuit又在干嘛呢？小女孩惊呼：“Oh, Biscuit! It's not time to roll over！” Roll over就是打滚的意思。哈哈，Biscuit又在地上打滚了！小女孩着急地说，现在不是打滚的时候呀，我们要去pet show啦！你觉得Biscuit是想玩吗？",
+      "narrativeEN": "Oh, Biscuit! It's not time to roll over. Woof, woof! It's time for the pet show!",
+      "keywords": [
+        "roll over",
+        "time for"
+      ],
+      "audioCN": "prize_p4_cn",
+      "audioEN": "prize_p4_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 61280
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_06.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "他们终于来到宠物表演的现场啦！哇，好多好多小宠物呀！Look at all the pets，看这些小动物！Biscuit看到了谁呢？原来他看到了自己的friend，friend就是朋友！他的好朋友Puddles也来啦！它们开心地打招呼，Bow wow！",
+      "narrativeEN": "Look at all the pets, Biscuit. Woof, woof! Biscuit sees his friend Puddles. Bow wow! Woof, woof!",
+      "keywords": [
+        "pets",
+        "friend"
+      ],
+      "audioCN": "prize_p5_cn",
+      "audioEN": "prize_p5_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 71460
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_07.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "走着走着，Biscuit又看到了谁呀？哈哈，他又看到了另一个friend，他的好朋友Sam也来了！Ruff！大家都好开心呀！Biscuit是不是很喜欢跟朋友们在一起呀？你也有很多好朋友吗？",
+      "narrativeEN": "Biscuit sees his friend Sam. Ruff! Woof, woof!",
+      "keywords": [
+        "friend"
+      ],
+      "audioCN": "prize_p6_cn",
+      "audioEN": "prize_p6_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 83880
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_08.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "除了老朋友，Biscuit还看到了好多new friends，new friends就是新朋友！大家都聚在一起，真热闹呀！Biscuit是不是很喜欢交朋友呀？你喜欢认识新朋友吗？",
+      "narrativeEN": "Biscuit sees lots of new friends, too. Woof, woof!",
+      "keywords": [
+        "new friends"
+      ],
+      "audioCN": "prize_p7_cn",
+      "audioEN": "prize_p7_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 91040
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_09.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哎呀，大家都要站好啦！小女孩说：“Hold still now, Biscuit. Here comes the judge！” Judge就是裁判员，要来评选啦！可是Biscuit又跑掉了，小女孩着急地说：“Oh no, Biscuit. Come back！” Come back就是快回来！Biscuit跑去哪儿了呢？",
+      "narrativeEN": "Hold still now, Biscuit. Here comes the judge. Woof! Oh no, Biscuit. Come back!",
+      "keywords": [
+        "judge",
+        "Come back"
+      ],
+      "audioCN": "prize_p8_cn",
+      "audioEN": "prize_p8_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 98620
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_10.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "Biscuit跑去干嘛了呢？原来他想去看看那些小fish，fish就是小鱼，他还在笼子外面探头探脑，想看看那些bunnies，bunnies就是小兔子！哈哈，他是不是对什么都很好奇呀？",
+      "narrativeEN": "Biscuit wants to see the fish. Woof! Biscuit wants to see the bunnies. Woof!",
+      "keywords": [
+        "fish",
+        "bunnies"
+      ],
+      "audioCN": "prize_p9_cn",
+      "audioEN": "prize_p9_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 110100
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_11.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哈哈，原来Biscuit是想看看pet show里all of the pets，all of the pets就是所有的小宠物！他太喜欢小动物了，忍不住东看看西瞧瞧，是不是跟你一样呀？他是不是想和所有的小动物都成为朋友呢？",
+      "narrativeEN": "Woof, woof! Biscuit wants to see all of the pets at the pet show!",
+      "keywords": [
+        "all of the pets"
+      ],
+      "audioCN": "prize_p10_cn",
+      "audioEN": "prize_p10_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 121920
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_12.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "小女孩终于找到Biscuit啦！她抱着Biscuit，觉得他真是个silly puppy，silly就是有点傻傻的，可爱的意思！她摸着Biscuit说：“你猜猜看，你会赢得什么prize呢？” Prize就是奖品！你觉得Biscuit会得什么奖呢？",
+      "narrativeEN": "Silly puppy! Here you are. What prize will you win now? Woof, woof!",
+      "keywords": [
+        "silly",
+        "prize"
+      ],
+      "audioCN": "prize_p11_cn",
+      "audioEN": "prize_p11_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 127540
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_13.webp",
+      "teacherExpression": "happy",
+      "narrativeCN": "哇，快看！Biscuit真的得奖了！他得了什么奖呢？哈哈，他得到了一枚大大的“FRIEND”奖牌！FRIEND就是朋友！小女孩开心地说，这是the best prize of all，就是所有奖品里最好的！因为Biscuit真是个爱交朋友的好狗狗呀！",
+      "narrativeEN": "FRIEND Oh, Biscuit! You won the best prize of all! Woof! FRIEND",
+      "keywords": [
+        "FRIEND",
+        "best prize"
+      ],
+      "audioCN": "prize_p12_cn",
+      "audioEN": "prize_p12_en",
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      },
+      "pageStartMs": 134800
+    },
+    {
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_13.webp",
+      "narrativeCN": "今天的故事讲完啦！Biscuit Wins a Prize真是太有趣了！你学会了哪些新单词呀？我们明天再见哦！",
+      "narrativeEN": "",
+      "keywords": [],
+      "audioCN": "prize_done",
+      "audioEN": null,
+      "highlights": [],
+      "characterPos": {
+        "x": 0.75,
+        "y": 0.7,
+        "action": "excited"
+      }
+    }
+  ],
+  "phonicsWords": [
+    {
+      "word": "pet",
+      "phonemes": [
+        "p",
+        "e",
+        "t"
+      ],
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_03.webp"
+    },
+    {
+      "word": "rub",
+      "phonemes": [
+        "r",
+        "u",
+        "b"
+      ],
+      "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_04.webp"
+    }
+  ],
+  "recordingPage": {
+    "imageAsset": "assets/books/08Biscuit_Wins_a_Prize/spread_03.webp",
+    "sentences": [
+      {
+        "text": "There will be lots of pets, and prizes, too!",
+        "audio": "audio/prize_rec_left.mp3",
+        "side": "left"
+      },
+      {
+        "text": "Come along, sweet puppy.",
+        "audio": "audio/prize_rec_right.mp3",
+        "side": "right"
+      }
+    ]
+  }
+}
